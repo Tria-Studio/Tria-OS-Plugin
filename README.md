@@ -12,3 +12,5 @@ Get the plugin [here](https://www.roblox.com/library/6466800923/TRIA-os-Map-Maki
 
 If you have created a map kit or map addon which you want added to the plugin, (idk how we will handle these if theres a way through github) or DM @grif-0 and submissions 
 will be quality assured and handled from there.
+
+View the changelog [here](docs/CHANGELOG.md)
