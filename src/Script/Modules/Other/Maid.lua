@@ -1,4 +1,4 @@
----	Manages the cleaning of events and other things.
+---	Manages the cleaning of events and other things
 -- Useful for encapsulating state and make deconstructors easy
 -- @classmod Maid
 -- @see Signal
