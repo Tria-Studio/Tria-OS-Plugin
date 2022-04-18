@@ -1,6 +1,17 @@
 {
-  "name": "project",
+  "name": "Tria.OS",
+  "gameId": 2593938530,
+  "placeId": 6824256892,
   "tree": {
-    "$className": "DataModel"
+    "$className": "DataModel",
+    "Workspace": {
+      "$className": "Workspace",
+      "$path": "src/Classes/Workspace",
+      "$ignoreUnknownInstances": true,
+      "$properties": {
+        "AllowThirdPartySales": true,
+        "CollisionGroups": "Default^0^-1\\Characters^1^-3"
+      }
+    }
   }
 }

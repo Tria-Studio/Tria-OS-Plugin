@@ -1,0 +1,3469 @@
+<roblox version="4">
+  <Item class="Workspace" referent="0">
+    <Properties>
+      <string name="Name">Workspace</string>
+      <bool name="AllowThirdPartySales">true</bool>
+      <string name="CollisionGroups">Default^0^-1\Characters^1^-3</string>
+    </Properties>
+    <Item class="Script" referent="1">
+      <Properties>
+        <string name="Name">Script</string>
+        <string name="Source">--[[
+
+	TRIA.os Map Making Companion Plugin by grif_0.
+	
+	Enables a quick + efficient workflow when creating maps. Allows you to add BtnFuncs onto parts + groups of parts effortlessly, and change stuff 
+	like its Button # and delay time, or other tag-specific data.
+	
+	This plugin inclued two bonus features: View Modes + Settings Editor.
+	
+	Settings Editor allows you to easily edit the settings of your map, without needing to scroll through the explorer looking for the right properties.
+	
+	View Modes gives you ways to visualise your maps objects, allowing you to see yout BtnFunc tagged parts, Objects like wallruns, start, end, and 
+	buttons, and eventually _Detail parts.
+	
+	
+	Please do not resell or reupload or claim you created this. Feel free to use this, no need to give me credit for using this.
+	Please report any bugs + suggestions to me! 
+	
+	Thanks!
+	 - grif_0
+
+
+		Changelog
+	
+	 V 2.2
+		
+		BUGS
+		- fixed 0.6 mapkits not working
+		- other bug fixes i forgot
+		- Tag can be clicked when no parts are visible
+		- Tag menu wouldnt show if a part was a kill part
+		
+		CHANGES
+		- Plugin now supports TRIA.os v0.6
+		- Added notices for users using old mapkit versions encouraging them to update their map
+		- Settings page will now tell you if a setting cannot be found
+		- Adjusted the insert page to be more helpful
+		- Added notices to the insert page
+		- Added 'Texture Kit' by Phexonia to the insert page
+		- Added the new 0.6 map settings to the Settings page
+		- Added the abillity to edit the oxygen inside of an air tank
+		- Buttons are new easier to select
+		- Insert page will now use the latest versions of the mapkits automatically
+		- Added dropdown menus to some setting objects
+		- Added low detail mode tag
+		- Added Speed + Jump booster tags
+		- Improved security for non TRIA.os maps (FE2, FP275, D2)
+		
+	V 2.1
+		- Bug: Colorwheel not working
+		- Bug: Colorwheel not respecting undo/redo
+		- Bug: Last selected map not loading at the start of a new session
+		- Bug: notification screen was huge sometimes
+		- _Kill tag support
+		- Added a new Insert tab to insert the map kits, map addons, and map components to your map
+	
+	V 2.0.1
+	  - Updated difficulty tooltip
+	  - New 'Export to Lighting' option
+
+	V 2.0
+		 - Changed from a FE2 Map Making Companion to a TRIA.os Map Making Companion.
+		 - Removed all FE2 references and FE2 specific items.
+		 - UI overhaul
+		 - Rewritten to be modular, organized, efficient
+		 - Selected map saves between sessions
+		 - Many map selecting improvements
+		 - Fixed Undo/Redo
+		 - Important feedback will now appear in the widget along with the output
+		 - You can now alter the Button# and delay, ot other data per indivijual tag
+		 - New map settings editor
+
+	V 1.2
+	 - Add Ziplines to Object View
+	 - Add Rescue point to Object View [DONE]
+	 - Maybe add some sorta Variation View
+	 - Model inserter tab: Insert Slide wall, walljump, air tank, zipline, etc.
+
+	V 1.1
+	 - Proper light/dark theme support [DONE]
+	 - Fix bugs [DONE]
+	 - Intro view mode [DONE]
+	 
+	V 1.0
+	 - Edit _Delay [DONE]
+	 - Edit _Sound SoundId [DONE]
+	 - Detail mode [DONE]
+	 - _Detail + _Wall selector [DONE]
+	 - Bugtest [DONE]
+	 - Release [DONE]
+]]
+
+local ServerStorage = game:GetService("ServerStorage")
+local StudioService = game:GetService("StudioService")
+
+local VERSION = 2.2
+
+local PluginBar = plugin:CreateToolbar("TRIA.os Map tools")
+local OpenButton = PluginBar:CreateButton("TRIA.os Tools", "Tools to help map making!", "rbxassetid://6924807717", "Map Creation Tools")
+local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 200, 250)
+local Widget = plugin:CreateDockWidgetPluginGui("TRIA.osTools", WidgetInfo)
+
+local Util = require(script.Modules.UtilFuncs)
+local SelectMap = require(script.Modules.SelectMap)
+local SettingsMod = require(script.Modules.Settings)
+local BtnController = require(script.Modules.Button)
+local MaidMod = require(script.Modules.Other.Maid)
+
+local StudioTheme = settings().Studio.Theme
+local ChosenFrame = Util.UI.Frames.Tags
+local UI = Util.UI
+local Maid = MaidMod.new()
+
+
+
+-- ======== WIDGET HANDLER ======== --
+
+
+
+
+
+Widget.Title = "TRIA.os Map Maker Companion"
+Util.Widget = Widget
+UI.Parent = Widget
+UI.Size = UDim2.new(1, 0, 1, 0)
+
+
+local function Startup()
+	for _, Button in pairs(UI.Frames.Tags.ButtonTags:GetChildren()) do
+		if Button:IsA("TextButton") then
+			local Type = Util.GetTagType(Button.Name)
+
+			local Controller = BtnController.new(Button.Name, Type)
+			Maid:GiveTask(Controller)
+		end
+	end
+
+	for _, Button in pairs(UI.Frames.Tags.ObjectTags:GetChildren()) do
+		if Button:IsA("TextButton") then
+			if Button:IsA("TextButton") then
+				local Type = Util.GetTagType(Button.Name)
+
+				local Controller = BtnController.new(Button.Name, Type)
+				Maid:GiveTask(Controller)
+			end
+		end
+	end
+
+	--for _, Button in pairs(UI.Frames.View.ButtonTags:GetChildren()) do
+	--	if Button:IsA("TextButton") then
+	--		if Button:IsA("TextButton") then
+	--			local Controller = BtnController.new(Button.Name)
+	--			Maid:GiveTask(Controller)
+	--		end
+	--	end
+	--end
+end
+
+OpenButton.Click:Connect(function()
+	Widget.Enabled = not Widget.Enabled
+
+	if not ServerStorage:FindFirstChild("TRIAosTools_Plugin") then
+		local Folder = Instance.new("Folder")
+		Folder.Name = "TRIAosTools_Plugin"
+		Folder.Parent = ServerStorage
+	end
+	local UserId = StudioService:GetUserId()
+	if not ServerStorage.TRIAosTools_Plugin:FindFirstChild(UserId) then
+		local Folder = script.TRIAosTools_Plugin:Clone()
+		Folder.Name = UserId
+		Folder.Parent = ServerStorage.TRIAosTools_Plugin
+		Util.PluginSettings = Folder
+	end
+
+	local Map = ServerStorage.TRIAosTools_Plugin:FindFirstChild(StudioService:GetUserId()).Map.Value
+
+	if Map and Map.Parent and not Util.Map then
+		SelectMap.SelectMap(Map)
+	end
+end)
+
+if Widget.Enabled then
+
+	if not ServerStorage:FindFirstChild("TRIAosTools_Plugin") then
+		local Folder = Instance.new("Folder")
+		Folder.Name = "TRIAosTools_Plugin"
+		Folder.Parent = ServerStorage
+	end
+
+	local UserId = tostring(StudioService:GetUserId())
+	if not ServerStorage.TRIAosTools_Plugin:FindFirstChild(UserId) then
+		local Folder = script.TRIAosTools_Plugin:Clone()
+		Folder.Name = UserId
+		Folder.Parent = ServerStorage.TRIAosTools_Plugin
+		Util.PluginSettings = Folder
+	end
+
+	local Map = ServerStorage.TRIAosTools_Plugin:FindFirstChild(StudioService:GetUserId()).Map.Value
+
+	if Map and Map.Parent and not Util.Map then
+		SelectMap.SelectMap(Map)
+	end
+
+	Startup()
+end
+
+Util.PluginSettings = ServerStorage:FindFirstChild("TRIAosTools_Plugin"):FindFirstChild(tostring(StudioService:GetUserId()))
+
+if not Util.PluginSettings then
+	if not ServerStorage:FindFirstChild("TRIAosTools_Plugin") then
+		local Folder = Instance.new("Folder")
+		Folder.Name = "TRIAosTools_Plugin"
+		Folder.Parent = ServerStorage
+	end
+
+	local UserId = tostring(StudioService:GetUserId())
+	if not ServerStorage.TRIAosTools_Plugin:FindFirstChild(UserId) then
+		local Folder = script.TRIAosTools_Plugin:Clone()
+		Folder.Name = UserId
+		Folder.Parent = ServerStorage.TRIAosTools_Plugin
+		Util.PluginSettings = Folder
+	end
+end
+
+Widget:GetPropertyChangedSignal("Enabled"):Connect(function()
+	if not Widget.Enabled then
+		SelectMap.ClearMap(true)
+		Maid:DoCleaning()
+	else
+		Startup()
+	end
+end)
+
+local InserterCont = require(script.Modules.ObjectInsert)
+
+-- ======== UI HANDLER ======== --
+
+
+
+
+
+UI.ChosenMap.Clear.MouseButton1Click:Connect(function()
+	SelectMap.ClearMap()
+	Util:Cleanup()
+end)
+
+UI.ChosenMap.SelectMap.MouseButton1Click:Connect(SelectMap.SelectMap)
+
+for _, Button in pairs(UI.CurrentMode:GetChildren()) do
+	if Button:IsA("GuiButton") then
+		Button.MouseButton1Click:Connect(function()
+			ChosenFrame.Visible = false
+			UI.CurrentMode[ChosenFrame.Name].BackgroundColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Titlebar)
+			UI.CurrentMode[ChosenFrame.Name].Bars.Visible = false
+			UI.CurrentMode[ChosenFrame.Name].ZIndex = 1
+			ChosenFrame = UI.Frames[Button.Name]
+			ChosenFrame.Visible = true
+			UI.CurrentMode[ChosenFrame.Name].BackgroundColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.MainBackground)
+			UI.CurrentMode[ChosenFrame.Name].Bars.Visible = true
+			UI.CurrentMode[ChosenFrame.Name].ZIndex = 2
+
+			if ChosenFrame.Name == "Insert" and not Util.PluginSettings:GetAttribute("UserAgreedToInsertInjection") then
+				Util.Warn("[NOTICE] You need to give this plugin script injection permissions otherwise some features on this page may not work.", true, "I understand", true)
+				Util.PluginSettings:SetAttribute("UserAgreedToInsertInjection", true)
+			end
+		end)
+	end
+end
+
+for _, Button in pairs(UI:GetDescendants()) do
+	if Button:IsA("GuiButton") and Button.Name == "Tip" then
+		Button.MouseButton1Click:Connect(function()
+			Button.Tooltip.Visible = not Button.Tooltip.Visible
+		end)
+	end
+end
+
+local function Draw()
+	StudioTheme = settings().Studio.Theme
+
+	for _, Button in pairs(UI.CurrentMode:GetChildren()) do
+		if Button:IsA("TextButton") then
+			local Color = ChosenFrame.Name == Button.Name and StudioTheme:GetColor(Enum.StudioStyleGuideColor.MainBackground) or StudioTheme:GetColor(Enum.StudioStyleGuideColor.Titlebar)
+			Button.BackgroundColor3 = Color
+		end
+	end
+
+	if Util.Map then
+		UI.ChosenMap.SelectMap.TextColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.TitlebarText)
+	end
+
+	for _, Frame in pairs(UI:GetDescendants()) do
+		if Frame:GetAttribute("Theme") or Frame:GetAttribute("TextTheme") or Frame:GetAttribute("BorderTheme") then
+			local Color = Frame:GetAttribute("Theme") and StudioTheme:GetColor(Enum.StudioStyleGuideColor[Frame:GetAttribute("Theme")])
+			local TextColor  = Frame:GetAttribute("TextTheme") and StudioTheme:GetColor(Enum.StudioStyleGuideColor[Frame:GetAttribute("TextTheme")])
+			local TextStrokeColor  = Frame:GetAttribute("TextStrokeTheme") and StudioTheme:GetColor(Enum.StudioStyleGuideColor[Frame:GetAttribute("TextStrokeTheme")])
+
+			if Frame:IsA("TextBox") then
+				if TextColor and not Frame:GetAttribute("BlockTextColor") then
+					Frame.TextColor3 = TextColor
+				end
+				if Color then
+					Frame.BackgroundColor3 = Color
+				end
+				if TextStrokeColor and not Frame:GetAttribute("BlockTextColor") then
+					Frame.TextStrokeColor3 = TextStrokeColor
+				end
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			elseif Frame:IsA("TextLabel") then
+				if TextColor then
+					Frame.TextColor3 = TextColor
+				end
+				if Color then
+					Frame.BackgroundColor3 = Color
+				end
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			elseif Frame:IsA("ImageLabel") then
+				if Color then
+					if Frame:GetAttribute("ThemeMode") == "BackgroundColor3" then
+						Frame.BackgroundColor3 = Color
+					else
+						Frame.ImageColor3 = TextColor
+					end
+				end
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			elseif Frame:IsA("ViewportFrame") then
+				if Color then
+					Frame.BackgroundColor3 = Color
+				end
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			elseif Frame:IsA("ImageButton") then
+				if TextColor then
+					Frame.ImageColor3 = TextColor
+				end
+				if Color then
+					Frame.BackgroundColor3 = Color
+				end
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			elseif Frame:IsA("Frame") then
+				if Color then
+					Frame.BackgroundColor3 = Color
+				end
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			elseif Frame:IsA("ScrollingFrame") then
+				if Color then
+					Frame.BackgroundColor3 = Color
+				end
+				Frame.ScrollBarImageColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.ScrollBar)
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			elseif Frame:IsA("TextButton") then
+				if Color then
+					Frame.BackgroundColor3 = Color
+				end
+				if TextColor then
+					Frame.TextColor3 = TextColor
+				end
+				Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+			end
+		end
+	end
+end
+
+Draw()
+settings().Studio.ThemeChanged:Connect(Draw)
+
+Util.Warn("[NOTICE]: THIS PLUGIN IS IN BETA!\n\nPlease report all bugs and any feature suggestions. Thanks!\n")
+
+if Util.PluginSettings:GetAttribute("VersionWhenLastOpened") ~= VERSION then
+	local ChangelogText = [[
+		This plugin has been updated since you last used it!
+		
+		[CHANGELOG] V 2.2
+		
+		BUGS
+		- fixed 0.6 mapkits not working
+		- other bug fixes i forgot
+		- Tag can be clicked when no parts are visible
+		- Tag menu wouldnt show if a part was a kill part
+		
+		CHANGES
+		- Plugin now supports TRIA.os v0.6
+		- Added notices for users using old mapkit versions encouraging them to update their map
+		- Settings page will now tell you if a setting cannot be found
+		- Adjusted the insert page to be more helpful
+		- Added notices to the insert page
+		- Added 'Texture Kit' by Phexonia to the insert page
+		- Added the new 0.6 map settings to the Settings page
+		- Added the abillity to edit the oxygen inside of an air tank
+		- Buttons are new easier to select
+		- Insert page will now use the latest versions of the mapkits automatically
+		- Added dropdown menus to some setting objects
+		- Added low detail mode tag
+		- Added Speed + Jump booster tags
+		- Improved security for non TRIA.os maps (FE2, FP275, D2)
+	]]
+	Util.Warn(ChangelogText, true, "Awesome!", true)
+	Util.PluginSettings:SetAttribute("VersionWhenLastOpened", VERSION)
+end</string>
+      </Properties>
+      <Item class="Folder" referent="2">
+        <Properties>
+          <string name="Name">Inserts</string>
+        </Properties>
+        <Item class="Model" referent="3">
+          <Properties>
+            <string name="Name">EasyTP</string>
+          </Properties>
+          <Item class="ModuleScript" referent="4">
+            <Properties>
+              <string name="Name">EasyTP</string>
+              <string name="Source"><![CDATA[--[[
+	EasyTP by not_grif (@grif_0)
+	
+	INSTRUCTIONS:
+		1) Parent this module into your map script
+		2) Require this in your MapScript with the following
+				local EasyTP = require(script.EasyTP)
+
+		3) Define your teleporting parts with the following naming scheme:
+				_Teleport[TeleportNumber][Start or End]
+				
+				Example:
+					_Teleport1Start, _Teleport1End
+
+			- In order to set a custom flash color per flash, you can add copy this table into the table 'TeleportParts' on Line 47.
+					[TeleportNumber] = {
+						FlashColor = [The Flash Color. If nil or not stated, it will use the default color on Line 45.],
+					},
+
+		4) Enable/Disable flashing on Line 44
+		5) Set up your teleport parts
+			- Size doesnt matter, Make it transparent and CanCollide false. Players will be teleported to the center of the End part,
+			  facing the FRONT FACE of the part.
+
+		6) Call a teleport using with the followng:
+				EasyTP.Teleport(TeleportNumber)
+
+
+
+	Enjoy!
+	 - grif_0
+
+]]
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+
+local Map = script:FindFirstAncestorOfClass("Model")
+local Overlap = OverlapParams.new()
+
+
+
+local module = {
+	DoFlashing = true, --// Should the screen flash when teleporting?
+	FlashColor = Color3.fromRGB(255, 255, 255), --// Color of the flash
+}
+local TeleportParts: {[number]: {Start: BasePart?, End: BasePart?, FlashColor: Color3?} } = {
+	[1] = {
+		FlashColor = nil,
+	},
+}
+
+Overlap.FilterType = Enum.RaycastFilterType.Whitelist
+
+
+
+function module.Teleport(TeleportNumber: number)
+	TeleportParts[TeleportNumber] = TeleportParts[TeleportNumber] or {Start = nil, End = nil, FlashColor = nil}
+
+	local TPParts = TeleportParts[TeleportNumber]
+	local PlayersToTP: {[number]: Player} = {}
+	local ColorCorrection: ColorCorrectionEffect = Lighting:FindFirstChild("_qwertyuiopasdfghjklzxcvbnm")
+	local Characters = {}
+
+	TPParts.Start = Map:FindFirstChild(string.format("_Teleport%dStart", TeleportNumber), true)
+	TPParts.End = Map:FindFirstChild(string.format("_Teleport%dEnd", TeleportNumber), true)
+
+	assert(TPParts.Start, string.format("Start for Teleport %d not found.", TeleportNumber))
+	assert(TPParts.End, string.format("End for Teleport %d not found.", TeleportNumber))
+
+	for _, Player in pairs(Players:GetPlayers()) do
+		table.insert(Characters, Player.Character)
+	end
+
+	if not ColorCorrection then
+		ColorCorrection = Instance.new("ColorCorrectionEffect")
+		ColorCorrection.Name = "_qwertyuiopasdfghjklzxcvbnm"
+		ColorCorrection.Parent = Lighting
+	end
+
+	Overlap.FilterDescendantsInstances = Characters
+
+	for _, Part: BasePart in pairs(workspace:GetPartsInPart(TPParts.Start, Overlap)) do
+		if Part.Name ~= "HumanoidRootPart" then
+			continue
+		end
+		local Player: Player = Players:GetPlayerFromCharacter(Part.Parent)
+
+		if Player then
+			table.insert(PlayersToTP, Player)
+		end
+	end
+
+	for _, Player: Player in pairs(PlayersToTP) do
+		local Character = Player.Character
+		Character.HumanoidRootPart.CFrame = TPParts.End.CFrame
+	end
+
+	if module.DoFlashing or TPParts.FlashColor then
+		for _, Player in pairs(PlayersToTP) do
+			local LocalScript = script.LocalFlash:Clone()
+			local Color = TPParts.FlashColor or module.FlashColor or Color3.fromRGB(255, 255, 255)
+			
+			LocalScript.Disabled = false
+			LocalScript:SetAttribute("TintColor", Color)
+			LocalScript.Parent = Player.PlayerGui
+		end
+	end
+end
+
+return module
+]]></string>
+            </Properties>
+            <Item class="LocalScript" referent="5">
+              <Properties>
+                <string name="Name">LocalFlash</string>
+                <string name="Source">local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+
+local ColorCorrection: ColorCorrectionEffect = Lighting:FindFirstChild("_qwertyuiopasdfghjklzxcvbnm")
+
+
+
+ColorCorrection.Enabled = true
+ColorCorrection.TintColor = script:GetAttribute("TintColor")
+
+local Tween = TweenService:Create(ColorCorrection, TweenInfo.new(.075), {Brightness = .75, Saturation = -1})
+Tween:Play()
+Tween.Completed:Wait()
+
+local Tween = TweenService:Create(ColorCorrection, TweenInfo.new(.5), {Brightness = 0, Saturation = -0})
+Tween:Play()
+Tween.Completed:Wait()
+
+ColorCorrection.Enabled = false
+script:Destroy()</string>
+              </Properties>
+            </Item>
+          </Item>
+        </Item>
+        <Item class="Model" referent="6">
+          <Properties>
+            <string name="Name">TextureKit</string>
+          </Properties>
+          <Item class="Folder" referent="7">
+            <Properties>
+              <string name="Name">FE2 + Textures</string>
+            </Properties>
+            <Item class="Script" referent="8">
+              <Properties>
+                <string name="Name">Instructions</string>
+                <string name="Source">-- [[ IMPORTANT ]]
+
+-- The credits belongs to all of the Map Makers and to Crazyblox, who find the textures the best
+-- and has created their own textures to be used by Map Making on FE2MT.
+
+----------------------------------------------------------
+
+-- [[ ABOUT ]]
+
+-- Hello, and thank you for purchasing FE2 + Textures!
+
+-- FE2 + Textures is a model that can be used for Map Makers by making their own map, including yours.
+-- These part of the textures will let you know what to use and what kind of texture names you can use.
+-- Inside of these folders has 3 folders, including: Original, Custom and Signs.
+-- These textures you see includes any custom or original ones, including one of my textures
+-- that I've created (Checker, Diamonds, etc).
+
+-- [[ FOLDERS ]]
+
+-- Original - These original textures was used in Flood Escape 2, made by Crazyblox. They can be used by making your own map.
+-- Custom - These custom textures was created by the Map Makers, and other textures can be found by the Decals.
+
+-- -- Crates - Crates that are used for creating a crate
+-- -- Grate/Metal - Grate/Metal that could be used for any kinds of background vent and for any platforms
+-- -- Liquids - Liquids that are useful for the flood such as water, lava, goo, etc.
+-- -- Tiles - Tiles that are floors/wall included
+
+-- Signs - These signs will let you understand which textures are used
+
+----------------------------------------------------------
+
+-- [[ UPDATES ]]
+
+-- April 28th, 2020 - April 29th, 2020
+-- * FE2 + Texture Model Released, over 58+ Textures to be placed
+
+-- April 30th, 2020
+-- More Textures added, now includes 11+ Textures
+
+-- November 14th, 2021
+-- 9 new Textures added
+-- Renamed/Updated the missing part of the texture names
+-- New folders added to Custom; Crates, Grate/Metal, Liquids &amp; Tiles
+
+-- [[ CREDITS ]]
+
+-- These credits are important for all of the people who created or find their textures that
+-- used to make their own maps, while using textures for anything you need by details, including the creator of Flood Escape 2.
+
+-- Thank you to...
+-- Crazyblox: Original Textures (FE2 &amp; FE2MT)
+-- Enzso: Custom Textures (Easierlization, Digitalization, Harderlization, Digitalized &amp; Others)
+-- ForbiddenJ: Grate Textures (Normal &amp; Burned)
+-- VRANZO: Custom Textures
+-- MrBloxMC: MrBloxMC's Texture Pack
+-- Creators of the Decals/Textures
+
+----------------------------------------------------------
+
+-- I hope you enjoy FE2 + Textures. Happy Map Making!
+-- Phexonia, 2021</string>
+              </Properties>
+            </Item>
+          </Item>
+        </Item>
+        <Item class="Model" referent="9">
+          <Properties>
+            <string name="Name">Waterjet</string>
+          </Properties>
+          <Item class="ModuleScript" referent="10">
+            <Properties>
+              <string name="Name">WaterJetMod</string>
+              <string name="Source"><![CDATA[--[[	
+	WaterJet TRIA.OS mod V1.0 made by grif_0 (not_grif)
+	
+	This module is to only be used inside of TRIA:os. This module was created to add agility features to underwater gameplay by 
+	adding customizable jetstreams.
+	
+	I have attached an example jet fan for reference.
+	
+	Please give me any feedback on what I could improve on twitter (@grif_0) or in the TRIA community server.
+	
+	
+	Thanks for using this! Enjoy!
+	
+	 - grif
+	
+	
+	
+	
+	TO INSTALL:
+		 - Place this module directly inside of your MapScript. Do not edit or delete any children of this part. 
+		 - Inside of the LocalWaterJet script, set the value of the ObjectValue 'Map' to your map model.
+		 - Inside of your MapScript, insert the following code at the top of your script below the line where you define Lib:
+		 	
+		 		local WaterjetMod = require(script.WaterjetMod)
+	
+	
+	
+	
+	TO EDIT JETS:
+	
+
+    WaterJet parts MUST:
+        - Be a BasePart (Not a mesh or a union)
+        - Follow the following naming scheme: _WaterJet[you can put whatever after this]
+        - The FRONT face is the face that becomes the jetstream
+
+    Editable Properties:
+    
+    [Attributes]
+        - Distnace: number - how far the waterstream will be active
+        - Speed: number - studs per second on how fast you will travel
+        - Type: string - Determines the area in which the jetstream is active on the parts front face:
+			- "Square": he entire face of the part
+			- "Cylinder": Creates a cylinder with the diameter of the SMALLER EDGE SIZE in the center of the part.
+
+    	- ParticleId: number - the assetID of the chosen particle emitter. Leave 0 for none.
+    	
+    [BoolValue inside fan part]
+    	- Enabled: boolean - Determines whether or not the fan is active
+    	
+    	
+    	
+    To toggle fan states easily, you can use the function below:
+    
+   		function module:SetFanEnabled(Fan: Part, Enabled: boolean)
+
+end
+
+]]
+
+
+local module = {}
+
+
+
+function module:SetFanEnabled(Fan: Part, Enabled: boolean)
+	Fan.Enabled.Value = Enabled
+end
+
+for _, Player in pairs(game.Players:GetPlayers()) do
+	local Copy = script.LocalWaterjet:Clone()
+	Copy.Disabled = false
+	Copy.Parent = Player.PlayerGui
+end
+
+
+
+return module
+]]></string>
+            </Properties>
+            <Item class="LocalScript" referent="11">
+              <Properties>
+                <string name="Name">LocalWaterjet</string>
+                <string name="Source">local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+local Lib = script.Map.Value
+
+local RayParams = RaycastParams.new()
+local Player = Players.localPlayer
+local Character = Player.Character
+local HumanoidRootPart: Part = Character.HumanoidRootPart
+
+local lastWater
+local lastSwimming
+local timeIn = 0
+
+local Fans = {}
+local Collisions = {}
+
+
+script.Parent = Player.PlayerScripts
+RayParams.FilterDescendantsInstances = {script.Map.Value}
+RayParams.FilterType = Enum.RaycastFilterType.Whitelist
+
+
+function Collisions.Wedge(Part1, Part2)
+	local Point = Part2.CFrame:Inverse() * Part1
+	local Size = Part2.Size
+
+	local X = Point.X > -Size.X / 2 and Point.X &lt; Size.X / 2
+	local Y = Point.Y &lt; (Size.Y / Size.Z) * Point.Z and Point.Y > -Size.Y / 2
+	local Z = Point.Z > (Size.Y / Size.Z) * Point.Y and Point.Z &lt; Size.Z / 2
+
+	return X and Y and Z
+end
+
+function Collisions.Block(Part1, Part2, IgnoreY)
+	local Point = Part2.CFrame:Inverse() * Part1
+	local Size = Part2.Size
+
+	local X = Point.X > -Size.X / 2 and Point.X &lt; Size.X / 2
+	local Y = Point.Y > -Size.Y / 2 and Point.Y &lt; Size.Y / 2
+	local Z = Point.Z > -Size.Z / 2 and Point.Z &lt; Size.Z / 2
+
+	return X and (IgnoreY or Y) and Z
+end
+
+function Collisions.Cylinder(Part1, Part2)
+	local Point = Part2.CFrame:Inverse() * Part1
+	local CPos = (Point * Vector3.new(0, 1, 1))
+	local Size = Part2.Size
+
+	local X = Point.X > -Size.X / 2 and Point.X &lt; Size.X / 2
+	local mag = CPos.Magnitude &lt; math.min(Size.Y, Size.Z) / 2
+
+	return X and mag
+end
+
+function Collisions.Ball(Part1, Part2)
+	local Point = Part2.CFrame:Inverse() * Part1
+	local Size = Part2.Size
+
+	local mag = Point.Magnitude &lt; Size.X / 2
+
+	return mag
+end
+
+function Collisions.CornerWedge(Part1, Part2)
+	local Size = Part2.Size
+
+	local Point1 = (Part2.CFrame * CFrame.Angles(0, math.pi/2, 0)):Inverse() * Part1
+	local X1 = Point1.X > -Size.X / 2 and Point1.X &lt; Size.X / 2
+	local Y1 = Point1.Y &lt; (Size.Y / Size.Z) * Point1.Z and Point1.Y > -Size.Y / 2
+	local Z1 = Point1.Z > (Size.Y / Size.Z) * Point1.Y and Point1.Z &lt; Size.Z / 2
+
+	local Point2 = (Part2.CFrame * CFrame.Angles(0, math.pi, 0)):Inverse() * Part1
+	local X2 = Point2.X > -Size.X / 2 and Point2.X &lt; Size.X / 2
+	local Y2 = Point2.Y &lt; (Size.Y / Size.Z) * Point2.Z and Point2.Y > -Size.Y / 2
+	local Z2 = Point2.Z > (Size.Y / Size.Z) * Point2.Y and Point2.Z &lt; Size.Z / 2
+
+	return X1 and Y1 and Z1 and X2 and Y2 and Z2
+end
+
+
+local function CheckCollision(PosToCheck, Part: BasePart, IgnoreY)
+
+	if Part:IsA("UnionOperation") or Part:IsA("MeshPart") then
+		return
+	end
+
+	local Position = if typeof(PosToCheck) == "CFrame" then PosToCheck.Position elseif typeof(PosToCheck) == "Vector3" then PosToCheck elseif PosToCheck:IsA("BasePart") then PosToCheck.Position elseif PosToCheck:IsA("Attachment") then PosToCheck.WorldPosition else Vector3.new()
+	if Part:IsA("WedgePart") then
+		return Collisions.Wedge(Position, Part)
+	elseif Part:IsA("CornerWedgePart") then
+		return Collisions.CornerWedge(Position, Part)
+	elseif Part:IsA("Part") then
+		if Part.Shape == Enum.PartType.Block then
+			return Collisions.Block(Position, Part, IgnoreY)
+		elseif Part.Shape == Enum.PartType.Cylinder then
+			return Collisions.Cylinder(Position, Part)
+		elseif Part.Shape == Enum.PartType.Ball then
+			return Collisions.Ball(Position, Part)
+		end
+	end
+
+	return
+end
+
+
+
+local function GetNearbyFans()
+	local NearbyFans = {}
+	local Position = HumanoidRootPart.Position
+
+	for _, Fan in pairs(Fans) do
+		local localPos = Fan.CFrame:Inverse() * Position
+
+		if localPos.Z &lt; 0 and localPos.Z > -Fan:GetAttribute("Distance") and Fan.Enabled.Value then
+			local Types = {}
+
+			function Types.Square()
+				local X = localPos.X > -Fan.Size.X / 2 and localPos.X &lt; Fan.Size.X / 2
+				local Y = localPos.Y > -Fan.Size.Y / 2 and localPos.Y &lt; Fan.Size.Y / 2
+				return X and Y
+			end
+
+			function Types.Cylinder()
+				local Pos = localPos * Vector3.new(1, 1, 0)
+				return Pos.Magnitude &lt; math.min(Fan.Size.X / 2, Fan.Size.Y / 2)
+			end
+
+			if Types[Fan:GetAttribute("Shape")]() then
+				table.insert(NearbyFans, Fan)
+			end
+		end
+	end
+
+	return NearbyFans
+end
+
+local function GetWater()
+	for _, Part: BasePart in pairs(workspace:GetPartsInPart(HumanoidRootPart)) do
+		if Part.Name:sub(1, 7) == "_Liquid" then
+			return Part
+		end
+	end
+end
+
+RunService.Heartbeat:Connect(function(deltaTime: number)
+	local Water = lastWater or GetWater()
+
+	if Water and CheckCollision(HumanoidRootPart, Water) then
+		lastWater = Water
+		lastSwimming = true
+		timeIn = math.min(timeIn + deltaTime * 2, 1)
+
+		for _, Fan: BasePart in pairs(GetNearbyFans()) do
+			local localPos = Fan.CFrame:Inverse() * HumanoidRootPart.Position
+
+			local Raycast = workspace:Raycast(HumanoidRootPart.Position, -Fan.CFrame.LookVector * Fan:GetAttribute("Distance"), RayParams)
+
+			if Raycast then
+				local Normal = Raycast.Normal
+
+				HumanoidRootPart.CFrame += Normal * Fan:GetAttribute("Speed") * deltaTime * timeIn
+			end
+		end
+	else
+		if lastSwimming then
+			local Fans = GetNearbyFans()
+			local Fan = Fans and Fans[1]
+
+			if Fan then
+				local Raycast = workspace:Raycast(HumanoidRootPart.Position, (Fan.Position - HumanoidRootPart.Position).Unit * Fan:GetAttribute("Distance"), RayParams)
+
+				HumanoidRootPart:ApplyImpulse(Raycast.Normal * Fan:GetAttribute("Speed") * 12)
+			end
+
+			lastSwimming = false
+		end
+
+		timeIn = 0
+		lastWater = nil
+	end
+end)
+
+
+-- initiate
+
+
+for _, part: Instance in pairs(script.Map.Value:GetDescendants()) do
+	if part:IsA("BasePart") and not (part:IsA("UnionOperation") or part:IsA("MeshPart")) then
+		if part.Name:sub(1, 9) == "_WaterJet" then
+			if part:GetAttribute("Shape") ~= "Square" and part:GetAttribute("Shape") ~= "Cylinder" then
+				warn(string.format("%s is not a valid waterjet shape for fan %s.", part:GetAttribute("Shape") or "No shape defined", part:GetFullName()))
+				continue
+			end
+
+			table.insert(Fans, part)
+
+			part.Enabled.Changed:Connect(function()
+				if part:FindFirstChild("FanParticleEmitter") then
+					part.FanParticleEmitter.Enabled = part.Enabled.Value
+				end
+			end)
+
+			if part:GetAttribute("ParticleId") ~= 0 then
+				local ParticleEmitter = script.ParticleEmitter:Clone()
+				ParticleEmitter.Speed = NumberRange.new(part:GetAttribute("Speed"), part:GetAttribute("Speed"))
+				ParticleEmitter.Lifetime = NumberRange.new(part:GetAttribute("Distance") / part:GetAttribute("Speed"), part:GetAttribute("Distance") / part:GetAttribute("Speed"))
+				ParticleEmitter.Rate = part.Size.X * part.Size.Y / 144 * 32
+				ParticleEmitter.Enabled = part.Enabled.Value
+				ParticleEmitter.Parent = part
+				ParticleEmitter.Name = "FanParticleEmitter"
+				ParticleEmitter.Texture = "rbxassetid://" .. part:GetAttribute("ParticleId")
+				ParticleEmitter.Shape = Enum.ParticleEmitterShape[part:GetAttribute("Shape") == "Cylinder" and "Disc" or "Box"]
+			end
+		end
+	end
+end
+
+Player.Character.Humanoid.Died:Connect(function()
+	task.wait(4)
+	script:Destroy()
+end)
+
+task.wait(script.Map.Value.Settings.Main:GetAttribute("MaxTime"))
+script:Destroy()</string>
+              </Properties>
+            </Item>
+          </Item>
+        </Item>
+      </Item>
+      <Item class="Folder" referent="12">
+        <Properties>
+          <string name="Name">Modules</string>
+        </Properties>
+        <Item class="ModuleScript" referent="13">
+          <Properties>
+            <string name="Name">Button</string>
+            <string name="Source"><![CDATA[--[[
+	Button handler. Handles the selection of objects, and changes the object accordingly to user input.
+	
+	Adds or removes the tags / object to the selected parts. Does not handle with the tag-specific data.
+]]
+local Selection = game:GetService("Selection")
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+
+local Maid = require(script.Parent.Other.Maid)
+local Signal = require(script.Parent.Other.Signal)
+local SelectMap = require(script.Parent.SelectMap)
+local UtilModule = require(script.Parent.UtilFuncs)
+local ButtonPropHandler = require(script.PropertyUI)
+
+local UI = UtilModule.UI
+
+button = {}
+button.__index = button
+
+
+
+function button.new(Name, Type)
+	local self = {
+		Activated = false,
+		Maid = Maid.new(),
+		Name = Name,
+		Type = Type,
+		UI = UI.Frames:FindFirstChild(Name, true),
+		UIProperties = UI.Frames:FindFirstChild(Name .. "Frame", true),
+		Updated = Signal.new()
+	}
+
+	if self.UIProperties then
+		self.PropHandler = ButtonPropHandler.new(self)
+	end
+
+	local function ThemeChanged()
+		local Color = self.Activated and settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.CurrentMarker, Enum.StudioStyleGuideModifier.Selected) or settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.Mid)
+		self.UI.BackgroundColor3 = Color
+	end
+	settings().Studio.ThemeChanged:Connect(ThemeChanged)
+	ThemeChanged()
+
+	local function UpdateProperties()
+		local Types = {}
+
+		function Types.Button()
+			if self.Name == "_Sound" then
+
+			else
+
+			end
+		end
+		function Types.Object()
+			local Types = {}
+
+			function Types.WallRun()
+
+			end
+			function Types.WallJump()
+
+			end
+			function Types._SpeedBooster()
+
+			end
+			function Types._JumpBooster()
+
+			end
+
+			Types[self.Name]()
+		end
+		function Types.ButtonObj()
+
+		end
+		function Types.Water()
+
+		end
+		Types[self.Type]()
+	end
+
+	local function SelectionChanged()
+		if not UtilModule.Map then return end
+
+		local Selected = Selection:Get()
+
+		if #Selected == 0 then
+			self.Activated = false
+		else
+			self.Activated = UtilModule.ArePartsTagged(Selected, self.Name)
+		end
+
+		local Color = self.Activated and settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.CurrentMarker, Enum.StudioStyleGuideModifier.Selected) or settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.Mid)
+		self.UI.BackgroundColor3 = Color
+
+		if self.UIProperties then
+			self.UIProperties.Visible = self.Activated
+		end
+
+		self.Updated:Fire(UtilModule.ArePartsTagged(Selected, self.Name), Selected)
+	end
+	if self.Type then
+		Selection.SelectionChanged:Connect(SelectionChanged)
+
+		SelectMap.MapChanged:Connect(function(Map)
+			if Map then
+				SelectionChanged()
+			else
+				self.Activated = false
+				local Color = self.Activated and settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.CurrentMarker, Enum.StudioStyleGuideModifier.Selected) or settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.Mid)
+				self.UI.BackgroundColor3 = Color
+
+				if self.UIProperties then
+					self.UIProperties.Visible = false
+				end
+			end
+		end)
+	end
+
+	local function ButtonClicked()
+		if not UtilModule.Map then return end
+
+		if #Selection:Get() == 0 then return end
+
+		ChangeHistoryService:SetWaypoint(string.format("Updating %s part(s) with %s tag.", tostring(#Selection:Get()), self.Name))
+
+		self.Activated = not self.Activated
+
+		if self.Activated then
+			local Types = {}
+
+			function Types.Button()
+				for _, Part in pairs(Selection:Get()) do
+					local CurrentTag = UtilModule.GetTag(Part, self.Name)
+
+					if not CurrentTag then
+						local Tag = self.Name == "_Sound" and Instance.new("Sound") or Instance.new("ObjectValue")
+						Tag.Name = self.Name .. 1
+						Tag.Parent = Part
+					end
+				end
+			end
+			function Types.Object()
+				for _, Part in pairs(Selection:Get()) do
+					local CurrentTag = UtilModule.GetTag(Part, self.Name)
+
+					if not CurrentTag then
+						local Tag = self.Name == "_WallRun" and Instance.new("NumberValue") or Instance.new("ObjectValue")
+						Tag.Name = self.Name
+						Tag.Parent = Part
+					end
+				end
+			end
+			function Types.Kill()
+				Types.Object()
+			end
+			function Types.ButtonObj()
+				self.Activated = not self.Activated
+			end
+			function Types.Water()
+				for _, Part in pairs(Selection:Get()) do
+					if Part:IsA("BasePart") then
+						Part.Name = "_Liquid0"
+						Part:SetAttribute("Type", "water")
+					end
+				end
+			end
+			function Types.AirTank()
+				self.Activated = not self.Activated
+			end
+			function Types.Detail()
+				if not UtilModule.Map:FindFirstChild("Detail") then
+					local Folder = Instance.new("Folder")
+					Folder.Parent = UtilModule.Map
+					Folder.Name = "Detail"
+				end
+				
+				for _, Part in pairs(Selection:Get()) do
+					Part.Parent = UtilModule.Map.Detail
+				end
+			end
+			function Types.Boost()
+				for _, Part in pairs(Selection:Get()) do
+					Part.Name = self.Name
+					Part:SetAttribute("Speed", 0)
+				end
+			end
+
+			Types[self.Type]()
+		else
+			local Types = {}
+
+			function Types.Button()
+				for _, Part in pairs(Selection:Get()) do
+					local Tag = UtilModule.GetTag(Part, self.Name)
+					if Tag then
+						Tag.Parent = nil
+					end
+				end
+			end
+			function Types.Object()
+				for _, Part in pairs(Selection:Get()) do
+					local Tag = UtilModule.GetTag(Part, self.Name)
+					if Tag then
+						Tag.Parent = nil
+					end
+				end
+			end
+			function Types.Kill()
+				Types.Object()
+			end
+			function Types.ButtonObj()
+				self.Activated = not self.Activated
+			end
+			function Types.Water()
+				for _, Part in pairs(Selection:Get()) do
+					if Part:IsA("BasePart") then
+						Part.Name = Part.ClassName
+						Part:SetAttribute("Type", nil)
+					end
+				end
+			end
+			function Types.AirTank()
+
+			end
+			function Types.Detail()
+				local Folder = UtilModule.Map:FindFirstChild("Geometry")
+				
+				if not Folder then
+					Folder = Instance.new("Folder")
+					Folder.Parent = UtilModule.Map
+					Folder.Name = "Geometry"
+				end
+				
+				for _, Part in pairs(Selection:Get()) do
+					Part.Parent = Folder
+					Part:SetAttribute("_Detail", false)
+				end
+			end
+			function Types.Boost()
+				for _, Part in pairs(Selection:Get()) do
+					Part.Name = Part.ClassName
+					Part:SetAttribute("Speed", nil)
+				end
+			end
+
+			Types[self.Type]()
+		end
+
+		local Color = self.Activated and settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.CurrentMarker, Enum.StudioStyleGuideModifier.Selected) or settings().Studio.Theme:GetColor(Enum.StudioStyleGuideColor.Mid)
+		self.UI.BackgroundColor3 = Color
+
+		if self.UIProperties then
+			self.UIProperties.Visible = self.Activated
+		end
+
+		ChangeHistoryService:SetWaypoint(string.format("Updated %s part(s) with %s tag.", tostring(#Selection:Get()), self.Name))
+	end
+	self.UI.MouseButton1Click:Connect(ButtonClicked)
+
+	return setmetatable(self, button)
+end
+
+function button:Destroy()
+	self.Maid:DoCleaning()
+
+	if self.UIProperties then
+		self.PropHandler:Destroy()
+	end
+end
+
+return button
+]]></string>
+          </Properties>
+          <Item class="ModuleScript" referent="14">
+            <Properties>
+              <string name="Name">PropertyUI</string>
+              <string name="Source">--[[
+	Handles all tag-specific data, and altering of that data. Works in parody with the Button class.
+]]
+
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+
+local UtilFuncs = require(script.Parent.Parent.UtilFuncs)
+local Maid = require(script.Parent.Parent.Other.Maid)
+local Signal = require(script.Parent.Parent.Other.Signal)
+
+propertyUI = {}
+propertyUI.__index = propertyUI
+
+
+
+function propertyUI.new(Main)
+	local self = {
+		BtnHandler = Main,
+		Maid = Maid.new()
+	}
+
+	self.BtnHandler.Updated:Connect(function(AllActivated, Selected)
+		self.Maid:DoCleaning()
+
+		if typeof(Selected) == "Instance" then
+			Selected = {Selected}
+		end
+
+		local UI = self.BtnHandler.UIProperties
+		local Types = {}
+
+		function Types.Button()
+			if self.BtnHandler.Name == "_Sound" then
+				UI.Main.SoundId.SoundNum.Text = ""
+
+				local SoundMaid = Maid.new()
+
+				local function ObjectChanged()
+					local Val = ""
+
+					for _, Sound in pairs(Selected) do
+						if not Sound:IsDescendantOf(UtilFuncs.Map) then
+							continue
+						end
+
+						local Tag = UtilFuncs.GetTag(Sound, self.BtnHandler.Name)
+						if not Tag then
+							return
+						end
+
+						if Val == "" then 
+							Val = Tag.SoundId
+						end
+
+						if Val ~= Tag.SoundId then
+							UI.Main.SoundId.SoundNum.Text = ""
+							return
+						end
+					end
+
+					UI.Main.SoundId.SoundNum.Text = string.gsub(Val, "[^%d]+", "")
+				end
+
+				if AllActivated then
+					for _, Part in pairs(Selected) do
+						local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+
+						SoundMaid:GiveTask(Tag:GetPropertyChangedSignal("SoundId"):Connect(ObjectChanged))
+
+						local function AncestorChanged()
+							if not Tag or not Tag.Parent then
+								ObjectChanged()
+								UI.Visible = false
+								SoundMaid:DoCleaning()
+							end
+						end
+
+						SoundMaid:GiveTask(Tag.AncestryChanged:Connect(AncestorChanged))
+					end
+				end
+				ObjectChanged()
+
+				local function UpdateSound()
+					local Number = string.gsub(UI.Main.SoundId.SoundNum.Text, "[^%d]+", "")
+					local SoundId = "rbxassetid://" .. Number
+
+					if not Number or Number == "" then 
+						UI.Main.SoundId.SoundNum.Text = ""
+						return 
+					end
+
+					ChangeHistoryService:SetWaypoint("Changing Tag '_Sound' SoundId to " .. Number)
+
+					for _, Part in pairs(Selected) do
+						local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+						Tag.SoundId = SoundId
+					end
+
+					UI.Main.SoundId.SoundNum.Text = Number
+
+					ChangeHistoryService:SetWaypoint("Changed Tag '_Sound' SoundId to " .. Number)
+				end
+
+				SoundMaid:GiveTask(UI.Main.SoundId.SoundNum.FocusLost:Connect(UpdateSound))
+				self.Maid:GiveTask(SoundMaid)
+			end
+
+			UI.Main.Button.ButtonNum.Text = ""
+			UI.Main.Delay.DelayNum.Text = ""
+
+
+			-- ==== BUTTON NUM ==== --
+
+			local ButtonMaid = Maid.new()
+
+			local function ButtonNumChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					if not Part:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+					if not Tag then
+						return
+					end
+
+					if Val == "" then 
+						Val = Tag.Name
+					end
+
+					if Val ~= Tag.Name then
+						UI.Main.Button.ButtonNum.Text = ""
+						return
+					end
+				end
+
+				local Text = string.gsub(Val, "[^%d]+", "")
+				UI.Main.Button.ButtonNum.Text = Text
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+
+					ButtonMaid:GiveTask(Tag:GetPropertyChangedSignal("Name"):Connect(ButtonNumChanged))
+				end
+			end
+			ButtonNumChanged()
+
+			local function UpdateButtonNum()
+				local Text = string.gsub(UI.Main.Button.ButtonNum.Text, "[^%d]+", "")
+				if not Text or Text == "" then return end
+
+				local Number = math.max(tonumber(Text), 1)
+
+				if not Number or Number == "" then 
+					UI.Main.Button.ButtonNum.Text = ""
+					return 
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Button to %s", self.BtnHandler.Name, Number))
+
+				for _, Part in pairs(Selected) do
+					local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+					Tag.Name = self.BtnHandler.Name .. Number
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Button to %s", self.BtnHandler.Name, Number))
+			end 
+
+			ButtonMaid:GiveTask(UI.Main.Button.ButtonNum.FocusLost:Connect(UpdateButtonNum))
+			self.Maid:GiveTask(ButtonMaid)
+
+			-- ==== DELAY NUM ==== --
+
+			--[[
+				- If theres a _Delay object, then update
+				- Listen for an ObjectValue created, and if its name is _Delay
+				- listen for the object being deleted and update 
+				
+			]]
+
+			local DelayMaid = Maid.new()
+
+			local function DelayNumChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					if not Part:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+					if not Tag then return end
+
+					local DelayTag = Tag:FindFirstChild("_Delay")
+					if not DelayTag then
+						UI.Main.Delay.DelayNum.Text = ""
+						return 
+					end
+
+					if Val == "" then 
+						Val = DelayTag.Value
+					end
+
+					if Val ~= DelayTag.Value then
+						UI.Main.Delay.DelayNum.Text = ""
+						return
+					end
+				end
+
+				UI.Main.Delay.DelayNum.Text = Val
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+					local DelayTag = Tag:FindFirstChild("_Delay")
+
+					if DelayTag then
+						DelayMaid:GiveTask(DelayTag:GetPropertyChangedSignal("Value"):Connect(DelayNumChanged))
+						DelayNumChanged()
+
+						local function AncestorChanged()
+							if not Tag:FindFirstChild("_Delay") then
+								DelayNumChanged()
+							end
+						end
+						DelayMaid:GiveTask(Tag:FindFirstChild("_Delay").AncestryChanged:Connect(AncestorChanged))
+					end
+				end
+			end
+
+			local function UpdateDelay()
+				local Number = string.gsub(UI.Main.Delay.DelayNum.Text, "[^%d%p]+", "")
+
+				if not tonumber(Number) or Number == "" then 
+					UI.Main.Delay.DelayNum.Text = ""
+					return 
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Delay to %s", self.BtnHandler.Name, Number))
+
+				for _, Part in pairs(Selected) do
+					local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+					local DelayTag = Tag:FindFirstChild("_Delay")
+
+					if not DelayTag then
+						DelayTag = Instance.new("NumberValue")
+						DelayTag.Name = "_Delay"
+						DelayTag.Parent = Tag
+
+						DelayMaid:GiveTask(DelayTag:GetPropertyChangedSignal("Value"):Connect(DelayNumChanged))
+
+						local function AncestorChanged()
+							if not Tag:FindFirstChild("_Delay") then
+								DelayNumChanged()
+							end
+						end
+						DelayMaid:GiveTask(Tag:FindFirstChild("_Delay").AncestryChanged:Connect(AncestorChanged))
+					end
+
+					ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Delay to %s", self.BtnHandler.Name, Number))
+
+					DelayTag.Value = Number
+				end
+
+				UI.Main.Delay.DelayNum.Text = Number
+			end 
+
+			self.Maid:GiveTask(UI.Main.Delay.DelayNum.FocusLost:Connect(UpdateDelay))
+			self.Maid:GiveTask(DelayMaid)
+		end
+		function Types.ButtonObj()
+			UI.Main.Button.ButtonNum.Text = ""
+			UI.Main.Group.ImageButton.Image = "rbxassetid://6031068420"
+
+			-- ==== BUTTON NUM/PATH ==== --
+
+			local ButtonMaid = Maid.new()
+
+			local function ButtonNumChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					local function FindParts(part: Instance): boolean
+						return if part:FindFirstChild("Light") and part:FindFirstChild("Hitbox") then true else false
+					end
+
+					local Button = string.sub(Part.Name, 1, 7) == "_Button" and Part:IsA("Model") and FindParts(Part) and Part or string.sub(Part.Parent.Name, 1, 7) == "_Button" and Part.Parent:IsA("Model") and FindParts(Part.Parent) and Part.Parent
+					if not Part:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					if not Button then
+						return
+					end
+
+					if Val == "" then 
+						Val = Button.Name
+					end
+
+					if Val ~= Button.Name then
+						UI.Main.Button.ButtonNum.Text = ""
+						return
+					end
+				end
+
+				local Text = string.gsub(Val, "_Button", "")
+				local Path = string.gsub(Text, "%d", "")
+				Text = string.gsub(Text, "%a", "")
+
+				UI.Main.Button.ButtonNum.Text = Text
+				UI.Main.Path.PathNum.Text = Path
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					ButtonMaid:GiveTask(Part:GetPropertyChangedSignal("Name"):Connect(ButtonNumChanged))
+				end
+			end
+			ButtonNumChanged()
+
+			local function UpdateButtonNum()
+				local Text = string.gsub(UI.Main.Button.ButtonNum.Text, "[^%d]+", "")
+				if not Text or Text == "" then
+					UI.Main.Button.ButtonNum.Text = ""
+					return 
+				end
+				local Number = math.max(tonumber(Text), 0)
+				local Path = UI.Main.Path.PathNum.Text
+
+				if not Number or Number == "" then 
+					UI.Main.Button.ButtonNum.Text = ""
+					return 
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Number to %s", self.BtnHandler.Name, Number))
+
+				for _, Part in pairs(Selected) do
+					local function FindParts(part: Instance): boolean
+						return if part:FindFirstChild("Light") and part:FindFirstChild("Hitbox") then true else false
+					end
+
+					local Button = string.sub(Part.Name, 1, 7) == "_Button" and Part:IsA("Model") and FindParts(Part) and Part or string.sub(Part.Parent.Name, 1, 7) == "_Button" and Part.Parent:IsA("Model") and FindParts(Part.Parent) and Part.Parent
+
+					if Button then
+						Button.Name = "_Button" .. Number .. Path
+					end
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Number to %s", self.BtnHandler.Name, Number))
+			end 
+			ButtonMaid:GiveTask(UI.Main.Button.ButtonNum.FocusLost:Connect(UpdateButtonNum))
+			ButtonMaid:GiveTask(UI.Main.Path.PathNum.FocusLost:Connect(UpdateButtonNum))
+
+
+			-- ==== GROUP BUTTON ==== --
+
+
+			local function GroupChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					local function FindParts(part: Instance): boolean
+						return if part:FindFirstChild("Light") and part:FindFirstChild("Hitbox") then true else false
+					end
+
+					local Button = string.sub(Part.Name, 1, 7) == "_Button" and Part:IsA("Model") and FindParts(Part) and Part or string.sub(Part.Parent.Name, 1, 7) == "_Button" and Part.Parent:IsA("Model") and FindParts(Part.Parent) and Part.Parent
+
+					if not Button or not Button:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					if Val == "" then 
+						Val = Button:GetAttribute("Group")
+					end
+
+					if Val ~= Button:GetAttribute("Group") then
+						UI.Main.Group.ImageButton.Image = "rbxassetid://6031068420"
+						return
+					end
+				end
+
+				UI.Main.Group.ImageButton.Image = Val and "rbxassetid://6031068421" or "rbxassetid://6031068420"
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					ButtonMaid:GiveTask(Part:GetAttributeChangedSignal("Group"):Connect(GroupChanged))
+				end
+			end
+			GroupChanged()
+
+			local function UpdateGroup()
+				local State = UI.Main.Group.ImageButton.Image == "rbxassetid://6031068421"
+				State = not State
+
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Group to %s", self.BtnHandler.Name, tostring(State)))
+
+				for _, Part in pairs(Selected) do
+					Part:SetAttribute("Group", State)
+				end
+
+				UI.Main.Group.ImageButton.Image = State and "rbxassetid://6031068421" or "rbxassetid://6031068420"
+
+				ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Group to %s", self.BtnHandler.Name, tostring(State)))
+			end 
+			ButtonMaid:GiveTask(UI.Main.Group.ImageButton.MouseButton1Click:Connect(UpdateGroup))
+
+			self.Maid:GiveTask(ButtonMaid)
+		end
+
+		function Types.Object()
+			local Types = {}
+
+			function Types._WallRun()
+				UI.Main.Speed.SpeedNum.Text = ""
+
+				-- ==== WALLRU NSPEED ==== --
+
+				local SpeedMaid = Maid.new()
+
+				local function SpeedChanged()
+					local Val = ""
+
+					for _, Part in pairs(Selected) do
+						if not Part:IsDescendantOf(UtilFuncs.Map) then
+							continue
+						end
+
+						local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+						if not Tag then
+							return
+						end
+
+						if Val == "" then 
+							Val = Tag.Value
+						end
+
+						if Val ~= Tag.Value then
+							UI.Main.Speed.SpeedNum.Text = ""
+							return
+						end
+					end
+
+					if Val == "" or not Val then
+						UI.Main.Speed.SpeedNum.Text = ""
+						return
+					end
+
+					local Text = string.gsub(Val, "[^%d]+", "")
+					UI.Main.Speed.SpeedNum.Text = Text
+				end
+
+				if AllActivated then
+					for _, Part in pairs(Selected) do
+						local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+
+						SpeedMaid:GiveTask(Tag:GetPropertyChangedSignal("Value"):Connect(SpeedChanged))
+					end
+				end
+				SpeedChanged()
+
+				local function UpdateSpeed()
+					local Text = string.gsub(UI.Main.Speed.SpeedNum.Text, "[^%d]+", "")
+					local Number = math.max(tonumber(Text), 1)
+
+					if not Number or Number == "" then 
+						UI.Main.Speed.SpeedNum.Text = ""
+						return 
+					end
+
+					ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Speed to %s", self.BtnHandler.Name, Number))
+
+					for _, Part in pairs(Selected) do
+						local Tag = UtilFuncs.GetTag(Part, self.BtnHandler.Name)
+						Tag.Value = Number
+					end
+
+					ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Speed to %s", self.BtnHandler.Name, Number))
+				end 
+
+				SpeedMaid:GiveTask(UI.Main.Speed.SpeedNum.FocusLost:Connect(UpdateSpeed))
+				self.Maid:GiveTask(SpeedMaid)
+
+			end
+			if Types[self.BtnHandler.Name] then
+				Types[self.BtnHandler.Name]()
+			else
+				warn(self.BtnHandler.Name)
+			end
+
+		end
+		function Types.Boost()
+			UI.Main.Speed.SpeedNum.Text = ""
+
+			-- ==== BOOST SPEED ==== --
+
+			local SpeedMaid = Maid.new()
+
+			local function SpeedChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					if not Part:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					UI.Main.Speed.SpeedNum.Text = Part:GetAttribute("Speed") or ""
+				end
+
+				
+
+				
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					SpeedMaid:GiveTask(Part:GetAttributeChangedSignal("Speed"):Connect(SpeedChanged))
+				end
+			end
+			SpeedChanged()
+
+			local function UpdateSpeed()
+				local Text = string.gsub(UI.Main.Speed.SpeedNum.Text, "[^%d]+", "")
+				local Number = math.max(tonumber(Text), 1)
+
+				if not Number or Number == "" then 
+					UI.Main.Speed.SpeedNum.Text = ""
+					return 
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Speed to %s", self.BtnHandler.Name, Number))
+
+				for _, Part in pairs(Selected) do
+					Part:SetAttribute("Speed", Number)
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Speed to %s", self.BtnHandler.Name, Number))
+			end 
+
+			SpeedMaid:GiveTask(UI.Main.Speed.SpeedNum.FocusLost:Connect(UpdateSpeed))
+			self.Maid:GiveTask(SpeedMaid)
+		end
+
+		function Types.Water()
+			local function ResetColors()
+				UI.Main.LiquidType.Types.acid.TextColor3 = Color3.fromRGB(0, 214, 14)
+				UI.Main.LiquidType.Types.acid.TextStrokeTransparency = 1
+				UI.Main.LiquidType.Types.acid.TextSize = 14
+				UI.Main.LiquidType.Types.custom.TextColor3 = Color3.fromRGB(132, 7, 209)
+				UI.Main.LiquidType.Types.custom.TextStrokeTransparency = 1
+				UI.Main.LiquidType.Types.custom.TextSize = 14
+				UI.Main.LiquidType.Types.lava.TextColor3 = Color3.fromRGB(176, 44, 0)
+				UI.Main.LiquidType.Types.lava.TextStrokeTransparency = 1
+				UI.Main.LiquidType.Types.lava.TextSize = 14
+				UI.Main.LiquidType.Types.water.TextColor3 = Color3.fromRGB(2, 112, 181)
+				UI.Main.LiquidType.Types.water.TextStrokeTransparency = 1
+				UI.Main.LiquidType.Types.water.TextSize = 14
+			end
+			ResetColors()
+
+			-- ==== WATER NUM ==== --
+
+			local WaterMaid = Maid.new()
+
+			local function WaterNumChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					if not Part:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					if not string.find(Part.Name, "_Liquid", 1, true) then
+						return
+					end
+
+					if Val == "" then 
+						Val = Part.Name
+					end
+
+					if Val ~= Part.Name then
+						UI.Main.LiquidNum.LiquidNum.Text = ""
+						return
+					end
+				end
+
+				local Text = string.gsub(Val, "_Liquid", "")
+				UI.Main.LiquidNum.LiquidNum.Text = Text
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					WaterMaid:GiveTask(Part:GetPropertyChangedSignal("Name"):Connect(WaterNumChanged))
+				end
+			end
+			WaterNumChanged()
+
+			local function UpdateWaterNum()
+				local Text = string.gsub(UI.Main.LiquidNum.LiquidNum.Text, "[^%d]+", "")
+				if not Text then
+					UI.Main.LiquidNum.LiquidNum.Text = ""
+					return 
+				end
+				local Number = math.max(tonumber(Text), 0)
+
+				if not Number or Number == "" then 
+					UI.Main.LiquidNum.LiquidNum.Text = ""
+					return 
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Number to %s", self.BtnHandler.Name, Number))
+
+				for _, Part in pairs(Selected) do
+					Part.Name = "_Liquid" .. Number
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Number to %s", self.BtnHandler.Name, Number))
+			end 
+			WaterMaid:GiveTask(UI.Main.LiquidNum.LiquidNum.FocusLost:Connect(UpdateWaterNum))
+
+			-- ==== WATER STATE ==== --
+
+			local States = {
+				"water",
+				"acid",
+				"lava",
+				"custom"
+			}
+
+			local function WaterStateChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					if not Part:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					if not Part or not Part:GetAttribute("Type") or not string.find(Part.Name, "_Liquid", 1, true) and not table.find(States, Part:GetAttribute("Type")) then
+						ResetColors()
+						return
+					end
+
+					if Val == "" then 
+						Val = Part:GetAttribute("Type")
+					end
+
+					if Val ~= Part:GetAttribute("Type") or not table.find(States, Part:GetAttribute("Type")) then
+						ResetColors()
+						return
+					end
+				end
+
+				if Val == "" then
+					ResetColors()
+					return
+				end
+
+				UI.Main.LiquidType.Types[Val].TextStrokeTransparency = 0
+				UI.Main.LiquidType.Types[Val].TextSize = 16
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					WaterMaid:GiveTask(Part:GetAttributeChangedSignal("Type"):Connect(WaterStateChanged))
+				end
+			end
+			WaterStateChanged()
+
+			local function UpdateWaterState(state)
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' State to %s", self.BtnHandler.Name, state))
+
+				for _, Part in pairs(Selected) do
+					Part:SetAttribute("Type", state)
+				end
+
+				ResetColors()
+				UI.Main.LiquidType.Types[state].TextStrokeTransparency = 0
+				UI.Main.LiquidType.Types[state].TextSize = 16
+
+				ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' State to %s", self.BtnHandler.Name, state))
+			end 
+
+			for _, Button in pairs(UI.Main.LiquidType.Types:GetChildren()) do
+				if Button:IsA("GuiButton") then
+					WaterMaid:GiveTask(Button.MouseButton1Click:Connect(function()
+						UpdateWaterState(Button.Name)
+					end))
+				end
+			end
+
+			self.Maid:GiveTask(WaterMaid)
+		end
+
+
+		function Types.AirTank()
+			UI.Main.Oxygen.OxygenText.Text = ""
+
+			-- ==== BOOST SPEED ==== --
+
+			local SpeedMaid = Maid.new()
+
+			local function OxygenChanged()
+				local Val = ""
+
+				for _, Part in pairs(Selected) do
+					if not Part:IsDescendantOf(UtilFuncs.Map) then
+						continue
+					end
+
+					local Tank = Part.Name == "AirTank" and Part:IsA("Model") and Part or Part.Name == "Hitbox" and Part.Parent.Name == "AirTank" and Part.Parent:IsA("Model") and Part.Parent
+
+					if Tank then
+
+						UI.Main.Oxygen.OxygenText.Text = Tank:GetAttribute("Oxygen") or ""
+					end
+				end
+
+
+			end
+
+			if AllActivated then
+				for _, Part in pairs(Selected) do
+					SpeedMaid:GiveTask(Part:GetAttributeChangedSignal("Value"):Connect(OxygenChanged))
+				end
+			end
+			OxygenChanged()
+
+			local function UpdateOxygen()
+				local Text = string.gsub(UI.Main.Oxygen.OxygenText.Text, "[^%d]+", "")
+				local Number = math.max(tonumber(Text), 1)
+
+				if not Number or Number == "" then 
+					UI.Main.Oxygen.OxygenText.Text = ""
+					return 
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changing Tag '%s' Speed to %s", self.BtnHandler.Name, Number))
+
+				for _, Part in pairs(Selected) do
+					local Tank = Part.Name == "AirTank" and Part:IsA("Model") and Part or Part.Name == "Hitbox" and Part.Parent.Name == "AirTank" and Part.Parent:IsA("Model") and Part.Parent
+
+					if Tank then
+						Tank:SetAttribute("Oxygen", Number)
+					end
+				end
+
+				ChangeHistoryService:SetWaypoint(string.format("Changed Tag '%s' Speed to %s", self.BtnHandler.Name, Number))
+			end 
+
+			SpeedMaid:GiveTask(UI.Main.Oxygen.OxygenText.FocusLost:Connect(UpdateOxygen))
+			self.Maid:GiveTask(SpeedMaid)
+		end
+
+
+		Types[self.BtnHandler.Type]()
+
+		if not AllActivated then return end
+	end)
+
+	return setmetatable(self, propertyUI)
+end
+
+function propertyUI:Destroy()
+	self.Maid:DoCleaning()
+end
+
+
+return propertyUI</string>
+            </Properties>
+          </Item>
+        </Item>
+        <Item class="ModuleScript" referent="15">
+          <Properties>
+            <string name="Name">ObjectInsert</string>
+            <string name="Source">local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local Selection = game:GetService("Selection")
+local InsertService = game:GetService("InsertService")
+
+local Maid = require(script.Parent.Other.Maid)
+local Signal = require(script.Parent.Other.Signal)
+local UtilModule = require(script.Parent.UtilFuncs)
+
+local module = {}
+
+
+--[[
+	TODO
+	 - make sure addon isnt already installed
+	 - tell the player if it already is
+	 - tell the player it successfully installed
+]]
+
+for _, Type in pairs(UtilModule.UI.Frames.Insert:GetChildren()) do
+	if Type:IsA("Frame") then
+		for _, Button in pairs(Type:GetChildren()) do
+			if Button:IsA("TextButton") then
+
+				Button.MouseButton1Click:Connect(function()
+					if not UtilModule.Map and Type.Name ~= "MapKits" then
+						UtilModule.Warn("You need to have a map selected to load map components or map addons.")
+						warn("You need to have a map selected to load map components or map addons.")
+						return
+					end
+
+					if Button:GetAttribute("IsThirdParty") and not Button:GetAttribute("_ThirdPartyAgreed") then
+						UtilModule.Warn("[NOTICE] This asset is not made by TRIA or grif_0\n", true, "I understand", true)
+						Button:SetAttribute("_ThirdPartyAgreed", true)
+					end
+
+					local Types = {}
+
+					function Types.Components()
+						local Model = script.Parent.Parent.Inserts[Button.Name]:Clone()
+						Model:PivotTo(CFrame.new((workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -10)).Position))
+						Model.Parent = UtilModule.Map
+						Selection:Set({Model})
+
+						if Button.Name == "MapExit" then
+							Selection:Set({Model.ExitBlock, Model.ExitRegion})
+							Model.ExitBlock.Parent = UtilModule.Map
+
+							local Folder = UtilModule.Map:FindFirstChild("ExitRegion")
+							Model.ExitRegion.Parent = Folder and Folder:IsA("Folder") and Folder or UtilModule.Map
+							Model:Destroy()
+						elseif Button.Name == "Button" then
+							Model.Name = "_Button#"
+						end
+
+					end
+					function Types.MapKits()
+						local Names = {
+							JumpKit = "TRIA.os Jumps Kit by epicflamingo100",
+							MapKit = "TRIA.os Map Kit by TRIA",
+							TextureKit = "Texture Kit by Phexonia",
+						}
+						local Model = InsertService:LoadAsset(Button:GetAttribute("AssetId")) or script.Parent.Parent.Inserts:FindFirstChild(Button.Name) and script.Parent.Parent.Inserts:FindFirstChild(Button.Name):Clone()
+						Model:PivotTo(CFrame.new((workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -10)).Position))
+						Model.Parent = workspace
+
+						UtilModule.Warn(string.format("[NOTICE] Successfuly inserted %s \n", Names[Button.Name]) )
+						Model.Name = Names[Button.Name]
+						Selection:Set({Model})
+					end
+					function Types.Addons()
+
+						if UtilModule.Map.MapScript:FindFirstChild(Button.Name) then
+							UtilModule.Warn("You already have this addon installed.")
+							warn("You already have this addon installed.")
+							return
+						end
+
+						local Model = script.Parent.Parent.Inserts:FindFirstChild(Button.Name) and script.Parent.Parent.Inserts:FindFirstChild(Button.Name):Clone() or InsertService:LoadAsset(Button:GetAttribute("AssetId"))
+						Model:PivotTo(CFrame.new((workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -10)).Position))
+						Model.Parent = workspace
+						Selection:Set({Model})
+						Model.Parent = UtilModule.Map
+						if Button.Name == "Waterjet" then
+							Selection:Set({Model._WaterJet1})
+							Model._WaterJet1.Parent  = UtilModule.Map
+							Model.WaterJetMod.Parent = UtilModule.Map.MapScript
+							Model:Destroy()
+
+							UtilModule.Warn(string.format("[NOTICE] Successfuly installed %s\n", "Waterjet by grif_0") )
+							--plugin:OpenScript(UtilModule.Map.MapScript.WaterJetMod, 1)
+						elseif Button.Name == "EasyTP" then
+							UtilModule.Warn(string.format("[NOTICE] Successfuly installed %s\n", "EasyTP by grif_0") )
+							Model.EasyTP.Parent = UtilModule.Map.MapScript
+							Model:Destroy()
+							--plugin:OpenScript(UtilModule.Map.MapScript.EasyTP, 1)
+						end
+
+						warn("Successfully installed " .. Button.Name .. ".")
+					end
+
+					game:GetService("ChangeHistoryService"):SetWaypoint("Inserting object...")
+
+					Types[Type.Name]()
+
+					game:GetService("ChangeHistoryService"):SetWaypoint("Inserted object.")
+				end)
+			end
+		end
+	end
+end
+return module</string>
+          </Properties>
+        </Item>
+        <Item class="Folder" referent="16">
+          <Properties>
+            <string name="Name">Other</string>
+          </Properties>
+          <Item class="ModuleScript" referent="17">
+            <Properties>
+              <string name="Name">Maid</string>
+              <string name="Source">---	Manages the cleaning of events and other things.
+-- Useful for encapsulating state and make deconstructors easy.
+-- @classmod Maid
+-- @see Signal
+
+local Maid = {}
+Maid.ClassName = "Maid"
+
+--- Returns a new Maid object
+-- @constructor Maid.new()
+-- @treturn Maid
+function Maid.new()
+	return setmetatable({
+		_tasks = {}
+	}, Maid)
+end
+
+function Maid.isMaid(value)
+	return type(value) == "table" and value.ClassName == "Maid"
+end
+
+--- Returns Maid[key] if not part of Maid metatable
+-- @return Maid[key] value
+function Maid:__index(index)
+	if Maid[index] then
+		return Maid[index]
+	else
+		return self._tasks[index]
+	end
+end
+
+--- Add a task to clean up. Tasks given to a maid will be cleaned when
+--  maid[index] is set to a different value.
+-- @usage
+-- Maid[key] = (function)         Adds a task to perform
+-- Maid[key] = (event connection) Manages an event connection
+-- Maid[key] = (Maid)             Maids can act as an event connection, allowing a Maid to have other maids to clean up.
+-- Maid[key] = (Object)           Maids can cleanup objects with a `Destroy` method
+-- Maid[key] = nil                Removes a named task. If the task is an event, it is disconnected. If it is an object,
+--                                it is destroyed.
+function Maid:__newindex(index, newTask)
+	if Maid[index] ~= nil then
+		error(("'%s' is reserved"):format(tostring(index)), 2)
+	end
+
+	local tasks = self._tasks
+	local oldTask = tasks[index]
+
+	if oldTask == newTask then
+		return
+	end
+
+	tasks[index] = newTask
+
+	if oldTask then
+		if type(oldTask) == "function" then
+			oldTask()
+		elseif typeof(oldTask) == "RBXScriptConnection" then
+			oldTask:Disconnect()
+		elseif oldTask.Destroy then
+			oldTask:Destroy()
+		end
+	end
+end
+
+--- Same as indexing, but uses an incremented number as a key.
+-- @param task An item to clean
+-- @treturn number taskId
+function Maid:GiveTask(task)
+	if not task then
+		error("Task cannot be false or nil", 2)
+	end
+
+	local taskId = #self._tasks+1
+	self[taskId] = task
+
+	if type(task) == "table" and (not task.Destroy) then
+		warn("[Maid.GiveTask] - Gave table task without .Destroy\n\n" .. debug.traceback())
+	end
+
+	return taskId
+end
+
+function Maid:GivePromise(promise)
+	if not promise:IsPending() then
+		return promise
+	end
+
+	local newPromise = promise.resolved(promise)
+	local id = self:GiveTask(newPromise)
+
+	-- Ensure GC
+	newPromise:Finally(function()
+		self[id] = nil
+	end)
+
+	return newPromise
+end
+
+--- Cleans up all tasks.
+-- @alias Destroy
+function Maid:DoCleaning()
+	local tasks = self._tasks
+
+	-- Disconnect all events first as we know this is safe
+	for index, task in pairs(tasks) do
+		if typeof(task) == "RBXScriptConnection" then
+			tasks[index] = nil
+			task:Disconnect()
+		end
+	end
+
+	-- Clear out tasks table completely, even if clean up tasks add more tasks to the maid
+	local index, task = next(tasks)
+	while task ~= nil do
+		tasks[index] = nil
+		if type(task) == "function" then
+			task()
+		elseif typeof(task) == "RBXScriptConnection" then
+			task:Disconnect()
+		elseif task.Destroy then
+			task:Destroy()
+		end
+		index, task = next(tasks)
+	end
+end
+
+--- Alias for DoCleaning()
+-- @function Destroy
+Maid.Destroy = Maid.DoCleaning
+
+return Maid</string>
+            </Properties>
+          </Item>
+          <Item class="ModuleScript" referent="18">
+            <Properties>
+              <string name="Name">Signal</string>
+              <string name="Source">--- Lua-side duplication of the API of events on Roblox objects.
+-- Signals are needed for to ensure that for local events objects are passed by
+-- reference rather than by value where possible, as the BindableEvent objects
+-- always pass signal arguments by value, meaning tables will be deep copied.
+-- Roblox's deep copy method parses to a non-lua table compatable format.
+-- @classmod Signal
+
+local ENABLE_TRACEBACK = false
+
+local Signal = {}
+Signal.__index = Signal
+Signal.ClassName = "Signal"
+
+--- Constructs a new signal.
+-- @constructor Signal.new()
+-- @treturn Signal
+function Signal.new()
+	local self = setmetatable({}, Signal)
+
+	self._bindableEvent = Instance.new("BindableEvent")
+	self._argData = nil
+	self._argCount = nil -- Prevent edge case of :Fire("A", nil) --> "A" instead of "A", nil
+
+	self._source = ENABLE_TRACEBACK and debug.traceback() or ""
+
+	return self
+end
+
+--- Fire the event with the given arguments. All handlers will be invoked. Handlers follow
+-- Roblox signal conventions.
+-- @param ... Variable arguments to pass to handler
+-- @treturn nil
+function Signal:Fire(...)
+	if not self._bindableEvent then
+		warn(("Signal is already destroyed. %s"):format(self._source))
+		return
+	end
+
+	self._argData = {...}
+	self._argCount = select("#", ...)
+	self._bindableEvent:Fire()
+	-- self._argData = nil
+	-- self._argCount = nil
+end
+
+--- Connect a new handler to the event. Returns a connection object that can be disconnected.
+-- @tparam function handler Function handler called with arguments passed when `:Fire(...)` is called
+-- @treturn Connection Connection object that can be disconnected
+function Signal:Connect(handler)
+	if not (type(handler) == "function") then
+		error(("connect(%s)"):format(typeof(handler)), 2)
+	end
+
+	return self._bindableEvent.Event:Connect(function()
+		handler(unpack(self._argData, 1, self._argCount))
+	end)
+end
+
+--- Wait for fire to be called, and return the arguments it was given.
+-- @treturn ... Variable arguments from connection
+function Signal:Wait()
+	self._bindableEvent.Event:Wait()
+	assert(self._argData, "Missing arg data, likely due to :TweenSize/Position corrupting threadrefs.")
+	return unpack(self._argData, 1, self._argCount)
+end
+
+--- Disconnects all connected events to the signal. Voids the signal as unusable.
+-- @treturn nil
+function Signal:Destroy()
+	if self._bindableEvent then
+		self._bindableEvent:Destroy()
+		self._bindableEvent = nil
+	end
+
+	self._argData = nil
+	self._argCount = nil
+
+	setmetatable(self, nil)
+end
+
+return Signal</string>
+            </Properties>
+          </Item>
+        </Item>
+        <Item class="ModuleScript" referent="19">
+          <Properties>
+            <string name="Name">SelectMap</string>
+            <string name="Source"><![CDATA[local Selection = game:GetService("Selection")
+local ServerStorage = game:GetService("ServerStorage")
+local StudioService = game:GetService("StudioService")
+
+local Maid = require(script.Parent.Other.Maid)
+local Signal = require(script.Parent.Other.Signal)
+
+local UtilModule = require(script.Parent.UtilFuncs)
+
+local UI = UtilModule.UI
+local StudioTheme = settings().Studio.Theme
+
+local module = {}
+
+module.Maid = Maid.new()
+module.MapChanged = Signal.new()
+
+function module.SelectMap(Map)
+	local Selected = Selection:Get()
+
+	local function Reset()
+		if UtilModule.Map then 
+			UI.ChosenMap.SelectMap.Text = UtilModule.Map.Settings.Main:GetAttribute("Name")
+			UI.ChosenMap.SelectMap.TextColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.TitlebarText)
+			UI.NoMapSelected.Visible = false
+			ServerStorage.TRIAosTools_Plugin[StudioService:GetUserId()].Map.Value = UtilModule.Map
+
+			module.MapChanged:Fire(UtilModule.Map)
+		else
+			UI.ChosenMap.SelectMap.Text = "No map selected"
+			UI.ChosenMap.SelectMap.TextColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.ErrorText)
+			UI.NoMapSelected.Visible = true
+			ServerStorage.TRIAosTools_Plugin[StudioService:GetUserId()].Map.Value = nil
+			module.Maid:DoCleaning()
+			module.MapChanged:Fire(nil)
+		end
+		Selection:Set(Selected)
+	end
+
+	if not Map then
+		UI.ChosenMap.SelectMap.Text = "Click model to select"
+		UI.ChosenMap.SelectMap.TextColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.DimmedText)
+
+		Selection:Remove(Selection:Get())
+		Selection.SelectionChanged:Wait()
+	end
+	local Model = Map and {Map} or Selection:Get()
+
+	if #Model == 1 then
+		Model = Model[1]
+
+		-- Check if its a FE2 map / FP275 (they use the same map kit?)
+
+		local IsFE2 = false
+		local IsD2 = false
+
+		local EventScript = Model:FindFirstChild("EventScript")
+
+		if EventScript and string.find(EventScript.Source, "workspace.Multiplayer.GetMapVals:Invoke()", 1, true) then
+			IsFE2 = true
+		end
+
+		local Variants = Model:FindFirstChild("_Variants")
+		local Variant = Variants and Variants:FindFirstChild("Variant")
+		if Variants and Variant and Variant:IsA("Model") then
+			IsFE2 = true
+		end
+
+		local Rope = Model:FindFirstChild("_Rope", true)
+		if Rope and Rope:FindFirstChild("Point1") then
+			IsFE2 = true
+		end
+
+		local Settings = Model:FindFirstChild("Settings")
+		local Setting = Settings and (Settings:FindFirstChild("BGM") or Settings:FindFirstChild("Creator") or Settings:FindFirstChild("Difficulty") or Settings:FindFirstChild("MapImage") or Settings:FindFirstChild("MapName") or Settings:FindFirstChild("MaxTime"))
+
+		if Model:FindFirstChild("_Rescue") and Setting and Settings:FindFirstChild("Rescue") then
+			IsFE2 = true
+		end
+
+		if Setting and Setting:IsA("ValueBase") then
+			IsFE2 = true
+		end
+
+		-- Check if its a D2 map
+
+		local Wall = Model:FindFirstChild("ExitWall")
+		if Wall and not Wall.CanCollide then
+			IsD2 = true
+		end
+
+		local EventScript = Model:FindFirstChild("EventScript")
+
+		if EventScript and string.find(EventScript.Source, "local D2, Map = workspace.MapTest.GetMapFunctions:Invoke(), script.Parent", 1, true) then
+			IsD2 = true
+		end
+
+
+
+
+		if IsFE2 then
+			UtilModule.Warn("FE2 map detected. This plugin only supports TRIA.os maps. Use the TRIA.os converter plugin by TRIA to convert this to a TRIA.os map.", nil, nil, true)
+			warn("FE2 map detected. This plugin only supports TRIA.os maps. Use the TRIA.os converter plugin by TRIA to convert this to a TRIA.os map.")
+			Reset()
+			return
+		end
+		if IsD2 then
+			UtilModule.Warn("D2 map detected. This plugin only supports TRIA.os maps. Use the TRIA.os converter plugin by TRIA to convert this to a TRIA.os map.", nil, nil, true)
+			warn("D2 map detected. This plugin only supports TRIA.os maps. Use the TRIA.os converter plugin by TRIA to convert this to a TRIA.os map.")
+			Reset()
+			return
+		end
+
+		if not Model:IsA("Model") then
+			UtilModule.Warn("Map must be a model.")
+			warn("Map must be a model.")
+			Reset()
+			return
+		end
+		if not Model:FindFirstChild("Spawn") then
+			UtilModule.Warn("Cannot select map: Map is missing a Spawn.")
+			warn("Cannot select map: Map is missing a Spawn.")
+			Reset()
+			return
+		end
+		if not Model:FindFirstChild("ExitRegion") then
+			UtilModule.Warn("Cannot select map: Map is missing an ExitRegion.")
+			warn("Cannot select map: Map is missing an ExitRegion.")
+			Reset()
+			return
+		end
+		if not Model:FindFirstChild("MapScript") then
+			UtilModule.Warn("Cannot select map: Map is missing a MapScript.")
+			warn("Cannot select map: Map is missing a MapScript.")
+			Reset()
+			return
+		end
+		local Settings = Model:FindFirstChild("Settings")
+
+		local LiquidSetting = Settings:FindFirstChild("Liquids")
+		local LightingSetting = Settings:FindFirstChild("Lighting")
+		local MainSetting = Settings:FindFirstChild("Main")
+		local ButtonsSetting = Settings:FindFirstChild("Buttons")
+
+		local CustomLiquidSetting = LiquidSetting and LiquidSetting:FindFirstChild("custom") or true
+
+		--local DefaultButtonSetting = ButtonsSetting and ButtonsSetting:FindFirstChild("Default")
+		--local GroupButtonSetting = ButtonsSetting and ButtonsSetting:FindFirstChild("Group")
+		if not Settings or not LiquidSetting or not LightingSetting or not MainSetting or not (ButtonsSetting or Settings:FindFirstChild("Button")) or not CustomLiquidSetting then
+			UtilModule.Warn("Cannot select map: Map is missing its Settings. Possibly missing the Settings folder, Liquids, Button, Lighting, Main.")
+			warn("Cannot select map: Map is missing its Settings. Possibly missing the Settings folder, Liquids, Button, Lighting, Main.")
+			Reset()
+			return
+		end
+
+		Selection:Set(Selected)
+		module.MapChanged:Fire(Model)
+		module.Maid:DoCleaning()
+		UtilModule:Cleanup()
+		UtilModule.Map = Model
+		ServerStorage.TRIAosTools_Plugin[StudioService:GetUserId()].Map.Value = Model
+		UI.ChosenMap.SelectMap.Text = Model.Settings.Main:GetAttribute("Name")
+		UI.NoMapSelected.Visible = false
+		UI.ChosenMap.SelectMap.TextColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.TitlebarText)
+
+		local function NameChanged()
+			UI.ChosenMap.SelectMap.Text = Model.Settings.Main:GetAttribute("Name")
+		end
+		module.Maid:GiveTask(Model.Settings.Main:GetAttributeChangedSignal("Name"):Connect(NameChanged))
+
+		local function MapRemoved()
+			if not UtilModule.Map or not UtilModule.Map.Parent then
+				module.ClearMap()
+			end 
+		end
+
+		if not Model.Settings.Main:GetAttribute("_KitVersion") then
+			UtilModule.Warn("[NOTICE] This map is using a pre V0.6 MapKit version.\n\n Some features may not work or be supported because this plugin only supports the most recent version of the MapKit.\n\n It is reccomended that you convert your map over to the newest MapKit version.\n", true, "I understand", true)
+		end
+		module.Maid:GiveTask(Model.AncestryChanged:Connect(MapRemoved))
+	end
+end
+
+function module.ClearMap(store)
+	UtilModule.Map = nil
+	UI.NoMapSelected.Visible = true
+	UI.ChosenMap.SelectMap.Text = "No map selected"
+	UI.ChosenMap.SelectMap.TextColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.ErrorText)
+
+	module.Maid:DoCleaning()
+	module.MapChanged:Fire(nil)
+	if not store then
+		ServerStorage.TRIAosTools_Plugin[StudioService:GetUserId()].Map.Value = nil
+	end
+end
+
+settings().Studio.ThemeChanged:Connect(function()
+	StudioTheme = settings().Studio.Theme
+end)
+
+
+
+return module
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="20">
+          <Properties>
+            <string name="Name">Settings</string>
+            <string name="Source"><![CDATA[local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+
+local Maid = require(script.Parent.Other.Maid)
+local Signal = require(script.Parent.Other.Signal)
+local UtilModule = require(script.Parent.UtilFuncs)
+local SelectMap = require(script.Parent.SelectMap)
+local SelectColor = require(script.SelectColor)
+
+local UI = UtilModule.UI
+local ColorFrame = UI.ColorWheel.Main
+
+--[[
+	TODO
+	 - Create UI [DONE]
+	 - Dark + Light mode [DONE]
+	 - UI hints 
+	 - program color selector
+	 - Create a dropdown menu thing
+	 - Abillity to edit settings
+	 - Abillity to listen to settings to update
+	 - reset settings
+]]
+
+local module = {
+	Maid = Maid.new()
+}
+
+local function TextToOutput(Frame, Text, Color: boolean?)
+	local CurrentText = Frame.TextBox.Text
+	local Types = {}
+
+	function Types.String()
+		return Text, true
+	end
+	function Types.Number()
+		if tonumber(Text) then
+			return tonumber(Text), true
+		else
+			return Frame:GetAttribute("Last")
+		end
+	end
+	function Types.Color()
+		local Mult = 1
+
+		if typeof(Text) == "Color3" then
+			local NewText = string.format("%s, %s, %s", tostring(Text.R * 255), tostring(Text.G * 255), tostring(Text.B * 255))
+			Text = NewText
+		end
+
+		Text = string.gsub(Text, " ", "")
+		if string.find(Text, "Color3%.%a%a%a%(", 1) then
+			Text = string.gsub(Text, 'Color3%.%a%a%a%(', "")
+			Mult = 255
+		elseif string.find(Text, "Color3.%a%a%a%a%a%a%a%(", 1) then
+			Text = string.gsub(Text, 'Color3%.%a%a%a%a%a%a%a%(', "")
+		end
+		Text = string.gsub(Text, "%)", "")
+
+		local Texts = string.split(Text, ",")
+		for _, Thing in pairs(Texts) do
+			if not tonumber(Thing) then
+				return Frame:GetAttribute("Last")
+			end
+		end
+
+		if Color then
+			return #Texts == 3 and Color3.fromRGB(math.min(math.floor(Texts[1] * Mult + .5), 255), math.min(math.floor(Texts[2] * Mult + .5), 255), math.min(math.floor(Texts[3] * Mult + .5), 255)), true or Frame:GetAttribute("Last")
+		else
+			return #Texts == 3 and string.format("%s, %s, %s", tostring(math.min(math.floor(Texts[1] * Mult + .5), 255)), tostring(math.min(math.floor(Texts[2] * Mult + .5), 255)), tostring(math.min(math.floor(Texts[3] * Mult + .5), 255))), true or Frame:GetAttribute("Last")
+		end
+	end
+	function Types.Time()
+		local Texts = string.split(Text, ":")
+
+		if #Texts ~= 3 then
+			return Frame:GetAttribute("Last")
+		end
+		for i, Thing in pairs(Texts) do
+			if not tonumber(Thing) then
+				return Frame:GetAttribute("Last")
+			end
+			if #Thing == 1 then
+				Texts[i] = 0 .. Thing
+			elseif tonumber(Thing) and #Thing > 2 then
+				Texts[i] = string.sub(Thing, 1, 2)
+			end
+		end
+		return #Texts == 3 and string.format("%s:%s:%s", Texts[1], Texts[2], Texts[3]), true or Frame:GetAttribute("Last")
+	end
+	function Types.Boolean()
+		if tonumber(Text) then
+			return tonumber(Text), true
+		else
+			return Frame:GetAttribute("Last")
+		end
+	end
+	function Types.Dropdown()
+		return Text, true
+	end
+
+	--print(Frame:GetAttribute("Type"))
+	local Val1, Val2 = Types[Frame:GetAttribute("Type")]()
+	return Val1, Val2
+end
+
+
+
+for _, Button in pairs(UI.Frames.Settings:GetDescendants()) do
+	if Button.Name == "SelectColor" then
+		Button.MouseButton1Click:Connect(function()
+			local Frame = Button.Parent
+			SelectColor.SelectColor(Frame)
+		end)
+	end
+end
+
+SelectMap.MapChanged:Connect(function(Map)
+	module.Maid:DoCleaning()
+	ColorFrame.Parent.Visible = false
+
+	if not Map then
+		for _, Frame in pairs(UI.Frames.Settings:GetDescendants()) do
+			if Frame:IsA("TextBox") then
+				Frame.Parent:SetAttribute("Last", "")
+				Frame.Text = ""
+
+				if Frame.Parent:GetAttribute("Type") == "Boolean" then
+					Frame.Parent.Image.Image = "rbxassetid://6031068420"
+				end
+			end
+		end
+	else
+		local MapSettings = Map.Settings
+
+		for _, Frame in pairs(UI.Frames.Settings:GetDescendants()) do
+			if Frame:IsA("TextBox") then
+				Frame.Parent:SetAttribute("Last", "")
+				Frame.Text = ""
+			end
+		end
+
+		for _, Frame in pairs(UI.Frames.Settings:GetDescendants()) do
+			if Frame:IsA("TextBox") then
+				local Parents = {}
+
+				if Frame.Parent.Parent.Parent.Parent.Name == "Settings" then
+					table.insert(Parents, Frame.Parent.Parent.Parent.Name)
+					table.insert(Parents, Frame.Parent.Parent.Name)
+				else
+					table.insert(Parents, Frame.Parent.Parent.Name)
+				end
+
+				local Continue
+				local Value
+				local Setting = MapSettings
+				for _, Parent in pairs(Parents) do
+					if Frame.Parent.Name ~= "custom" then
+						if not Setting:FindFirstChild(Parent) then
+							Frame.TextEditable = false
+							Frame.TextColor3 = Color3.new()
+							Frame.TextStrokeColor3 = Color3.fromRGB(178, 178, 178)
+							Frame.TextStrokeTransparency = .25
+							Frame:SetAttribute("BlockTextColor", true)
+							Frame.Text = "[no setting found]"
+							Continue = true
+							break
+						end
+						Setting = Setting[Parent]
+					end
+				end
+
+				local Name = Frame.Parent.Name
+
+				if Continue then
+					continue
+				end
+
+				Frame:SetAttribute("BlockTextColor", false)
+				if Frame and Frame.Parent and Frame.Parent:GetAttribute("Type") ~= "Color" then
+					Frame.TextStrokeTransparency = 1
+
+					local StudioTheme = settings().Studio.Theme
+					local Color = Frame:GetAttribute("Theme") and StudioTheme:GetColor(Enum.StudioStyleGuideColor[Frame:GetAttribute("Theme")])
+					local TextColor  = Frame:GetAttribute("TextTheme") and StudioTheme:GetColor(Enum.StudioStyleGuideColor[Frame:GetAttribute("TextTheme")])
+					local TextStrokeColor  = Frame:GetAttribute("TextStrokeTheme") and StudioTheme:GetColor(Enum.StudioStyleGuideColor[Frame:GetAttribute("TextStrokeTheme")])
+
+					if TextColor and not Frame:GetAttribute("BlockTextColor") then
+						Frame.TextColor3 = TextColor
+					end
+					if Color then
+						Frame.BackgroundColor3 = Color
+					end
+					if TextStrokeColor and not Frame:GetAttribute("BlockTextColor") then
+						Frame.TextStrokeColor3 = TextStrokeColor
+					end
+					Frame.BorderColor3 = StudioTheme:GetColor(Enum.StudioStyleGuideColor.Border)
+				end
+
+				module.Maid:GiveTask(
+					Setting:GetAttributeChangedSignal(Name):Connect(function()
+						local Output = Setting:GetAttribute(Name)
+
+						Frame.Parent:SetAttribute("Last", Frame.Text)
+
+						if Frame.Parent:GetAttribute("Type") == "Color" then
+							Frame.Text = string.format("%s, %s, %s", tostring(math.floor(Output.R * 255 + .5)), tostring(math.floor(Output.G * 255 + .5)), tostring(math.floor(Output.B * 255 + .5)))
+							Frame.TextColor3 = Output
+						elseif Frame.Parent:GetAttribute("Type") == "Boolean" then
+							Frame.Parent.Image.Image = if Setting:GetAttribute(Name) then "rbxassetid://6031068421" else "rbxassetid://6031068420"
+						elseif Frame.Parent:GetAttribute("Type") == "Dropdown" then
+							Frame.Text = Output
+						end
+					end)
+				)
+
+				if not Frame.Parent:GetAttribute("NoEdit") then
+					if Frame.Parent:GetAttribute("Type") == "Boolean" then
+						module.Maid:GiveTask(
+							Frame.Parent.Image.MouseButton1Click:Connect(function()
+
+								ChangeHistoryService:SetWaypoint(string.format("Changing map settings %s.", Frame.Parent.Name))
+
+								local currentState = Frame:GetAttribute("Value")
+								local NewValue = not currentState
+
+								local Output, Success = TextToOutput(Frame.Parent, NewValue)
+
+								Frame:SetAttribute("Value", NewValue)
+								if Success then
+									Frame.Parent:SetAttribute("Last", currentState)
+									Setting:SetAttribute(Frame.Parent.Name, Output)
+								end
+
+								Frame.Parent.Image.Image = if NewValue then "rbxassetid://6031068421" else "rbxassetid://6031068420"
+								Setting:SetAttribute(Frame.Parent.Name, NewValue)
+								ChangeHistoryService:SetWaypoint(string.format("Changed map settings %s.", Frame.Parent.Name))
+							end))
+					elseif Frame.Parent:GetAttribute("Type") == "Dropdown" then
+						module.Maid:GiveTask(Frame.Parent.DropButton.MouseButton1Click:Connect(function()
+							if not Frame:GetAttribute("Dropdown") then
+								Frame:SetAttribute("Dropdown", true)
+								local Current = Frame.Text
+								local Value = UtilModule.DropdownMenu(Frame.Parent.Dropdown)
+
+								if Value then
+									local Output, Success = TextToOutput(Frame.Parent, Value)
+
+									if Success then
+										ChangeHistoryService:SetWaypoint(string.format("Changing map settings %s.", Frame.Parent.Name))
+										Frame.Text = Value
+										Frame.Parent:SetAttribute("Last", Current)
+
+										Setting:SetAttribute(Frame.Parent.Name, Output)
+										ChangeHistoryService:SetWaypoint(string.format("Changed map settings %s.", Frame.Parent.Name))
+									end
+								end
+
+								task.wait()
+								Frame:SetAttribute("Dropdown", false)
+							end
+						end))
+					else
+						if Frame.Parent.Name ~= "custom" then
+							module.Maid:GiveTask(
+								Frame.FocusLost:Connect(function()
+
+									ChangeHistoryService:SetWaypoint(string.format("Changing map settings %s.", Frame.Parent.Name))
+
+									local Text = Frame.Text
+									local Output, Success = TextToOutput(Frame.Parent, Frame.Text)
+									Frame.Text = Output
+
+									if Success then
+										Frame.Parent:SetAttribute("Last", Text)
+									end
+									if Frame.Parent:GetAttribute("Type") == "Color" then
+										Frame.TextColor3 = SelectColor.GetColorFromString(Output)
+										Setting:SetAttribute(Frame.Parent.Name, SelectColor.GetColorFromString(Output))
+									else
+										Setting:SetAttribute(Frame.Parent.Name, Output)
+									end
+
+									ChangeHistoryService:SetWaypoint(string.format("Changed map settings %s.", Frame.Parent.Name))
+								end))
+						end
+					end
+				end
+
+
+				if Frame.Parent:GetAttribute("Type") == "Color" then
+					local Color = Setting:GetAttribute(Frame.Parent.Name)
+					if not Color then
+						continue
+					end
+					Value = string.format("%s, %s, %s", tostring(math.floor(Color.R * 255 + .5)), tostring(math.floor(Color.G * 255 + .5)), tostring(math.floor(Color.B * 255 + .5)))
+				elseif Frame.Parent:GetAttribute("Type") == "Time" then
+					Value = Setting:GetAttribute("TimeOfDay") or Setting:GetAttribute("ClockTime")
+				elseif Frame.Parent:GetAttribute("Type") == "Boolean" then
+					Frame:SetAttribute("Value", Setting:GetAttribute(Frame.Parent.Name) or Frame.Parent:GetAttribute("Default"))
+					Frame.Parent.Image.Image = if Frame:GetAttribute("Value") then "rbxassetid://6031068421" else "rbxassetid://6031068420"
+				else
+					Value = Setting:GetAttribute(Frame.Parent.Name)
+				end
+
+				if not Value then
+					continue
+				end
+
+				Frame.Text = TextToOutput(Frame.Parent, Value)
+				Frame.Parent:SetAttribute("Last", Frame.Text or "")
+				if Frame.Parent:GetAttribute("Type") == "Color" then
+					Frame.TextColor3 = TextToOutput(Frame.Parent, Value, true)
+				end
+
+			end
+		end
+
+		module.Maid:GiveTask(
+			UI.Frames.Settings.Lighting.Import.TextButton.MouseButton1Click:Connect(function()
+
+				ChangeHistoryService:SetWaypoint("Importing settings from lighting to map")
+
+				for _, Frame in pairs(UI.Frames.Settings.Lighting:GetChildren()) do
+					if Frame:IsA("Frame") then
+						local Value = Lighting[Frame:GetAttribute("Type") == "Time" and "TimeOfDay" or Frame.Name]
+
+						Frame:SetAttribute("Last", Frame.TextBox.Text)
+						local Output, Success = TextToOutput(Frame, Value)
+						if Success then
+							Frame.TextBox.Text = Output
+						end
+
+						if Frame:GetAttribute("Type") == "Color" then
+							Frame.TextBox.TextColor3 = Value
+						end
+					end
+				end
+
+				ChangeHistoryService:SetWaypoint("Imported settings from lighting to map")
+			end)
+		)
+
+		module.Maid:GiveTask(
+			UI.Frames.Settings.Lighting.Export.TextButton.MouseButton1Click:Connect(function()
+
+				ChangeHistoryService:SetWaypoint("Exporting settings from lighting to map")
+
+				for _, Frame in pairs(UI.Frames.Settings.Lighting:GetChildren()) do
+					if Frame:IsA("Frame") then
+						local Name = Frame:GetAttribute("Type") == "Time" and "TimeOfDay" or Frame.Name
+						local Value = MapSettings.Lighting:GetAttribute(Name)
+
+						if Value then
+							Lighting[Name] = Value 
+						end
+					end
+				end
+
+				ChangeHistoryService:SetWaypoint("Exported settings from lighting to map")
+			end)
+		)
+	end
+end)
+
+return module
+]]></string>
+          </Properties>
+          <Item class="ModuleScript" referent="21">
+            <Properties>
+              <string name="Name">SelectColor</string>
+              <string name="Source"><![CDATA[local RunService = game:GetService("RunService")
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+
+local Maid = require(script.Parent.Parent.Other.Maid)
+local Signal = require(script.Parent.Parent.Other.Signal)
+local UtilModule = require(script.Parent.Parent.UtilFuncs)
+local SelectMap = require(script.Parent.Parent.SelectMap)
+
+local UI = UtilModule.UI
+local ColorFrame = UI.ColorWheel.Main
+
+local module = {}
+
+
+
+function module.GetColorFromString(Color)
+	local Text = Color
+	local Mult = 1
+	local String = false
+
+	Text = string.gsub(Text, " ", "")
+	if string.find(Text, "Color3%.%a%a%a%(", 1) then
+		Text = string.gsub(Text, 'Color3%.%a%a%a%(', "")
+		Mult = 255
+	elseif string.find(Text, "Color3.%a%a%a%a%a%a%a%(", 1) then
+		Text = string.gsub(Text, 'Color3%.%a%a%a%a%a%a%a%(', "")
+	end
+	Text = string.gsub(Text, "%)", "")
+
+	local Texts = string.split(Text, ",")
+	for _, Thing in pairs(Texts) do
+		if not tonumber(Thing) then
+			return String and "255, 255, 255" or Color3.new(255, 255, 255)
+		end
+	end
+	return #Texts == 3 and String and string.format("%s, %s, %s", Texts[1], Texts[2], Texts[3]) or Color3.fromRGB(math.min(Texts[1] * Mult, 255), math.min(Texts[2] * Mult, 255), math.min(Texts[3] * Mult, 255)) or Color3.new(255, 255, 255)
+end
+
+function module.SelectColor(Frame)
+	if not UtilModule.Map then return end
+	local Maid = Maid.new()
+
+	local function GetColor(String, Color: string?)
+		local Text = Color or Frame.TextBox.Text
+		local Mult = 1
+
+		Text = string.gsub(Text, " ", "")
+		if string.find(Text, "Color3%.%a%a%a%(", 1) then
+			Text = string.gsub(Text, 'Color3%.%a%a%a%(', "")
+			Mult = 255
+		elseif string.find(Text, "Color3.%a%a%a%a%a%a%a%(", 1) then
+			Text = string.gsub(Text, 'Color3%.%a%a%a%a%a%a%a%(', "")
+		end
+		Text = string.gsub(Text, "%)", "")
+
+		local Texts = string.split(Text, ",")
+		for _, Thing in pairs(Texts) do
+			if not tonumber(Thing) then
+				return String and "255, 255, 255" or Color3.new(255, 255, 255)
+			end
+		end
+		return #Texts == 3 and String and string.format("%s, %s, %s", Texts[1], Texts[2], Texts[3]) or Color3.fromRGB(math.min(Texts[1] * Mult, 255), math.min(Texts[2] * Mult, 255), math.min(Texts[3] * Mult, 255)) or Color3.new(255, 255, 255)
+	end
+
+	for _, Button in pairs(UI.Frames.Settings:GetDescendants()) do
+		if Button:IsA("TextBox") then
+			Button.TextEditable = false
+		end
+	end
+
+	local CurrentColor = GetColor()
+	local SelectedColor = CurrentColor
+	local H, S, V = Color3.toHSV(CurrentColor)
+	local Angle = -(H * 360) - 90
+	ColorFrame.Slider.Pointer.Position = UDim2.new(.5, 0, 1 - V, 0)
+	ColorFrame.Wheel.ImageColor3 = Color3.new(V, V, V)
+	ColorFrame.Wheel.Pointer.Position = UDim2.new(.5 + math.sin(math.rad(Angle)) * (S / 2), 0, .5 + math.cos(math.rad(Angle)) * (S / 2), 0)
+	ColorFrame.Selected.Text = GetColor(true)
+	ColorFrame.Selected.TextColor3 = CurrentColor
+	ColorFrame.Parent.Visible = true
+
+	local function Close()
+		ColorFrame.Parent.Visible = false
+		for _, Button in pairs(UI.Frames.Settings:GetDescendants()) do
+			if Button:IsA("TextBox") then
+				Button.TextEditable = true
+			end
+		end
+	end
+
+	Maid:GiveTask(
+		ColorFrame.Exit.MouseButton1Click:Connect(function()
+			Close()
+			Maid:DoCleaning()
+		end))
+
+	Maid:GiveTask(
+		ColorFrame.Confirm.MouseButton1Click:Connect(function()
+			Close()
+
+			ChangeHistoryService:SetWaypoint("Setting color")
+			local Text = string.format("%s, %s, %s", tostring(math.floor(SelectedColor.R * 255 + .5)), tostring(math.floor(SelectedColor.G * 255 + .5)), tostring(math.floor(SelectedColor.B * 255 + .5)))
+			Frame.TextBox.Text = Text
+			Frame.TextBox.TextColor3 = SelectedColor
+			UtilModule.Map.Settings:FindFirstChild(Frame.Parent.Name, true):SetAttribute(Frame.Name, SelectedColor)
+			ChangeHistoryService:SetWaypoint("Set color")
+			Maid:DoCleaning()
+		end))
+
+	Maid:GiveTask(
+		ColorFrame.Parent:GetPropertyChangedSignal("Visible"):Connect(function()
+			if not ColorFrame.Parent.Visible then
+				Maid:DoCleaning()
+			end
+		end))
+
+	for _, Button in pairs(UI.Frames.Settings:GetDescendants()) do
+		if Button.Name == "SelectColor" then
+			Button.MouseButton1Click:Connect(function()
+				Close()
+				Maid:DoCleaning()
+			end)
+		end
+	end
+	local function UpdateColor(ignore)
+		local Angle = -(H * 360) - 90
+		ColorFrame.Slider.Pointer.Position = UDim2.new(.5, 0, 1 - V, 0)
+		ColorFrame.Wheel.ImageColor3 = Color3.new(V, V, V)
+		ColorFrame.Wheel.Pointer.Position = UDim2.new(.5 + math.sin(math.rad(Angle)) * (S / 2), 0, .5 + math.cos(math.rad(Angle)) * (S / 2), 0)
+		ColorFrame.Parent.Visible = true
+		script:SetAttribute("_Color", Color3.fromHSV(H, S, V))
+		RunService.Heartbeat:Wait()
+		local ColorNew = script:GetAttribute("_Color")
+		SelectedColor = Color3.fromRGB(math.floor(ColorNew.R * 255 + .5), math.floor(ColorNew.G * 255 + .5), math.floor(ColorNew.B * 255 + .5))
+		ColorFrame.Selected.Text = GetColor(true, string.format("%s, %s, %s", tostring(math.floor(ColorNew.R * 255 + .5)), tostring(math.floor(ColorNew.G * 255 + .5)), tostring(math.floor(ColorNew.B * 255 + .5)) ))
+		ColorFrame.Selected.TextColor3 = SelectedColor
+	end
+
+	local MouseDown = false
+	local function UpdateSliderPos()
+		local LocalPos = ColorFrame.Slider.AbsolutePosition - UtilModule.Widget:GetRelativeMousePosition()
+		local SliderPos = -1 + ((LocalPos.Y + ColorFrame.Slider.AbsoluteSize.Y) / 2 / ColorFrame.Slider.AbsoluteSize.Y + .5) * 2
+		ColorFrame.Slider.Pointer.Position = UDim2.new(.5, 0, 1 - SliderPos, 0)
+		ColorFrame.Wheel.ImageColor3 = Color3.new(SliderPos, SliderPos, SliderPos)
+		V = SliderPos
+		UpdateColor()
+	end
+
+	local function UpdateWheelPos()
+		local LocalPos = ColorFrame.Wheel.AbsolutePosition + ColorFrame.Wheel.AbsoluteSize / 2 - UtilModule.Widget:GetRelativeMousePosition()
+		local Angle = math.deg(math.atan2(LocalPos.X, LocalPos.Y))
+		local Diameter = math.max(-LocalPos.Magnitude / ColorFrame.Wheel.AbsoluteSize.Y, -.5)
+
+		if -((Angle + 90) / 360) + .5 < 0 then
+			H = -((Angle + 90) / 360) + 1.5
+		else
+			H = -((Angle + 90) / 360) + .5
+		end
+		S = -Diameter * 2
+		ColorFrame.Wheel.Pointer.Position = UDim2.new(.5 + math.sin(math.rad(Angle)) * Diameter, 0, .5 + math.cos(math.rad(Angle)) * Diameter, 0)
+		UpdateColor(true)
+	end
+
+	Maid:GiveTask(
+		ColorFrame.Slider.Button.MouseButton1Down:Connect(function()
+			MouseDown = true
+			UpdateSliderPos()
+		end)
+	)
+	Maid:GiveTask(
+		ColorFrame.Slider.Button.MouseLeave:Connect(function()
+			MouseDown = false
+		end)
+	)
+	Maid:GiveTask(
+		ColorFrame.Slider.Button.MouseButton1Up:Connect(function()
+			MouseDown = false
+		end)
+	)
+	Maid:GiveTask(
+		ColorFrame.Slider.Button.MouseMoved:Connect(function()
+			if MouseDown then
+				UpdateSliderPos()
+			end
+		end)
+	)
+
+
+	Maid:GiveTask(
+		ColorFrame.Wheel.Button.MouseLeave:Connect(function()
+			MouseDown = false
+		end)
+	)
+	Maid:GiveTask(
+		ColorFrame.Wheel.Button.MouseButton1Up:Connect(function()
+			MouseDown = false
+		end)
+	)
+	Maid:GiveTask(
+		ColorFrame.Wheel.Button.MouseButton1Down:Connect(function()
+			MouseDown = true
+			UpdateWheelPos()
+		end)
+	)
+	Maid:GiveTask(
+		ColorFrame.Wheel.Button.MouseMoved:Connect(function()
+			if MouseDown then
+				UpdateWheelPos()
+			end
+		end)
+	)
+end
+
+return module
+]]></string>
+            </Properties>
+          </Item>
+        </Item>
+        <Item class="ModuleScript" referent="22">
+          <Properties>
+            <string name="Name">UtilFuncs</string>
+            <string name="Source"><![CDATA[local RunService = game:GetService("RunService")
+
+local Maid = require(script.Parent.Other.Maid)
+local Signal = require(script.Parent.Other.Signal)
+
+local module = {
+	Map = nil,
+	UI = script.Parent.Parent.Widget,
+	Widget = nil,
+	PluginSettings = nil,
+
+	FuncTags = {
+		"_Show",
+		"_Hide",
+		"_Fall",
+		"_Explode",
+		"_Destroy",
+		"_Sound",
+	},
+	ObjectTags = {
+		"_WallRun",
+		"_WallJump",
+	},
+	BoostTags = {
+		"_SpeedBooster",
+		"_JumpBooster",
+	},
+	AirTank = "AirTank",
+	KillTag = "_Kill",
+	DetailTag = "Detail",
+	ButtonTag = "_Button",
+	WaterTag = "_Liquid",
+}
+
+
+
+function module.GetTagType(Tag: string): string
+	if table.find(module.FuncTags, Tag) then
+		return "Button"
+	elseif Tag == module.KillTag then
+		return "Kill"
+	elseif table.find(module.ObjectTags, Tag) then
+		return "Object"
+	elseif table.find(module.BoostTags, Tag) then
+		return "Boost"
+	elseif Tag == module.ButtonTag then
+		return "ButtonObj"
+	elseif Tag == module.WaterTag then
+		return "Water"
+	elseif Tag == module.AirTank then
+		return "AirTank"
+	elseif Tag == module.DetailTag then
+		return "Detail"
+	end
+	return ""
+end
+function module.GetPartsWithTag(Tag: string)
+	assert(Tag, "No tag select")
+	assert(module.Map, "No map selected.")
+
+	local FindTag = Tag .. "%d"
+	local PossibleTags = nil
+	
+	if table.find(module.FuncTags, FindTag) then
+		PossibleTags = module.FuncTags
+	elseif table.find(module.ObjectTags, FindTag) then
+		PossibleTags = module.ObjectTags
+	elseif table.find(module.BoostTags, FindTag) then
+		PossibleTags = module.BoostTags
+	elseif module.ButtonTag == FindTag then
+		PossibleTags = {module.ButtonTag}
+	elseif module.WaterTag == FindTag then
+		PossibleTags = {module.WaterTag}
+	elseif FindTag == module.DetailTag then
+		PossibleTags = "Detail"
+	end
+	assert(PossibleTags, "No possible tags found.")
+
+	local Found = {}
+	
+	if Tag == "Detail" then
+		if module.Map:FindFirstChild("Detail") then
+			for _, object in pairs(module.Map.Detail:GetDescendants()) do
+				table.insert(Found, object)
+			end
+		end
+	else
+		for _, object in pairs(module.Map:GetDescendants()) do
+			if object:IsA("ObjectValue") then
+				local Name = string.gsub(object.Name, "%d", "%%d")
+
+				if table.find(PossibleTags, Name) then
+					table.insert(Found, object)
+				end
+			end
+		end
+	end
+
+	return Found
+end
+
+function module.GetTag(Part: Instance, Tag: string): Instance | nil
+	for _, Object in pairs(Part:GetChildren()) do
+		if (Tag == "_Sound" and Object:IsA("Sound") or Tag == "_WallRun" and Object:IsA("NumberValue") or Object:IsA("ObjectValue")) and string.find(Object.Name, Tag, 1, true) then
+			return Object
+		end
+	end
+end
+
+function module.IsTagged(Part: Instance, Tag: string): boolean
+	local Type = module.GetTagType(Tag)
+
+	local Types = {}
+
+	function Types.Button()
+		for _, Object in pairs(Part:GetChildren()) do
+			if (Tag == "_Sound" and Object:IsA("Sound") or Object:IsA("ObjectValue")) and string.find(Object.Name, Tag, 1, true) then
+				return true
+			end
+		end
+	end
+	function Types.Object()
+		for _, Object in pairs(Part:GetChildren()) do
+			if (Tag == "_WallRun" and Object:IsA("NumberValue") or Object:IsA("ObjectValue")) and Object.Name == Tag then
+				return true
+			end
+		end
+	end
+	function Types.Kill()
+		if Part:GetAttribute("_Kill") then
+			return true
+		end
+		for _, Object in pairs(Part:GetChildren()) do
+			if Object:IsA("ObjectValue") and Object.Name == Tag then
+				return true
+			end
+		end
+	end
+	function Types.Boost()
+		return Part.Name == Tag
+	end
+	function Types.Detail()
+		if Part:GetAttribute("_Detail") then
+			return true
+		end
+		for _, Object in pairs(Part:GetChildren()) do
+			if Object:IsA("ObjectValue") and Object.Name == Tag then
+				return true
+			end
+		end
+	end
+	function Types.AirTank()
+		return Part.Name == "AirTank" and Part:IsA("Model") or Part.Name == "Hitbox" and Part.Parent.Name == "AirTank" and Part.Parent:IsA("Model")
+	end
+	function Types.ButtonObj()
+		local function FindParts(part: Instance): boolean
+			return if part:FindFirstChild("Light") and part:FindFirstChild("Hitbox") then true else false
+		end
+
+		local Button = string.sub(Part.Name, 1, 7) == "_Button" and Part:IsA("Model") and FindParts(Part) and Part or string.sub(Part.Parent.Name, 1, 7) == "_Button" and Part.Parent:IsA("Model") and FindParts(Part.Parent) and Part.Parent
+
+		if Button then return true end
+	end
+	function Types.Water()
+		return string.find(Part.Name, "_Liquid", 1, true)
+	end
+	function Types.Detail()
+		return module.Map:FindFirstChild("Detail") and Part:IsDescendantOf(module.Map:FindFirstChild("Detail"))
+	end
+
+	local Value = Types[Type] and Types[Type]()
+	return Value
+end
+
+function module.ArePartsTagged(Parts, Tag: string): boolean
+	for _, Part in pairs(Parts) do
+		if not module.IsTagged(Part, Tag) or not Part:IsDescendantOf(module.Map) then
+			return false
+		end
+	end
+
+	return true
+end
+
+function module:Cleanup()
+
+end
+
+function module.Warn(Message: string, WaitForCallback: boolean?, TextOverride: string?, DarkenBack: boolean?)
+	local UI = module.UI
+	local Texts = {
+		"Ok",
+		"Ok",
+		"Ok",
+		"Ok",
+		"Ok",
+		"K",
+		"K",
+		"K",
+		"Fine",
+		"Fine",
+		"Fine",
+		"Ight",
+		"Ight",
+		"Ight",
+		"Whatever",
+	}
+
+	UI.Message.Main.TextLabel.Size = UDim2.new(1, 0, 0, 2000)
+	UI.Message.Main.TextLabel.Text = Message
+	local Size = game:GetService("TextService"):GetTextSize(Message, 14, Enum.Font.SourceSansBold, Vector2.new(UI.Message.Main.TextLabel.AbsoluteSize.X, UI.Message.Main.TextLabel.AbsoluteSize.X))
+	RunService.Heartbeat:Wait()
+	RunService.Heartbeat:Wait()
+	UI.Message.Main.TextLabel.Size = UDim2.new(1, 0, 0, Size.Y)
+	UI.Message.Size = UDim2.new(1, 0, 0, 64 + 0 + Size.Y)
+	UI.Message.Visible = true
+	UI.Message.Main.TextButton.Text = TextOverride or Texts[math.random(1, #Texts)]
+
+	if DarkenBack then
+		UI.Message.Main.Back.Visible = true
+	end
+	if WaitForCallback then
+		UI.Message.Main.TextButton.MouseButton1Click:Wait()
+	end
+end
+
+function module.DropdownMenu(Frame: Frame)
+	Frame.Visible = true
+	Frame.Parent._Backdrop.Visible = true
+	Frame.Parent.DropButton.Image = "rbxassetid://6031094679"
+
+	local Value
+	local Maid = Maid.new()
+	local Continue = Signal.new()
+
+	Maid:GiveTask(Frame.Parent.DropButton.MouseButton1Click:Connect(function()
+		Continue:Fire()
+	end))
+
+	for _, Frame: Instance in pairs(Frame:GetChildren()) do
+		if Frame:IsA("TextButton") then
+			Maid:GiveTask(Frame.MouseButton1Click:Connect(function()
+				Value = Frame:GetAttribute("Value")
+				Continue:Fire()
+			end))
+		elseif Frame:IsA("TextLabel") and Frame.Name == "custom" then
+			Maid:GiveTask(Frame.confirm.MouseButton1Click:Connect(function()
+				if Frame.TextBox.Text ~= "" then
+					Value = Frame.TextBox.Text
+					Continue:Fire()
+				end
+			end))
+		end
+	end
+
+	Continue:Wait()
+	Maid:Destroy()
+
+	Frame.Parent.DropButton.Image = "rbxassetid://6031094687"
+	Frame.Visible = false
+	Frame.Parent._Backdrop.Visible = false
+	return Value
+end
+
+module.UI.Message.Main.TextButton.MouseButton1Click:Connect(function()
+	module.UI.Message.Visible = false
+	module.UI.Message.Main.Back.Visible = false
+end)
+
+return module
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="23">
+          <Properties>
+            <string name="Name">ViewModes</string>
+            <string name="Source"><![CDATA[--[[
+oh fuck oh god kill me i dont want to do this AAAAAAAAAAAAAAAA
+
+	TODO
+	 - UI
+	 - Dark + Light mode
+	 - VIEW MODES: 
+	    - Find appropariate parts, label them
+	    - Listen for name change or parent changes for those parts
+	    - Listen for new parts being created and name changes
+	    
+	 - Tag view mode: Possibly filter?
+	 - Button view
+	 - Object view
+]]
+
+local module = {}
+
+return module
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+</roblox>
