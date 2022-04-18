@@ -1,7 +1,7 @@
 {
   "name": "Tria.OS",
-  "gameId": 2593938530,
-  "placeId": 6824256892,
+  "gameId": 0,
+  "placeId": 0,
   "tree": {
     "$className": "DataModel",
     "Workspace": {
