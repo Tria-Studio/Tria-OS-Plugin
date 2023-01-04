@@ -1,0 +1,78 @@
+local Fusion = require(script.Parent.Fusion)
+local Theme = require(script.Parent.Themes)
+
+local New = Fusion.New
+local Children = Fusion.Children
+local Computed = Fusion.Computed
+local State = Fusion.State
+
+local components = {
+    Constraints = require(script.Constraints)
+}
+
+
+
+
+function components.TopbarButton(data)
+    return New "TextButton" {
+        AutoButtonColor = true,
+        BackgroundColor3 = Theme.Titlebar.Default,
+        Text = "",
+        Size = UDim2.new(.167, 0, 1, 0),
+        
+        [Children] = {
+            New "Frame" {
+                Name = "Enabled",
+                Size = UDim2.new(1, 0, 1, 0),
+                BackgroundTransparency = 1,
+                Visible = data.Visible,
+
+                [Children] = {
+                    New "Frame" {
+                        BackgroundColor3 = Theme.Border.Default,
+                        Size = UDim2.new(0, 2, 1, 0),
+                    },
+                    New "Frame" {
+                        AnchorPoint = Vector2.new(1, 0),
+                        Position = UDim2.new(1, 0, 0, 0),
+                        BackgroundColor3 = Theme.Border.Default,
+                        Size = UDim2.new(0, 2, 1, 0),
+                    },
+                    New "Frame" {
+                        AnchorPoint = Vector2.new(.5, 0),
+                        Position = UDim2.new(.5, 0, 0, 0),
+                        BackgroundColor3 = Theme.Button.Selected,
+                        Size = UDim2.new(1, -4, 0, 2),
+                    },
+                }
+            },
+            New "Frame" {
+                Name = "Disabled",
+                Size = UDim2.new(1, 0, 1, 0),
+                BackgroundTransparency = 1,
+                Visible = Computed(function()
+                    return not data.Visible:get()
+                end),
+
+                [Children] =  New "Frame" {
+                    AnchorPoint = Vector2.new(.5, 1),
+                    Position = UDim2.new(.5, 0, 1, 0),
+                    BackgroundColor3 = Theme.Border.Default,
+                    Size = UDim2.new(1, 0, 0, 2),
+                },
+            },
+            New "ImageLabel" {
+                ImageColor3 = Theme.BrightText.Default,
+                AnchorPoint = Vector2.new(.5, .5),
+                BackgroundTransparency = 1,
+                Position = UDim2.new(.5, 0, .5, 0),
+                Size = UDim2.new(1, 0, .7, 0),
+                Image = data.Icon,
+
+                [Children] = components.Constraints.UIAspectRatio(1),
+            }
+        }
+    }
+end
+
+return components
