@@ -14,14 +14,18 @@ local themes = {
         Default = State(StudioTheme:GetColor(GuideColor.Border))
     },
     Button = {
-        Selected = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Selected))
+        Selected = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Selected)),
+        Hover = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover))
     },
     BrightText = {
         Default = State(StudioTheme:GetColor(GuideColor.BrightText))
     },
     MainBackground = {
         Default = State(StudioTheme:GetColor(GuideColor.MainBackground))
-    }
+    },
+    TitlebarText = {
+        Default = State(StudioTheme:GetColor(GuideColor.TitlebarText))
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function()

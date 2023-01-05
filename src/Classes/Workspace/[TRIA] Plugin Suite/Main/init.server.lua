@@ -7,6 +7,7 @@ local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
 local Fusion = require(script.Resources.Fusion)
 local Components = require(script.Resources.Components)
 local Theme = require(script.Resources.Themes)
+local Pages = require(script.Resources.Components.Pages)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -14,14 +15,7 @@ local ComputedPairs = Fusion.ComputedPairs
 local State = Fusion.State
 local StudioTheme = settings().Studio.Theme
 
-local states = {
-	ObjectTags = State(true),
-	ViewModes = State(false),
-	Compatibility = State(false),
-	Settings = State(false),
-	Publish = State(false),
-	Insert = State(false),
-}
+
 
 Widget.Title = "[TRIA] Plugin Suite"
 
@@ -33,7 +27,25 @@ New "Frame" {
 	BackgroundColor3 = Theme.MainBackground.Default,
 
 	[Children] = {
-		New "Frame" {
+		New "Frame" { -- Pages
+			Name = "Pages",
+			Size = UDim2.new(1, 0, 1, -76),
+			Position = UDim2.new(0, 0, 0, 52),
+			BackgroundTransparency = 1,
+
+			[Children] = {
+				Pages:NewPage({
+					Name = "ObjectTags",
+					Default = true,
+				}),
+				Pages:NewPage({Name = "ViewModes"}),
+				Pages:NewPage({Name = "Settings"}),
+				Pages:NewPage({Name = "Compatibility"}),
+				Pages:NewPage({Name = "Publish"}),
+				Pages:NewPage({Name = "Insert"}),
+			}
+		},
+		New "Frame" { -- Topbar
 			Name = "Topbar",
 			Size = UDim2.new(1, 0, 0, 36),
 			BackgroundColor3 = Theme.Titlebar.Default,
@@ -41,33 +53,31 @@ New "Frame" {
 			[Children] = {
 				Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal),
 				Components.TopbarButton({
-					Visible = states.ObjectTags,
+					Name = "ObjectTags",
 					Icon = "rbxassetid://6034687957",
 				}),
 				Components.TopbarButton({
-					Visible = states.ViewModes,
+					Name = "ViewModes",
 					Icon = "rbxassetid://6031763426",
 				}),
 				Components.TopbarButton({
-					Visible = states.Settings,
+					Name = "Settings",
 					Icon = "rbxassetid://6031280882",
 				}),
 				Components.TopbarButton({
-					Visible = states.Compatibility,
+					Name = "Compatibility",
 					Icon = "rbxassetid://6022668955",
 				}),
 				Components.TopbarButton({
-					Visible = states.Publish,
+					Name = "Publish",
 					Icon = "rbxassetid://6034973085",
 				}),
 				Components.TopbarButton({
-					Visible = states.Insert,
+					Name = "Insert",
 					Icon = "rbxassetid://6035047377",
 				})
 			},
-		}
-		,-- Topbar
-
+		},
 		-- Colorwheel
 		
 		-- Message
@@ -75,8 +85,6 @@ New "Frame" {
 		
 		
 		-- Bottom bar (map frame)
-		
-		-- Pages
 	}
 }
 

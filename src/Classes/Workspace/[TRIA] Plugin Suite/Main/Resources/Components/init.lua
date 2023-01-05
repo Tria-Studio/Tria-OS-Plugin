@@ -5,6 +5,7 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local State = Fusion.State
+local OnEvent = Fusion.OnEvent
 
 local components = {
     Constraints = require(script.Constraints)
@@ -14,12 +15,23 @@ local components = {
 
 
 function components.TopbarButton(data)
+    local Pages = require(script.Pages)
+    data.Visible = Pages.pageData.pages[data.Name].Visible
+
     return New "TextButton" {
         AutoButtonColor = true,
-        BackgroundColor3 = Theme.Titlebar.Default,
+        BackgroundColor3 = Computed(function()
+            Theme.Button.Hover:get()
+            Theme.Titlebar.Default:get()
+            return if data.Visible:get() then Theme.Button.Hover:get() else Theme.Titlebar.Default:get()
+        end),
         Text = "",
         Size = UDim2.new(.167, 0, 1, 0),
         
+        [OnEvent "Activated"] = function()
+            Pages:ChangePage(data.Name)
+        end,
+
         [Children] = {
             New "Frame" {
                 Name = "Enabled",
@@ -71,6 +83,23 @@ function components.TopbarButton(data)
 
                 [Children] = components.Constraints.UIAspectRatio(1),
             }
+        }
+    }
+end
+
+function components.PageHeader(Name: string)
+    return  New "TextLabel" {
+        Size = UDim2.new(1, 0, 0, 16),
+        BackgroundColor3 = Theme.Button.Hover,
+        TextColor3 = Theme.BrightText.Default,
+        Text = "View Modes",
+        AnchorPoint = Vector2.new(0, 1),
+
+        [Children] = New "Frame" {
+            BackgroundColor3 = Theme.Border.Default,
+            Position = UDim2.new(0, 0, 1, 0),
+            AnchorPoint = Vector2.new(0, .5),
+            Size = UDim2.new(1, 0, 0, 1)
         }
     }
 end
