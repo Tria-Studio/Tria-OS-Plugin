@@ -14,7 +14,11 @@ local themes = {
         Default = State(StudioTheme:GetColor(GuideColor.Border))
     },
     Button = {
+        Default = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Default)),
         Hover = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover))
+    },
+    MainText = {
+        Default = State(StudioTheme:GetColor(GuideColor.MainText))
     },
     MainButton = {
         Default = State(StudioTheme:GetColor(GuideColor.MainButton))
@@ -28,6 +32,12 @@ local themes = {
     TitlebarText = {
         Default = State(StudioTheme:GetColor(GuideColor.TitlebarText))
     },
+    ErrorText = {
+        Default = State(StudioTheme:GetColor(GuideColor.ErrorText))
+    },
+    InputFieldBackground = {
+        Default = State(StudioTheme:GetColor(GuideColor.InputFieldBackground))
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function(a)
@@ -35,9 +45,7 @@ settings().Studio.ThemeChanged:Connect(function(a)
     --TODO this doesnt work
     for Name, Value in pairs(themes) do
         for Theme, _ in pairs(Value) do
-            print(themes[Name][Theme]:get())
             themes[Name][Theme]:set(StudioTheme:GetColor(GuideColor[Name], GuideModifier[Theme]))
-            print(themes[Name][Theme]:get())
         end
     end
 end)

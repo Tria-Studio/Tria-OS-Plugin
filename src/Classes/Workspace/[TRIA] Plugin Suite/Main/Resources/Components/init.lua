@@ -14,6 +14,44 @@ local components = {
 
 
 
+
+
+
+function components.TextButton(data)
+    return New "TextButton" {
+        BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
+        BorderColor3 = Theme.Border.Default,
+        BorderSizePixel = data.BorderSizePixel or 1,
+        AnchorPoint = data.AnchorPoint,
+        Size = data.Size,
+        Position = data.Position,
+        TextSize = data.TextSize,
+        Text = data.Text,
+        TextColor3 = data.TextColor3 or Theme.MainText.Default,
+        BorderMode = Enum.BorderMode.Inset,
+        AutoButtonColor = true,
+
+        [OnEvent "Activated"] = data.Callback
+    }
+end
+
+function components.ImageButton(data)
+    return New "ImageButton" {
+        BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
+        BorderColor3 = Theme.Border.Default,
+        BorderSizePixel = data.BorderSizePixel or 1,
+        AnchorPoint = data.AnchorPoint,
+        Size = data.Size,
+        Position = data.Position,
+        Image = data.Image,
+        ImageColor3 = data.TextColor3 or Theme.MainText.Default,
+        BorderMode = Enum.BorderMode.Inset,
+        AutoButtonColor = true,
+
+        [OnEvent "Activated"] = data.Callback
+    }
+end
+
 function components.TopbarButton(data)
     local Pages = require(script.Pages)
     data.Visible = Pages.pageData.pages[data.Name].Visible
@@ -91,15 +129,15 @@ function components.PageHeader(Name: string)
     return  New "TextLabel" {
         Size = UDim2.new(1, 0, 0, 16),
         BackgroundColor3 = Theme.Button.Hover,
-        TextColor3 = Theme.BrightText.Default,
-        Text = "View Modes",
+        TextColor3 = Theme.TitlebarText.Default,
+        Text = Name,
         AnchorPoint = Vector2.new(0, 1),
 
         [Children] = New "Frame" {
             BackgroundColor3 = Theme.Border.Default,
             Position = UDim2.new(0, 0, 1, 0),
             AnchorPoint = Vector2.new(0, .5),
-            Size = UDim2.new(1, 0, 0, 1)
+            Size = UDim2.new(1, 0, 0, 2)
         }
     }
 end

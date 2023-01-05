@@ -1,6 +1,6 @@
 local PluginBar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local OpenButton = PluginBar:CreateButton("TRIA.os Companion Plugin", "Tools to help map making easier!", "rbxassetid://12032105372", "Mapmaking Companion")
-local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 200, 250)
+local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 225, 250)
 local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
 
 
@@ -15,7 +15,7 @@ local ComputedPairs = Fusion.ComputedPairs
 local State = Fusion.State
 local StudioTheme = settings().Studio.Theme
 
-
+local selectTextState = State("No map selected")
 
 Widget.Title = "[TRIA] Plugin Suite"
 
@@ -78,13 +78,47 @@ New "Frame" {
 				})
 			},
 		},
+		New "Frame" { -- Bottom bar
+			AnchorPoint = Vector2.new(0, 1),
+			Position = UDim2.new(0, 0, 1, 0),
+			Size = UDim2.new(1, 0, 0, 24),
+			BackgroundColor3 = Theme.Titlebar.Default,
+			BorderColor3 = Theme.Border.Default,
+			BorderSizePixel = 1,
+
+			[Children] = {
+				New "TextLabel" {
+					BackgroundTransparency = 1,
+					AnchorPoint = Vector2.new(0, .5),
+					Size = UDim2.new(0, 70, 1, -4),
+					Position = UDim2.new(0, 4, .5, 0),
+					Text = "Selected Map:",
+					TextColor3 = Theme.TitlebarText.Default,
+				},
+				Components.TextButton({
+					Size = UDim2.new(1, -100, 0.917, -4),
+					Position = UDim2.new(0, 76, 0, 2),
+					Text = selectTextState,
+					TextColor3 = State(Theme.ErrorText.Default):get(),
+					BackgroundColor3 = Theme.InputFieldBackground.Default,
+				}),
+				Components.ImageButton({
+					AnchorPoint = Vector2.new(1, .5),
+					Size = UDim2.new(0, 20, 0, 20),
+					Position = UDim2.new(1, -2, .5, 0),
+					Image = "rbxassetid://6022668885",
+					TextColor3 = State(Theme.MainText.Default):get(),
+					BackgroundColor3 = Theme.Button.Default,
+				})
+			}
+		},
 		-- Colorwheel
 		
 		-- Message
 		
 		
 		
-		-- Bottom bar (map frame)
+		
 	}
 }
 
