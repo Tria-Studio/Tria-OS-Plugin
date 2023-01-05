@@ -38,6 +38,12 @@ local themes = {
     InputFieldBackground = {
         Default = State(StudioTheme:GetColor(GuideColor.InputFieldBackground))
     },
+    DimmedText = {
+        Default = State(StudioTheme:GetColor(GuideColor.DimmedText))
+    },
+    SubText = {
+        Default = State(StudioTheme:GetColor(GuideColor.SubText))
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function(a)

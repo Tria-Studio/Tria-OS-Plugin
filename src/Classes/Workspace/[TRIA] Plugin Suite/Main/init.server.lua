@@ -8,16 +8,14 @@ local Fusion = require(script.Resources.Fusion)
 local Components = require(script.Resources.Components)
 local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
+local SelectMap = require(script.SelectMap)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local ComputedPairs = Fusion.ComputedPairs
 local State = Fusion.State
-local StudioTheme = settings().Studio.Theme
-
-local selectTextState = State("No map selected")
 
 Widget.Title = "[TRIA] Plugin Suite"
+
 
 
 New "Frame" {
@@ -54,11 +52,11 @@ New "Frame" {
 				Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal),
 				Components.TopbarButton({
 					Name = "ObjectTags",
-					Icon = "rbxassetid://6034687957",
+					Icon = "rbxassetid://6031079158",
 				}),
 				Components.TopbarButton({
 					Name = "ViewModes",
-					Icon = "rbxassetid://6031763426",
+					Icon = "rbxassetid://6031260793",
 				}),
 				Components.TopbarButton({
 					Name = "Settings",
@@ -74,7 +72,7 @@ New "Frame" {
 				}),
 				Components.TopbarButton({
 					Name = "Insert",
-					Icon = "rbxassetid://6035047377",
+					Icon = "rbxassetid://6035047391",
 				})
 			},
 		},
@@ -96,10 +94,10 @@ New "Frame" {
 					TextColor3 = Theme.TitlebarText.Default,
 				},
 				Components.TextButton({
-					Size = UDim2.new(1, -100, 0.917, -4),
-					Position = UDim2.new(0, 76, 0, 2),
-					Text = selectTextState,
-					TextColor3 = State(Theme.ErrorText.Default):get(),
+					Size = UDim2.new(1, -100, 1, -6),
+					Position = UDim2.new(0, 76, 0, 3),
+					Text = SelectMap.selectTextState,
+					TextColor3 = SelectMap.selectTextColor,
 					BackgroundColor3 = Theme.InputFieldBackground.Default,
 				}),
 				Components.ImageButton({
@@ -107,7 +105,7 @@ New "Frame" {
 					Size = UDim2.new(0, 20, 0, 20),
 					Position = UDim2.new(1, -2, .5, 0),
 					Image = "rbxassetid://6022668885",
-					TextColor3 = State(Theme.MainText.Default):get(),
+					ImageColor3 = State(Theme.SubText.Default):get(),
 					BackgroundColor3 = Theme.Button.Default,
 				})
 			}
@@ -125,3 +123,5 @@ New "Frame" {
 OpenButton.Click:Connect(function()
 	Widget.Enabled = not Widget.Enabled
 end)
+
+SelectMap:AutoSelect()

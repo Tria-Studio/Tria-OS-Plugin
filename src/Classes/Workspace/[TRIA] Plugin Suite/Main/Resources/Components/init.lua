@@ -44,7 +44,7 @@ function components.ImageButton(data)
         Size = data.Size,
         Position = data.Position,
         Image = data.Image,
-        ImageColor3 = data.TextColor3 or Theme.MainText.Default,
+        ImageColor3 = data.ImageColor3 or Theme.MainText.Default,
         BorderMode = Enum.BorderMode.Inset,
         AutoButtonColor = true,
 
