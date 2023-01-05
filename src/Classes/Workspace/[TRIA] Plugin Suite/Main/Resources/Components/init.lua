@@ -53,7 +53,7 @@ function components.TopbarButton(data)
                     New "Frame" {
                         AnchorPoint = Vector2.new(.5, 0),
                         Position = UDim2.new(.5, 0, 0, 0),
-                        BackgroundColor3 = Theme.Button.Selected,
+                        BackgroundColor3 = Theme.MainButton.Default,
                         Size = UDim2.new(1, -4, 0, 2),
                     },
                 }
