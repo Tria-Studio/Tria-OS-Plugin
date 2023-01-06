@@ -25,6 +25,7 @@ function components.TextButton(data)
         AnchorPoint = data.AnchorPoint,
         Size = data.Size,
         Position = data.Position,
+        Visible = data.Visible or true,
         TextSize = data.TextSize,
         Text = data.Text,
         TextColor3 = data.TextColor3 or Theme.MainText.Default,

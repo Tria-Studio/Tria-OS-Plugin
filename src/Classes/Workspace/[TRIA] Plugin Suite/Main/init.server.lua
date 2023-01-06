@@ -1,3 +1,4 @@
+local TextService = game:GetService("TextService")
 local PluginBar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local OpenButton = PluginBar:CreateButton("TRIA.os Companion Plugin", "Tools to help map making easier!", "rbxassetid://12032105372", "Mapmaking Companion")
 local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 225, 250)
@@ -9,10 +10,13 @@ local Components = require(script.Resources.Components)
 local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
 local SelectMap = require(script.SelectMap)
+local Util = require(script.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local State = Fusion.State
+local Computed = Fusion.Computed
+local OnEvent = Fusion.OnEvent
 
 Widget.Title = "[TRIA] Plugin Suite"
 
@@ -110,6 +114,124 @@ New "Frame" {
 				})
 			}
 		},
+		New "Frame" { --// Message
+			BackgroundTransparency = .75,
+			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+			Size = UDim2.new(1, 0, 1, 0),
+			Position = UDim2.new(0, 0, 0, 0),
+			Visible = Computed(function()
+				return Util._Message.Text:get() ~= ""
+			end),
+
+			[Children] = {
+				New "ImageLabel" {
+					BackgroundTransparency = 1,
+					Size = UDim2.new(1, -12, 0, 152),
+					Position = UDim2.new(.5, 0, .5, 0),
+					AnchorPoint = Vector2.new(.5, .5),
+					Image = "rbxassetid://8697780388",
+					ImageColor3 = Color3.fromRGB(0, 0, 0),
+					ImageTransparency = .5,
+					ScaleType = Enum.ScaleType.Slice,
+					SliceCenter = Rect.new(200, 200, 300, 300),
+					SliceScale = 0.075
+				},
+				New "Frame" {
+					BackgroundColor3 = Theme.Notification.Default,
+					BorderColor3 = Theme.Border.Default,
+					AnchorPoint = Vector2.new(.5, .5),
+					Position = UDim2.new(.5, 0, .5, 0),
+					Size = UDim2.new(1, -36, 0, 128),
+
+					[Children] = {
+						New "Frame" { --// Topbar
+							BackgroundColor3 = Theme.CategoryItem.Default,
+							BorderColor3 = Theme.Border.Default,
+							BorderSizePixel = 1,
+							Size = UDim2.new(1, 0, 0, 24),
+						
+							[Children] = {
+								Components.ImageButton({
+									AnchorPoint = Vector2.new(1, 0),
+									Size = UDim2.new(0, 24, 0, 24),
+									Position = UDim2.new(1, 0, 0, 0),
+									Image = "rbxassetid://6031094678",
+									ImageColor3 = Theme.ErrorText.Default,
+									BorderMode = Enum.BorderMode.Outline,
+									Callback = Util.CloseMessage
+								}),
+								New "TextLabel" {
+									BackgroundTransparency = 1,
+									Size = UDim2.new(1, -24, 1, 0),
+									Text = Util._Message.Header,
+									TextColor3 = Theme.TitlebarText.Default,
+									Font = Enum.Font.SourceSansBold,
+									TextXAlignment = Enum.TextXAlignment.Left,
+
+									[Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8))
+								}
+							}
+						},
+						New "TextLabel" { --// Body
+							BackgroundTransparency = 1,
+							Position = UDim2.new(0, 0, 0, 24),
+							Size = UDim2.new(1, 0, 1, -48),
+							Text = Util._Message.Text,
+							TextColor3 = Theme.MainText.Default,
+							TextSize = 13,
+							TextWrapped = true,
+							TextXAlignment = Enum.TextXAlignment.Left,
+							TextYAlignment = Enum.TextYAlignment.Top,
+
+							[Children] = Components.Constraints.UIPadding(UDim.new(0, 4), UDim.new(0, 4), UDim.new(0, 4), UDim.new(0, 4))
+						} ,
+						New "Frame" { --// Buttons
+							AnchorPoint = Vector2.new(0, 1),
+							BackgroundTransparency = 1,
+							Position = UDim2.new(0, 0, 1, 0),
+							Size = UDim2.new(1, 0, 0, 24),
+
+							[Children] = {
+								Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
+								Components.TextButton({ --// Option 1
+									LayoutOrder = 1,
+									BackgroundColor3 = Theme.Button.Selected,
+									Size = UDim2.new(0, 56, 0, 18),
+									Text = Computed(function()
+										return Util._Message.Option1:get().Text or ""
+									end),
+									TextColor3 = Theme.BrightText.Default,
+									BorderMode = Enum.BorderMode.Outline,
+									Callback = function()
+										Util._Message.Option1:get().Callback()
+									end
+								}),
+								Components.TextButton({ --// Option 2
+									LayoutOrder = 2,
+									BackgroundColor3 = Theme.Button.Default,
+									Size = UDim2.new(0, 56, 0, 18),
+									Text = Computed(function()
+										return Util._Message.Option2:get() and Util._Message.Option2:get().Text or ""
+									end),
+									Visible = Computed(function()
+										Util._Message.Text:get()
+										return Util._Message.Option2:get().Text ~= nil
+									end),
+									TextColor3 = Theme.ButtonText.Default,
+									BorderMode = Enum.BorderMode.Outline,
+									Callback = function()
+										if Util._Message.Option2:get() then 
+											Util._Message.Option2:get().Callback()
+										end
+									end
+								})
+							}
+						}
+					}
+				}
+			}
+		}
+
 		-- Colorwheel
 		
 		-- Message
@@ -122,6 +244,10 @@ New "Frame" {
 
 OpenButton.Click:Connect(function()
 	Widget.Enabled = not Widget.Enabled
+
+	if Widget.Enabled then
+		Util:ShowMessage("Test Message", "This is a test you idiot")
+	end
 end)
 
 SelectMap:AutoSelect()

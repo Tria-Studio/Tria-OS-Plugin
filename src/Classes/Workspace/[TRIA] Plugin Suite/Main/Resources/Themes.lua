@@ -15,7 +15,8 @@ local themes = {
     },
     Button = {
         Default = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Default)),
-        Hover = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover))
+        Hover = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover)),
+        Selected = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Selected))
     },
     MainText = {
         Default = State(StudioTheme:GetColor(GuideColor.MainText))
@@ -44,6 +45,15 @@ local themes = {
     SubText = {
         Default = State(StudioTheme:GetColor(GuideColor.SubText))
     },
+    Notification = {
+        Default = State(StudioTheme:GetColor(GuideColor.Notification))
+    },
+    CategoryItem = {
+        Default = State(StudioTheme:GetColor(GuideColor.CategoryItem))
+    },
+    ButtonText = {
+        Default = State(StudioTheme:GetColor(GuideColor.ButtonText))
+    }
 }
 
 settings().Studio.ThemeChanged:Connect(function(a)
