@@ -242,12 +242,17 @@ New "Frame" {
 	}
 }
 
+local function OnOpen()
+	SelectMap:AutoSelect()
+end
+
 OpenButton.Click:Connect(function()
 	Widget.Enabled = not Widget.Enabled
 
 	if Widget.Enabled then
-		Util:ShowMessage("Test Message", "This is a test you idiot")
+		OnOpen()
 	end
 end)
-
-SelectMap:AutoSelect()
+if Widget.Enabled then
+	OnOpen()
+end

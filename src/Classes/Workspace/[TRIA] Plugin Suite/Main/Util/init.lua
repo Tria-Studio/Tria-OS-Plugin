@@ -20,6 +20,7 @@ local util = {
 
     mapModel = nil,
     MapChanged = Signal.new(),
+    MainMaid = Maid.new(),
 
     _Message = {
         Text = State(""),
@@ -30,7 +31,6 @@ local util = {
 }
 
 function util.CloseMessage()
-    print"ASS"
     util._Message.Text:set("")
     util._Message.Header:set("")
     util._Message.Option1:set({})
