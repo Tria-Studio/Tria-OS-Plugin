@@ -3,12 +3,14 @@ local UserInputService = game:GetService("UserInputService")
 local Fusion = require(script.Parent.Resources.Fusion)
 local Theme = require(script.Parent.Resources.Themes)
 local Util = require(script.Parent.Util)
+local Pages = require(script.Parent.Resources.Components.Pages)
 
 local Maid = Util.Maid.new()
 local State = Fusion.State
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local selectMap = {
+    hasOptimizedStructure = State(false),
     selectingMap = State(false),
     selectTextState = State("No map selected"),
     selectTextColor = State(Theme.ErrorText.Default:get()),
@@ -90,8 +92,7 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
             return false, "Unknown map type detected. Please make sure this map is a TRIA.os map as this plugin only supports TRIA.os map development."
         end
 
-        local OptimizedStructure = Map:FindFirstChild("Special")
-        if not Map:FindFirstChild("Spawn") and not (OptimizedStructure and OptimizedStructure:FindFirstChild("Spawn")) then
+        if not Map:FindFirstChild("Spawn", true) then
             return false, "No spawn point found. Add a part named 'Spawn', and add it into the Special folder. "
         end
 
@@ -170,8 +171,26 @@ function selectMap:SetMap(Map: Model|Workspace)
         end
 
         ObjectType[Map.ClassName]()
+
+        local Option1 = {
+            Text = "Read more",
+            Callback = function()
+                Pages:ChangePage("Compatibility")
+            end
+        }
+        local Option2 = {
+            Text = "Got it",
+        }
+        local optimizedStructure = Map:FindFirstChild("Special")
+        selectMap.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
+
+        if not selectMap.hasOptimizedStructure:get() then
+            Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
+        end
+        
     else --// clear selection
         Util.mapModel = nil
+        selectMap.hasOptimizedStructure:set(false)
         selectMap.selectCancelColor:set(Theme.SubText.Default:get())
         selectMap.selectTextState:set("No map selected")
         selectMap.selectTextColor:set(Theme.ErrorText.Default:get())
@@ -225,7 +244,7 @@ function selectMap:StartMapSelection()
     end))
 
     Maid:GiveTask(Mouse.Button1Down:Connect(function()
-        selectMap:SetMap(currentTarget)
+        print(selectMap:SetMap(currentTarget))
         selectMap.selectingMap:set(false)
         selectMap.selectCancelImage:set("rbxassetid://6022668885")
         Maid:DoCleaning()

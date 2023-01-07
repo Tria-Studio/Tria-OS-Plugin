@@ -53,7 +53,10 @@ local themes = {
     },
     ButtonText = {
         Default = State(StudioTheme:GetColor(GuideColor.ButtonText))
-    }
+    },
+    ColorPickerFrame = {
+        Default = State(StudioTheme:GetColor(GuideColor.ColorPickerFrame))
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function(a)

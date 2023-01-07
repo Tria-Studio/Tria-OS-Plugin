@@ -1,5 +1,6 @@
 local Fusion = require(script.Parent.Fusion)
 local Theme = require(script.Parent.Themes)
+local Util = require(script.Parent.Parent.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -13,17 +14,15 @@ local components = {
 
 
 
-
-
-
-
 function components.TextButton(data)
     return New "TextButton" {
         BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
         BorderColor3 = Theme.Border.Default,
+        AutomaticSize = data.AutomaticSize,
         BorderSizePixel = data.BorderSizePixel or 1,
         AnchorPoint = data.AnchorPoint,
         Size = data.Size,
+        Font = data.Font, 
         Position = data.Position,
         Visible = data.Visible or true,
         TextSize = data.TextSize,
@@ -68,7 +67,9 @@ function components.TopbarButton(data)
         Size = UDim2.new(.167, 0, 1, 0),
         
         [OnEvent "Activated"] = function()
-            Pages:ChangePage(data.Name)
+            if not Util._Topbar.FreezeFrame:get() then
+             Pages:ChangePage(data.Name)
+            end
         end,
 
         [Children] = {
@@ -142,5 +143,73 @@ function components.PageHeader(Name: string)
         }
     }
 end
+
+function components.MiniTopbar(data)
+  return New "Frame" { --// Topbar
+        BackgroundColor3 = Theme.CategoryItem.Default,
+        BorderColor3 = Theme.Border.Default,
+        BorderSizePixel = 1,
+        Size = UDim2.new(1, 0, 0, 24),
+    
+        [Children] = {
+            components.ImageButton({
+                AnchorPoint = Vector2.new(1, 0),
+                Size = UDim2.new(0, 24, 0, 24),
+                Position = UDim2.new(1, 0, 0, 0),
+                Image = "rbxassetid://6031094678",
+                ImageColor3 = Theme.ErrorText.Default,
+                BorderMode = Enum.BorderMode.Outline,
+                Callback = data.Callback
+            }),
+            New "TextLabel" {
+                BackgroundTransparency = 1,
+                Size = UDim2.new(1, -24, 1, 0),
+                Text = data.Text,
+                TextColor3 = Theme.MainText.Default,
+                Font = Enum.Font.SourceSansBold,
+                TextXAlignment = Enum.TextXAlignment.Left,
+
+                [Children] = components.Constraints.UIPadding(nil, nil, UDim.new(0, 8))
+            }
+        }
+    }
+end
+
+function components.TwoOptions(option1Data, option2Data)
+    return New "Frame" { --// Buttons
+        AnchorPoint = Vector2.new(0, 1),
+        BackgroundTransparency = 1,
+        Position = UDim2.new(0, 0, 1, 0),
+        Size = UDim2.new(1, 0, 0, 24),
+
+        [Children] = {
+            components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Right, UDim.new(0, 6), Enum.VerticalAlignment.Center),
+            components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 3)),
+            components.TextButton({ --// Option 1
+                    LayoutOrder = 1,
+                    BackgroundColor3 = Theme.Button.Selected,
+                    Size = UDim2.new(0, 56, 0, 18),
+                    Text = option1Data.Text, 
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    TextColor3 = Theme.BrightText.Default,
+                    Font = Enum.Font.SourceSansSemibold,
+                    BorderMode = Enum.BorderMode.Outline,
+                    Callback = option1Data.Callback
+                }),
+             components.TextButton({ --// Option 2
+                LayoutOrder = 2,
+                BackgroundColor3 = Theme.Button.Default,
+                Size = UDim2.new(0, 56, 0, 18),
+                Text = option2Data.Text,
+                Visible = option2Data.Visible or true,
+                AutomaticSize = Enum.AutomaticSize.X,
+                TextColor3 = Theme.ButtonText.Default,
+                BorderMode = Enum.BorderMode.Outline,
+                Callback = option2Data.Callback
+            })
+        },
+    }
+end
+
 
 return components

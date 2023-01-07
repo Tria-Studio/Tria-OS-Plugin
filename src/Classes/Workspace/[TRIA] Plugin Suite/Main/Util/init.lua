@@ -18,10 +18,14 @@ local util = {
     Signal = Signal,
     Maid = Maid,
 
+    Widget = nil,
     mapModel = nil,
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
 
+    _Topbar = {
+        FreezeFrame = State(false)
+    },
     _Message = {
         Text = State(""),
         Header = State(""),
