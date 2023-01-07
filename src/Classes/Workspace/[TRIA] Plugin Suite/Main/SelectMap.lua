@@ -1,15 +1,19 @@
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local Fusion = require(script.Parent.Resources.Fusion)
 local Theme = require(script.Parent.Resources.Themes)
 local Util = require(script.Parent.Util)
 
+local Maid = Util.Maid.new()
 local State = Fusion.State
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local selectMap = {
     selectingMap = State(false),
     selectTextState = State("No map selected"),
-    selectTextColor = State(Theme.ErrorText.Default:get())
+    selectTextColor = State(Theme.ErrorText.Default:get()),
+    selectCancelColor = State(Theme.SubText.Default:get()),
+    selectCancelImage = State("rbxassetid://6022668885")
 }
 
 function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
@@ -110,8 +114,10 @@ function selectMap:SetMap(Map: Model|Workspace)
             return false, message
         end
 
+        selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
         selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
         selectMap.selectTextColor:set(Theme.MainText.Default:get())
+        Util.mapModel = Map
         Util.MainMaid:DoCleaning()
 
 
@@ -163,9 +169,10 @@ function selectMap:SetMap(Map: Model|Workspace)
             end))
         end
 
-        print(Map.ClassName)
         ObjectType[Map.ClassName]()
     else --// clear selection
+        Util.mapModel = nil
+        selectMap.selectCancelColor:set(Theme.SubText.Default:get())
         selectMap.selectTextState:set("No map selected")
         selectMap.selectTextColor:set(Theme.ErrorText.Default:get())
     end
@@ -179,13 +186,14 @@ function selectMap:StartMapSelection()
         return
     end
 
-    local Maid = Util.Maid.new()
     local currentTarget
     local lastTarget
     local debounce
     local Highlight = Instance.new("Highlight", workspace.CurrentCamera)
     local Mouse = plugin:GetMouse()
 
+    selectMap.selectCancelImage:set("rbxassetid://6031094678")
+    selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
     selectMap.selectTextState:set("Click to select")
     selectMap.selectTextColor:set(Theme.SubText.Default:get())
     Maid:GiveTask(Highlight)
@@ -217,15 +225,23 @@ function selectMap:StartMapSelection()
     end))
 
     Maid:GiveTask(Mouse.Button1Down:Connect(function()
-        local success, message = selectMap:SetMap(currentTarget)
-
-        if not success then
-            Util:ShowMessage("Error selecting map", message)
-            return
-        end
-        Maid:Destroy()
+        selectMap:SetMap(currentTarget)
+        selectMap.selectingMap:set(false)
+        selectMap.selectCancelImage:set("rbxassetid://6022668885")
+        Maid:DoCleaning()
         plugin:Deactivate()
     end))
+end
+
+function selectMap:StopManualSelection()
+    selectMap.selectingMap:set(false)
+    Maid:DoCleaning()
+    plugin:Deactivate()
+
+    selectMap.selectCancelImage:set("rbxassetid://6022668885")
+    selectMap.selectCancelColor:set(if Util.mapModel then Theme.ErrorText.Default:get() else Theme.SubText.Default:get())
+    selectMap.selectTextState:set(if Util.mapModel then Util.mapModel.Settings.Main:GetAttribute("Name") else "No map selected")
+    selectMap.selectTextColor:set(if Util.mapModel then Theme.MainText.Default:get() else Theme.ErrorText.Default:get())
 end
 
 function selectMap:AutoSelect()

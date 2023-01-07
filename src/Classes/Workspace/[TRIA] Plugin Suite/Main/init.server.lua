@@ -111,11 +111,15 @@ New "Frame" {
 					AnchorPoint = Vector2.new(1, .5),
 					Size = UDim2.new(0, 20, 0, 20),
 					Position = UDim2.new(1, -2, .5, 0),
-					Image = "rbxassetid://6022668885",
-					ImageColor3 = State(Theme.ErrorText.Default):get(),
+					Image = SelectMap.selectCancelImage,
+					ImageColor3 = SelectMap.selectCancelColor,
 					BackgroundColor3 = Theme.Button.Default,
 					Callback = function()
-						SelectMap:SetMap(nil)
+						if SelectMap.selectingMap:get() then
+							SelectMap:StopManualSelection()
+						else
+							SelectMap:SetMap(nil)
+						end
 					end
 				})
 			}
@@ -238,12 +242,7 @@ New "Frame" {
 			}
 		}
 
-		-- Colorwheel
-		
-		-- Message
-		
-		
-		
+		-- Colorwheel		
 		
 	}
 }
