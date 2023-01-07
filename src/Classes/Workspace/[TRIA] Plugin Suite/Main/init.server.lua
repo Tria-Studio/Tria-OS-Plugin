@@ -19,7 +19,7 @@ local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 
 Widget.Title = "[TRIA] Plugin Suite"
-
+Util.plugin = plugin
 
 
 New "Frame" {
@@ -103,14 +103,20 @@ New "Frame" {
 					Text = SelectMap.selectTextState,
 					TextColor3 = SelectMap.selectTextColor,
 					BackgroundColor3 = Theme.InputFieldBackground.Default,
+					Callback = function()
+						SelectMap:StartMapSelection()
+					end
 				}),
 				Components.ImageButton({
 					AnchorPoint = Vector2.new(1, .5),
 					Size = UDim2.new(0, 20, 0, 20),
 					Position = UDim2.new(1, -2, .5, 0),
 					Image = "rbxassetid://6022668885",
-					ImageColor3 = State(Theme.SubText.Default):get(),
+					ImageColor3 = State(Theme.ErrorText.Default):get(),
 					BackgroundColor3 = Theme.Button.Default,
+					Callback = function()
+						SelectMap:SetMap(nil)
+					end
 				})
 			}
 		},

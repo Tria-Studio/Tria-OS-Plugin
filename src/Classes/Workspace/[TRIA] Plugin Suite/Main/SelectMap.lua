@@ -1,10 +1,13 @@
+local RunService = game:GetService("RunService")
 local Fusion = require(script.Parent.Resources.Fusion)
 local Theme = require(script.Parent.Resources.Themes)
 local Util = require(script.Parent.Util)
 
 local State = Fusion.State
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local selectMap = {
+    selectingMap = State(false),
     selectTextState = State("No map selected"),
     selectTextColor = State(Theme.ErrorText.Default:get())
 }
@@ -80,7 +83,7 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
 
      if Map:IsA("Model") or Map:IsA("Workspace") then
         if score_1 > .875 or score_2 > 1 then
-            return false, "Unknown map type detected. Please make sure this map is a TRIA.os map."
+            return false, "Unknown map type detected. Please make sure this map is a TRIA.os map as this plugin only supports TRIA.os map development."
         end
 
         local OptimizedStructure = Map:FindFirstChild("Special")
@@ -101,10 +104,15 @@ end
 function selectMap:SetMap(Map: Model|Workspace)
     print"setting map"
     if Map then -- add or change selection
+        local success, message = selectMap:IsTriaMap(Map)
+
+        if not success then
+            return false, message
+        end
+
         selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
         selectMap.selectTextColor:set(Theme.MainText.Default:get())
         Util.MainMaid:DoCleaning()
-
 
 
         local ObjectType = {}
@@ -148,6 +156,7 @@ function selectMap:SetMap(Map: Model|Workspace)
                     if #Map:GetChildren() == 0 and not selectMap:IsTriaMap(Map, true) then
                         if not selectMap:AutoSelect() then
                             selectMap:SetMap(nil)
+                            return 
                         end
                     end
                 end
@@ -160,6 +169,63 @@ function selectMap:SetMap(Map: Model|Workspace)
         selectMap.selectTextState:set("No map selected")
         selectMap.selectTextColor:set(Theme.ErrorText.Default:get())
     end
+
+    return true
+end
+
+function selectMap:StartMapSelection()
+    if selectMap:IsTriaMap(workspace) then
+        selectMap:SetMap(workspace)
+        return
+    end
+
+    local Maid = Util.Maid.new()
+    local currentTarget
+    local lastTarget
+    local debounce
+    local Highlight = Instance.new("Highlight", workspace.CurrentCamera)
+    local Mouse = plugin:GetMouse()
+
+    selectMap.selectTextState:set("Click to select")
+    selectMap.selectTextColor:set(Theme.SubText.Default:get())
+    Maid:GiveTask(Highlight)
+    selectMap.selectingMap:set(true)
+    plugin:Activate(true)
+
+    Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
+        local target = Mouse.Target
+
+        if target ~= lastTarget then
+            lastTarget = target
+
+            repeat
+                target = target and target:FindFirstAncestorOfClass("Model")
+            until not target or target.Parent == workspace
+
+            if currentTarget == target then
+                return
+            end
+
+            if target and selectMap:IsTriaMap(target) then
+                Highlight.Adornee = target
+                currentTarget = target
+            else
+                Highlight.Adornee = nil
+                currentTarget = nil
+            end 
+        end
+    end))
+
+    Maid:GiveTask(Mouse.Button1Down:Connect(function()
+        local success, message = selectMap:SetMap(currentTarget)
+
+        if not success then
+            Util:ShowMessage("Error selecting map", message)
+            return
+        end
+        Maid:Destroy()
+        plugin:Deactivate()
+    end))
 end
 
 function selectMap:AutoSelect()
