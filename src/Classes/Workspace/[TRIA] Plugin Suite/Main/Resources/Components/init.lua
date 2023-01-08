@@ -211,5 +211,20 @@ function components.TwoOptions(option1Data, option2Data)
     }
 end
 
+function components.ScrollingFrameHeader(text: string, layoutOrder: number)
+    return New "TextLabel" {
+        BackgroundColor3 = Theme.HeaderSection.Default,
+        Border = Theme.Border.Default,
+        BorderSizePixel = 1,
+        BorderMode = Enum.BorderMode.Middle,
+        Size = UDim2.new(1, 0, 0, 28),
+        Font = Enum.Font.SourceSansBold,
+        Text = text,
+        TextColor3 = Theme.MainText.Default,
+        TextSize = 16,
+
+    }
+end
+
 
 return components

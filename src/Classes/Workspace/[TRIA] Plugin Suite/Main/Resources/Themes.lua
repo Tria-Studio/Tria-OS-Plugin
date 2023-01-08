@@ -57,6 +57,15 @@ local themes = {
     ColorPickerFrame = {
         Default = State(StudioTheme:GetColor(GuideColor.ColorPickerFrame))
     },
+    ScrollBarBackground = {
+        Default = State(StudioTheme:GetColor(GuideColor.ScrollBarBackground))
+    },
+    ScrollBar = {
+        Default = State(StudioTheme:GetColor(GuideColor.ScrollBar))
+    },
+    HeaderSection = {
+        Default = State(StudioTheme:GetColor(GuideColor.HeaderSection))
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function(a)
