@@ -42,6 +42,7 @@ function components.ImageButton(data)
         BorderSizePixel = data.BorderSizePixel or 1,
         AnchorPoint = data.AnchorPoint,
         Size = data.Size,
+        ZIndex = data.ZIndex,
         Position = data.Position,
         Image = data.Image,
         ImageColor3 = data.ImageColor3 or Theme.MainText.Default,
@@ -149,10 +150,12 @@ function components.MiniTopbar(data)
         BackgroundColor3 = Theme.CategoryItem.Default,
         BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
+        ZIndex = 2,
         Size = UDim2.new(1, 0, 0, 24),
     
         [Children] = {
             components.ImageButton({
+                ZIndex = 2,
                 AnchorPoint = Vector2.new(1, 0),
                 Size = UDim2.new(0, 24, 0, 24),
                 Position = UDim2.new(1, 0, 0, 0),
@@ -162,6 +165,7 @@ function components.MiniTopbar(data)
                 Callback = data.Callback
             }),
             New "TextLabel" {
+                ZIndex = 2,
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, -24, 1, 0),
                 Text = data.Text,

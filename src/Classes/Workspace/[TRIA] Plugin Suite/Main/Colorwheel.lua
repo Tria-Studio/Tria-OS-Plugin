@@ -257,7 +257,7 @@ function Colorwheel:GetUI()
                             New "TextButton" {
                                 Text = "",
                                 Position = UDim2.new(-1, 0, -1, 0),
-                                Size = UDim2.new(3, 0, 2.05, 0),
+                                Size = UDim2.new(3, 0, 3, 0),
                                 BackgroundTransparency = 1,
                                 ZIndex = 2,
 
@@ -389,8 +389,8 @@ function Colorwheel:GetUI()
                         BackgroundColor3 = Theme.InputFieldBackground.Default,
                         BorderColor3 = Theme.Border.Default,
                         BorderSizePixel = 1,
-                        Position = UDim2.new(.205 - .025, 0, .92, 0),
-                        Size = UDim2.new(.275, 0, .06, 0),
+                        Position = UDim2.new(.05, 0, .92, 0),
+                        Size = UDim2.new(.26, 0, .06, 0),
                         TextColor3 = Theme.MainText.Default,
                         PlaceholderColor3 = Theme.DimmedText.Default,
                         PlaceholderText = "Hex",
@@ -419,14 +419,6 @@ function Colorwheel:GetUI()
                             UpdateColor()
                         end
                     },
-                    New "TextLabel" { --// Hex textlabel
-                        BackgroundTransparency = 1,
-                        Position = UDim2.new(0.025, 0, 0.92, 0),
-                        Size = UDim2.new(0.163, 0, 0.06, 0),
-                        Font = Enum.Font.SourceSansSemibold,
-                        TextColor3 = Theme.SubText.Default,
-                        Text = "Hex:"
-                    }
                 }
             }
         }
