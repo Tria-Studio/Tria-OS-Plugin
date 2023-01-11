@@ -214,7 +214,7 @@ end
 function components.ScrollingFrameHeader(text: string, layoutOrder: number)
     return New "TextLabel" {
         BackgroundColor3 = Theme.HeaderSection.Default,
-        Border = Theme.Border.Default,
+        BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
         BorderMode = Enum.BorderMode.Middle,
         Size = UDim2.new(1, 0, 0, 28),

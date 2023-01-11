@@ -1,4 +1,3 @@
-local TextService = game:GetService("TextService")
 local PluginBar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local OpenButton = PluginBar:CreateButton("TRIA.os Companion Plugin", "Tools to help map making easier!", "rbxassetid://12032105372", "Mapmaking Companion")
 local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 225, 250)
@@ -14,9 +13,6 @@ local Util = require(script.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local State = Fusion.State
-local Computed = Fusion.Computed
-local OnEvent = Fusion.OnEvent
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
