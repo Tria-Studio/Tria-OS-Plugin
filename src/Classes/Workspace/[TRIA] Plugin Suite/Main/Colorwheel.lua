@@ -1,4 +1,3 @@
-local DataStoreService = game:GetService("DataStoreService")
 local Fusion = require(script.Parent.Resources.Fusion)
 local Components = require(script.Parent.Resources.Components)
 local Theme = require(script.Parent.Resources.Themes)
@@ -68,14 +67,16 @@ local function GetColorDisplay(data)
                 [OnEvent "FocusLost"] = function()
                     local NewColor
                     local success = pcall(function()
-                        local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255)
                         if data.Display == "R" or data.Display == "G" or data.Display == "B" then
+                            local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255)
+
                             NewColor = Color3.fromRGB(data.Display == "R" and textNumber or chosenColor:get().R * 255,
                                 data.Display == "G" and textNumber or chosenColor:get().G * 255,
                                 data.Display == "B" and textNumber or chosenColor:get().B * 255)
                         else
                             local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255) / 255
                             local H, S, V = chosenColor:get():ToHSV()
+
                             NewColor = Color3.fromHSV(data.Display == "H" and textNumber or H,
                                 data.Display == "S" and textNumber or S,
                                 data.Display == "V" and textNumber or V)
