@@ -60,9 +60,9 @@ function components.TopbarButton(data)
         Active = Util.buttonsActive,
         AutoButtonColor = Util.buttonsActive,
         BackgroundColor3 = Computed(function()
-            Theme.Button.Hover:get()
-            Theme.Titlebar.Default:get()
-            return if data.Visible:get() then Theme.Button.Hover:get() else Theme.Titlebar.Default:get()
+            local hoverColor = Theme.RibbonButton.Hover:get()
+            local titlebarColor = Theme.RibbonButton.Default:get()
+            return if data.Visible:get() then hoverColor else titlebarColor
         end),
         Text = "",
         Size = UDim2.new(.167, 0, 1, 0),
@@ -131,7 +131,7 @@ end
 function components.PageHeader(Name: string)
     return  New "TextLabel" {
         Size = UDim2.new(1, 0, 0, 16),
-        BackgroundColor3 = Theme.Button.Hover,
+        BackgroundColor3 = Theme.Titlebar.Default,
         TextColor3 = Theme.TitlebarText.Default,
         Text = Name,
         AnchorPoint = Vector2.new(0, 1),

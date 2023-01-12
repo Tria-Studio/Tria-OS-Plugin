@@ -69,7 +69,13 @@ local themes = {
     Dropdown = {
         Default = State(StudioTheme:GetColor(GuideColor.Dropdown))
     },
-
+    RibbonButton = {
+        Default = State(StudioTheme:GetColor(GuideColor.RibbonButton)),
+        Hover = State(StudioTheme:GetColor(GuideColor.RibbonButton, GuideModifier.Hover))
+    },
+    Item = {
+        Default = State(StudioTheme:GetColor(GuideColor.Item)),
+    },
     CheckedFieldBackground = {
         Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldBackground))
     },
