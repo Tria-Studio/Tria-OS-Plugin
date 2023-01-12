@@ -66,6 +66,19 @@ local themes = {
     HeaderSection = {
         Default = State(StudioTheme:GetColor(GuideColor.HeaderSection))
     },
+    Dropdown = {
+        Default = State(StudioTheme:GetColor(GuideColor.Dropdown))
+    },
+
+    CheckedFieldBackground = {
+        Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldBackground))
+    },
+    CheckedFieldBorder = {
+        Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldBorder))
+    },
+    CheckedFieldIndicator = {
+        Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldIndicator))
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function()

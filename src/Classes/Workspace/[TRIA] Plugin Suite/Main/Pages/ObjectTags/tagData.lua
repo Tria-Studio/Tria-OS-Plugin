@@ -210,6 +210,7 @@ data.dataTypes = {
         _Show = {
             DisplayText = "_Show#",
             DisplayIcon = "rbxassetid://6031075931",
+            LayoutOrder = 1,
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -225,6 +226,7 @@ data.dataTypes = {
         _Hide = {
             DisplayText = "_Hide#",
             DisplayIcon = "rbxassetid://6031075929",
+            LayoutOrder = 2,
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -240,6 +242,7 @@ data.dataTypes = {
         _Fall = {
             DisplayText = "_Fall#",
             DisplayIcon = "rbxassetid://6031094674",
+            LayoutOrder = 3,
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -255,6 +258,7 @@ data.dataTypes = {
         _Destroy = {
             DisplayText = "_Destroy#",
             DisplayIcon = "rbxassetid://6022668962",
+            LayoutOrder = 5,
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -270,6 +274,7 @@ data.dataTypes = {
         _Sound = {
             DisplayText = "_Sound#",
             DisplayIcon = "rbxassetid://6026671215",
+            LayoutOrder = 4,
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -291,6 +296,7 @@ data.dataTypes = {
         _Explode = {
             DisplayText = "_Explode#",
             DisplayIcon = "rbxassetid://6034684949",
+            LayoutOrder = 6,
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -334,7 +340,7 @@ data.dataTypes = {
         
         _Button = {
             DisplayText = "_Button",
-            DisplayIcon = "rbxassetid://6274811030",
+            DisplayIcon = "rbxassetid://6026647916",
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -378,7 +384,7 @@ data.dataTypes = {
         },
         Zipline = {
             DisplayText = "Zipline",
-            DisplayIcon = "rbxassetid://6274811030",
+            DisplayIcon = "rbxassetid://6035067839",
             metadata = {
                 {
                     data = data.metadataTypes.ZiplineColor,

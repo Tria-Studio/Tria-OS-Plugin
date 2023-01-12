@@ -118,7 +118,7 @@ function selectMap:SetMap(Map: Model|Workspace)
         selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
         selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
         selectMap.selectTextColor:set(Theme.MainText.Default:get())
-        Util.mapModel = Map
+        Util.mapModel:set(Map)
         Util.MainMaid:DoCleaning()
 
 
@@ -185,11 +185,12 @@ function selectMap:SetMap(Map: Model|Workspace)
         selectMap.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
         if not selectMap.hasOptimizedStructure:get() then
+            task.wait()
             Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
         end
         
     else --// clear selection
-        Util.mapModel = nil
+        Util.mapModel:set(nil)
         selectMap.hasOptimizedStructure:set(false)
         selectMap.selectCancelColor:set(Theme.SubText.Default:get())
         selectMap.selectTextState:set("No map selected")
@@ -258,9 +259,9 @@ function selectMap:StopManualSelection()
     plugin:Deactivate()
 
     selectMap.selectCancelImage:set("rbxassetid://6022668885")
-    selectMap.selectCancelColor:set(if Util.mapModel then Theme.ErrorText.Default:get() else Theme.SubText.Default:get())
-    selectMap.selectTextState:set(if Util.mapModel then Util.mapModel.Settings.Main:GetAttribute("Name") else "No map selected")
-    selectMap.selectTextColor:set(if Util.mapModel then Theme.MainText.Default:get() else Theme.ErrorText.Default:get())
+    selectMap.selectCancelColor:set(if Util.mapModel:get() then Theme.ErrorText.Default:get() else Theme.SubText.Default:get())
+    selectMap.selectTextState:set(if Util.mapModel:get() then Util.mapModel:get().Settings.Main:GetAttribute("Name") else "No map selected")
+    selectMap.selectTextColor:set(if Util.mapModel:get() then Theme.MainText.Default:get() else Theme.ErrorText.Default:get())
 end
 
 function selectMap:AutoSelect()

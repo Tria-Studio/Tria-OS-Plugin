@@ -428,11 +428,13 @@ end
 function Colorwheel:GetColor()
     local Maid = Util.Maid.new()
     Util._Topbar.FreezeFrame:set(true)
+    Util.buttonsActive:set(false)
     visible:set(true)
 
     colorChosen:Wait()
     local Color = chosenColor:get()
    
+    Util.buttonsActive:set(true)
     Util._Topbar.FreezeFrame:set(false)
     visible:set(false)
     chosenColor:set(Color3.new(1, 1, 1))

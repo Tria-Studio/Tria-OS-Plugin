@@ -8,7 +8,7 @@ local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 
 local components = {
-    Constraints = require(script.Constraints)
+    Constraints = require(script.Constraints),
 }
 
 
@@ -57,7 +57,8 @@ function components.TopbarButton(data)
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     return New "TextButton" {
-        AutoButtonColor = true,
+        Active = Util.buttonsActive,
+        AutoButtonColor = Util.buttonsActive,
         BackgroundColor3 = Computed(function()
             Theme.Button.Hover:get()
             Theme.Titlebar.Default:get()
@@ -225,7 +226,7 @@ function components.ScrollingFrameHeader(text: string, layoutOrder: number)
         Font = Enum.Font.SourceSansBold,
         Text = text,
         TextColor3 = Theme.MainText.Default,
-        TextSize = 16,
+        TextSize = 17,
 
     }
 end

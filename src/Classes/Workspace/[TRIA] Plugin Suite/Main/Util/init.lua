@@ -3,6 +3,7 @@ local Signal = require(script.Signal)
 local Maid = require(script.Maid)
 
 local State = Fusion.State
+local Computed = Fusion.Computed
 
 local defaultMessageResponses = {
     "Ok",
@@ -19,9 +20,11 @@ local util = {
     Maid = Maid,
 
     Widget = nil,
-    mapModel = nil,
+    mapModel = State(nil),
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
+
+    buttonsActive = State(true),
 
     _Topbar = {
         FreezeFrame = State(false)
@@ -33,6 +36,17 @@ local util = {
         Option2 = State({}),
     }
 }
+
+
+
+util.buttonActiveFunc = function()
+    return util.mapModel:get() and util.buttonsActive:get()
+end
+
+Computed(function()
+    util.buttonsActive:set(util._Message.Text:get() == "")
+end)
+
 
 function util.CloseMessage()
     util._Message.Text:set("")
