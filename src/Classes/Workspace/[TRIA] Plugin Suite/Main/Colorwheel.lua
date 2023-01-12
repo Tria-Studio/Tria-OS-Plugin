@@ -256,8 +256,8 @@ function Colorwheel:GetUI()
                             
                             New "TextButton" {
                                 Text = "",
-                                Position = UDim2.new(-1, 0, -1, 0),
-                                Size = UDim2.new(3, 0, 3, 0),
+                                Position = UDim2.new(-1, 0, -.07, 0),
+                                Size = UDim2.new(3, 0, 1.13, 0),
                                 BackgroundTransparency = 1,
                                 ZIndex = 2,
 
