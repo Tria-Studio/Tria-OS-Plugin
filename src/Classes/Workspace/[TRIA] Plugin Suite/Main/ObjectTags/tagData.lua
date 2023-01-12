@@ -11,7 +11,6 @@ data.metadataTypes = {
     ButtonNum = {
         type = "EndOfName",
         dataType = "number",
-        displayName = "Button & Path #",
         default = 1,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -19,7 +18,6 @@ data.metadataTypes = {
     GroupButton = {
         type = "Attribute",
         dataType = "boolean",
-        displayName = "Group Button",
         default = false,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -27,7 +25,6 @@ data.metadataTypes = {
     ActiveColor = {
         type = "Attribute",
         dataType = "color",
-        displayName = "Active Color",
         default = nil,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -35,7 +32,6 @@ data.metadataTypes = {
     ActivatedColor = {
         type = "Attribute",
         dataType = "color",
-        displayName = "Activated Color",
         default = nil,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -43,7 +39,6 @@ data.metadataTypes = {
     InactiveColor = {
         type = "Attribute",
         dataType = "color",
-        displayName = "Inactive Color",
         default = nil,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -51,7 +46,6 @@ data.metadataTypes = {
     DisabledColor = {
         type = "Attribute",
         dataType = "color",
-        displayName = "Disabled Color",
         default = nil,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -59,15 +53,13 @@ data.metadataTypes = {
     LocatorImage = {
         type = "Attribute",
         dataType = "string",
-        displayName = "Locator Image",
         default = nil,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
     },
-    ActivatedSound = {
+    ACtivatedSound = {
         type = "Attribute",
         dataType = "string",
-        displayName = "Activated Sound",
         default = nil,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -77,7 +69,6 @@ data.metadataTypes = {
     _Delay = {
         type = "ChildInstanceValue",
         dataType = "number",
-        displayName = "Delay",
         default = 0,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -85,7 +76,6 @@ data.metadataTypes = {
     SoundId = {
         type = "ChildInstanceValue",
         dataType = "string",
-        displayName = "Sound ID",
         default = "",
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -93,7 +83,6 @@ data.metadataTypes = {
     LiquidNum = {
         type = "EndOfName",
         dataType = "number",
-        displayName = "Liquid #",
         default = 1,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -101,7 +90,6 @@ data.metadataTypes = {
     LiquidType = {
         type = "Attribute",
         dataType = "liquidSelect",
-        displayName = "Type",
         default = 1,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -109,7 +97,6 @@ data.metadataTypes = {
     Oxygen = {
         type = "Attribute",
         dataType = "number",
-        displayName = "Amount",
         default = 300,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -117,7 +104,6 @@ data.metadataTypes = {
     Speed = {
         type = "Attribute",
         dataType = "number",
-        displayName = "WalkSpeed",
         default = 40,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -125,7 +111,6 @@ data.metadataTypes = {
     Momentum = {
         type = "Attribute",
         dataType = "number",
-        displayName = "Momentum",
         default = 0,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -133,7 +118,6 @@ data.metadataTypes = {
     WalkSpeed = {
         type = "Attribute",
         dataType = "number",
-        displayName = "WalkSpeed",
         default = 100,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -141,7 +125,6 @@ data.metadataTypes = {
     JumpPower = {
         type = "Attribute",
         dataType = "number",
-        displayName = "JumpPower",
         default = 100,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -151,7 +134,6 @@ data.metadataTypes = {
     ZiplineColor = {
         type = "ConfigAttribute",
         dataType = "color",
-        displayName = "Wire Color",
         default = Color3.fromRGB(255, 10 , 10),
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -159,7 +141,6 @@ data.metadataTypes = {
     ZiplineJumpable = {
         type = "ConfigAttribute",
         dataType = "boolean",
-        displayName = "Jumpable Ziplines",
         default = false,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -168,14 +149,12 @@ data.metadataTypes = {
         type = "ConfigAttribute",
         dataType = "dropdown_materials",
         default = "Fabric",
-        displayName = "Wire Material",
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
     },
     ZiplineMomentum = {
         type = "ConfigAttribute",
         dataType = "boolean",
-        displayName = "Momentum",
         default = true,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -183,7 +162,6 @@ data.metadataTypes = {
     ZiplineSparkle = {
         type = "ConfigAttribute",
         dataType = "boolean",
-        displayName = "Wire Sparkles",
         default = true,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -191,7 +169,6 @@ data.metadataTypes = {
     ZiplineSpeed = {
         type = "ConfigAttribute",
         dataType = "number",
-        displayName = "Speed",
         default = 40,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -199,7 +176,6 @@ data.metadataTypes = {
     ZiplineWidth = {
         type = "ConfigAttribute",
         dataType = "number",
-        displayName = "Wire Thickness",
         default = 0.25,
         textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
@@ -207,51 +183,20 @@ data.metadataTypes = {
 }
 
 data.dataTypes = {
-    buttonTags = {
-        _Show = {
-            DisplayText = "_Show#",
-            DisplayIcon = "rbxassetid://6031075931",
-            metadata = {
-                {
-                    data = data.metadataTypes.ButtonNum,
-                    location = 1
-                }, {
-                    data = data.metadataTypes._Delay,
-                    location = 2
-                }
-            },
-            tagFormat = "ObjectValue",
-            IsTagApplicable = true,
+    _Show = {
+        DisplayText = "_Show#",
+        DisplayIcon = "rbxassetid://6031075931",
+        metadata = {
+            data.metadataTypes.ButtonNum,
+            data.metadataTypes._Delay
         },
-        _Hide = {
-            DisplayText = "_Hide#",
-            DisplayIcon = "rbxassetid://6031075929",
-            metadata = {
-                {
-                    data = data.metadataTypes.ButtonNum,
-                    location = 1
-                }, {
-                    data = data.metadataTypes._Delay,
-                    location = 2
-                }
-            },
-            tagFormat = "ObjectValue",
-            IsTagApplicable = true,
+        metadataLayout = {
+            "Half",
+            "Half",   
         },
-        _Fall = {
-            DisplayText = "_Fall#",
-            DisplayIcon = "rbxassetid://6031094674",
-            metadata = {
-                {
-                    data = data.metadataTypes.ButtonNum,
-                    location = 1
-                }, {
-                    data = data.metadataTypes._Delay,
-                    location = 2
-                }
-            },
-            tagFormat = "ObjectValue",
-            IsTagApplicable = true,
+        tagData = {
+            format = "ObjectValue",
+            changePartName = false,
         },
         _Destroy = {
             DisplayText = "_Destroy#",
@@ -332,7 +277,6 @@ data.dataTypes = {
             tagFormat = "_Action",
             IsTagApplicable = true,
         },
-        
         _Button = {
             DisplayText = "_Button",
             DisplayIcon = "rbxassetid://6274811030",
@@ -462,5 +406,6 @@ data.dataTypes = {
         },
     }
 }
+
 
 return data
