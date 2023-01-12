@@ -68,7 +68,7 @@ local themes = {
     },
 }
 
-settings().Studio.ThemeChanged:Connect(function(a)
+settings().Studio.ThemeChanged:Connect(function()
     StudioTheme = settings().Studio.Theme
     --TODO this doesnt work
     for Name, Value in pairs(themes) do

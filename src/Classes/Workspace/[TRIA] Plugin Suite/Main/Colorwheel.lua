@@ -165,7 +165,7 @@ function Colorwheel:GetUI()
                                 return Color3.new(1, 1, 1)
                             end
 
-                            local  H, S, V = chosenColor:get():ToHSV()
+                            local _, _, V = chosenColor:get():ToHSV()
                             return Color3.new(V, V, V)
                         end),
 
@@ -343,7 +343,7 @@ function Colorwheel:GetUI()
                                         return ""
                                     end
 
-                                    local H, S, V = chosenColor:get():ToHSV()
+                                    local H, _, _ = chosenColor:get():ToHSV()
                                     return math.floor(H * 255 + .5)
                                 end
                             }),
@@ -355,7 +355,7 @@ function Colorwheel:GetUI()
                                         return ""
                                     end
 
-                                    local H, S, V = chosenColor:get():ToHSV()
+                                    local _, S, _ = chosenColor:get():ToHSV()
                                     return math.floor(S * 255 + .5)
                                 end
                             }),
@@ -367,7 +367,7 @@ function Colorwheel:GetUI()
                                         return ""
                                     end
 
-                                    local H, S, V = chosenColor:get():ToHSV()
+                                    local _, _, V = chosenColor:get():ToHSV()
                                     return math.floor(V * 255 + .5)
                                 end
                             }),

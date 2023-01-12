@@ -5,7 +5,6 @@ local Util = require(script.Parent.Parent.Util)
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
-local State = Fusion.State
 local OnEvent = Fusion.OnEvent
 
 local components = {
@@ -220,6 +219,7 @@ function components.ScrollingFrameHeader(text: string, layoutOrder: number)
         BackgroundColor3 = Theme.HeaderSection.Default,
         BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
+        LayoutOrder = layoutOrder,
         BorderMode = Enum.BorderMode.Middle,
         Size = UDim2.new(1, 0, 0, 28),
         Font = Enum.Font.SourceSansBold,
