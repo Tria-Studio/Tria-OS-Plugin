@@ -2,9 +2,10 @@ local Fusion = require(script.Parent.Parent.Resources.Fusion)
 local Theme = require(script.Parent.Parent.Resources.Themes)
 local Components = require(script.Parent.Parent.Resources.Components)
 -- local Util = require(script.Parent.Util)
--- local TagData = require(script.tagData)
+local TagData = require(script.tagData)
 
 local New = Fusion.New
+local ForValues = Fusion.ForValues
 local Children = Fusion.Children
 
 local frame = {}
@@ -27,7 +28,16 @@ function frame:GetFrame(data)
                 [Children] = {
                     Components.Constraints.UIListLayout(),
                     Components.ScrollingFrameHeader("Button Event Tags", 1),
-                    
+                    New "Frame" {
+                        BackgroundTransparency = 1,
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        Size = UDim2.new(1, 0, 0, 0),
+                        LayoutOrder = 2,
+
+                        [Children] = ForValues(TagData.dataTypes.buttonTags, function(tagName, data)
+                            Components.
+                        end)
+                    }
                 }
             }
         }
