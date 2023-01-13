@@ -7,6 +7,7 @@ local Pages = require(script.Parent.Resources.Components.Pages)
 
 local Maid = Util.Maid.new()
 local State = Fusion.State
+local Computed = Fusion.Computed
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local selectMap = {
@@ -17,6 +18,7 @@ local selectMap = {
     selectCancelColor = State(Theme.SubText.Default:get()),
     selectCancelImage = State("rbxassetid://6022668885")
 }
+
 
 function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
     local score_1 = 0 -- d2

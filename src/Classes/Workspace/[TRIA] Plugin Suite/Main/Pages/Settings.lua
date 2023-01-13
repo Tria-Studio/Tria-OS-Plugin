@@ -14,6 +14,7 @@ function frame:GetFrame(data)
         Size = UDim2.new(1, 0, 1, 0),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
+        Name = "Settings",
 
         [Children] = {
             Components.PageHeader("Map Settings")

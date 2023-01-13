@@ -6,6 +6,7 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
+local State = Fusion.State
 
 local components = {
     Constraints = require(script.Constraints),
@@ -15,6 +16,8 @@ local components = {
 
 function components.TextButton(data)
     return New "TextButton" {
+        Active = data.Active,
+        AutoButtonColor = data.AutoButtonColor or true,
         BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
         BorderColor3 = Theme.Border.Default,
         AutomaticSize = data.AutomaticSize,
@@ -22,15 +25,17 @@ function components.TextButton(data)
         AnchorPoint = data.AnchorPoint,
         Size = data.Size,
         Font = data.Font, 
+        FontFace = data.FontFace,
         Position = data.Position,
         Visible = data.Visible or true,
         TextSize = data.TextSize,
         Text = data.Text,
         TextColor3 = data.TextColor3 or Theme.MainText.Default,
         BorderMode = Enum.BorderMode.Inset,
-        AutoButtonColor = true,
 
-        [OnEvent "Activated"] = data.Callback
+        [OnEvent "Activated"] = data.Callback,
+
+        [Children] = data.Children
     }
 end
 
@@ -130,6 +135,7 @@ end
 
 function components.PageHeader(Name: string)
     return  New "TextLabel" {
+        ZIndex = 2,
         Size = UDim2.new(1, 0, 0, 16),
         BackgroundColor3 = Theme.Titlebar.Default,
         TextColor3 = Theme.TitlebarText.Default,
@@ -140,7 +146,8 @@ function components.PageHeader(Name: string)
             BackgroundColor3 = Theme.Border.Default,
             Position = UDim2.new(0, 0, 1, 0),
             AnchorPoint = Vector2.new(0, .5),
-            Size = UDim2.new(1, 0, 0, 2)
+            Size = UDim2.new(1, 0, 0, 2),
+            ZIndex = 2
         }
     }
 end
@@ -215,9 +222,9 @@ function components.TwoOptions(option1Data, option2Data)
     }
 end
 
-function components.ScrollingFrameHeader(text: string, layoutOrder: number)
+function components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?)
     return New "TextLabel" {
-        BackgroundColor3 = Theme.HeaderSection.Default,
+        BackgroundColor3 = color or Theme.Item.Default,
         BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
         LayoutOrder = layoutOrder,
@@ -227,9 +234,82 @@ function components.ScrollingFrameHeader(text: string, layoutOrder: number)
         Text = text,
         TextColor3 = Theme.MainText.Default,
         TextSize = 17,
-
     }
 end
 
+function components.ScrollingFrame(data)
+    return New "ScrollingFrame" {
+        BorderColor3 = Theme.Border.Default,
+        CanvasSize = UDim2.new(0, 0, 0, 0),
+        BorderSizePixel = 1,
+        BackgroundColor3 = Theme.ScrollBarBackground.Default,
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        ScrollBarImageColor3 = Theme.ScrollBar.Default,
+        BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+        TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+
+        Size = data.Size,
+        Visible = data.Visible or true,
+
+        [Children] = data.Children
+    }
+end
+
+function components.Dropdown(data)
+    local dropdownVisible = State(data.DefaultState)
+
+   return New "Frame" {
+        Size = UDim2.new(1, 0, 0, 0),
+        BackgroundTransparency = 1,
+        AutomaticSize = Enum.AutomaticSize.Y,
+
+        [Children] = {
+            components.TextButton({
+                Active = Computed(Util.buttonActiveFunc),
+                AutoButtonColor = Computed(Util.buttonActiveFunc),
+
+                FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),
+                TextSize = 16,
+                Text = data.Header,
+                Size = UDim2.new(1, 0, 0, 24),
+                BackgroundColor3 = Theme.HeaderSection.Default,
+
+                Callback = function()
+                    dropdownVisible:set(not dropdownVisible:get())
+                end,
+        
+                Children = {
+                    components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), UDim.new(0, 12)),
+                    New "ImageLabel" {
+                        AnchorPoint = Vector2.new(1, .5),
+                        BackgroundTransparency = 1,
+                        Position = UDim2.new(1, 0, .5, 0),
+                        Size = UDim2.new(1.25, 0, 1.25, 0),
+                        Image = Computed(function()
+                            return if dropdownVisible:get() then "rbxassetid://6031091004" else "rbxassetid://6031090990"
+                        end),
+        
+                        [Children] = components.Constraints.UIAspectRatio(1)
+                    }
+                }
+            }),
+            New "TextLabel" {
+                AutomaticSize = Computed(function()
+                    return if dropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
+                 end),
+                 BackgroundColor3 = Theme.Notification.Default,
+                 BorderColor3 = Theme.Border.Default,
+                 TextColor3 = Theme.MainText.Default,
+                 BorderSizePixel = 1,
+                 Visible = dropdownVisible,
+                 Size = UDim2.new(1, 0, 0, 0),
+                 Position = UDim2.new(0, 0, 0, 24),
+                 Text = data.Text,
+                 RichText = true,
+                 TextWrapped = true
+            }
+        }
+    }
+end
 
 return components

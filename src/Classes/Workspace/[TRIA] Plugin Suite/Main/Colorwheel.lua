@@ -401,7 +401,6 @@ function Colorwheel:GetUI()
                             end
 
                             local Color = chosenColor:get()
-                            print(Color)
                             return string.format("#%s", Color:ToHex())
                         end),
 

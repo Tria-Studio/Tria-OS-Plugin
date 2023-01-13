@@ -1,6 +1,6 @@
-local Fusion = require(script.Parent.Parent.Fusion)
-local Theme = require(script.Parent.Parent.Themes)
-local Components = require(script.Parent)
+local Fusion = require(script.Parent.Parent.Parent.Resources.Fusion)
+local Theme = require(script.Parent.Parent.Parent.Resources.Themes)
+local Components = require(script.Parent.Parent.Parent.Resources.Components )
 local Util = require(script.Parent.Parent.Parent.Util)
 
 local New = Fusion.New
@@ -21,7 +21,7 @@ return function(name, data)
         Name = name,
 
         [Children] = New "Frame" {
-            BackgroundColor3 = Theme.Button.Default,
+            BackgroundColor3 = Theme.Button.Default,    
             Size = UDim2.new(1, 0, 0, 25),
             AutomaticSize = Enum.AutomaticSize.Y,
 

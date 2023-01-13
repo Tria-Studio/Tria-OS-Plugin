@@ -39,6 +39,9 @@ local themes = {
     InputFieldBackground = {
         Default = State(StudioTheme:GetColor(GuideColor.InputFieldBackground))
     },
+    InputFieldBorder = {
+        Default = State(StudioTheme:GetColor(GuideColor.InputFieldBorder))
+    },
     DimmedText = {
         Default = State(StudioTheme:GetColor(GuideColor.DimmedText))
     },
@@ -71,10 +74,19 @@ local themes = {
     },
     RibbonButton = {
         Default = State(StudioTheme:GetColor(GuideColor.RibbonButton)),
-        Hover = State(StudioTheme:GetColor(GuideColor.RibbonButton, GuideModifier.Hover))
+        Hover = State(StudioTheme:GetColor(GuideColor.RibbonButton, GuideModifier.Hover)),
     },
     Item = {
         Default = State(StudioTheme:GetColor(GuideColor.Item)),
+    },
+    TableItem = {
+        Default = State(StudioTheme:GetColor(GuideColor.TableItem)),
+    },
+    DialogButton = {
+        Default = State(StudioTheme:GetColor(GuideColor.DialogButton)),
+    },
+    InfoText = {
+        Default = State(StudioTheme:GetColor(GuideColor.InfoText)),
     },
     CheckedFieldBackground = {
         Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldBackground))

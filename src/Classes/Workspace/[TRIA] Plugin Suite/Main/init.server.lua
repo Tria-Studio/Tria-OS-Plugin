@@ -13,6 +13,7 @@ local Util = require(script.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
+local Computed = Fusion.Computed
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
@@ -122,9 +123,20 @@ New "Frame" {
 			}
 		},
 		require(script.Message), --// Message
-		require(script.Colorwheel):GetUI(), --// Color wheel
+		require(script.Colorwheel):GetUI(), --// Color wheel,
+		New "Frame" {
+			ZIndex = 4,
+			BackgroundTransparency = .75,
+			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+			Size = UDim2.new(1, 0, 1, -76),
+			Position = UDim2.new(0, 0, 0, 52),
+			Visible = Computed(function()
+				return Util.mapModel:get() == nil
+			end)
+		}
 	}
 }
+
 
 local function OnOpen()
 	SelectMap:AutoSelect()
