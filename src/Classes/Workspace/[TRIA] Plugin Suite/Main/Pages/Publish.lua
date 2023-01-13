@@ -1,4 +1,5 @@
 local ContentProvider = game:GetService("ContentProvider")
+local TextService = game:GetService("TextService")
 local Fusion = require(script.Parent.Parent.Resources.Fusion)
 local Theme = require(script.Parent.Parent.Resources.Themes)
 local Components = require(script.Parent.Parent.Resources.Components)
@@ -7,10 +8,12 @@ local New = Fusion.New
 local Children = Fusion.Children
 local ComputedPairs = Fusion.ComputedPairs
 local State = Fusion.State
+local Computed = Fusion.Computed
 
+local NoMapsFoundText = State("No whitelisted maps found.")
 local whitelistMapId = State("")
-local selectedPublishMap = State("")
-
+local selectedPublishMap = State(nil)
+local apiKey = State(nil)
 
 
 local frame = {}
@@ -34,6 +37,12 @@ local function GetInfoFrame(name, frames)
 end
 
 function frame:GetFrame(data)
+    local publishedMaps = {}
+
+    if #publishedMaps == 0 then
+        table.insert(publishedMaps, NoMapsFoundText:get())
+    end
+
     return New "Frame" {
         Size = UDim2.new(1, 0, 1, 0),
         BackgroundColor3 = Theme.MainBackground.Default,
@@ -44,9 +53,10 @@ function frame:GetFrame(data)
             Components.PageHeader("Map Whitelisting & Publishing"),
             Components.ScrollingFrame{
                 Size = UDim2.new(1, 0, 1, 0),
+                BackgroundColor3 = Theme.MainBackground.Default,
 
                 Children = {
-                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
+                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 12)),
                     Components.Dropdown({
                         Header = "Setup Instructions",
                         Text = 
@@ -68,14 +78,14 @@ function frame:GetFrame(data)
                         Text = "Your creator token is a long phrase which authenticates and allows you to publish/whitelist maps. <u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account. Users in a team create place are not able to see & obtain your token",
                         DefaultState = true
                     }),
-                    GetInfoFrame("Map Whitelisting", {
+                    GetInfoFrame("Map Whitelisting", { --// Whitelisting
                         New "TextBox" { --// Insert Whitelist ID
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                             BorderColor3 = Theme.InputFieldBorder.Default,
                             BorderSizePixel = 1,
                             LayoutOrder = 2,
                             Size = UDim2.new(1, 0, 0, 32),
-                            PlaceholderColor3 = Theme.InfoText.Default,
+                            PlaceholderColor3 = Theme.DimmedText.Default,
                             TextColor3 = Theme.SubText.Default,
                             PlaceholderText = "Map Model ID"
                         },
@@ -98,8 +108,147 @@ function frame:GetFrame(data)
                                 end
                             })
                         }
+                    }),
+                    GetInfoFrame("Map Publishing", { --// Publishing
+                        New "TextLabel" {
+                            RichText = true,
+                            LayoutOrder = 2,
+                            Size = UDim2.new(1, 0, 0, 20),
+                            AutomaticSize = Enum.AutomaticSize.Y,
+                            TextColor3 = Theme.MainText.Default,
+                            TextWrapped = true,
+                            BackgroundTransparency = 1,
+                            Text = "Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame."
+                        },
+                        New "Frame" {
+                            BackgroundColor3 = Theme.Item.Default,
+                            BorderColor3 = Theme.Border.Default,
+                            BorderSizePixel = 1,
+                            LayoutOrder = 3,
+                            AutomaticSize = Enum.AutomaticSize.Y,
+                            Size = UDim2.new(1, 0, 0, 0),
 
-                    })
+                            [Children] = {
+                                Components.Constraints.UIListLayout(),
+                                Components.ScrollingFrameHeader("Your Whitelisted Maps:", -1, nil, 20),
+                                New "Frame" {
+                                    AutomaticSize = Enum.AutomaticSize.Y,
+                                    Size = UDim2.new(1, 0, 0, 0),
+                                    BackgroundTransparency = 1,
+
+                                    [Children] = {
+                                        Components.Constraints.UIGridLayout(UDim2.new(0, 220, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.new(0, 6, 0, 6)),
+                                        ComputedPairs(publishedMaps, function(_, value)
+                                            if value == NoMapsFoundText:get() then
+                                                return New "TextLabel" {
+                                                    Size = UDim2.new(1, 0, 0, 20),
+                                                    Text = NoMapsFoundText:get(),
+                                                    BackgroundTransparency = 1,
+                                                    TextColor3 = Theme.ErrorText.Default,
+                                                }
+                                            else
+                                                --// This will create the actual map frame but im lazy rn
+                                            end
+                                        end)
+                                    }
+                                }
+                            }
+                        },
+                        New "TextLabel" {
+                            BackgroundColor3 = Theme.InputFieldBackground.Default,
+                            BorderColor3 = Theme.InputFieldBorder.Default,
+                            BorderSizePixel = 1,
+                            LayoutOrder = 4,
+                            Size = UDim2.new(1, 0, 0, 32),
+                            
+                            Text = Computed(function()
+                                return if selectedPublishMap:get() then selectedPublishMap:get().Name else "No map selected"
+                            end),
+
+                            TextColor3 = Computed(function()
+                                local selectedColor = Theme.SubText.Default:get()
+                                local inactiveColor = Theme.DimmedText.Default:get()
+                                return if selectedPublishMap:get() then selectedColor else inactiveColor
+                            end)
+                        },
+                        New "Frame" {
+                            BackgroundTransparency = 1,
+                            LayoutOrder = 5,
+                            Size = UDim2.new(1, 0, 0, 32),
+
+                            [Children] = Components.TextButton({
+                                AnchorPoint = Vector2.new(.5, .5),
+                                BackgroundColor3 = Theme.MainButton.Default,
+                                BorderSizePixel = 2,
+                                Position = UDim2.new(0.5, 0, 0.45, 0),
+                                Size = UDim2.new(0.4, 0, 0, 24),
+                                Text = "Publish",
+                                TextColor3 = Theme.BrightText.Default,
+
+                                Callback = function()
+                                    -- this function will call to publish
+                                end
+                            })
+                        }
+                    }),
+                    GetInfoFrame("TRIA Map Creator Key", { --// API Key
+                        Components.Dropdown({
+                            LayoutOrder = 2,
+                            Header = "How This Works",
+                            Text = [[To get your TRIA Map Creator Key, follow the steps at the top of this page.
+
+                            This is where you will enter your TRIA Map Creator Key. You must do this in order to use this page otherwise it will not work.]],
+                            DefaultState = true
+                        }),
+                        New "TextLabel" { --// Status
+                            RichText = true,
+                            LayoutOrder = 3,
+                            Size = UDim2.new(1, 0, 0, 20),
+                            TextColor3 = Theme.MainText.Default,
+                            TextWrapped = true,
+                            BackgroundTransparency = 1,
+                            Text = Computed(function()
+                                return if apiKey:get() 
+                                    then '<u>Status:</u> <font color="rgb(25,255,0)"> Submitted</font>' 
+                                    else '<u>Status:</u> <font color="rgb(255,75,0)"> Not Submitted</font>'
+                            end)
+                        },
+                        New "TextBox" { --// Insert API Key
+                            BackgroundColor3 = Theme.InputFieldBackground.Default,
+                            BorderColor3 = Theme.InputFieldBorder.Default,
+                            BorderSizePixel = 1,
+                            LayoutOrder = 4,
+                            Size = UDim2.new(1, 0, 0, 32),
+                            PlaceholderColor3 = Theme.DimmedText.Default,
+                            TextColor3 = Theme.SubText.Default,
+                            PlaceholderText = "Insert TRIA Map Creator Key"
+                        },
+                        New "Frame" {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, 30),
+                            LayoutOrder = 5,
+
+                            [Children] = Components.TextButton({
+                                AnchorPoint = Vector2.new(.5, .5),
+                                BackgroundColor3 = Theme.MainButton.Default,
+                                BorderSizePixel = 2,
+                                Position = UDim2.new(0.5, 0, 0.45, 0),
+                                Size = UDim2.new(0.4, 0, 0, 24),
+                                Text = "Submit",
+                                TextColor3 = Theme.BrightText.Default,
+
+                                Callback = function()
+                                    -- this function will call to whitelist
+                                end
+                            })
+                        },
+                    }),
+                    New "Frame" {
+                        Name = "spacer",
+                        BackgroundTransparency = 1,
+                        LayoutOrder = 6,
+                        Size = UDim2.new(1, 0, 0, 25)
+                    }
                 }
             }
         }

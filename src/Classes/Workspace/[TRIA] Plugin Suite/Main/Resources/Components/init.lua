@@ -222,14 +222,14 @@ function components.TwoOptions(option1Data, option2Data)
     }
 end
 
-function components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?)
+function components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?, size: number?)
     return New "TextLabel" {
-        BackgroundColor3 = color or Theme.Item.Default,
+        BackgroundColor3 = color or Theme.HeaderSection.Default,
         BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
         LayoutOrder = layoutOrder,
         BorderMode = Enum.BorderMode.Middle,
-        Size = UDim2.new(1, 0, 0, 28),
+        Size = UDim2.new(1, 0, 0, size or 28),
         Font = Enum.Font.SourceSansBold,
         Text = text,
         TextColor3 = Theme.MainText.Default,
@@ -242,7 +242,8 @@ function components.ScrollingFrame(data)
         BorderColor3 = Theme.Border.Default,
         CanvasSize = UDim2.new(0, 0, 0, 0),
         BorderSizePixel = 1,
-        BackgroundColor3 = Theme.ScrollBarBackground.Default,
+        VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
+        BackgroundColor3 = data.BackgroundColor3 or Theme.ScrollBarBackground.Default,
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
         ScrollBarImageColor3 = Theme.ScrollBar.Default,
         BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
@@ -262,6 +263,7 @@ function components.Dropdown(data)
         Size = UDim2.new(1, 0, 0, 0),
         BackgroundTransparency = 1,
         AutomaticSize = Enum.AutomaticSize.Y,
+        LayoutOrder = data.LayoutOrder,
 
         [Children] = {
             components.TextButton({
@@ -272,7 +274,7 @@ function components.Dropdown(data)
                 TextSize = 16,
                 Text = data.Header,
                 Size = UDim2.new(1, 0, 0, 24),
-                BackgroundColor3 = Theme.HeaderSection.Default,
+                BackgroundColor3 = Theme.Button.Default,
 
                 Callback = function()
                     dropdownVisible:set(not dropdownVisible:get())

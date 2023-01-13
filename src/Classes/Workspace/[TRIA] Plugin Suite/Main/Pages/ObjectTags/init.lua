@@ -21,10 +21,11 @@ function frame:GetFrame(data)
             Components.ScrollingFrame({
                 Size = UDim2.new(1, 0, 1, 0),
                 CanvasSize = UDim2.new(0, 0, 0, 180),
+                BackgroundColor3 = Theme.MainBackground.Default,
 
                 Children = {
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
-                    Components.ScrollingFrameHeader("Button Event Tags", 1, Theme.HeaderSection.Default),
+                    Components.ScrollingFrameHeader("Button Event Tags", 1),
                     New "Frame" {
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
@@ -38,7 +39,7 @@ function frame:GetFrame(data)
                             end)
                         },
                     },
-                    Components.ScrollingFrameHeader("Object Tags", 3, Theme.HeaderSection.Default),
+                    Components.ScrollingFrameHeader("Object Tags", 3),
                     New "Frame" {
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
