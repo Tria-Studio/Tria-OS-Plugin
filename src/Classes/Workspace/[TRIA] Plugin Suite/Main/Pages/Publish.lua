@@ -145,7 +145,7 @@ function frame:GetFrame(data)
 
                                     [Children] = {
                                         Computed(function()
-                                            return Components.Constraints.UIGridLayout(UDim2.fromOffset(220, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.fromOffset(6, 6)),
+                                            return Components.Constraints.UIGridLayout(UDim2.fromOffset(220, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.fromOffset(6, 6))
                                         end, Fusion.cleanup),
                                         
                                         ForValues(publishedMaps, function(value)
