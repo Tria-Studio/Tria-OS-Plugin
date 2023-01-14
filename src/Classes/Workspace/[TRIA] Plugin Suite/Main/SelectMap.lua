@@ -220,7 +220,7 @@ function selectMap:StartMapSelection()
     selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
     selectMap.selectTextState:set("Click to select")
     selectMap.selectTextColor:set(Theme.SubText.Default:get())
-    Maid:GiveTask(Highlight)
+    Maid:GiveTask(mapHighlight)
     selectMap.selectingMap:set(true)
     plugin:Activate(true)
 
