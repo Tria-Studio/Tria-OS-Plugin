@@ -210,7 +210,7 @@ function components.TwoOptions(option1Data, option2Data)
             components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Right, UDim.new(0, 6), Enum.VerticalAlignment.Center),
             components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 3)),
             optionButtonComponent(option1Data),
-            optionButtonComponent(option2DataData),
+            optionButtonComponent(option2Data),
         },
     }
 end
