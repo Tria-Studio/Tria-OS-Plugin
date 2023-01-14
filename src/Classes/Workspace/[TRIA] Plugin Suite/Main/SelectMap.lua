@@ -249,6 +249,7 @@ function selectMap:StartMapSelection()
     end))
 
     Maid:GiveTask(mouse.Button1Down:Connect(function()
+        selectMap:SetMap(currentTarget)
         selectMap.selectingMap:set(false)
         selectMap.selectCancelImage:set("rbxassetid://6022668885")
         Maid:DoCleaning()
