@@ -33,16 +33,16 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
     if not ignoreChecks then
         local script1: Script? = Map:FindFirstChild("EventScript")
         if script1 and string.find(script1.Source, "workspace.MapTest.GetMapFunctions:Invoke()", 1, true) then
-            score_1 += .5
+            score_1 += 0.5
         end
         if script1 and string.find(script1.Source, "workspace.Multiplayer.GetMapVals:Invoke()", 1, true) then
-            score_2 += .5
+            score_2 += 0.5
         end
     end
 
     local script2: Script? = Map:FindFirstChild("MapScript")
     if script2 and (string.find(script2.Source, "game.GetMapLib:Invoke()()", 1, true) or string.find(script2.Source, "ServerStorage.Bindables.GetMapLib:Invoke()()", 1, true)) then
-        score_3 += .5
+        score_3 += 0.5
         hasMapScript = true
     end
 
@@ -54,18 +54,18 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
         local settings1 = Map:FindFirstChild("MapInfo")
         if settings1 and settings1:FindFirstChild("Lighting")and settings1:FindFirstChild("Audio") and settings1:FindFirstChild("Creator")
         and settings1:FindFirstChild("Difficulty") and settings1:FindFirstChild("MapImage") and settings1:FindFirstChild("MapName") then
-            score_1 += .5
+            score_1 += 0.5
         end
     
         if settings2 and settings2:FindFirstChild("Rescue") and settings2:FindFirstChild("BGM") and settings2:FindFirstChild("MaxTime")
         and settings2:FindFirstChild("Difficulty") and settings2:FindFirstChild("MapImage") and settings2:FindFirstChild("MapName") then
-            score_2 += .5
+            score_2 += 0.5
         end
     end
 
      if settings2 and settings2:FindFirstChild("Main") and settings2:FindFirstChild("Lighting")
      and settings2:FindFirstChild("Liquids") and (settings2:FindFirstChild("Button") or settings2:FindFirstChild("Buttons")) then
-        score_3 += .5
+        score_3 += 0.5
         hasSettings = true
      end
 
@@ -73,26 +73,26 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
 
     if not ignoreChecks then
         if Map:FindFirstChild("ExitWall") and Map:FindFirstChild("MapPreviewCamera") then
-            score_1 += .25
+            score_1 += 0.25
         end
         if Map:FindFirstChild("WalkspeedBooster", true) or Map:FindFirstChild("TeleporterA1", true) and Map:FindFirstChild("TeleporterA2", true) then
-            score_1 += .125
+            score_1 += 0.125
         end
 
         if Map:FindFirstChild("Intro") and Map:FindFirstChild("Intro"):IsA("Model") then
-            score_2 += .125
+            score_2 += 0.125
         end
         if Map:FindFirstChild("OST_List") or Map:FindFirstChild("_Variants", true) then
-            score_2 += .125
+            score_2 += 0.125
         end
         if Map:FindFirstChild("EndPole", true) and Map:FindFirstChild("EndPole", true):FindFirstChild("RopePiece")
         and Map:FindFirstChild("StartPole", true) and Map:FindFirstChild("StartPole", true):FindFirstChild("RopePiece") then
-            score_2 += .125
+            score_2 += 0.125
         end
     end
 
      if Map:IsA("Model") or Map:IsA("Workspace") then
-        if score_1 > .875 or score_2 > 1 then
+        if score_1 > 0.875 or score_2 > 1 then
             return false, "Unknown map type detected. Please make sure this map is a TRIA.os map as this plugin only supports TRIA.os map development."
         end
 

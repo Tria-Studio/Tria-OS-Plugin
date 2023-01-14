@@ -41,7 +41,7 @@ return function(name, data)
                     [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil)
                 },
                 New "ImageLabel" { --// Checkbox
-                    BackgroundTransparency = .25,
+                    BackgroundTransparency = 0.25,
                     BackgroundColor3 = Theme.CheckedFieldBackground.Default,
                     BorderColor3 = Theme.CheckedFieldBorder.Default,
                     BorderSizePixel = 1,

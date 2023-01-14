@@ -8,7 +8,7 @@ local Children = Fusion.Children
 local Computed = Fusion.Computed
 
 return New "Frame" { --// Message
-	BackgroundTransparency = .75,
+	BackgroundTransparency = 0.75,
 	BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
 	Position = UDim2.fromScale(0, 0),
@@ -20,11 +20,11 @@ return New "Frame" { --// Message
 		New "ImageLabel" {
 			BackgroundTransparency = 1,
 			Size = UDim2.new(1, -12, 0, 152),
-			Position = UDim2.fromScale(.5, .5),
-			AnchorPoint = Vector2.new(.5, .5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			AnchorPoint = Vector2.new(0.5, 0.5),
 			Image = "rbxassetid://8697780388",
 			ImageColor3 = Color3.fromRGB(0, 0, 0),
-			ImageTransparency = .5,
+			ImageTransparency = 0.5,
 			ScaleType = Enum.ScaleType.Slice,
 			SliceCenter = Rect.new(200, 200, 300, 300),
 			SliceScale = 0.075
@@ -32,8 +32,8 @@ return New "Frame" { --// Message
 		New "Frame" {
 			BackgroundColor3 = Theme.Notification.Default,
 			BorderColor3 = Theme.Border.Default,
-			AnchorPoint = Vector2.new(.5, .5),
-			Position = UDim2.fromScale(.5, .5),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.new(1, -36, 0, 128),
 
 			[Children] = {

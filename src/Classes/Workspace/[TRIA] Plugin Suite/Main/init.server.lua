@@ -86,9 +86,9 @@ New "Frame" {
 			[Children] = {
 				New "TextLabel" {
 					BackgroundTransparency = 1,
-					AnchorPoint = Vector2.new(0, .5),
+					AnchorPoint = Vector2.new(0, 0.5),
 					Size = UDim2.new(0, 70, 1, -4),
-					Position = UDim2.new(0, 4, .5, 0),
+					Position = UDim2.new(0, 4, 0.5, 0),
 					Text = "Selected Map:",
 					TextColor3 = Theme.TitlebarText.Default,
 				},
@@ -103,9 +103,9 @@ New "Frame" {
 					end
 				}),
 				Components.ImageButton({
-					AnchorPoint = Vector2.new(1, .5),
+					AnchorPoint = Vector2.new(1, 0.5),
 					Size = UDim2.fromOffset(20, 20),
-					Position = UDim2.new(1, -2, .5, 0),
+					Position = UDim2.new(1, -2, 0.5, 0),
 					Image = SelectMap.selectCancelImage,
 					ImageColor3 = SelectMap.selectCancelColor,
 					BackgroundColor3 = Theme.Button.Default,
@@ -125,7 +125,7 @@ New "Frame" {
 
 		New "Frame" {
 			ZIndex = 4,
-			BackgroundTransparency = .75,
+			BackgroundTransparency = 0.75,
 			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 			Size = UDim2.new(1, 0, 1, -76),
 			Position = UDim2.fromOffset(0, 52),
