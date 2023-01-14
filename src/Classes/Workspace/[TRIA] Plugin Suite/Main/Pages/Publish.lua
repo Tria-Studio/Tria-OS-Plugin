@@ -11,11 +11,13 @@ local Children = Fusion.Children
 local ForValues = Fusion.ForValues
 local Value = Fusion.Value
 local Computed = Fusion.Computed
+local Ref = Fusion.Ref
 
 local NoMapsFoundText = Value("No whitelisted maps found.")
 local whitelistMapId = Value("")
 local selectedPublishMap = Value(nil)
-local apiKey = Value(nil)
+local apiKey = Value("")
+local apiTextbox = Value()
 
 local frame = {}
 
@@ -44,7 +46,7 @@ function frame:GetFrame(data)
         table.insert(publishedMaps, NoMapsFoundText:get())
     end
 
-    return New "Frame" {
+    local newFrame = New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
@@ -208,9 +210,10 @@ function frame:GetFrame(data)
                         Components.Dropdown({
                             LayoutOrder = 2,
                             Header = "How This Works",
-                            Text = [[To get your TRIA Map Creator Key, follow the steps at the top of this page.
-
-                            This is where you will enter your TRIA Map Creator Key. You must do this in order to use this page otherwise it will not work.]],
+                            Text = [[
+                                To get your TRIA Map Creator Key, follow the steps at the top of this page.
+                                This is where you will enter your TRIA Map Creator Key. You must do this in order to use this page otherwise it will not work.
+                            ]],
                             DefaultState = true
                         }),
 
@@ -222,7 +225,7 @@ function frame:GetFrame(data)
                             TextWrapped = true,
                             BackgroundTransparency = 1,
                             Text = Computed(function()
-                                return if apiKey:get() 
+                                return if #apiKey:get() > 0
                                     then '<u>Status:</u> <font color="rgb(25,255,0)"> Submitted</font>' 
                                     else '<u>Status:</u> <font color="rgb(255,75,0)"> Not Submitted</font>'
                             end)
@@ -236,7 +239,8 @@ function frame:GetFrame(data)
                             Size = UDim2.new(1, 0, 0, 32),
                             PlaceholderColor3 = Theme.DimmedText.Default,
                             TextColor3 = Theme.SubText.Default,
-                            PlaceholderText = "Insert TRIA Map Creator Key"
+
+                            [Ref] = apiTextbox
                         },
 
                         New "Frame" {
@@ -270,6 +274,19 @@ function frame:GetFrame(data)
             }
         }
     }
+
+    local apiBox = apiTextbox:get()
+    apiBox:GetPropertyChangedSignal("Text"):Connect(function()
+        local currentText = apiBox.Text
+        if currentText:match("[%a%w]") ~= nil then
+            currentText = currentText:gsub(".", "*")
+            apiBox.Text = currentText
+        end
+    end)
+
+    return newFrame
 end
+
+
 
 return frame
