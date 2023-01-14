@@ -69,7 +69,7 @@ function components.TopbarButton(data)
             return if data.Visible:get() then hoverColor else titlebarColor
         end),
         Text = "",
-        Size = UDim2.fromScale(.167, 1),
+        Size = UDim2.fromScale(0.167, 1),
         
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get() then
@@ -96,8 +96,8 @@ function components.TopbarButton(data)
                         Size = UDim2.new(0, 2, 1, 0),
                     },
                     New "Frame" {
-                        AnchorPoint = Vector2.new(.5, 0),
-                        Position = UDim2.fromScale(.5, 0),
+                        AnchorPoint = Vector2.new(0.5, 0),
+                        Position = UDim2.fromScale(0.5, 0),
                         BackgroundColor3 = Theme.MainButton.Default,
                         Size = UDim2.new(1, -4, 0, 2),
                     },
@@ -112,18 +112,18 @@ function components.TopbarButton(data)
                 end),
 
                 [Children] =  New "Frame" {
-                    AnchorPoint = Vector2.new(.5, 1),
-                    Position = UDim2.fromScale(.5, 1),
+                    AnchorPoint = Vector2.new(0.5, 1),
+                    Position = UDim2.fromScale(0.5, 1),
                     BackgroundColor3 = Theme.Border.Default,
                     Size = UDim2.new(1, 0, 0, 2),
                 },
             },
             New "ImageLabel" {
                 ImageColor3 = Theme.BrightText.Default,
-                AnchorPoint = Vector2.new(.5, .5),
+                AnchorPoint = Vector2.new(0.5, 0.5),
                 BackgroundTransparency = 1,
-                Position = UDim2.fromScale(.5, .5),
-                Size = UDim2.new(1, 0, .7, 0),
+                Position = UDim2.fromScale(0.5, 0.5),
+                Size = UDim2.new(1, 0, 0.7, 0),
                 Image = data.Icon,
 
                 [Children] = components.Constraints.UIAspectRatio(1),
@@ -144,7 +144,7 @@ function components.PageHeader(Name: string)
         [Children] = New "Frame" {
             BackgroundColor3 = Theme.Border.Default,
             Position = UDim2.fromScale(0, 1),
-            AnchorPoint = Vector2.new(0, .5),
+            AnchorPoint = Vector2.new(0, 0.5),
             Size = UDim2.new(1, 0, 0, 2),
             ZIndex = 2
         }
@@ -276,9 +276,9 @@ function components.Dropdown(data)
                 Children = {
                     components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), UDim.new(0, 12)),
                     New "ImageLabel" {
-                        AnchorPoint = Vector2.new(1, .5),
+                        AnchorPoint = Vector2.new(1, 0.5),
                         BackgroundTransparency = 1,
-                        Position = UDim2.fromScale(1, .5),
+                        Position = UDim2.fromScale(1, 0.5),
                         Size = UDim2.fromScale(1.25, 1.25),
                         Image = Computed(function()
                             return if dropdownVisible:get() then "rbxassetid://6031091004" else "rbxassetid://6031090990"
