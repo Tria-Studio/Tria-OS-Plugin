@@ -9,11 +9,11 @@ local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 
-local components = {
+local Components = {
     Constraints = require(script.Constraints),
 }
 
-function components.TextButton(data)
+function Components.TextButton(data)
     return New "TextButton" {
         Active = data.Active,
         AutoButtonColor = data.AutoButtonColor or true,
@@ -38,7 +38,7 @@ function components.TextButton(data)
     }
 end
 
-function components.ImageButton(data)
+function Components.ImageButton(data)
     return New "ImageButton" {
         BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
         BorderColor3 = Theme.Border.Default,
@@ -56,7 +56,7 @@ function components.ImageButton(data)
     }
 end
 
-function components.TopbarButton(data)
+function Components.TopbarButton(data)
     local Pages = require(script.Pages)
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
@@ -126,13 +126,13 @@ function components.TopbarButton(data)
                 Size = UDim2.new(1, 0, 0.7, 0),
                 Image = data.Icon,
 
-                [Children] = components.Constraints.UIAspectRatio(1),
+                [Children] = Components.Constraints.UIAspectRatio(1),
             }
         }
     }
 end
 
-function components.PageHeader(Name: string)
+function Components.PageHeader(Name: string)
     return  New "TextLabel" {
         ZIndex = 2,
         Size = UDim2.new(1, 0, 0, 16),
@@ -141,17 +141,19 @@ function components.PageHeader(Name: string)
         Text = Name,
         AnchorPoint = Vector2.new(0, 1),
 
-        [Children] = New "Frame" {
-            BackgroundColor3 = Theme.Border.Default,
-            Position = UDim2.fromScale(0, 1),
-            AnchorPoint = Vector2.new(0, 0.5),
-            Size = UDim2.new(1, 0, 0, 2),
-            ZIndex = 2
+        [Children] = {
+            New "Frame" {
+                BackgroundColor3 = Theme.Border.Default,
+                Position = UDim2.fromScale(0, 1),
+                AnchorPoint = Vector2.new(0, 0.5),
+                Size = UDim2.new(1, 0, 0, 2),
+                ZIndex = 2
+            },
         }
     }
 end
 
-function components.MiniTopbar(data)
+function Components.MiniTopbar(data)
   return New "Frame" { --// Topbar
         BackgroundColor3 = Theme.CategoryItem.Default,
         BorderColor3 = Theme.Border.Default,
@@ -160,7 +162,7 @@ function components.MiniTopbar(data)
         Size = UDim2.new(1, 0, 0, 24),
     
         [Children] = {
-            components.ImageButton({
+            Components.ImageButton({
                 ZIndex = 2,
                 AnchorPoint = Vector2.new(1, 0),
                 Size = UDim2.fromOffset(24, 24),
@@ -179,14 +181,14 @@ function components.MiniTopbar(data)
                 Font = Enum.Font.SourceSansBold,
                 TextXAlignment = Enum.TextXAlignment.Left,
 
-                [Children] = components.Constraints.UIPadding(nil, nil, UDim.new(0, 8))
+                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8))
             }
         }
     }
 end
 
 function optionButtonComponent(data)
-    return components.TextButton({
+    return Components.TextButton({
         LayoutOrder = 1,
         BackgroundColor3 = Theme.Button.Selected,
         Size = UDim2.fromOffset(56, 18),
@@ -196,10 +198,10 @@ function optionButtonComponent(data)
         Font = Enum.Font.SourceSansSemibold,
         BorderMode = Enum.BorderMode.Outline,
         Callback = data.Callback
-    }),
+    })
 end
 
-function components.TwoOptions(option1Data, option2Data)
+function Components.TwoOptions(option1Data, option2Data)
     return New "Frame" { --// Buttons
         AnchorPoint = Vector2.new(0, 1),
         BackgroundTransparency = 1,
@@ -207,15 +209,15 @@ function components.TwoOptions(option1Data, option2Data)
         Size = UDim2.new(1, 0, 0, 24),
 
         [Children] = {
-            components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Right, UDim.new(0, 6), Enum.VerticalAlignment.Center),
-            components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 3)),
+            Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Right, UDim.new(0, 6), Enum.VerticalAlignment.Center),
+            Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 3)),
             optionButtonComponent(option1Data),
             optionButtonComponent(option2Data),
         },
     }
 end
 
-function components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?, size: number?)
+function Components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?, size: number?)
     return New "TextLabel" {
         BackgroundColor3 = color or Theme.HeaderSection.Default,
         BorderColor3 = Theme.Border.Default,
@@ -230,7 +232,7 @@ function components.ScrollingFrameHeader(text: string, layoutOrder: number, colo
     }
 end
 
-function components.ScrollingFrame(data)
+function Components.ScrollingFrame(data)
     return New "ScrollingFrame" {
         BorderColor3 = Theme.Border.Default,
         CanvasSize = UDim2.fromScale(0, 0),
@@ -249,7 +251,7 @@ function components.ScrollingFrame(data)
     }
 end
 
-function components.Dropdown(data)
+function Components.Dropdown(data)
     local dropdownVisible = Value(data.DefaultState)
 
    return New "Frame" {
@@ -259,7 +261,7 @@ function components.Dropdown(data)
         LayoutOrder = data.LayoutOrder,
 
         [Children] = {
-            components.TextButton({
+            Components.TextButton({
                 Active = Computed(Util.buttonActiveFunc),
                 AutoButtonColor = Computed(Util.buttonActiveFunc),
 
@@ -274,7 +276,7 @@ function components.Dropdown(data)
                 end,
         
                 Children = {
-                    components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), UDim.new(0, 12)),
+                    Components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), UDim.new(0, 12)),
                     New "ImageLabel" {
                         AnchorPoint = Vector2.new(1, 0.5),
                         BackgroundTransparency = 1,
@@ -284,7 +286,7 @@ function components.Dropdown(data)
                             return if dropdownVisible:get() then "rbxassetid://6031091004" else "rbxassetid://6031090990"
                         end),
         
-                        [Children] = components.Constraints.UIAspectRatio(1)
+                        [Children] = Components.Constraints.UIAspectRatio(1)
                     }
                 }
             }),
@@ -307,4 +309,4 @@ function components.Dropdown(data)
     }
 end
 
-return components
+return Components
