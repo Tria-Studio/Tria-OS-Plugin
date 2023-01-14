@@ -145,7 +145,7 @@ function frame:GetFrame(data)
 
                                     [Children] = {
                                         Computed(function()
-                                            return Components.Constraints.UIGridLayout(UDim2.fromOffset(220, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.fromOffset(6, 6))
+                                            return Components.Constraints.UIGridLayout(UDim2.new(1, 0, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.fromOffset(6, 6))
                                         end, Fusion.cleanup),
                                         
                                         ForValues(publishedMaps, function(value)
@@ -157,7 +157,7 @@ function frame:GetFrame(data)
                                                     TextColor3 = Theme.ErrorText.Default,
                                                 }
                                             else
-                                                --// This will create the actual map frame but im lazy rn
+                                                --// GRIF CREATE A MAP FRAME U LAZY NERD
                                             end
                                         end, Fusion.cleanup)
                                     }

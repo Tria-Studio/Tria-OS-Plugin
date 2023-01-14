@@ -14,6 +14,8 @@ local defaultMessageResponses = {
     "Got it",
     "Alright",
     "Yeah",
+    "Cool",
+    "Ok thanks"
 }
 
 local util = {
