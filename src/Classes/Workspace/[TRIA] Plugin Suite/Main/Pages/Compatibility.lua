@@ -1,11 +1,10 @@
-local Fusion = require(script.Parent.Parent.Resources.Fusion)
-local Theme = require(script.Parent.Parent.Resources.Themes)
-local Components = require(script.Parent.Parent.Resources.Components)
+local Package = script.Parent.Parent
+local Fusion = require(Package.Resources.Fusion)
+local Theme = require(Package.Resources.Themes)
+local Components = require(Package.Resources.Components)
 
 local New = Fusion.New
 local Children = Fusion.Children
-
-
 
 local frame = {}
 

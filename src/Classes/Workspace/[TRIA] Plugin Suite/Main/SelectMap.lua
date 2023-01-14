@@ -1,9 +1,11 @@
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local Fusion = require(script.Parent.Resources.Fusion)
-local Theme = require(script.Parent.Resources.Themes)
-local Util = require(script.Parent.Util)
-local Pages = require(script.Parent.Resources.Components.Pages)
+
+local Package = script.Parent
+local Fusion = require(Package.Resources.Fusion)
+local Theme = require(Package.Resources.Themes)
+local Util = require(Package.Util)
+local Pages = require(Package.Resources.Components.Pages)
 
 local Maid = Util.Maid.new()
 local State = Fusion.State
@@ -19,11 +21,11 @@ local selectMap = {
     selectCancelImage = State("rbxassetid://6022668885")
 }
 
-
 function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
-    local score_1 = 0 -- d2
-    local score_2 = 0 -- fe2, fp 275, any other fe2 clone thats lazy and uses the fe2 mapkit lol
-    local score_3 = 0 -- tria.os
+    local score_1 = 0 -- D2
+    local score_2 = 0 -- FE2/FP275
+    local score_3 = 0 -- TRIA.os
+
     local hasMapScript, hasSettings, oldMapLib
 
     --// script check
@@ -109,7 +111,6 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
 end
 
 function selectMap:SetMap(Map: Model|Workspace)
-    print"setting map"
     if Map then -- add or change selection
         local success, message = selectMap:IsTriaMap(Map)
 
@@ -180,9 +181,11 @@ function selectMap:SetMap(Map: Model|Workspace)
                 Pages:ChangePage("Compatibility")
             end
         }
+
         local Option2 = {
             Text = "Got it",
         }
+
         local optimizedStructure = Map:FindFirstChild("Special")
         selectMap.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
@@ -191,7 +194,7 @@ function selectMap:SetMap(Map: Model|Workspace)
             Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
         end
         
-    else --// clear selection
+    else
         Util.mapModel:set(nil)
         selectMap.hasOptimizedStructure:set(false)
         selectMap.selectCancelColor:set(Theme.SubText.Default:get())
@@ -208,11 +211,10 @@ function selectMap:StartMapSelection()
         return
     end
 
-    local currentTarget
-    local lastTarget
-    local debounce
-    local Highlight = Instance.new("Highlight", workspace.CurrentCamera)
-    local Mouse = plugin:GetMouse()
+    local currentTarget, lastTarget, debounce
+
+    local mapHighlight = Instance.new("Highlight", workspace.CurrentCamera)
+    local mouse = plugin:GetMouse()
 
     selectMap.selectCancelImage:set("rbxassetid://6031094678")
     selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
@@ -223,7 +225,7 @@ function selectMap:StartMapSelection()
     plugin:Activate(true)
 
     Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
-        local target = Mouse.Target
+        local target = mouse.Target
 
         if target ~= lastTarget then
             lastTarget = target
@@ -237,17 +239,16 @@ function selectMap:StartMapSelection()
             end
 
             if target and selectMap:IsTriaMap(target) then
-                Highlight.Adornee = target
+                mapHighlight.Adornee = target
                 currentTarget = target
             else
-                Highlight.Adornee = nil
+                mapHighlight.Adornee = nil
                 currentTarget = nil
             end 
         end
     end))
 
-    Maid:GiveTask(Mouse.Button1Down:Connect(function()
-        print(selectMap:SetMap(currentTarget))
+    Maid:GiveTask(mouse.Button1Down:Connect(function()
         selectMap.selectingMap:set(false)
         selectMap.selectCancelImage:set("rbxassetid://6022668885")
         Maid:DoCleaning()
@@ -274,11 +275,11 @@ function selectMap:AutoSelect()
         return true
     end
 
-    for _, Thing: Instance in pairs(workspace:GetChildren()) do
-        if Thing:IsA("Model") then
-            local isMap, value = selectMap:IsTriaMap(Thing)
+    for _, v: Instance in pairs(workspace:GetChildren()) do
+        if v:IsA("Model") then
+            local isMap, value = selectMap:IsTriaMap(v)
             if isMap then
-                selectMap:SetMap(Thing)
+                selectMap:SetMap(v)
                 return true
             end
         end

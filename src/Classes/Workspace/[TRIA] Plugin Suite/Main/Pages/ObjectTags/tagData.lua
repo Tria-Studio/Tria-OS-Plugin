@@ -7,6 +7,7 @@ local data = {}
         - ChildInstanceValue
         - EndOfName
 ]]
+
 data.metadataTypes = {
     ButtonNum = {
         type = "EndOfName",

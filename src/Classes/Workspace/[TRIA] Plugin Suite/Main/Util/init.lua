@@ -15,6 +15,7 @@ local defaultMessageResponses = {
     "Alright",
     "Yeah",
 }
+
 local util = {
     Signal = Signal,
     Maid = Maid,
@@ -37,8 +38,6 @@ local util = {
     }
 }
 
-
-
 util.buttonActiveFunc = function()
     return util.mapModel:get() and util.buttonsActive:get()
 end
@@ -46,7 +45,6 @@ end
 Computed(function()
     util.buttonsActive:set(util._Message.Text:get() == "")
 end)
-
 
 function util.CloseMessage()
     util._Message.Text:set("")

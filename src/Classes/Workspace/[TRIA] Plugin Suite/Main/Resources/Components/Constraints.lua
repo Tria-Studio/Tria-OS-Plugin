@@ -1,10 +1,8 @@
-local Fusion = require(script.Parent.Parent.Fusion)
-
+local Package = script.Parent.Parent
+local Fusion = require(Package.Fusion)
 local New = Fusion.New
 
 local constraints = {}
-
-
 
 function constraints.UIListLayout(FillDirection: Enum.FillDirection, HorizontalAlignment: Enum.HorizontalAlignment, Padding: UDim?, VerticalAlignment: Enum.VerticalAlignment?)
     return New "UIListLayout" {
