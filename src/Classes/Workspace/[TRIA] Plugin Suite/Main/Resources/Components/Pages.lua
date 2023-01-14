@@ -4,24 +4,24 @@ local Pages = Resources.Parent.Pages
 
 local Value = Fusion.Value
 
-local pages = {
+local PageHandler = {
     pageData = {
         pages = {},
         currentPage = nil,
     }
 }
 
-function pages:ChangePage(NewPage: string)
-    if pages.pageData.currentPage == NewPage then
+function PageHandler:ChangePage(NewPage: string)
+    if PageHandler.pageData.currentPage == NewPage then
         return
     end
 
-    pages.pageData.pages[pages.pageData.currentPage].Visible:set(false)
-    pages.pageData.pages[NewPage].Visible:set(true)
-    pages.pageData.currentPage = NewPage
+    PageHandler.pageData.pages[PageHandler.pageData.currentPage].Visible:set(false)
+    PageHandler.pageData.pages[NewPage].Visible:set(true)
+    PageHandler.pageData.currentPage = NewPage
 end
 
-function pages:NewPage(data)
+function PageHandler:NewPage(data)
     local newPageData = {
         Name = data.Name,
         Frame = nil,
@@ -29,13 +29,13 @@ function pages:NewPage(data)
     }
 
     newPageData.Frame = require(Pages:FindFirstChild(newPageData.Name)):GetFrame(newPageData)
-    pages.pageData.pages[data.Name] = newPageData
+    PageHandler.pageData.pages[data.Name] = newPageData
 
     if newPageData.Visible:get() then
-        pages.pageData.currentPage = newPageData.Name
+        PageHandler.pageData.currentPage = newPageData.Name
     end
 
     return newPageData.Frame
 end
 
-return pages
+return PageHandler

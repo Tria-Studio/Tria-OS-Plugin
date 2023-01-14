@@ -15,7 +15,9 @@ local Ref = Fusion.Ref
 
 local NoMapsFoundText = Value("No whitelisted maps found.")
 local whitelistMapId = Value("")
+
 local selectedPublishMap = Value(nil)
+
 local apiKey = Value("")
 local apiTextbox = Value()
 
@@ -112,7 +114,9 @@ function frame:GetFrame(data)
 
                                 Callback = function()
                                     -- this function will call to whitelist
-                                end
+                                end,
+
+                                Children = Components.Constraints.UICorner(0, 8)
                             })
                         }
                     }),
@@ -201,7 +205,9 @@ function frame:GetFrame(data)
 
                                 Callback = function()
                                     -- this function will call to publish
-                                end
+                                end,
+
+                                Children = Components.Constraints.UICorner(0, 8)
                             })
                         }
                     }),
@@ -248,19 +254,42 @@ function frame:GetFrame(data)
                             Size = UDim2.new(1, 0, 0, 30),
                             LayoutOrder = 5,
 
-                            [Children] = Components.TextButton({
-                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                BackgroundColor3 = Theme.MainButton.Default,
-                                BorderSizePixel = 2,
-                                Position = UDim2.fromScale(0.5, 0.45),
-                                Size = UDim2.new(0.4, 0, 0, 24),
-                                Text = "Submit",
-                                TextColor3 = Theme.BrightText.Default,
+                            [Children] = {
+                                Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
+                                
+                                Components.TextButton({
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
+                                    BackgroundColor3 = Theme.MainButton.Default,
+                                    BorderSizePixel = 2,
+                                    Position = UDim2.fromScale(0.5, 0.45),
+                                    Size = UDim2.new(0.4, 0, 0, 24),
+                                    Text = "Submit",
+                                    TextColor3 = Theme.BrightText.Default,
+    
+                                    Callback = function()
+                                        apiKey:set(apiTextbox:get().Text)
+                                    end,
 
-                                Callback = function()
-                                    -- this function will call to whitelist
-                                end
-                            })
+                                    Children = Components.Constraints.UICorner(0, 8)
+                                }),
+
+                                Components.TextButton({
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
+                                    BackgroundColor3 = Theme.ErrorText.Default,
+                                    BorderSizePixel = 2,
+                                    Position = UDim2.fromScale(0.5, 0.45),
+                                    Size = UDim2.new(0.4, 0, 0, 24),
+                                    Text = "Remove",
+                                    TextColor3 = Theme.BrightText.Default,
+    
+                                    Callback = function()
+                                        apiKey:set("")
+                                        apiTextbox:get().Text = ""
+                                    end,
+
+                                    Children = Components.Constraints.UICorner(0, 8)
+                                })
+                            }
                         },
                     }),
 
