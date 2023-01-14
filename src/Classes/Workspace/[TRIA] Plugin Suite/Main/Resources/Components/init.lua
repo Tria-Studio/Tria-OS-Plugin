@@ -185,6 +185,20 @@ function components.MiniTopbar(data)
     }
 end
 
+function optionButtonComponent(data)
+    return components.TextButton({
+        LayoutOrder = 1,
+        BackgroundColor3 = Theme.Button.Selected,
+        Size = UDim2.fromOffset(56, 18),
+        Text = data.Text, 
+        AutomaticSize = Enum.AutomaticSize.X,
+        TextColor3 = Theme.BrightText.Default,
+        Font = Enum.Font.SourceSansSemibold,
+        BorderMode = Enum.BorderMode.Outline,
+        Callback = data.Callback
+    }),
+end
+
 function components.TwoOptions(option1Data, option2Data)
     return New "Frame" { --// Buttons
         AnchorPoint = Vector2.new(0, 1),
@@ -195,28 +209,8 @@ function components.TwoOptions(option1Data, option2Data)
         [Children] = {
             components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Right, UDim.new(0, 6), Enum.VerticalAlignment.Center),
             components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 3)),
-            components.TextButton({ --// Option 1
-                    LayoutOrder = 1,
-                    BackgroundColor3 = Theme.Button.Selected,
-                    Size = UDim2.fromOffset(56, 18),
-                    Text = option1Data.Text, 
-                    AutomaticSize = Enum.AutomaticSize.X,
-                    TextColor3 = Theme.BrightText.Default,
-                    Font = Enum.Font.SourceSansSemibold,
-                    BorderMode = Enum.BorderMode.Outline,
-                    Callback = option1Data.Callback
-                }),
-             components.TextButton({ --// Option 2
-                LayoutOrder = 2,
-                BackgroundColor3 = Theme.Button.Default,
-                Size = UDim2.fromOffset(56, 18),
-                Text = option2Data.Text,
-                Visible = option2Data.Visible or true,
-                AutomaticSize = Enum.AutomaticSize.X,
-                TextColor3 = Theme.ButtonText.Default,
-                BorderMode = Enum.BorderMode.Outline,
-                Callback = option2Data.Callback
-            })
+            optionButtonComponent(option1Data),
+            optionButtonComponent(option2DataData),
         },
     }
 end
