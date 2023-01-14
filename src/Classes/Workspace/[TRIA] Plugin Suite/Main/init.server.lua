@@ -23,14 +23,14 @@ Util.Widget = Widget
 New "Frame" {
 	Name = "TRIA.os Plugin",
 	Parent = Widget,
-	Size = UDim2.new(1, 0, 1, 0),
+	Size = UDim2.fromScale(1, 1),
 	BackgroundColor3 = Theme.MainBackground.Default,
 
 	[Children] = {
 		New "Frame" { -- Pages
 			Name = "Pages",
 			Size = UDim2.new(1, 0, 1, -76),
-			Position = UDim2.new(0, 0, 0, 52),
+			Position = UDim2.fromOffset(0, 52),
 			BackgroundTransparency = 1,
 
 			[Children] = {
@@ -77,7 +77,7 @@ New "Frame" {
 		},
 		New "Frame" { -- Bottom bar
 			AnchorPoint = Vector2.new(0, 1),
-			Position = UDim2.new(0, 0, 1, 0),
+			Position = UDim2.fromScale(0, 1),
 			Size = UDim2.new(1, 0, 0, 24),
 			BackgroundColor3 = Theme.Titlebar.Default,
 			BorderColor3 = Theme.Border.Default,
@@ -94,7 +94,7 @@ New "Frame" {
 				},
 				Components.TextButton({
 					Size = UDim2.new(1, -100, 1, -6),
-					Position = UDim2.new(0, 76, 0, 3),
+					Position = UDim2.fromOffset(76, 3),
 					Text = SelectMap.selectTextState,
 					TextColor3 = SelectMap.selectTextColor,
 					BackgroundColor3 = Theme.InputFieldBackground.Default,
@@ -104,7 +104,7 @@ New "Frame" {
 				}),
 				Components.ImageButton({
 					AnchorPoint = Vector2.new(1, .5),
-					Size = UDim2.new(0, 20, 0, 20),
+					Size = UDim2.fromOffset(20, 20),
 					Position = UDim2.new(1, -2, .5, 0),
 					Image = SelectMap.selectCancelImage,
 					ImageColor3 = SelectMap.selectCancelColor,
@@ -128,7 +128,7 @@ New "Frame" {
 			BackgroundTransparency = .75,
 			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 			Size = UDim2.new(1, 0, 1, -76),
-			Position = UDim2.new(0, 0, 0, 52),
+			Position = UDim2.fromOffset(0, 52),
 			Visible = Computed(function()
 				return Util.mapModel:get() == nil
 			end)

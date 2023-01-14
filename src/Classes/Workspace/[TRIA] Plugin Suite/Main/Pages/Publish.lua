@@ -25,7 +25,7 @@ local function GetInfoFrame(name, frames)
         AutomaticSize = Enum.AutomaticSize.Y,
         BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
-        Size = UDim2.new(1, 0, 0, 0),
+        Size = UDim2.fromScale(1, 0),
         
         [Children] = {
             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 4)),
@@ -45,7 +45,7 @@ function frame:GetFrame(data)
     end
 
     return New "Frame" {
-        Size = UDim2.new(1, 0, 1, 0),
+        Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
         Name = "Publish",
@@ -53,7 +53,7 @@ function frame:GetFrame(data)
         [Children] = {
             Components.PageHeader("Map Whitelisting & Publishing"),
             Components.ScrollingFrame{
-                Size = UDim2.new(1, 0, 1, 0),
+                Size = UDim2.fromScale(1, 1),
                 BackgroundColor3 = Theme.MainBackground.Default,
 
                 Children = {
@@ -133,18 +133,21 @@ function frame:GetFrame(data)
                             BorderSizePixel = 1,
                             LayoutOrder = 3,
                             AutomaticSize = Enum.AutomaticSize.Y,
-                            Size = UDim2.new(1, 0, 0, 0),
+                            Size = UDim2.fromScale(1, 0),
 
                             [Children] = {
                                 Components.Constraints.UIListLayout(),
                                 Components.ScrollingFrameHeader("Your Whitelisted Maps:", -1, nil, 20),
                                 New "Frame" {
                                     AutomaticSize = Enum.AutomaticSize.Y,
-                                    Size = UDim2.new(1, 0, 0, 0),
+                                    Size = UDim2.fromScale(1, 0),
                                     BackgroundTransparency = 1,
 
                                     [Children] = {
-                                        Components.Constraints.UIGridLayout(UDim2.new(0, 220, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.new(0, 6, 0, 6)),
+                                        Computed(function()
+                                            return Components.Constraints.UIGridLayout(UDim2.fromOffset(220, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.fromOffset(6, 6)),
+                                        end, Fusion.cleanup),
+                                        
                                         ForValues(publishedMaps, function(value)
                                             if value == NoMapsFoundText:get() then
                                                 return New "TextLabel" {
@@ -189,7 +192,7 @@ function frame:GetFrame(data)
                                 AnchorPoint = Vector2.new(.5, .5),
                                 BackgroundColor3 = Theme.MainButton.Default,
                                 BorderSizePixel = 2,
-                                Position = UDim2.new(0.5, 0, 0.45, 0),
+                                Position = UDim2.fromScale(0.5, 0.45),
                                 Size = UDim2.new(0.4, 0, 0, 24),
                                 Text = "Publish",
                                 TextColor3 = Theme.BrightText.Default,
@@ -245,7 +248,7 @@ function frame:GetFrame(data)
                                 AnchorPoint = Vector2.new(.5, .5),
                                 BackgroundColor3 = Theme.MainButton.Default,
                                 BorderSizePixel = 2,
-                                Position = UDim2.new(0.5, 0, 0.45, 0),
+                                Position = UDim2.fromScale(0.5, 0.45),
                                 Size = UDim2.new(0.4, 0, 0, 24),
                                 Text = "Submit",
                                 TextColor3 = Theme.BrightText.Default,

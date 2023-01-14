@@ -14,15 +14,15 @@ local frame = {}
 
 function frame:GetFrame(data)
     return New "Frame" {
-        Size = UDim2.new(1, 0, 1, 0),
+        Size = UDim2.fromScale(1, 1),
         Visible = data.Visible,
         Name = "ObjectTags",
 
         [Children] = {
             Components.PageHeader("Object Tags"),
             Components.ScrollingFrame({
-                Size = UDim2.new(1, 0, 1, 0),
-                CanvasSize = UDim2.new(0, 0, 0, 180),
+                Size = UDim2.fromScale(1, 1),
+                CanvasSize = UDim2.fromOffset(0, 180),
                 BackgroundColor3 = Theme.MainBackground.Default,
 
                 Children = {
@@ -31,7 +31,7 @@ function frame:GetFrame(data)
                     New "Frame" {
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
-                        Size = UDim2.new(1, 0, 0, 0),
+                        Size = UDim2.fromScale(1, 0),
                         LayoutOrder = 2,
 
                         [Children] = {
@@ -45,7 +45,7 @@ function frame:GetFrame(data)
                     New "Frame" {
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
-                        Size = UDim2.new(1, 0, 0, 0),
+                        Size = UDim2.fromScale(1, 0),
                         LayoutOrder = 4,
 
                         [Children] = {

@@ -69,7 +69,7 @@ function components.TopbarButton(data)
             return if data.Visible:get() then hoverColor else titlebarColor
         end),
         Text = "",
-        Size = UDim2.new(.167, 0, 1, 0),
+        Size = UDim2.fromScale(.167, 1),
         
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get() then
@@ -80,7 +80,7 @@ function components.TopbarButton(data)
         [Children] = {
             New "Frame" {
                 Name = "Enabled",
-                Size = UDim2.new(1, 0, 1, 0),
+                Size = UDim2.fromScale(1, 1),
                 BackgroundTransparency = 1,
                 Visible = data.Visible,
 
@@ -91,13 +91,13 @@ function components.TopbarButton(data)
                     },
                     New "Frame" {
                         AnchorPoint = Vector2.new(1, 0),
-                        Position = UDim2.new(1, 0, 0, 0),
+                        Position = UDim2.fromScale(1, 0),
                         BackgroundColor3 = Theme.Border.Default,
                         Size = UDim2.new(0, 2, 1, 0),
                     },
                     New "Frame" {
                         AnchorPoint = Vector2.new(.5, 0),
-                        Position = UDim2.new(.5, 0, 0, 0),
+                        Position = UDim2.fromScale(.5, 0),
                         BackgroundColor3 = Theme.MainButton.Default,
                         Size = UDim2.new(1, -4, 0, 2),
                     },
@@ -105,7 +105,7 @@ function components.TopbarButton(data)
             },
             New "Frame" {
                 Name = "Disabled",
-                Size = UDim2.new(1, 0, 1, 0),
+                Size = UDim2.fromScale(1, 1),
                 BackgroundTransparency = 1,
                 Visible = Computed(function()
                     return not data.Visible:get()
@@ -113,7 +113,7 @@ function components.TopbarButton(data)
 
                 [Children] =  New "Frame" {
                     AnchorPoint = Vector2.new(.5, 1),
-                    Position = UDim2.new(.5, 0, 1, 0),
+                    Position = UDim2.fromScale(.5, 1),
                     BackgroundColor3 = Theme.Border.Default,
                     Size = UDim2.new(1, 0, 0, 2),
                 },
@@ -122,7 +122,7 @@ function components.TopbarButton(data)
                 ImageColor3 = Theme.BrightText.Default,
                 AnchorPoint = Vector2.new(.5, .5),
                 BackgroundTransparency = 1,
-                Position = UDim2.new(.5, 0, .5, 0),
+                Position = UDim2.fromScale(.5, .5),
                 Size = UDim2.new(1, 0, .7, 0),
                 Image = data.Icon,
 
@@ -143,7 +143,7 @@ function components.PageHeader(Name: string)
 
         [Children] = New "Frame" {
             BackgroundColor3 = Theme.Border.Default,
-            Position = UDim2.new(0, 0, 1, 0),
+            Position = UDim2.fromScale(0, 1),
             AnchorPoint = Vector2.new(0, .5),
             Size = UDim2.new(1, 0, 0, 2),
             ZIndex = 2
@@ -163,8 +163,8 @@ function components.MiniTopbar(data)
             components.ImageButton({
                 ZIndex = 2,
                 AnchorPoint = Vector2.new(1, 0),
-                Size = UDim2.new(0, 24, 0, 24),
-                Position = UDim2.new(1, 0, 0, 0),
+                Size = UDim2.fromOffset(24, 24),
+                Position = UDim2.fromScale(1, 0),
                 Image = "rbxassetid://6031094678",
                 ImageColor3 = Theme.ErrorText.Default,
                 BorderMode = Enum.BorderMode.Outline,
@@ -189,7 +189,7 @@ function components.TwoOptions(option1Data, option2Data)
     return New "Frame" { --// Buttons
         AnchorPoint = Vector2.new(0, 1),
         BackgroundTransparency = 1,
-        Position = UDim2.new(0, 0, 1, 0),
+        Position = UDim2.fromScale(0, 1),
         Size = UDim2.new(1, 0, 0, 24),
 
         [Children] = {
@@ -198,7 +198,7 @@ function components.TwoOptions(option1Data, option2Data)
             components.TextButton({ --// Option 1
                     LayoutOrder = 1,
                     BackgroundColor3 = Theme.Button.Selected,
-                    Size = UDim2.new(0, 56, 0, 18),
+                    Size = UDim2.fromOffset(56, 18),
                     Text = option1Data.Text, 
                     AutomaticSize = Enum.AutomaticSize.X,
                     TextColor3 = Theme.BrightText.Default,
@@ -209,7 +209,7 @@ function components.TwoOptions(option1Data, option2Data)
              components.TextButton({ --// Option 2
                 LayoutOrder = 2,
                 BackgroundColor3 = Theme.Button.Default,
-                Size = UDim2.new(0, 56, 0, 18),
+                Size = UDim2.fromOffset(56, 18),
                 Text = option2Data.Text,
                 Visible = option2Data.Visible or true,
                 AutomaticSize = Enum.AutomaticSize.X,
@@ -239,7 +239,7 @@ end
 function components.ScrollingFrame(data)
     return New "ScrollingFrame" {
         BorderColor3 = Theme.Border.Default,
-        CanvasSize = UDim2.new(0, 0, 0, 0),
+        CanvasSize = UDim2.fromScale(0, 0),
         BorderSizePixel = 1,
         VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
         BackgroundColor3 = data.BackgroundColor3 or Theme.ScrollBarBackground.Default,
@@ -259,7 +259,7 @@ function components.Dropdown(data)
     local dropdownVisible = Value(data.DefaultState)
 
    return New "Frame" {
-        Size = UDim2.new(1, 0, 0, 0),
+        Size = UDim2.fromScale(1, 0),
         BackgroundTransparency = 1,
         AutomaticSize = Enum.AutomaticSize.Y,
         LayoutOrder = data.LayoutOrder,
@@ -284,8 +284,8 @@ function components.Dropdown(data)
                     New "ImageLabel" {
                         AnchorPoint = Vector2.new(1, .5),
                         BackgroundTransparency = 1,
-                        Position = UDim2.new(1, 0, .5, 0),
-                        Size = UDim2.new(1.25, 0, 1.25, 0),
+                        Position = UDim2.fromScale(1, .5),
+                        Size = UDim2.fromScale(1.25, 1.25),
                         Image = Computed(function()
                             return if dropdownVisible:get() then "rbxassetid://6031091004" else "rbxassetid://6031090990"
                         end),
@@ -303,8 +303,8 @@ function components.Dropdown(data)
                  TextColor3 = Theme.MainText.Default,
                  BorderSizePixel = 1,
                  Visible = dropdownVisible,
-                 Size = UDim2.new(1, 0, 0, 0),
-                 Position = UDim2.new(0, 0, 0, 24),
+                 Size = UDim2.fromScale(1, 0),
+                 Position = UDim2.fromOffset(0, 24),
                  Text = data.Text,
                  RichText = true,
                  TextWrapped = true
