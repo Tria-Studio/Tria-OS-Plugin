@@ -6,13 +6,11 @@ local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local State = Fusion.State
+local Value = Fusion.Value
 local Computed = Fusion.Computed
 
-
-
 return function(name, data)
-    local tagEnabled = State(false)
+    local tagEnabled = Value(false)
 
     return New "Frame" {
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -30,7 +28,7 @@ return function(name, data)
                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil),
                 New "TextButton" { --// Button
                     BackgroundColor3 = Theme.Button.Default,
-                    Position = UDim2.new(0, -56, 0, 0),
+                    Position = UDim2.fromOffset(-56, 0),
                     Size = UDim2.new(1, 56, 0, 25),
                     Font = Enum.Font.SourceSansBold,
                     Text = data.DisplayText,
@@ -48,8 +46,8 @@ return function(name, data)
                     BorderColor3 = Theme.CheckedFieldBorder.Default,
                     BorderSizePixel = 1,
                     AnchorPoint = Vector2.new(1, 0),
-                    Position = UDim2.new(0, -30, 0, 2),
-                    Size = UDim2.new(0, 20, 0, 20),
+                    Position = UDim2.fromOffset(-30, 2),
+                    Size = UDim2.fromOffset(20, 20),
                     Image = "rbxassetid://6031094667",
                     ImageColor3 = Theme.CheckedFieldIndicator.Default,
                     ImageTransparency = Computed(function()
@@ -57,8 +55,8 @@ return function(name, data)
                     end)
                 },
                 New "ImageLabel" { --// Icon
-                    Size = UDim2.new(0, 20, 0, 20),
-                    Position = UDim2.new(0, -6, 0, 2),
+                    Size = UDim2.fromOffset(20, 20),
+                    Position = UDim2.fromOffset(-6, 2),
                     BackgroundTransparency = 1,
                     AnchorPoint = Vector2.new(1, 0),
                     Image = data.DisplayIcon,

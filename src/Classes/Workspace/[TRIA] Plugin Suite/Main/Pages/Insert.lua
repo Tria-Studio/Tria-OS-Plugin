@@ -11,7 +11,7 @@ local frame = {}
 
 function frame:GetFrame(data)
     return New "Frame" {
-        Size = UDim2.new(1, 0, 1, 0),
+        Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
         Name = "Insert",

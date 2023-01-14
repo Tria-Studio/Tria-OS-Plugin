@@ -8,17 +8,17 @@ local Util = require(Package.Util)
 local Pages = require(Package.Resources.Components.Pages)
 
 local Maid = Util.Maid.new()
-local State = Fusion.State
+local Value = Fusion.Value
 local Computed = Fusion.Computed
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local selectMap = {
-    hasOptimizedStructure = State(false),
-    selectingMap = State(false),
-    selectTextState = State("No map selected"),
-    selectTextColor = State(Theme.ErrorText.Default:get()),
-    selectCancelColor = State(Theme.SubText.Default:get()),
-    selectCancelImage = State("rbxassetid://6022668885")
+    hasOptimizedStructure = Value(false),
+    selectingMap = Value(false),
+    selectTextState = Value("No map selected"),
+    selectTextColor = Value(Theme.ErrorText.Default:get()),
+    selectCancelColor = Value(Theme.SubText.Default:get()),
+    selectCancelImage = Value("rbxassetid://6022668885")
 }
 
 function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
@@ -249,6 +249,7 @@ function selectMap:StartMapSelection()
     end))
 
     Maid:GiveTask(mouse.Button1Down:Connect(function()
+        selectMap:SetMap(currentTarget)
         selectMap.selectingMap:set(false)
         selectMap.selectCancelImage:set("rbxassetid://6022668885")
         Maid:DoCleaning()

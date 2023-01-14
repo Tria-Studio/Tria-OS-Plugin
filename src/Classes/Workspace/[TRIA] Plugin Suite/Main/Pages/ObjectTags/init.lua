@@ -7,22 +7,22 @@ local TagListener = require(script.TagListener)
 local TagData = require(script.tagData)
 
 local New = Fusion.New
-local ComputedPairs = Fusion.ComputedPairs
+local ForPairs = Fusion.ForPairs
 local Children = Fusion.Children
 
 local frame = {}
 
 function frame:GetFrame(data)
     return New "Frame" {
-        Size = UDim2.new(1, 0, 1, 0),
+        Size = UDim2.fromScale(1, 1),
         Visible = data.Visible,
         Name = "ObjectTags",
 
         [Children] = {
             Components.PageHeader("Object Tags"),
             Components.ScrollingFrame({
-                Size = UDim2.new(1, 0, 1, 0),
-                CanvasSize = UDim2.new(0, 0, 0, 180),
+                Size = UDim2.fromScale(1, 1),
+                CanvasSize = UDim2.fromOffset(0, 180),
                 BackgroundColor3 = Theme.MainBackground.Default,
 
                 Children = {
@@ -31,28 +31,28 @@ function frame:GetFrame(data)
                     New "Frame" {
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
-                        Size = UDim2.new(1, 0, 0, 0),
+                        Size = UDim2.fromScale(1, 0),
                         LayoutOrder = 2,
 
                         [Children] = {
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 1)),
-                            ComputedPairs(TagData.dataTypes.buttonTags, function(tagName, data)
-                                return TagListener(tagName, data)
-                            end)
+                            ForPairs(TagData.dataTypes.buttonTags, function(tagName, data)
+                                return tagName, TagListener(tagName, data)
+                            end, Fusion.cleanup)
                         },
                     },
                     Components.ScrollingFrameHeader("Object Tags", 3),
                     New "Frame" {
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
-                        Size = UDim2.new(1, 0, 0, 0),
+                        Size = UDim2.fromScale(1, 0),
                         LayoutOrder = 4,
 
                         [Children] = {
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 1)),
-                            ComputedPairs(TagData.dataTypes.objectTags, function(tagName, data)
-                                return TagListener(tagName, data)
-                            end)
+                            ForPairs(TagData.dataTypes.objectTags, function(tagName, data)
+                                return tagName, TagListener(tagName, data)
+                            end, Fusion.cleanup)
                         },
                     }
                 }

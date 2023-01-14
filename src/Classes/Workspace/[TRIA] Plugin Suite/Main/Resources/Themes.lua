@@ -1,6 +1,6 @@
 local Fusion = require(script.Parent.Fusion)
 
-local State = Fusion.State
+local Value = Fusion.Value
 
 local StudioTheme = settings().Studio.Theme
 local GuideColor = Enum.StudioStyleGuideColor
@@ -8,94 +8,94 @@ local GuideModifier = Enum.StudioStyleGuideModifier
 
 local themes = {
     Titlebar = {
-        Default = State(StudioTheme:GetColor(GuideColor.Titlebar)),
+        Default = Value(StudioTheme:GetColor(GuideColor.Titlebar)),
     },
     Border = {
-        Default = State(StudioTheme:GetColor(GuideColor.Border))
+        Default = Value(StudioTheme:GetColor(GuideColor.Border))
     },
     Button = {
-        Default = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Default)),
-        Hover = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover)),
-        Selected = State(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Selected))
+        Default = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Default)),
+        Hover = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover)),
+        Selected = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Selected))
     },
     MainText = {
-        Default = State(StudioTheme:GetColor(GuideColor.MainText))
+        Default = Value(StudioTheme:GetColor(GuideColor.MainText))
     },
     MainButton = {
-        Default = State(StudioTheme:GetColor(GuideColor.MainButton))
+        Default = Value(StudioTheme:GetColor(GuideColor.MainButton))
     },
     BrightText = {
-        Default = State(StudioTheme:GetColor(GuideColor.BrightText))
+        Default = Value(StudioTheme:GetColor(GuideColor.BrightText))
     },
     MainBackground = {
-        Default = State(StudioTheme:GetColor(GuideColor.MainBackground))
+        Default = Value(StudioTheme:GetColor(GuideColor.MainBackground))
     },
     TitlebarText = {
-        Default = State(StudioTheme:GetColor(GuideColor.TitlebarText))
+        Default = Value(StudioTheme:GetColor(GuideColor.TitlebarText))
     },
     ErrorText = {
-        Default = State(StudioTheme:GetColor(GuideColor.ErrorText))
+        Default = Value(StudioTheme:GetColor(GuideColor.ErrorText))
     },
     InputFieldBackground = {
-        Default = State(StudioTheme:GetColor(GuideColor.InputFieldBackground))
+        Default = Value(StudioTheme:GetColor(GuideColor.InputFieldBackground))
     },
     InputFieldBorder = {
-        Default = State(StudioTheme:GetColor(GuideColor.InputFieldBorder))
+        Default = Value(StudioTheme:GetColor(GuideColor.InputFieldBorder))
     },
     DimmedText = {
-        Default = State(StudioTheme:GetColor(GuideColor.DimmedText))
+        Default = Value(StudioTheme:GetColor(GuideColor.DimmedText))
     },
     SubText = {
-        Default = State(StudioTheme:GetColor(GuideColor.SubText))
+        Default = Value(StudioTheme:GetColor(GuideColor.SubText))
     },
     Notification = {
-        Default = State(StudioTheme:GetColor(GuideColor.Notification))
+        Default = Value(StudioTheme:GetColor(GuideColor.Notification))
     },
     CategoryItem = {
-        Default = State(StudioTheme:GetColor(GuideColor.CategoryItem))
+        Default = Value(StudioTheme:GetColor(GuideColor.CategoryItem))
     },
     ButtonText = {
-        Default = State(StudioTheme:GetColor(GuideColor.ButtonText))
+        Default = Value(StudioTheme:GetColor(GuideColor.ButtonText))
     },
     ColorPickerFrame = {
-        Default = State(StudioTheme:GetColor(GuideColor.ColorPickerFrame))
+        Default = Value(StudioTheme:GetColor(GuideColor.ColorPickerFrame))
     },
     ScrollBarBackground = {
-        Default = State(StudioTheme:GetColor(GuideColor.ScrollBarBackground))
+        Default = Value(StudioTheme:GetColor(GuideColor.ScrollBarBackground))
     },
     ScrollBar = {
-        Default = State(StudioTheme:GetColor(GuideColor.ScrollBar))
+        Default = Value(StudioTheme:GetColor(GuideColor.ScrollBar))
     },
     HeaderSection = {
-        Default = State(StudioTheme:GetColor(GuideColor.HeaderSection))
+        Default = Value(StudioTheme:GetColor(GuideColor.HeaderSection))
     },
     Dropdown = {
-        Default = State(StudioTheme:GetColor(GuideColor.Dropdown))
+        Default = Value(StudioTheme:GetColor(GuideColor.Dropdown))
     },
     RibbonButton = {
-        Default = State(StudioTheme:GetColor(GuideColor.RibbonButton)),
-        Hover = State(StudioTheme:GetColor(GuideColor.RibbonButton, GuideModifier.Hover)),
+        Default = Value(StudioTheme:GetColor(GuideColor.RibbonButton)),
+        Hover = Value(StudioTheme:GetColor(GuideColor.RibbonButton, GuideModifier.Hover)),
     },
     Item = {
-        Default = State(StudioTheme:GetColor(GuideColor.Item)),
+        Default = Value(StudioTheme:GetColor(GuideColor.Item)),
     },
     TableItem = {
-        Default = State(StudioTheme:GetColor(GuideColor.TableItem)),
+        Default = Value(StudioTheme:GetColor(GuideColor.TableItem)),
     },
     DialogButton = {
-        Default = State(StudioTheme:GetColor(GuideColor.DialogButton)),
+        Default = Value(StudioTheme:GetColor(GuideColor.DialogButton)),
     },
     InfoText = {
-        Default = State(StudioTheme:GetColor(GuideColor.InfoText)),
+        Default = Value(StudioTheme:GetColor(GuideColor.InfoText)),
     },
     CheckedFieldBackground = {
-        Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldBackground))
+        Default = Value(StudioTheme:GetColor(GuideColor.CheckedFieldBackground))
     },
     CheckedFieldBorder = {
-        Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldBorder))
+        Default = Value(StudioTheme:GetColor(GuideColor.CheckedFieldBorder))
     },
     CheckedFieldIndicator = {
-        Default = State(StudioTheme:GetColor(GuideColor.CheckedFieldIndicator))
+        Default = Value(StudioTheme:GetColor(GuideColor.CheckedFieldIndicator))
     },
 }
 

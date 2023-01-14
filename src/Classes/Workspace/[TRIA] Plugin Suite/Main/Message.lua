@@ -10,8 +10,8 @@ local Computed = Fusion.Computed
 return New "Frame" { --// Message
 	BackgroundTransparency = .75,
 	BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-	Size = UDim2.new(1, 0, 1, 0),
-	Position = UDim2.new(0, 0, 0, 0),
+	Size = UDim2.fromScale(1, 1),
+	Position = UDim2.fromScale(0, 0),
 	Visible = Computed(function()
 		return Util._Message.Text:get() ~= ""
 	end),
@@ -20,7 +20,7 @@ return New "Frame" { --// Message
 		New "ImageLabel" {
 			BackgroundTransparency = 1,
 			Size = UDim2.new(1, -12, 0, 152),
-			Position = UDim2.new(.5, 0, .5, 0),
+			Position = UDim2.fromScale(.5, .5),
 			AnchorPoint = Vector2.new(.5, .5),
 			Image = "rbxassetid://8697780388",
 			ImageColor3 = Color3.fromRGB(0, 0, 0),
@@ -33,7 +33,7 @@ return New "Frame" { --// Message
 			BackgroundColor3 = Theme.Notification.Default,
 			BorderColor3 = Theme.Border.Default,
 			AnchorPoint = Vector2.new(.5, .5),
-			Position = UDim2.new(.5, 0, .5, 0),
+			Position = UDim2.fromScale(.5, .5),
 			Size = UDim2.new(1, -36, 0, 128),
 
 			[Children] = {
@@ -44,7 +44,7 @@ return New "Frame" { --// Message
 
 				New "TextLabel" { --// Body
 					BackgroundTransparency = 1,
-					Position = UDim2.new(0, 0, 0, 24),
+					Position = UDim2.fromOffset(0, 24),
 					Size = UDim2.new(1, 0, 1, -48),
 					Text = Util._Message.Text,
 					TextColor3 = Theme.MainText.Default,

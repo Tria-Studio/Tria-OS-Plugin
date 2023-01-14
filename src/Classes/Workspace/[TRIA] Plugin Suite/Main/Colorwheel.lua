@@ -6,26 +6,26 @@ local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local State = Fusion.State
+local Value = Fusion.Value
 local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
-local OnChange = Fusion.OnChange
+local Out = Fusion.Out
 
-local SliderAbsPos = State(UDim2.new())
-local SliderAbsSize = State(UDim2.new())
-local WheelAbsPos = State(UDim2.new())
-local WheelAbsSize = State(UDim2.new())
+local SliderAbsPos = Value(UDim2.new())
+local SliderAbsSize = Value(UDim2.new())
+local WheelAbsPos = Value(UDim2.new())
+local WheelAbsSize = Value(UDim2.new())
 
-local circlePointerPos = State(UDim2.new(.5, 0, .5, 0))
-local sliderPointerPos = State(UDim2.new(.5, 0, 0, 0))
+local circlePointerPos = Value(UDim2.fromScale(.5, .5))
+local sliderPointerPos = Value(UDim2.fromScale(.5, 0))
 
-local hexText = State("")
+local hexText = Value("")
 
-local mouseDownSlider = State(false)
-local mouseDownWheel = State(false)
-local visible = State(false)
+local mouseDownSlider = Value(false)
+local mouseDownWheel = Value(false)
+local visible = Value(false)
 
-local chosenColor = State(Color3.fromRGB(255, 255, 255))
+local chosenColor = Value(Color3.fromRGB(255, 255, 255))
 local colorChosen = Util.Signal.new()
 
 local ColorWheel = {}
@@ -39,7 +39,7 @@ local function UpdateColor()
 end
 
 local function GetColorDisplay(data)
-    local Text = State("")
+    local Text = Value("")
 
     return New "Frame" {
         BackgroundTransparency = 1,
@@ -48,7 +48,7 @@ local function GetColorDisplay(data)
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
-                Size = UDim2.new(.5, 0, 1, 0),
+                Size = UDim2.fromScale(.5, 1),
                 Font = Enum.Font.SourceSansSemibold,
                 TextColor3 = Theme.SubText.Default,
                 Text = string.format("%s:", data.Display),
@@ -58,14 +58,12 @@ local function GetColorDisplay(data)
                 BackgroundColor3 = Theme.InputFieldBackground.Default,
                 BorderColor3 = Theme.Border.Default,
                 BorderSizePixel = 1,
-                Position = UDim2.new(.5, 0, 0, 0),
-                Size = UDim2.new(.5, 0, 1, 0),
+                Position = UDim2.fromScale(.5, 0),
+                Size = UDim2.fromScale(.5, 1),
                 TextColor3 = Theme.MainText.Default,
                 Text = Computed(data.Computed),
 
-                [OnChange "Text"] = function(newValue: string)
-                    Text:set(newValue)
-                end,
+                [Out "Text"] = Text,
 
                 [OnEvent "FocusLost"] = function()
                     local NewColor
@@ -133,14 +131,14 @@ function ColorWheel:GetUI()
         BackgroundTransparency = .75,
         BackgroundColor3 = Color3.fromRGB(0, 0, 0),
         Size = UDim2.new(1, 0, 1, -76),
-        Position = UDim2.new(0, 0, 0, 52),
+        Position = UDim2.fromOffset(0, 52),
         Visible = visible,
     
         [Children] = {
             New "ImageLabel" {
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, -12, 0, 152),
-                Position = UDim2.new(.5, 0, .5, 0),
+                Position = UDim2.fromScale(.5, .5),
                 AnchorPoint = Vector2.new(.5, .5),
                 Image = "rbxassetid://8697780388",
                 ImageColor3 = Color3.fromRGB(0, 0, 0),
@@ -159,7 +157,7 @@ function ColorWheel:GetUI()
                 BorderColor3 = Theme.Border.Default,
                 BorderSizePixel = 1,
                 AnchorPoint = Vector2.new(.5, .5),
-                Position = UDim2.new(.5, 0, .5, 0),
+                Position = UDim2.fromScale(.5, .5),
                 Size = UDim2.new(1, -36, 0, 128),
 
                 [Children] = {
@@ -167,8 +165,8 @@ function ColorWheel:GetUI()
                     Components.Constraints.UISizeConstraint(Vector2.new(169, 169), Vector2.new(256, 256)),
                     New "ImageLabel" { --// Wheel
                         AnchorPoint = Vector2.new(.5, .5),
-                        Position = UDim2.new(0.4, 0, 0.395, 0),
-                        Size = UDim2.new(0.7, 0, 0.6, 0),
+                        Position = UDim2.fromScale(0.4, 0.395),
+                        Size = UDim2.fromScale(0.7, 0.6),
                         Image = "rbxassetid://6916730280",
                         BackgroundColor3 = Theme.Border.Default,
                         ImageColor3 = Computed(function()
@@ -180,12 +178,8 @@ function ColorWheel:GetUI()
                             return Color3.new(V, V, V)
                         end),
 
-                        [OnChange "AbsolutePosition"] = function(newValue)
-                            WheelAbsPos:set(newValue)
-                        end,
-                        [OnChange "AbsoluteSize"] = function(newValue)
-                            WheelAbsSize:set(newValue)
-                        end,
+                        [Out "AbsolutePosition"] = WheelAbsPos,
+                        [Out "AbsoluteSize"] = WheelAbsSize,
 
                         [Children] = {
                             Components.Constraints.UIAspectRatio(1),
@@ -197,12 +191,12 @@ function ColorWheel:GetUI()
                                 BorderSizePixel = 2,
                                 Position = circlePointerPos,
                                 AnchorPoint = Vector2.new(.5, .5),
-                                Size = UDim2.new(0.03, 0, 0.03, 0)
+                                Size = UDim2.fromScale(0.03, 0.03)
                             },
                             New "TextButton" {
                                 Text = "",
-                                Size = UDim2.new(3, 0, 2.05, 0),
-                                Position = UDim2.new(-1, 0, -1, 0),
+                                Size = UDim2.fromScale(3, 2.05),
+                                Position = UDim2.fromScale(-1, -1),
                                 BackgroundTransparency = 1,
                                 ZIndex = 2,
 
@@ -243,15 +237,11 @@ function ColorWheel:GetUI()
                         AnchorPoint = Vector2.new(0, .5),
                         BorderColor3 = Theme.Border.Default,
                         BorderSizePixel = 2,
-                        Position = UDim2.new(0.84, 0, 0.398, 0),
-                        Size = UDim2.new(0.063, 0, 0.531, 0),
+                        Position = UDim2.fromScale(0.84, 0.398),
+                        Size = UDim2.fromScale(0.063, 0.531),
 
-                        [OnChange "AbsolutePosition"] = function(newValue)
-                            SliderAbsPos:set(newValue)
-                        end,
-                        [OnChange "AbsoluteSize"] = function(newValue)
-                            SliderAbsSize:set(newValue)
-                        end,
+                        [Out "AbsolutePosition"] = SliderAbsPos,
+                        [Out "AbsoluteSize"] = SliderAbsSize,
 
                         [Children] = {
                             Components.Constraints.UIGradient(ColorSequence.new(Color3.new(0, 0, 0), Color3.new(1, 1, 1)), nil, 270),
@@ -261,14 +251,14 @@ function ColorWheel:GetUI()
                                 BorderSizePixel = 2,
                                 BorderMode = Enum.BorderMode.Inset,
                                 AnchorPoint = Vector2.new(.5, .5),
-                                Size = UDim2.new(1, 0, .03, 0),
+                                Size = UDim2.fromScale(1, .03),
                                 Position = sliderPointerPos,
                             },
                             
                             New "TextButton" {
                                 Text = "",
-                                Position = UDim2.new(-1, 0, -.07, 0),
-                                Size = UDim2.new(3, 0, 1.13, 0),
+                                Position = UDim2.fromScale(-1, -.07),
+                                Size = UDim2.fromScale(3, 1.13),
                                 BackgroundTransparency = 1,
                                 ZIndex = 2,
 
@@ -300,17 +290,17 @@ function ColorWheel:GetUI()
                         BackgroundColor3 = chosenColor,
                         BorderSizePixel = 1,
                         BorderColor3 = Theme.Border.Default,
-                        Size = UDim2.new(0.256, 0, 0.192, 0),
-                        Position = UDim2.new(0.05, 0, 0.698, 0),
+                        Size = UDim2.fromScale(0.256, 0.192),
+                        Position = UDim2.fromScale(0.05, 0.698),
                     },
                     New "Frame" { --// Values
                         BackgroundTransparency = 1,
-                        Position = UDim2.new(0.339, 0, 0.698, 0),
-                        Size = UDim2.new(0.641, 0, 0.192, 0),
+                        Position = UDim2.fromScale(0.339, 0.698),
+                        Size = UDim2.fromScale(0.641, 0.192),
                         ZIndex = 2,
 
                         [Children] = {
-                            Components.Constraints.UIGridLayout(UDim2.new(0.475, 0, 0.25, 0), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Vertical),
+                            Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
                             GetColorDisplay({
                                 LayoutOrder = 1,
                                 Display = "R",
@@ -398,8 +388,8 @@ function ColorWheel:GetUI()
                         BackgroundColor3 = Theme.InputFieldBackground.Default,
                         BorderColor3 = Theme.Border.Default,
                         BorderSizePixel = 1,
-                        Position = UDim2.new(.05, 0, .92, 0),
-                        Size = UDim2.new(.26, 0, .06, 0),
+                        Position = UDim2.fromScale(.05, .92),
+                        Size = UDim2.fromScale(.26, .06),
                         TextColor3 = Theme.MainText.Default,
                         PlaceholderColor3 = Theme.DimmedText.Default,
                         PlaceholderText = "Hex",
@@ -413,9 +403,7 @@ function ColorWheel:GetUI()
                             return string.format("#%s", Color:ToHex())
                         end),
 
-                        [OnChange "Text"] = function(newValue: string)
-                            hexText:set(newValue)
-                        end,
+                        [Out "Text"] = hexText,
                         [OnEvent "FocusLost"] = function()
                             local NewColor
                             local success = pcall(function()
@@ -446,8 +434,8 @@ function ColorWheel:GetColor()
     Util._Topbar.FreezeFrame:set(false)
     visible:set(false)
     chosenColor:set(Color3.new(1, 1, 1))
-    circlePointerPos:set(UDim2.new(.5, 0, .5, 0))
-    sliderPointerPos:set(UDim2.new(.5, 0, 0, 0))
+    circlePointerPos:set(UDim2.fromScale(.5, .5))
+    sliderPointerPos:set(UDim2.fromScale(.5, 0))
     Maid:DoCleaning()
 
     return Color

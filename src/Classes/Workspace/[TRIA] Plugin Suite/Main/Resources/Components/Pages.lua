@@ -2,7 +2,7 @@ local Resources = script.Parent.Parent
 local Fusion = require(Resources.Fusion)
 local Pages = Resources.Parent.Pages
 
-local State = Fusion.State
+local Value = Fusion.Value
 
 local pages = {
     pageData = {
@@ -25,7 +25,7 @@ function pages:NewPage(data)
     local newPageData = {
         Name = data.Name,
         Frame = nil,
-        Visible = State(data.Default)
+        Visible = Value(data.Default)
     }
 
     newPageData.Frame = require(Pages:FindFirstChild(newPageData.Name)):GetFrame(newPageData)
