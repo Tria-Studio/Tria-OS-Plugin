@@ -1,6 +1,7 @@
-local Fusion = require(script.Parent.Fusion)
-local Theme = require(script.Parent.Themes)
-local Util = require(script.Parent.Parent.Util)
+local Resources = script.Parent
+local Fusion = require(Resources.Fusion)
+local Theme = require(Resources.Themes)
+local Util = require(Resources.Parent.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -11,8 +12,6 @@ local State = Fusion.State
 local components = {
     Constraints = require(script.Constraints),
 }
-
-
 
 function components.TextButton(data)
     return New "TextButton" {

@@ -1,7 +1,8 @@
-local Fusion = require(script.Parent.Resources.Fusion)
-local Components = require(script.Parent.Resources.Components)
-local Theme = require(script.Parent.Resources.Themes)
-local Util = require(script.Parent.Util)
+local Package = script.Parent
+local Fusion = require(Package.Resources.Fusion)
+local Components = require(Package.Resources.Components)
+local Theme = require(Package.Resources.Themes)
+local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -15,25 +16,26 @@ local SliderAbsSize = State(UDim2.new())
 local WheelAbsPos = State(UDim2.new())
 local WheelAbsSize = State(UDim2.new())
 
-local visible = State(false)
 local circlePointerPos = State(UDim2.new(.5, 0, .5, 0))
 local sliderPointerPos = State(UDim2.new(.5, 0, 0, 0))
-local chosenColor = State(Color3.fromRGB(255, 255, 255))
-local colorChosen = Util.Signal.new()
+
 local hexText = State("")
+
 local mouseDownSlider = State(false)
 local mouseDownWheel = State(false)
+local visible = State(false)
 
-local Colorwheel = {}
+local chosenColor = State(Color3.fromRGB(255, 255, 255))
+local colorChosen = Util.Signal.new()
 
-
+local ColorWheel = {}
 
 local function UpdateColor()
     local H, S, V = chosenColor:get():ToHSV()
     local Angle = -(H * 360) - 90
 
-    sliderPointerPos:set(UDim2.new(.5, 0, 1 - V))
-    circlePointerPos:set(UDim2.new(.5 + math.sin(math.rad(Angle)) * (S / 2), 0, .5 + math.cos(math.rad(Angle)) * (S / 2), 0))
+    sliderPointerPos:set(UDim2.fromScale(.5, 1 - V))
+    circlePointerPos:set(UDim2.fromScale(.5 + math.sin(math.rad(Angle)) * (S / 2), .5 + math.cos(math.rad(Angle)) * (S / 2)))
 end
 
 local function GetColorDisplay(data)
@@ -51,6 +53,7 @@ local function GetColorDisplay(data)
                 TextColor3 = Theme.SubText.Default,
                 Text = string.format("%s:", data.Display),
             },
+
             New "TextBox" {
                 BackgroundColor3 = Theme.InputFieldBackground.Default,
                 BorderColor3 = Theme.Border.Default,
@@ -70,16 +73,20 @@ local function GetColorDisplay(data)
                         if data.Display == "R" or data.Display == "G" or data.Display == "B" then
                             local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255)
 
-                            NewColor = Color3.fromRGB(data.Display == "R" and textNumber or chosenColor:get().R * 255,
+                            NewColor = Color3.fromRGB(
+                                data.Display == "R" and textNumber or chosenColor:get().R * 255,
                                 data.Display == "G" and textNumber or chosenColor:get().G * 255,
-                                data.Display == "B" and textNumber or chosenColor:get().B * 255)
+                                data.Display == "B" and textNumber or chosenColor:get().B * 255
+                            )
                         else
                             local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255) / 255
                             local H, S, V = chosenColor:get():ToHSV()
 
-                            NewColor = Color3.fromHSV(data.Display == "H" and textNumber or H,
+                            NewColor = Color3.fromHSV(
+                                data.Display == "H" and textNumber or H,
                                 data.Display == "S" and textNumber or S,
-                                data.Display == "V" and textNumber or V)
+                                data.Display == "V" and textNumber or V
+                            )
                         end
                     end)
 
@@ -102,6 +109,7 @@ local function UpdatePos(type)
 
         V = if SliderPos > .985 then 1 elseif SliderPos < .015 then 0 else SliderPos
     end
+
     function types.Wheel()
         local MousePos = WheelAbsPos:get() + WheelAbsSize:get() / 2 - Util.Widget:GetRelativeMousePosition()
 		local Angle = math.deg(math.atan2(MousePos.X, MousePos.Y))
@@ -109,7 +117,10 @@ local function UpdatePos(type)
 
         H = -((Angle + 90) / 360) + if -((Angle + 90) / 360) + .5 < 0 then 1.5 else .5
 		S = -Diameter * 2
-        circlePointerPos:set(UDim2.new(.5 + math.sin(math.rad(Angle)) * Diameter, 0, .5 + math.cos(math.rad(Angle)) * Diameter, 0))
+        circlePointerPos:set(UDim2.fromScale(
+            .5 + math.sin(math.rad(Angle)) * Diameter, 
+            .5 + math.cos(math.rad(Angle)) * Diameter
+        ))
     end
 
     types[type]()
@@ -117,7 +128,7 @@ local function UpdatePos(type)
     UpdateColor()
 end
 
-function Colorwheel:GetUI()
+function ColorWheel:GetUI()
     return New "Frame" {
         BackgroundTransparency = .75,
         BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -273,8 +284,6 @@ function Colorwheel:GetUI()
 
                                 [OnEvent "MouseButton1Down"] = function()
                                     local MousePos = SliderAbsPos:get() - Util.Widget:GetRelativeMousePosition()
-                                   
-                                    print(MousePos, SliderAbsSize:get())
                                     if MousePos.X * -1 > 0 and MousePos.X * -1 < SliderAbsSize:get().Y and MousePos.Y * -1 > 0 and MousePos.Y * -1 < SliderAbsSize:get().Y then
                                         mouseDownSlider:set(true)
                                         UpdatePos("Slider")
@@ -424,7 +433,7 @@ function Colorwheel:GetUI()
     }
 end
 
-function Colorwheel:GetColor()
+function ColorWheel:GetColor()
     local Maid = Util.Maid.new()
     Util._Topbar.FreezeFrame:set(true)
     Util.buttonsActive:set(false)
@@ -444,4 +453,4 @@ function Colorwheel:GetColor()
     return Color
 end
 
-return Colorwheel
+return ColorWheel

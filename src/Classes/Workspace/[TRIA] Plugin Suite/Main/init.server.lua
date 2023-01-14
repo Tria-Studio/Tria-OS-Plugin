@@ -10,6 +10,8 @@ local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
 local SelectMap = require(script.SelectMap)
 local Util = require(script.Util)
+local ColorWheel = require(script.ColorWheel)
+local Message = require(script.Message)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -17,8 +19,6 @@ local Computed = Fusion.Computed
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
-
-
 
 New "Frame" {
 	Name = "TRIA.os Plugin",
@@ -34,10 +34,7 @@ New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				Pages:NewPage({
-					Name = "ObjectTags",
-					Default = true,
-				}),
+				Pages:NewPage({Name = "ObjectTags", Default = true}),
 				Pages:NewPage({Name = "ViewModes"}),
 				Pages:NewPage({Name = "Settings"}),
 				Pages:NewPage({Name = "Compatibility"}),
@@ -122,8 +119,10 @@ New "Frame" {
 				})
 			}
 		},
-		require(script.Message), --// Message
-		require(script.Colorwheel):GetUI(), --// Color wheel,
+
+		Message,
+		ColorWheel:GetUI(),
+
 		New "Frame" {
 			ZIndex = 4,
 			BackgroundTransparency = .75,
@@ -141,7 +140,7 @@ New "Frame" {
 local function OnOpen()
 	SelectMap:AutoSelect()
 	task.wait(2)
-	require(script.Colorwheel):GetColor()
+	ColorWheel:GetColor()
 end
 
 OpenButton.Click:Connect(function()
@@ -151,6 +150,7 @@ OpenButton.Click:Connect(function()
 		OnOpen()
 	end
 end)
+
 if Widget.Enabled then
 	OnOpen()
 end

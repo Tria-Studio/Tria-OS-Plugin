@@ -1,4 +1,6 @@
-local Fusion = require(script.Parent.Parent.Fusion)
+local Resources = script.Parent.Parent
+local Fusion = require(Resources.Fusion)
+local Pages = Resources.Parent.Pages
 
 local State = Fusion.State
 
@@ -26,7 +28,7 @@ function pages:NewPage(data)
         Visible = State(data.Default)
     }
 
-    newPageData.Frame = require(script.Parent.Parent.Parent.Pages:FindFirstChild(newPageData.Name)):GetFrame(newPageData)
+    newPageData.Frame = require(Pages:FindFirstChild(newPageData.Name)):GetFrame(newPageData)
     pages.pageData.pages[data.Name] = newPageData
 
     if newPageData.Visible:get() then
