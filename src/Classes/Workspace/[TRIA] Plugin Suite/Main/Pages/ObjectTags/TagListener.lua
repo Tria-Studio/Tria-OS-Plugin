@@ -6,13 +6,11 @@ local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local State = Fusion.State
+local Value = Fusion.Value
 local Computed = Fusion.Computed
 
-
-
 return function(name, data)
-    local tagEnabled = State(false)
+    local tagEnabled = Value(false)
 
     return New "Frame" {
         AutomaticSize = Enum.AutomaticSize.Y,

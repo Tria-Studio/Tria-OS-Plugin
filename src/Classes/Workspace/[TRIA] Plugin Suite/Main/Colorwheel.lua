@@ -6,26 +6,26 @@ local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local State = Fusion.State
+local Value = Fusion.Value
 local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
-local OnChange = Fusion.OnChange
+local Out = Fusion.Out
 
-local SliderAbsPos = State(UDim2.new())
-local SliderAbsSize = State(UDim2.new())
-local WheelAbsPos = State(UDim2.new())
-local WheelAbsSize = State(UDim2.new())
+local SliderAbsPos = Value(UDim2.new())
+local SliderAbsSize = Value(UDim2.new())
+local WheelAbsPos = Value(UDim2.new())
+local WheelAbsSize = Value(UDim2.new())
 
-local circlePointerPos = State(UDim2.new(.5, 0, .5, 0))
-local sliderPointerPos = State(UDim2.new(.5, 0, 0, 0))
+local circlePointerPos = Value(UDim2.new(.5, 0, .5, 0))
+local sliderPointerPos = Value(UDim2.new(.5, 0, 0, 0))
 
-local hexText = State("")
+local hexText = Value("")
 
-local mouseDownSlider = State(false)
-local mouseDownWheel = State(false)
-local visible = State(false)
+local mouseDownSlider = Value(false)
+local mouseDownWheel = Value(false)
+local visible = Value(false)
 
-local chosenColor = State(Color3.fromRGB(255, 255, 255))
+local chosenColor = Value(Color3.fromRGB(255, 255, 255))
 local colorChosen = Util.Signal.new()
 
 local ColorWheel = {}
@@ -39,7 +39,7 @@ local function UpdateColor()
 end
 
 local function GetColorDisplay(data)
-    local Text = State("")
+    local Text = Value("")
 
     return New "Frame" {
         BackgroundTransparency = 1,
@@ -63,9 +63,7 @@ local function GetColorDisplay(data)
                 TextColor3 = Theme.MainText.Default,
                 Text = Computed(data.Computed),
 
-                [OnChange "Text"] = function(newValue: string)
-                    Text:set(newValue)
-                end,
+                [Out "Text"] = Text,
 
                 [OnEvent "FocusLost"] = function()
                     local NewColor
@@ -180,12 +178,8 @@ function ColorWheel:GetUI()
                             return Color3.new(V, V, V)
                         end),
 
-                        [OnChange "AbsolutePosition"] = function(newValue)
-                            WheelAbsPos:set(newValue)
-                        end,
-                        [OnChange "AbsoluteSize"] = function(newValue)
-                            WheelAbsSize:set(newValue)
-                        end,
+                        [Out "AbsolutePosition"] = WheelAbsPos,
+                        [Out "AbsoluteSize"] = WheelAbsSize,
 
                         [Children] = {
                             Components.Constraints.UIAspectRatio(1),
@@ -246,12 +240,8 @@ function ColorWheel:GetUI()
                         Position = UDim2.new(0.84, 0, 0.398, 0),
                         Size = UDim2.new(0.063, 0, 0.531, 0),
 
-                        [OnChange "AbsolutePosition"] = function(newValue)
-                            SliderAbsPos:set(newValue)
-                        end,
-                        [OnChange "AbsoluteSize"] = function(newValue)
-                            SliderAbsSize:set(newValue)
-                        end,
+                        [Out "AbsolutePosition"] = SliderAbsPos,
+                        [Out "AbsoluteSize"] = SliderAbsSize,
 
                         [Children] = {
                             Components.Constraints.UIGradient(ColorSequence.new(Color3.new(0, 0, 0), Color3.new(1, 1, 1)), nil, 270),
@@ -413,9 +403,7 @@ function ColorWheel:GetUI()
                             return string.format("#%s", Color:ToHex())
                         end),
 
-                        [OnChange "Text"] = function(newValue: string)
-                            hexText:set(newValue)
-                        end,
+                        [Out "Text"] = hexText,
                         [OnEvent "FocusLost"] = function()
                             local NewColor
                             local success = pcall(function()

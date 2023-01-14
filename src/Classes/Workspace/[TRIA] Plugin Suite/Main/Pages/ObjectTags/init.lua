@@ -7,7 +7,7 @@ local TagListener = require(script.TagListener)
 local TagData = require(script.tagData)
 
 local New = Fusion.New
-local ComputedPairs = Fusion.ComputedPairs
+local ForPairs = Fusion.ForPairs
 local Children = Fusion.Children
 
 local frame = {}
@@ -36,9 +36,9 @@ function frame:GetFrame(data)
 
                         [Children] = {
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 1)),
-                            ComputedPairs(TagData.dataTypes.buttonTags, function(tagName, data)
-                                return TagListener(tagName, data)
-                            end)
+                            ForPairs(TagData.dataTypes.buttonTags, function(tagName, data)
+                                return tagName, TagListener(tagName, data)
+                            end, Fusion.cleanup)
                         },
                     },
                     Components.ScrollingFrameHeader("Object Tags", 3),
@@ -50,9 +50,9 @@ function frame:GetFrame(data)
 
                         [Children] = {
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 1)),
-                            ComputedPairs(TagData.dataTypes.objectTags, function(tagName, data)
-                                return TagListener(tagName, data)
-                            end)
+                            ForPairs(TagData.dataTypes.objectTags, function(tagName, data)
+                                return tagName, TagListener(tagName, data)
+                            end, Fusion.cleanup)
                         },
                     }
                 }

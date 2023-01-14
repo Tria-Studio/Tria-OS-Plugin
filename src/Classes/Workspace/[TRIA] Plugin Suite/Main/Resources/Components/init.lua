@@ -7,7 +7,7 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
-local State = Fusion.State
+local Value = Fusion.Value
 
 local components = {
     Constraints = require(script.Constraints),
@@ -256,7 +256,7 @@ function components.ScrollingFrame(data)
 end
 
 function components.Dropdown(data)
-    local dropdownVisible = State(data.DefaultState)
+    local dropdownVisible = Value(data.DefaultState)
 
    return New "Frame" {
         Size = UDim2.new(1, 0, 0, 0),

@@ -8,14 +8,14 @@ local Components = require(Package.Resources.Components)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local ComputedPairs = Fusion.ComputedPairs
-local State = Fusion.State
+local ForValues = Fusion.ForValues
+local Value = Fusion.Value
 local Computed = Fusion.Computed
 
-local NoMapsFoundText = State("No whitelisted maps found.")
-local whitelistMapId = State("")
-local selectedPublishMap = State(nil)
-local apiKey = State(nil)
+local NoMapsFoundText = Value("No whitelisted maps found.")
+local whitelistMapId = Value("")
+local selectedPublishMap = Value(nil)
+local apiKey = Value(nil)
 
 local frame = {}
 
@@ -30,9 +30,9 @@ local function GetInfoFrame(name, frames)
         [Children] = {
             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 4)),
             Components.ScrollingFrameHeader(name, 1),
-            ComputedPairs(frames, function(_, frame)
+            ForValues(frames, function(frame)
                 return frame
-            end)
+            end, Fusion.cleanup)
         }
     }
 end
@@ -145,7 +145,7 @@ function frame:GetFrame(data)
 
                                     [Children] = {
                                         Components.Constraints.UIGridLayout(UDim2.new(0, 220, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.new(0, 6, 0, 6)),
-                                        ComputedPairs(publishedMaps, function(_, value)
+                                        ForValues(publishedMaps, function(value)
                                             if value == NoMapsFoundText:get() then
                                                 return New "TextLabel" {
                                                     Size = UDim2.new(1, 0, 0, 20),
@@ -156,7 +156,7 @@ function frame:GetFrame(data)
                                             else
                                                 --// This will create the actual map frame but im lazy rn
                                             end
-                                        end)
+                                        end, Fusion.cleanup)
                                     }
                                 }
                             }
