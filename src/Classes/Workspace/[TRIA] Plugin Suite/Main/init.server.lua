@@ -9,13 +9,14 @@ local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
 local SelectMap = require(script.SelectMap)
 local Util = require(script.Util)
-local ColorWheel = require(script.ColorWheel)
+local ColorWheel = require(script.Colorwheel)
 local Message = require(script.Message)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local Spring = Fusion.Spring
+local OnEvent = Fusion.OnEvent
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
@@ -136,7 +137,8 @@ New "Frame" {
 					Text = SelectMap.selectTextState,
 					TextColor3 = SelectMap.selectTextColor,
 					BackgroundColor3 = Theme.InputFieldBackground.Default,
-					Callback = function()
+
+					[OnEvent "Activated"] = function()
 						SelectMap:StartMapSelection()
 					end
 				}),
