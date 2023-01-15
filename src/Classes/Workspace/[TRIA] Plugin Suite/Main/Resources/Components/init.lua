@@ -42,11 +42,13 @@ function Components.ImageButton(data)
     return New "ImageButton" {
         BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
         BorderColor3 = Theme.Border.Default,
+        BackgroundTransparency = data.BackgroundTransparency,
         BorderSizePixel = data.BorderSizePixel or 1,
         AnchorPoint = data.AnchorPoint,
         Size = data.Size,
         ZIndex = data.ZIndex,
         Position = data.Position,
+        ScaleType = data.ScaleType,
         Image = data.Image,
         ImageColor3 = data.ImageColor3 or Theme.MainText.Default,
         BorderMode = Enum.BorderMode.Inset,

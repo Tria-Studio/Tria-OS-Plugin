@@ -327,6 +327,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     end,
 
                                     [Children] = {
+                                        Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 22)),
                                         New "TextBox" { --// Hidden text box
                                             AnchorPoint = Vector2.new(0.5, 0.5),
                                             BackgroundTransparency = 1,
@@ -346,8 +347,25 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                                 apiData.apiKey.filtered:set(filteredText)
                                                 apiData.apiKey.unfiltered:set(newText)
                                                 apiData.apiTextbox.placeholderTransparency:set(#newText == 0 and 0 or 1)
-                                            end
-                                        }
+                                            end,
+                                        },
+                                        Components.ImageButton({
+                                            AutoButtonColor = false,
+                                            AnchorPoint = Vector2.new(0, 0.5),
+                                            BackgroundTransparency = 1,
+                                            Position = UDim2.fromScale(1, 0.5),
+                                            Size = UDim2.new(0, 18, 1, 0),
+                                            ScaleType = Enum.ScaleType.Fit,
+                                            TextColor3 = Theme.BrightText.Default,
+            
+                                            ImageColor3 = Theme.SubText.Default,
+                                            Image = Computed(function()
+                                                return if apiData.isShowingApiKey:get() then "rbxassetid://6031075931" else "rbxassetid://6031075929"
+                                            end),
+                                            Callback = function()
+                                                apiData.isShowingApiKey:set(not apiData.isShowingApiKey:get())
+                                            end,
+                                        })
                                     }
                                 }
                             }
@@ -430,22 +448,6 @@ You cannot whitelist or publish maps without doing this You only need to do this
 
                                     Children = Components.Constraints.UICorner(0, 8)
                                 }),
-
-                                Components.TextButton({
-                                    AnchorPoint = Vector2.new(0.5, 0.5),
-                                    BackgroundColor3 = Theme.WarnText.Default,
-                                    BorderSizePixel = 2,
-                                    Position = UDim2.fromScale(0.5, 0.75),
-                                    Size = UDim2.new(0.4, 0, 0, 24),
-                                    Text = "Toggle API Key",
-                                    TextColor3 = Theme.BrightText.Default,
-    
-                                    Callback = function()
-                                        apiData.isShowingApiKey:set(not apiData.isShowingApiKey:get())
-                                    end,
-
-                                    Children = Components.Constraints.UICorner(0, 6)
-                                })
                             }
                         },
                     }),
