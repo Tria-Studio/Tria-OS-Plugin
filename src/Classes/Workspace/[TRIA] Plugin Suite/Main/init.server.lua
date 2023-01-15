@@ -1,8 +1,7 @@
 local PluginBar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local OpenButton = PluginBar:CreateButton("TRIA.os Companion Plugin", "Tools to help map making easier!", "rbxassetid://12032105372", "Mapmaking Companion")
-local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 225, 250)
+local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 250)
 local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
-
 
 local Fusion = require(script.Resources.Fusion)
 local Components = require(script.Resources.Components)
@@ -10,12 +9,13 @@ local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
 local SelectMap = require(script.SelectMap)
 local Util = require(script.Util)
-local ColorWheel = require(script.Colorwheel)
+local ColorWheel = require(script.ColorWheel)
 local Message = require(script.Message)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
+local Spring = Fusion.Spring
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
@@ -40,6 +40,44 @@ New "Frame" {
 				Pages:NewPage({Name = "Compatibility"}),
 				Pages:NewPage({Name = "Publish"}),
 				Pages:NewPage({Name = "Insert"}),
+
+				New "TextLabel" {
+					Active = Computed(function()
+						return Util.mapModel:get() == nil
+					end),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+
+					BackgroundTransparency = Spring(Computed(function()
+						return Util.mapModel:get() == nil and 0.5 or 1
+					end), 18),
+					BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+
+					Font = Enum.Font.SourceSansBold,
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromScale(1, 1),
+
+					Text = "Select a map to continue.",
+					TextColor3 = Color3.new(1, 1, 1),
+					TextSize = Spring(Computed(function()
+						return 28 * (Util.mapModel:get() == nil and 1 or 2)
+					end), 18),
+					TextTransparency = Spring(Computed(function()
+						return Util.mapModel:get() == nil and 0 or 1
+					end), 18),
+
+					[Children] = {
+						New "UIGradient" {
+							Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))
+						},
+
+						New "UIStroke" {
+							Color = Color3.new(),
+							Transparency = Spring(Computed(function()
+								return Util.mapModel:get() == nil and 0 or 1
+							end), 18),
+						}
+					}
+				}
 			}
 		},
 		New "Frame" { -- Topbar

@@ -76,7 +76,7 @@ function Components.TopbarButton(data)
         
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get() then
-             Pages:ChangePage(data.Name)
+                Pages:ChangePage(data.Name)
             end
         end,
 
