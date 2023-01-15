@@ -427,23 +427,19 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Submit",
     
-                                    Active = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= ""
-                                    end),
-                                    AutoButtonColor = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= ""
-                                    end),
+                                    Active = apiData.submittedApiKey,
+                                    AutoButtonColor = apiData.submittedApiKey,
                                     TextColor3 = Computed(function()
                                         local EnabledColor = Theme.BrightText.Default
                                         local DisabledColor = Theme.SubText.Default
 
-                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.submittedApiKey:get() ~= "" and EnabledColor:get() or DisabledColor:get()
                                     end),
                                     BackgroundColor3 = Computed(function()
                                         local EnabledColor = Theme.MainButton.Default
                                         local DisabledColor = Theme.MainButton.Pressed
 
-                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.submittedApiKey:get() ~= "" and EnabledColor:get() or DisabledColor:get()
                                     end),
 
                                     Callback = function()
@@ -461,12 +457,8 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Remove",
                                    
-                                    Active = Computed(function()
-                                        return apiData.submittedApiKey:get()
-                                    end),
-                                    AutoButtonColor = Computed(function()
-                                        return apiData.submittedApiKey:get()
-                                    end),
+                                    Active = apiData.submittedApiKey,
+                                    AutoButtonColor = apiData.submittedApiKey,
 
                                     TextColor3 = Computed(function()
                                         local EnabledColor = Theme.BrightText.Default
