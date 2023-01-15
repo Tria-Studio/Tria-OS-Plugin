@@ -16,6 +16,7 @@ local Message = require(script.Message)
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
+local Spring = Fusion.Spring
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
@@ -40,6 +41,44 @@ New "Frame" {
 				Pages:NewPage({Name = "Compatibility"}),
 				Pages:NewPage({Name = "Publish"}),
 				Pages:NewPage({Name = "Insert"}),
+
+				New "TextLabel" {
+					Active = Computed(function()
+						return Util.mapModel:get() == nil
+					end),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+
+					BackgroundTransparency = Spring(Computed(function()
+						return Util.mapModel:get() == nil and 0.5 or 1
+					end), 18),
+					BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+
+					Font = Enum.Font.SourceSansBold,
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromScale(1, 1),
+
+					Text = "Select a map to continue.",
+					TextColor3 = Color3.new(1, 1, 1),
+					TextSize = Spring(Computed(function()
+						return Util.mapModel:get() == nil and 32 or 64
+					end), 18),
+					TextTransparency = Spring(Computed(function()
+						return Util.mapModel:get() == nil and 0 or 1
+					end), 18),
+
+					[Children] = {
+						New "UIGradient" {
+							Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))
+						},
+
+						New "UIStroke" {
+							Color = Color3.new(),
+							Transparency = Spring(Computed(function()
+								return Util.mapModel:get() == nil and 0 or 1
+							end), 18),
+						}
+					}
+				}
 			}
 		},
 		New "Frame" { -- Topbar
