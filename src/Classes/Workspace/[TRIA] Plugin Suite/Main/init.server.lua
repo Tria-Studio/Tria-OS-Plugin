@@ -67,16 +67,10 @@ New "Frame" {
 					end), 18),
 
 					[Children] = {
-						New "UIGradient" {
-							Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))
-						},
-
-						New "UIStroke" {
-							Color = Color3.new(),
-							Transparency = Spring(Computed(function()
-								return Util.mapModel:get() == nil and 0 or 1
-							end), 18),
-						}
+						Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
+						Components.Constraints.UIStroke(nil, Color3.new(), nil, Spring(Computed(function()
+							return Util.mapModel:get() == nil and 0 or 1
+						end), 18))
 					}
 				}
 			}
@@ -148,8 +142,8 @@ New "Frame" {
 					Position = UDim2.new(1, -2, 0.5, 0),
 					Image = SelectMap.selectCancelImage,
 					ImageColor3 = SelectMap.selectCancelColor,
-					BackgroundColor3 = Theme.Button.Default,
-					Callback = function()
+
+					[OnEvent "Activated"] = function()
 						if SelectMap.selectingMap:get() then
 							SelectMap:StopManualSelection()
 						else

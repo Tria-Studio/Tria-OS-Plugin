@@ -26,24 +26,23 @@ function Components.TextButton(data)
 end
 
 function Components.ImageButton(data)
-    return New "ImageButton" {
-        BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
-        BorderColor3 = Theme.Border.Default,
-        BackgroundTransparency = data.BackgroundTransparency,
-        BorderSizePixel = data.BorderSizePixel or 1,
-        AnchorPoint = data.AnchorPoint,
-        Size = data.Size,
-        ZIndex = data.ZIndex,
-        Position = data.Position,
-        ScaleType = data.ScaleType,
-        Image = data.Image,
-        ImageColor3 = data.ImageColor3 or Theme.MainText.Default,
+    return Hydrate(New "ImageButton" {
+        BackgroundColor3 = Theme.Button.Default,
+        BorderSizePixel = 1,
+        ImageColor3 = Theme.MainText.Default,
         BorderMode = Enum.BorderMode.Inset,
-        AutoButtonColor = true,
+        AutoButtonColor = true
+    })(data)
+end
 
-        [OnEvent "Activated"] = data.Callback,
-        [Children] = data.Children
-    }
+function Components.TextBox(data)
+    return Hydrate(New "TextBox" {
+        PlaceholderColor3 = Theme.DimmedText.Default,
+        BackgroundColor3 = Theme.InputFieldBackground.Default,
+        BorderColor3 = Theme.InputFieldBorder.Default,
+        BorderSizePixel = 1,
+        TextColor3 = Theme.SubText.Default,
+    })(data)
 end
 
 function Components.TopbarButton(data)
@@ -160,7 +159,8 @@ function Components.MiniTopbar(data)
                 Image = "rbxassetid://6031094678",
                 ImageColor3 = Theme.ErrorText.Default,
                 BorderMode = Enum.BorderMode.Outline,
-                Callback = data.Callback
+
+                [OnEvent "Activated"] = data.Callback
             }),
             New "TextLabel" {
                 ZIndex = 2,

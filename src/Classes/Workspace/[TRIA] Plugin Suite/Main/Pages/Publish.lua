@@ -119,14 +119,9 @@ Your creator token is a long phrase of characters which authenticates and allows
                     }),
 
                     getInfoFrame("Map Whitelisting", { --// Whitelisting
-                        New "TextBox" { --// Insert Whitelist ID
-                            BackgroundColor3 = Theme.InputFieldBackground.Default,
-                            BorderColor3 = Theme.InputFieldBorder.Default,
-                            BorderSizePixel = 1,
+                        Components.TextBox { --// Insert Whitelist ID
                             LayoutOrder = 2,
                             Size = UDim2.new(1, 0, 0, 32),
-                            PlaceholderColor3 = Theme.DimmedText.Default,
-                            TextColor3 = Theme.SubText.Default,
                             PlaceholderText = "Insert map model ID",
 
                             [Out "Text"] = whitelistMapId
@@ -270,7 +265,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                                                     Image = value.Image,
                                                     ScaleType = Enum.ScaleType.Crop,
 
-                                                    Children = New "Frame" {
+                                                    [Children] = New "Frame" {
                                                         BackgroundColor3 = Color3.new(0, 0, 0),
                                                         BackgroundTransparency = .625,
                                                         Position = UDim2.fromScale(0, 1),
@@ -374,14 +369,13 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     [Children] = {
                                         Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 22)),
                                        
-                                        New "TextBox" { --// Hidden text box
+                                        Components.TextBox({ --// Hidden text box
                                             AnchorPoint = Vector2.new(0.5, 0.5),
                                             BackgroundTransparency = 1,
                                             ClipsDescendants = true,
                                             Position = UDim2.fromScale(0.5, 0.5),
 
                                             PlaceholderText = "Insert TRIA Map Creator Key",
-                                            PlaceholderColor3 = Theme.DimmedText.Default,
                                             TextTransparency = apiData.apiTextbox.placeholderTransparency,
 
                                             Size = UDim2.fromScale(1, 1),
@@ -394,8 +388,8 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                                 apiData.apiKey.unfiltered:set(newText)
                                                 apiData.apiTextbox.placeholderTransparency:set(#newText == 0 and 0 or 1)
                                             end,
-                                        },
-                                        
+                                        }),
+
                                         Components.ImageButton({
                                             AutoButtonColor = false,
                                             AnchorPoint = Vector2.new(0, 0.5),
@@ -403,13 +397,13 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                             Position = UDim2.fromScale(1, 0.5),
                                             Size = UDim2.new(0, 18, 1, 0),
                                             ScaleType = Enum.ScaleType.Fit,
-                                            TextColor3 = Theme.BrightText.Default,
             
                                             ImageColor3 = Theme.SubText.Default,
                                             Image = Computed(function()
                                                 return if apiData.isShowingApiKey:get() then "rbxassetid://6031075931" else "rbxassetid://6031075929"
                                             end),
-                                            Callback = function()
+
+                                            [OnEvent "Activated"] = function()
                                                 apiData.isShowingApiKey:set(not apiData.isShowingApiKey:get())
                                             end,
                                         })
@@ -440,16 +434,14 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                         return apiData.apiKey.unfiltered:get() ~= ""
                                     end),
                                     TextColor3 = Computed(function()
-                                        local EnabledColor = Theme.BrightText.Default
-                                        local DisabledColor = Theme.SubText.Default
-
-                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return if apiData.apiKey.unfiltered:get() ~= "" 
+                                            then Theme.BrightText.Default:get()
+                                            else Theme.SubText.Default:get()
                                     end),
                                     BackgroundColor3 = Computed(function()
-                                        local EnabledColor = Theme.MainButton.Default
-                                        local DisabledColor = Theme.MainButton.Pressed
-
-                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return if apiData.apiKey.unfiltered:get() ~= "" 
+                                            then Theme.MainButton.Default:get() 
+                                            else Theme.MainButton.Pressed:get()
                                     end),
 
                                     [OnEvent "Activated"] = function()
@@ -466,21 +458,19 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Position = UDim2.fromScale(0.75, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Remove",
-                                   
+
                                     Active = apiData.submittedApiKey,
                                     AutoButtonColor = apiData.submittedApiKey,
 
                                     TextColor3 = Computed(function()
-                                        local EnabledColor = Theme.BrightText.Default
-                                        local DisabledColor = Theme.SubText.Default
-
-                                        return apiData.submittedApiKey:get() and EnabledColor:get() or DisabledColor:get()
+                                        return if apiData.submittedApiKey:get()
+                                            then Theme.BrightText.Default:get() 
+                                            else Theme.SubText.Default:get()
                                     end),
                                     BackgroundColor3 = Computed(function()
-                                        local EnabledColor = Theme.ErrorText.Default
-                                        local DisabledColor = Theme.DiffTextDeletionBackground.Default
-
-                                        return apiData.submittedApiKey:get() and EnabledColor:get() or DisabledColor:get()
+                                        return if apiData.submittedApiKey:get() 
+                                            then Theme.ErrorText.Default:get() 
+                                            else Theme.DiffTextDeletionBackground.Default:get()
                                     end),
     
                                     [OnEvent "Activated"] = function()
