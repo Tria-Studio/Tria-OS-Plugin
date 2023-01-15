@@ -54,13 +54,9 @@ local function getColorDisplay(data)
                 Text = string.format("%s:", data.Display),
             },
 
-            New "TextBox" {
-                BackgroundColor3 = Theme.InputFieldBackground.Default,
-                BorderColor3 = Theme.Border.Default,
-                BorderSizePixel = 1,
+            Components.TextBox {
                 Position = UDim2.fromScale(0.5, 0),
                 Size = UDim2.fromScale(0.5, 1),
-                TextColor3 = Theme.MainText.Default,
                 Text = Computed(data.Computed),
 
                 [Out "Text"] = Text,
@@ -70,7 +66,6 @@ local function getColorDisplay(data)
                     local success = pcall(function()
                         if data.Display == "R" or data.Display == "G" or data.Display == "B" then
                             local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255)
-
                             NewColor = Color3.fromRGB(
                                 data.Display == "R" and textNumber or chosenColor:get().R * 255,
                                 data.Display == "G" and textNumber or chosenColor:get().G * 255,
@@ -79,7 +74,6 @@ local function getColorDisplay(data)
                         else
                             local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255) / 255
                             local H, S, V = chosenColor:get():ToHSV()
-
                             NewColor = Color3.fromHSV(
                                 data.Display == "H" and textNumber or H,
                                 data.Display == "S" and textNumber or S,
@@ -384,14 +378,10 @@ function ColorWheel:GetUI()
                             colorChosen:Fire()
                         end
                     }),
-                    New "TextBox" { --// Hex input
-                        BackgroundColor3 = Theme.InputFieldBackground.Default,
-                        BorderColor3 = Theme.Border.Default,
-                        BorderSizePixel = 1,
+                    Components.TextBox { --// Hex input
                         Position = UDim2.fromScale(0.05, 0.92),
                         Size = UDim2.fromScale(0.26, 0.06),
                         TextColor3 = Theme.MainText.Default,
-                        PlaceholderColor3 = Theme.DimmedText.Default,
                         PlaceholderText = "Hex",
                         ZIndex = 2,
                         Text = Computed(function()

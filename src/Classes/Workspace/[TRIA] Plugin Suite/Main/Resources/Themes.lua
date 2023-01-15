@@ -34,7 +34,7 @@ local themes = {
     TitlebarText = {
         Default = Value(StudioTheme:GetColor(GuideColor.TitlebarText))
     },
-    WarnText = {
+    WarningText = {
         Default = Value(StudioTheme:GetColor(GuideColor.WarningText))
     },
     ErrorText = {

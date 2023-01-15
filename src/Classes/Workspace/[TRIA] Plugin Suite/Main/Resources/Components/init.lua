@@ -8,55 +8,41 @@ local Children = Fusion.Children
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
+local Hydrate = Fusion.Hydrate
 
 local Components = {
     Constraints = require(script.Constraints),
 }
 
 function Components.TextButton(data)
-    return New "TextButton" {
-        Active = data.Active,
-        AutoButtonColor = data.AutoButtonColor or true,
-        BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
+    return Hydrate(New "TextButton" {
+        AutoButtonColor = true,
+        BackgroundColor3 = Theme.Button.Default,
         BorderColor3 = Theme.Border.Default,
-        AutomaticSize = data.AutomaticSize,
-        BorderSizePixel = data.BorderSizePixel or 1,
-        AnchorPoint = data.AnchorPoint,
-        Size = data.Size,
-        Font = data.Font, 
-        FontFace = data.FontFace,
-        Position = data.Position,
-        Visible = data.Visible or true,
-        TextSize = data.TextSize,
-        Text = data.Text,
-        TextColor3 = data.TextColor3 or Theme.MainText.Default,
-        BorderMode = Enum.BorderMode.Inset,
-
-        [OnEvent "Activated"] = data.Callback,
-
-        [Children] = data.Children
-    }
+        BorderSizePixel = 1,
+        TextColor3 = Theme.MainText.Default,
+        BorderMode = Enum.BorderMode.Inset
+    })(data)
 end
 
 function Components.ImageButton(data)
-    return New "ImageButton" {
-        BackgroundColor3 = data.BackgroundColor3 or Theme.Button.Default,
-        BorderColor3 = Theme.Border.Default,
-        BackgroundTransparency = data.BackgroundTransparency,
-        BorderSizePixel = data.BorderSizePixel or 1,
-        AnchorPoint = data.AnchorPoint,
-        Size = data.Size,
-        ZIndex = data.ZIndex,
-        Position = data.Position,
-        ScaleType = data.ScaleType,
-        Image = data.Image,
-        ImageColor3 = data.ImageColor3 or Theme.MainText.Default,
+    return Hydrate(New "ImageButton" {
+        BackgroundColor3 = Theme.Button.Default,
+        BorderSizePixel = 1,
+        ImageColor3 = Theme.MainText.Default,
         BorderMode = Enum.BorderMode.Inset,
-        AutoButtonColor = true,
+        AutoButtonColor = true
+    })(data)
+end
 
-        [OnEvent "Activated"] = data.Callback,
-        [Children] = data.Children
-    }
+function Components.TextBox(data)
+    return Hydrate(New "TextBox" {
+        PlaceholderColor3 = Theme.DimmedText.Default,
+        BackgroundColor3 = Theme.InputFieldBackground.Default,
+        BorderColor3 = Theme.InputFieldBorder.Default,
+        BorderSizePixel = 1,
+        TextColor3 = Theme.SubText.Default,
+    })(data)
 end
 
 function Components.TopbarButton(data)
@@ -173,7 +159,8 @@ function Components.MiniTopbar(data)
                 Image = "rbxassetid://6031094678",
                 ImageColor3 = Theme.ErrorText.Default,
                 BorderMode = Enum.BorderMode.Outline,
-                Callback = data.Callback
+
+                [OnEvent "Activated"] = data.Callback
             }),
             New "TextLabel" {
                 ZIndex = 2,
@@ -200,7 +187,8 @@ function optionButtonComponent(data)
         TextColor3 = Theme.BrightText.Default,
         Font = Enum.Font.SourceSansSemibold,
         BorderMode = Enum.BorderMode.Outline,
-        Callback = data.Callback
+        
+        [OnEvent "Activated"] = data.Callback
     })
 end
 
@@ -274,11 +262,11 @@ function Components.Dropdown(data)
                 Size = UDim2.new(1, 0, 0, 24),
                 BackgroundColor3 = Theme.Button.Default,
 
-                Callback = function()
+                [OnEvent "Activated"] = function()
                     dropdownVisible:set(not dropdownVisible:get())
                 end,
         
-                Children = {
+                [Children] = {
                     Components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), UDim.new(0, 12)),
                     New "ImageLabel" {
                         AnchorPoint = Vector2.new(1, 0.5),

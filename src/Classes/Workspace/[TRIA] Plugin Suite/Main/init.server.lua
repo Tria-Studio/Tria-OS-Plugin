@@ -9,13 +9,14 @@ local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
 local SelectMap = require(script.SelectMap)
 local Util = require(script.Util)
-local ColorWheel = require(script.ColorWheel)
+local ColorWheel = require(script.Colorwheel)
 local Message = require(script.Message)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local Spring = Fusion.Spring
+local OnEvent = Fusion.OnEvent
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
@@ -66,16 +67,10 @@ New "Frame" {
 					end), 18),
 
 					[Children] = {
-						New "UIGradient" {
-							Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))
-						},
-
-						New "UIStroke" {
-							Color = Color3.new(),
-							Transparency = Spring(Computed(function()
-								return Util.mapModel:get() == nil and 0 or 1
-							end), 18),
-						}
+						Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
+						Components.Constraints.UIStroke(nil, Color3.new(), nil, Spring(Computed(function()
+							return Util.mapModel:get() == nil and 0 or 1
+						end), 18))
 					}
 				}
 			}
@@ -136,7 +131,8 @@ New "Frame" {
 					Text = SelectMap.selectTextState,
 					TextColor3 = SelectMap.selectTextColor,
 					BackgroundColor3 = Theme.InputFieldBackground.Default,
-					Callback = function()
+
+					[OnEvent "Activated"] = function()
 						SelectMap:StartMapSelection()
 					end
 				}),
@@ -146,8 +142,8 @@ New "Frame" {
 					Position = UDim2.new(1, -2, 0.5, 0),
 					Image = SelectMap.selectCancelImage,
 					ImageColor3 = SelectMap.selectCancelColor,
-					BackgroundColor3 = Theme.Button.Default,
-					Callback = function()
+
+					[OnEvent "Activated"] = function()
 						if SelectMap.selectingMap:get() then
 							SelectMap:StopManualSelection()
 						else
