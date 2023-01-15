@@ -12,13 +12,16 @@ local ForValues = Fusion.ForValues
 local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Ref = Fusion.Ref
+local Out = Fusion.Out
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local NoMapsFoundText = Value("No whitelisted maps found.")
 local whitelistMapId = Value("")
 
 local selectedPublishMap = Value(nil)
 
-local apiKey = Value("")
+local apiKeyText = Value("")
+local apiKey = Value(plugin:GetSetting("TRIA_apikey") or "")
 local apiTextbox = Value()
 
 local frame = {}
@@ -64,25 +67,30 @@ function frame:GetFrame(data)
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 12)),
                     Components.Dropdown({
                         Header = "Setup Instructions",
+                        TextXAlignment = Enum.TextXAlignment.Left,
                         Text = [[
-                            1) Join the TRIA.os Map Manager
-                            - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
+    <b>1)</b> Join the TRIA.os Map Manager
+        - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
              
-                            2) In the TRIA.os Map Manager, click on the [ ] tab and generate a TRIA API key for your account
-                                - NOTE: do <u>NOT</u> share this with anyone.
-                                - This API key will enable you to remotely whitelist & publish maps. you cannot do this without generating this key.
+    <b>2)</b> In the TRIA.os Map Manager, click on the [ ] tab and generate a TRIA API key for your account
+        - NOTE: do <u>NOT</u> share this with anyone.
+        - This API key will enable you to remotely whitelist & publish maps. you cannot do this without generating this key.
                         
-                            3) Below, enter the TRIA Map Key you generated in the Map Manager into the textbox below and click 'Set'
-                                - NOTE: This key will not be visible to other users in a team create place.
+    <b>3)</b> Below, enter the TRIA Map Key you generated in the Map Manager into the textbox below and click 'Set'
+       - NOTE: This key will not be visible to other users in a team create place.
                         
-                            4) You're all set!
+    <b>4)</b> You're all set!
                         ]],
                         DefaultState = false
                     }),
 
                     Components.Dropdown({
                         Header = "IMPORTANT NOTICE",
-                        Text = "Your creator token is a long phrase which authenticates and allows you to publish/whitelist maps. <u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account. Users in a team create place are not able to see & obtain your token",
+                        Text = [[
+Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
+                            
+<u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
+                        ]],
                         DefaultState = true
                     }),
 
@@ -95,7 +103,9 @@ function frame:GetFrame(data)
                             Size = UDim2.new(1, 0, 0, 32),
                             PlaceholderColor3 = Theme.DimmedText.Default,
                             TextColor3 = Theme.SubText.Default,
-                            PlaceholderText = "Map Model ID"
+                            PlaceholderText = "Insert map model ID",
+
+                            [Out "Text"] = whitelistMapId
                         },
 
                         New "Frame" {
@@ -105,18 +115,36 @@ function frame:GetFrame(data)
 
                             [Children] = Components.TextButton({
                                 AnchorPoint = Vector2.new(0.5, 0.5),
-                                BackgroundColor3 = Theme.MainButton.Default,
-                                BorderSizePixel = 2,
+                                 BorderSizePixel = 2,
                                 Position = UDim2.new(0.5, 0, 0.45, 0),
                                 Size = UDim2.new(0.4, 0, 0, 24),
                                 Text = "Whitelist",
-                                TextColor3 = Theme.BrightText.Default,
+
+                                Active = Computed(function()
+                                    return whitelistMapId:get() ~= ""
+                                end),
+                                AutoButtonColor = Computed(function()
+                                    return whitelistMapId:get() ~= ""
+                                end),
+
+                                TextColor3 = Computed(function()
+                                    local EnabledColor = Theme.BrightText.Default
+                                    local DisabledColor = Theme.SubText.Default
+
+                                    return whitelistMapId:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                end),
+                                BackgroundColor3 = Computed(function()
+                                    local EnabledColor = Theme.MainButton.Default
+                                    local DisabledColor = Theme.MainButton.Pressed
+
+                                    return whitelistMapId:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                end),
 
                                 Callback = function()
                                     -- this function will call to whitelist
                                 end,
 
-                                Children = Components.Constraints.UICorner(0, 8)
+                                Children = Components.Constraints.UICorner(0, 6),
                             })
                         }
                     }),
@@ -130,7 +158,7 @@ function frame:GetFrame(data)
                             TextColor3 = Theme.MainText.Default,
                             TextWrapped = true,
                             BackgroundTransparency = 1,
-                            Text = "Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame."
+                            Text = "Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame. <br />"
                         },
 
                         New "Frame" {
@@ -164,6 +192,7 @@ function frame:GetFrame(data)
                                                 }
                                             else
                                                 --// GRIF CREATE A MAP FRAME U LAZY NERD
+                                                --// https://cdn.discordapp.com/attachments/895042217331261472/1063969336307482704/nerd.png
                                             end
                                         end, Fusion.cleanup)
                                     }
@@ -196,18 +225,36 @@ function frame:GetFrame(data)
 
                             [Children] = Components.TextButton({
                                 AnchorPoint = Vector2.new(0.5, 0.5),
-                                BackgroundColor3 = Theme.MainButton.Default,
                                 BorderSizePixel = 2,
                                 Position = UDim2.fromScale(0.5, 0.45),
                                 Size = UDim2.new(0.4, 0, 0, 24),
                                 Text = "Publish",
-                                TextColor3 = Theme.BrightText.Default,
+
+                                Active = Computed(function()
+                                    return selectedPublishMap:get() ~= nil
+                                end),
+                                AutoButtonColor = Computed(function()
+                                    return selectedPublishMap:get() ~= nil
+                                end),
+
+                                TextColor3 = Computed(function()
+                                    local EnabledColor = Theme.BrightText.Default
+                                    local DisabledColor = Theme.SubText.Default
+
+                                    return selectedPublishMap:get() and EnabledColor:get() or DisabledColor:get()
+                                end),
+                                BackgroundColor3 = Computed(function()
+                                    local EnabledColor = Theme.MainButton.Default
+                                    local DisabledColor = Theme.MainButton.Pressed
+
+                                    return selectedPublishMap:get() and EnabledColor:get() or DisabledColor:get()
+                                end),
 
                                 Callback = function()
                                     -- this function will call to publish
                                 end,
 
-                                Children = Components.Constraints.UICorner(0, 8)
+                                Children = Components.Constraints.UICorner(0, 6)
                             })
                         }
                     }),
@@ -217,8 +264,11 @@ function frame:GetFrame(data)
                             LayoutOrder = 2,
                             Header = "How This Works",
                             Text = [[
-                                To get your TRIA Map Creator Key, follow the steps at the top of this page.
-                                This is where you will enter your TRIA Map Creator Key. You must do this in order to use this page otherwise it will not work.
+To get your TRIA Map Creator Key, follow the steps at the top of this page. This is where you will enter your TRIA Map Creator Key.
+
+If you generate a new key, your old key will become invalid and you will need to replace it with the new one here.
+
+You cannot whitelist or publish maps without doing this You only need to do this once.
                             ]],
                             DefaultState = true
                         }),
@@ -244,8 +294,10 @@ function frame:GetFrame(data)
                             LayoutOrder = 4,
                             Size = UDim2.new(1, 0, 0, 32),
                             PlaceholderColor3 = Theme.DimmedText.Default,
+                            PlaceholderText = "Insert TRIA Map Creator Key",
                             TextColor3 = Theme.SubText.Default,
 
+                            [Out "Text"] = apiKeyText,
                             [Ref] = apiTextbox
                         },
 
@@ -259,35 +311,75 @@ function frame:GetFrame(data)
                                 
                                 Components.TextButton({
                                     AnchorPoint = Vector2.new(0.5, 0.5),
-                                    BackgroundColor3 = Theme.MainButton.Default,
                                     BorderSizePixel = 2,
                                     Position = UDim2.fromScale(0.5, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Submit",
-                                    TextColor3 = Theme.BrightText.Default,
     
+                                    Active = Computed(function()
+                                        return apiKeyText:get() ~= ""
+                                    end),
+                                    AutoButtonColor = Computed(function()
+                                        return apiKeyText:get() ~= ""
+                                    end),
+                                    TextColor3 = Computed(function()
+                                        local EnabledColor = Theme.BrightText.Default
+                                        local DisabledColor = Theme.SubText.Default
+
+                                        return apiKeyText:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                    end),
+                                    BackgroundColor3 = Computed(function()
+                                        local EnabledColor = Theme.MainButton.Default
+                                        local DisabledColor = Theme.MainButton.Pressed
+
+                                        return apiKeyText:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                    end),
+
                                     Callback = function()
                                         apiKey:set(apiTextbox:get().Text)
+                                        plugin:SetSetting("TRIA_apikey", apiKey:get())
+                                        apiTextbox:get().Text = ""
+                                        print("API key stored: ", plugin:GetSetting("TRIA_apikey"))
                                     end,
 
-                                    Children = Components.Constraints.UICorner(0, 8)
+                                    Children = Components.Constraints.UICorner(0, 6)
                                 }),
 
                                 Components.TextButton({
                                     AnchorPoint = Vector2.new(0.5, 0.5),
-                                    BackgroundColor3 = Theme.ErrorText.Default,
                                     BorderSizePixel = 2,
                                     Position = UDim2.fromScale(0.5, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Remove",
-                                    TextColor3 = Theme.BrightText.Default,
+                                   
+                                    Active = Computed(function()
+                                        return apiKey:get() ~= ""
+                                    end),
+                                    AutoButtonColor = Computed(function()
+                                        return apiKey:get() ~= ""
+                                    end),
+
+                                    TextColor3 = Computed(function()
+                                        local EnabledColor = Theme.BrightText.Default
+                                        local DisabledColor = Theme.SubText.Default
+
+                                        return apiKey:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                    end),
+                                    BackgroundColor3 = Computed(function()
+                                        local EnabledColor = Theme.ErrorText.Default
+                                        local DisabledColor = Theme.DiffTextDeletionBackground.Default
+
+                                        return apiKey:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                    end),
     
                                     Callback = function()
                                         apiKey:set("")
                                         apiTextbox:get().Text = ""
+                                        plugin:SetSetting("TRIA_apikey", "")
+                                        print("API key stored: ", plugin:GetSetting("TRIA_apikey"))
                                     end,
 
-                                    Children = Components.Constraints.UICorner(0, 8)
+                                    Children = Components.Constraints.UICorner(0, 6)
                                 })
                             }
                         },
@@ -315,7 +407,5 @@ function frame:GetFrame(data)
 
     return newFrame
 end
-
-
 
 return frame
