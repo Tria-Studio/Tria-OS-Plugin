@@ -91,8 +91,12 @@ function frame:GetFrame(data)
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 12)),
                     Components.Dropdown({
                         Header = "Setup Instructions",
-                        TextXAlignment = Enum.TextXAlignment.Left,
-                        Text = [[
+                        DefaultState = false
+                    }, function(visible)
+                        return Components.DropdownTextlabel({
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            DropdownVisible = visible,
+                            Text = [[
     <b>1)</b> Join the TRIA.os Map Manager
         - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
              
@@ -104,19 +108,22 @@ function frame:GetFrame(data)
        - NOTE: This key will not be visible to other users in a team create place.
                         
     <b>4)</b> You're all set!
-                        ]],
-                        DefaultState = false
-                    }),
+                        ]]
+                        })
+                    end),
 
                     Components.Dropdown({
                         Header = "IMPORTANT NOTICE",
-                        Text = [[
+                        DefaultState = true
+                    }, function(visible)
+                        return Components.DropdownTextlabel({
+                            Text = [[
 Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
                             
 <u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
-                        ]],
-                        DefaultState = true
-                    }),
+                        ]]
+                        })
+                    end),
 
                     getInfoFrame("Map Whitelisting", { --// Whitelisting
                         Components.TextBox { --// Insert Whitelist ID
@@ -316,15 +323,18 @@ Your creator token is a long phrase of characters which authenticates and allows
                         Components.Dropdown({
                             LayoutOrder = 2,
                             Header = "How This Works",
-                            Text = [[
+                            DefaultState = true
+                        }, function(visible)
+                            return Components.DropdownTextlabel({
+                                Text = [[
 To get your TRIA Map Creator Key, follow the steps at the top of this page. This is where you will enter your TRIA Map Creator Key.
 
 If you generate a new key, your old key will become invalid and you will need to replace it with the new one here.
 
 You cannot whitelist or publish maps without doing this You only need to do this once.
                             ]],
-                            DefaultState = true
-                        }),
+                            })
+                        end),
 
                         New "TextLabel" { --// Status
                             RichText = true,

@@ -9,6 +9,8 @@ local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Hydrate = Fusion.Hydrate
+local Spring = Fusion.Spring
+local ForValues = Fusion.ForValues
 
 local Components = {
     Constraints = require(script.Constraints),
@@ -242,10 +244,10 @@ function Components.ScrollingFrame(data)
     }
 end
 
-function Components.Dropdown(data)
+function Components.Dropdown(data, childrenProcessor)
     local dropdownVisible = Value(data.DefaultState)
 
-   return New "Frame" {
+    local dropdown = New "Frame" {
         Size = UDim2.fromScale(1, 0),
         BackgroundTransparency = 1,
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -255,51 +257,63 @@ function Components.Dropdown(data)
             Components.TextButton({
                 Active = Computed(Util.buttonActiveFunc),
                 AutoButtonColor = Computed(Util.buttonActiveFunc),
+                BackgroundColor3 = Theme.Button.Default,
 
                 FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),
+                Size = UDim2.new(1, 0, 0, 24),
+
                 TextSize = 16,
                 Text = data.Header,
-                Size = UDim2.new(1, 0, 0, 24),
-                BackgroundColor3 = Theme.Button.Default,
+                TextXAlignment = Enum.TextXAlignment.Left,
 
                 [OnEvent "Activated"] = function()
                     dropdownVisible:set(not dropdownVisible:get())
                 end,
         
                 [Children] = {
-                    Components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), UDim.new(0, 12)),
+                    Components.Constraints.UIPadding(nil, nil, UDim.new(0, 20), nil),
                     New "ImageLabel" {
-                        AnchorPoint = Vector2.new(1, 0.5),
+                        AnchorPoint = Vector2.new(1, 0),
                         BackgroundTransparency = 1,
-                        Position = UDim2.fromScale(1, 0.5),
-                        Size = UDim2.fromScale(1.25, 1.25),
-                        Image = Computed(function()
-                            return if dropdownVisible:get() then "rbxassetid://6031090990" else "rbxassetid://6031091004" 
-                        end),
+                        Position = UDim2.fromScale(0, 0),
+                        Size = UDim2.fromOffset(20, 20),
+                        Image = "http://www.roblox.com/asset/?id=6031094687",
+
+                        Rotation = Spring(Computed(function()
+                            return dropdownVisible:get() and 0 or 180
+                        end), 20),
         
                         [Children] = Components.Constraints.UIAspectRatio(1)
-                    }
-                }
-            }),
-            New "TextLabel" {
-                 TextXAlignment = data.TextXAlignment,
-                 BackgroundColor3 = Theme.Notification.Default,
-                 BorderColor3 = Theme.Border.Default,
-                 TextColor3 = Theme.MainText.Default,
-                 BorderSizePixel = 1,
-                 Size = UDim2.fromScale(1, 0),
-                 Position = UDim2.fromOffset(0, 24),
-                 Text = data.Text,
-                 RichText = true,
-                 TextWrapped = true,
+                    },
 
-                 AutomaticSize = Computed(function()
-                    return if dropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
-                 end),
-                 Visible = dropdownVisible
-            }
+                    Computed(function()
+                        return childrenProcessor(dropdownVisible)
+                    end, Fusion.cleanup)
+                }
+            })
         }
     }
+    return dropdown
+end
+
+function Components.DropdownTextlabel(data)
+    return New "TextLabel" {
+        TextXAlignment = data.TextXAlignment,
+        BackgroundColor3 = Theme.Notification.Default,
+        BorderColor3 = Theme.Border.Default,
+        TextColor3 = Theme.MainText.Default,
+        BorderSizePixel = 1,
+        Size = UDim2.fromScale(1, 0),
+        Position = UDim2.fromOffset(0, 24),
+        Text = data.Text,
+        RichText = true,
+        TextWrapped = true,
+
+        AutomaticSize = Computed(function()
+           return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
+        end),
+        Visible = data.DropdownVisible
+   }
 end
 
 return Components
