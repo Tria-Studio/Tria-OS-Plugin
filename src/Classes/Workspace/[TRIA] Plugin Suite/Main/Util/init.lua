@@ -37,6 +37,37 @@ local util = {
         Header = Value(""),
         Option1 = Value({}),
         Option2 = Value({}),
+    },
+
+    Difficulty = {
+        [0] = {
+            Name = "Unrated",
+            Color = Color3.new(1, 1, 1)
+        },
+        [1] = {
+            Name = "Easy",
+            Color = Color3.fromRGB(85, 255, 127)
+        },
+        [2] = {
+            Name = "Normal",
+            Color = Color3.fromRGB(255, 255, 127)
+        },
+        [3] = {
+            Name = "Hard",
+            Color = Color3.fromRGB(255, 0, 25)
+        },
+        [4] = {
+            Name = "Insane",
+            Color = Color3.fromRGB(112, 42, 241)
+        },
+        [5] = {
+            Name = "Extreme",
+            Color = Color3.fromRGB(255, 128, 0)
+        },
+        [6] = {
+            Name = "Divine",
+            Color = Color3.fromRGB(255, 8, 152)
+        }
     }
 }
 
