@@ -139,8 +139,6 @@ New "Frame" {
 
 local function onOpen()
 	SelectMap:AutoSelect()
-	task.wait(2)
-	-- ColorWheel:GetColor() --// Debug
 end
 
 OpenButton.Click:Connect(function()
