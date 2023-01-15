@@ -1,8 +1,7 @@
 local PluginBar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local OpenButton = PluginBar:CreateButton("TRIA.os Companion Plugin", "Tools to help map making easier!", "rbxassetid://12032105372", "Mapmaking Companion")
-local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 225, 250)
+local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 250)
 local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
-
 
 local Fusion = require(script.Resources.Fusion)
 local Components = require(script.Resources.Components)
@@ -60,7 +59,7 @@ New "Frame" {
 					Text = "Select a map to continue.",
 					TextColor3 = Color3.new(1, 1, 1),
 					TextSize = Spring(Computed(function()
-						return Util.mapModel:get() == nil and 32 or 64
+						return 28 * (Util.mapModel:get() == nil and 1 or 2)
 					end), 18),
 					TextTransparency = Spring(Computed(function()
 						return Util.mapModel:get() == nil and 0 or 1
