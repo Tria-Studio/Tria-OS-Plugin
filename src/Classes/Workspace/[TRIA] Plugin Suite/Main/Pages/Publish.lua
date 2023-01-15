@@ -29,10 +29,11 @@ local apiData = {
         unfiltered = Value(plugin:GetSetting("TRIA_WebserverKey") or "")
     },
     apiTextbox = {
+        placeholderTransparency = Value(0),
         filtered = Value(),
         unfiltered = Value()
     },
-    submittedApiKey = Value(false),
+    submittedApiKey = Value(plugin:GetSetting("TRIA_WebserverKey") ~= nil),
     isShowingApiKey = Value(false)
 }
 
@@ -332,7 +333,11 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                             ClipsDescendants = true,
                                             Position = UDim2.fromScale(0.5, 0.5),
 
-                                            Size = UDim2.fromScale(0, 0),
+                                            PlaceholderText = "Insert TRIA Map Creator Key",
+                                            PlaceholderColor3 = Theme.DimmedText.Default,
+                                            TextTransparency = apiData.apiTextbox.placeholderTransparency,
+
+                                            Size = UDim2.fromScale(1, 1),
 
                                             [Ref] = apiData.apiTextbox.unfiltered,
 
@@ -340,6 +345,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                                 local filteredText = string.rep("*", #newText)
                                                 apiData.apiKey.filtered:set(filteredText)
                                                 apiData.apiKey.unfiltered:set(newText)
+                                                apiData.apiTextbox.placeholderTransparency:set(#newText == 0 and 0 or 1)
                                             end
                                         }
                                     }
@@ -353,13 +359,12 @@ You cannot whitelist or publish maps without doing this You only need to do this
                             LayoutOrder = 5,
 
                             [Children] = {
-                                Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 4)),
                                 Components.Constraints.UIPadding(UDim.new(0, 4), nil, nil, nil),
 
                                 Components.TextButton({
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BorderSizePixel = 2,
-                                    Position = UDim2.fromScale(0.5, 0.45),
+                                    Position = UDim2.fromScale(0.25, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Submit",
     
@@ -393,33 +398,33 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                 Components.TextButton({
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BorderSizePixel = 2,
-                                    Position = UDim2.fromScale(0.5, 0.45),
+                                    Position = UDim2.fromScale(0.75, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Remove",
                                    
                                     Active = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= ""
+                                        return apiData.submittedApiKey:get()
                                     end),
                                     AutoButtonColor = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= ""
+                                        return apiData.submittedApiKey:get()
                                     end),
 
                                     TextColor3 = Computed(function()
                                         local EnabledColor = Theme.BrightText.Default
                                         local DisabledColor = Theme.SubText.Default
 
-                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.submittedApiKey:get() and EnabledColor:get() or DisabledColor:get()
                                     end),
                                     BackgroundColor3 = Computed(function()
                                         local EnabledColor = Theme.ErrorText.Default
                                         local DisabledColor = Theme.DiffTextDeletionBackground.Default
 
-                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.submittedApiKey:get() and EnabledColor:get() or DisabledColor:get()
                                     end),
     
                                     Callback = function()
                                         apiData.apiTextbox.unfiltered:get().Text = ""
-                                        plugin:SetSetting("TRIA_WebserverKey", "")
+                                        plugin:SetSetting("TRIA_WebserverKey", nil)
                                         apiData.submittedApiKey:set(false)
                                     end,
 
@@ -430,7 +435,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BackgroundColor3 = Theme.WarnText.Default,
                                     BorderSizePixel = 2,
-                                    Position = UDim2.fromScale(0.5, 0.45),
+                                    Position = UDim2.fromScale(0.5, 0.75),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Toggle API Key",
                                     TextColor3 = Theme.BrightText.Default,
