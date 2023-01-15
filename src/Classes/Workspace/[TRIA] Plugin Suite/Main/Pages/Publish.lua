@@ -14,6 +14,8 @@ local Computed = Fusion.Computed
 local Ref = Fusion.Ref
 local OnEvent = Fusion.OnEvent
 local OnChange = Fusion.OnChange
+local Out = Fusion.Out
+
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local NoMapsFoundText = Value("No whitelisted maps found.")
@@ -24,7 +26,7 @@ local selectedPublishMap = Value(nil)
 local apiData = {
     apiKey = {
         filtered = Value(""),
-        unfiltered = Value("")
+        unfiltered = Value(plugin:GetSetting("TRIA_WebserverKey") or "")
     },
     apiTextbox = {
         filtered = Value(),
@@ -334,7 +336,6 @@ You cannot whitelist or publish maps without doing this You only need to do this
 
                                             [Ref] = apiData.apiTextbox.unfiltered,
 
-
                                             [OnChange "Text"] = function(newText: string)
                                                 local filteredText = string.rep("*", #newText)
                                                 apiData.apiKey.filtered:set(filteredText)
@@ -363,26 +364,26 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Text = "Submit",
     
                                     Active = Computed(function()
-                                        return apiKeyText:get() ~= ""
+                                        return apiData.apiKey.unfiltered:get() ~= ""
                                     end),
                                     AutoButtonColor = Computed(function()
-                                        return apiKeyText:get() ~= ""
+                                        return apiData.apiKey.unfiltered:get() ~= ""
                                     end),
                                     TextColor3 = Computed(function()
                                         local EnabledColor = Theme.BrightText.Default
                                         local DisabledColor = Theme.SubText.Default
 
-                                        return apiKeyText:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
                                     end),
                                     BackgroundColor3 = Computed(function()
                                         local EnabledColor = Theme.MainButton.Default
                                         local DisabledColor = Theme.MainButton.Pressed
 
-                                        return apiKeyText:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
                                     end),
 
                                     Callback = function()
-                                        print("API Key Recieved:\n\tFiltered:", apiData.apiKey.filtered:get(), "\n\tUnfiltered:", apiData.apiKey.unfiltered:get())
+                                        plugin:SetSetting("TRIA_WebserverKey", apiData.apiKey.unfiltered:get())
                                         apiData.submittedApiKey:set(true)
                                     end,
 
@@ -397,27 +398,28 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Text = "Remove",
                                    
                                     Active = Computed(function()
-                                        return apiKey:get() ~= ""
+                                        return apiData.apiKey.unfiltered:get() ~= ""
                                     end),
                                     AutoButtonColor = Computed(function()
-                                        return apiKey:get() ~= ""
+                                        return apiData.apiKey.unfiltered:get() ~= ""
                                     end),
 
                                     TextColor3 = Computed(function()
                                         local EnabledColor = Theme.BrightText.Default
                                         local DisabledColor = Theme.SubText.Default
 
-                                        return apiKey:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
                                     end),
                                     BackgroundColor3 = Computed(function()
                                         local EnabledColor = Theme.ErrorText.Default
                                         local DisabledColor = Theme.DiffTextDeletionBackground.Default
 
-                                        return apiKey:get() ~= "" and EnabledColor:get() or DisabledColor:get()
+                                        return apiData.apiKey.unfiltered:get() ~= "" and EnabledColor:get() or DisabledColor:get()
                                     end),
     
                                     Callback = function()
                                         apiData.apiTextbox.unfiltered:get().Text = ""
+                                        plugin:SetSetting("TRIA_WebserverKey", "")
                                         apiData.submittedApiKey:set(false)
                                     end,
 
@@ -454,6 +456,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
         }
     }
 
+    apiData.apiTextbox.unfiltered:get().Text = apiData.apiKey.unfiltered:get()
     return newFrame
 end
 
