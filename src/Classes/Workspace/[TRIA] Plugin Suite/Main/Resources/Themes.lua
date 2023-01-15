@@ -108,9 +108,9 @@ local themes = {
 
 settings().Studio.ThemeChanged:Connect(function()
     StudioTheme = settings().Studio.Theme
-    for Name, Value in pairs(themes) do
-        for Theme, _ in pairs(Value) do
-            themes[Name][Theme]:set(StudioTheme:GetColor(GuideColor[Name], GuideModifier[Theme]))
+    for name, data in pairs(themes) do
+        for key, _ in pairs(data) do
+            themes[name][key]:set(StudioTheme:GetColor(GuideColor[name], GuideModifier[key]))
         end
     end
 end)
