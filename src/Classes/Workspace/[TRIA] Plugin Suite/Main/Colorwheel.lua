@@ -30,7 +30,7 @@ local colorChosen = Util.Signal.new()
 
 local ColorWheel = {}
 
-local function UpdateColor()
+local function updateColor()
     local H, S, V = chosenColor:get():ToHSV()
     local Angle = -(H * 360) - 90
 
@@ -38,7 +38,7 @@ local function UpdateColor()
     circlePointerPos:set(UDim2.fromScale(0.5 + math.sin(math.rad(Angle)) * (S / 2), 0.5 + math.cos(math.rad(Angle)) * (S / 2)))
 end
 
-local function GetColorDisplay(data)
+local function getColorDisplay(data)
     local Text = Value("")
 
     return New "Frame" {
@@ -90,14 +90,14 @@ local function GetColorDisplay(data)
 
                     NewColor = if success then NewColor else Color3.fromRGB(0, 0, 0)
                     chosenColor:set(NewColor)
-                    UpdateColor()
+                    updateColor()
                 end
             }
         }
     }
 end
 
-local function UpdatePos(type)
+local function updatePos(type)
     local H, S, V = chosenColor:get():ToHSV()
     local types = {}
 
@@ -123,7 +123,7 @@ local function UpdatePos(type)
 
     types[type]()
     chosenColor:set(Color3.fromHSV(H, S, V))
-    UpdateColor()
+    updateColor()
 end
 
 function ColorWheel:GetUI()
@@ -202,7 +202,7 @@ function ColorWheel:GetUI()
 
                                 [OnEvent "MouseMoved"] = function()
                                     if mouseDownWheel:get() then
-                                        UpdatePos("Wheel")
+                                        updatePos("Wheel")
                                     end
                                 end,
 
@@ -216,7 +216,7 @@ function ColorWheel:GetUI()
 
                                     if (MousePos - CenterPos).Magnitude < WheelAbsSize:get().X / 2 then
                                         mouseDownWheel:set(true)
-                                        UpdatePos("Wheel")
+                                        updatePos("Wheel")
                                     end
                                 end,
 
@@ -264,7 +264,7 @@ function ColorWheel:GetUI()
 
                                 [OnEvent "MouseMoved"] = function()
                                     if mouseDownSlider:get() then
-                                        UpdatePos("Slider")
+                                        updatePos("Slider")
                                     end
                                 end,
 
@@ -276,7 +276,7 @@ function ColorWheel:GetUI()
                                     local MousePos = SliderAbsPos:get() - Util.Widget:GetRelativeMousePosition()
                                     if MousePos.X * -1 > 0 and MousePos.X * -1 < SliderAbsSize:get().Y and MousePos.Y * -1 > 0 and MousePos.Y * -1 < SliderAbsSize:get().Y then
                                         mouseDownSlider:set(true)
-                                        UpdatePos("Slider")
+                                        updatePos("Slider")
                                     end
                                 end,
 
@@ -301,7 +301,7 @@ function ColorWheel:GetUI()
 
                         [Children] = {
                             Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
-                            GetColorDisplay({
+                            getColorDisplay({
                                 LayoutOrder = 1,
                                 Display = "R",
                                 Computed = function()
@@ -312,7 +312,7 @@ function ColorWheel:GetUI()
                                     return math.floor(chosenColor:get().R * 255 + 0.5)
                                 end
                             }),
-                            GetColorDisplay({
+                            getColorDisplay({
                                 LayoutOrder = 2,
                                 Display = "G",
                                 Computed = function()
@@ -323,7 +323,7 @@ function ColorWheel:GetUI()
                                     return math.floor(chosenColor:get().G * 255 + 0.5)
                                 end
                             }),
-                            GetColorDisplay({
+                            getColorDisplay({
                                 LayoutOrder = 3,
                                 Display = "B",
                                 Computed = function()
@@ -334,7 +334,7 @@ function ColorWheel:GetUI()
                                     return math.floor(chosenColor:get().B * 255 + 0.5)
                                 end
                             }),
-                            GetColorDisplay({
+                            getColorDisplay({
                                 LayoutOrder = 4,
                                 Display = "H",
                                 Computed = function()
@@ -346,7 +346,7 @@ function ColorWheel:GetUI()
                                     return math.floor(H * 255 + 0.5)
                                 end
                             }),
-                            GetColorDisplay({
+                            getColorDisplay({
                                 LayoutOrder = 5,
                                 Display = "S",
                                 Computed = function()
@@ -358,7 +358,7 @@ function ColorWheel:GetUI()
                                     return math.floor(S * 255 + 0.5)
                                 end
                             }),
-                            GetColorDisplay({
+                            getColorDisplay({
                                 LayoutOrder = 6,
                                 Display = "V",
                                 Computed = function()
@@ -412,7 +412,7 @@ function ColorWheel:GetUI()
 
                             NewColor = if success then NewColor else Color3.fromRGB(0, 0, 0)
                             chosenColor:set(NewColor)
-                            UpdateColor()
+                            updateColor()
                         end
                     },
                 }
