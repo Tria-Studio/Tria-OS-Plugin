@@ -12,7 +12,8 @@ local ForValues = Fusion.ForValues
 local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Ref = Fusion.Ref
-local Out = Fusion.Out
+local OnEvent = Fusion.OnEvent
+local OnChange = Fusion.OnChange
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local NoMapsFoundText = Value("No whitelisted maps found.")
@@ -20,13 +21,22 @@ local whitelistMapId = Value("")
 
 local selectedPublishMap = Value(nil)
 
-local apiKeyText = Value("")
-local apiKey = Value(plugin:GetSetting("TRIA_apikey") or "")
-local apiTextbox = Value()
+local apiData = {
+    apiKey = {
+        filtered = Value(""),
+        unfiltered = Value("")
+    },
+    apiTextbox = {
+        filtered = Value(),
+        unfiltered = Value()
+    },
+    submittedApiKey = Value(false),
+    isShowingApiKey = Value(false)
+}
 
 local frame = {}
 
-local function GetInfoFrame(name, frames)
+local function getInfoFrame(name, frames)
     return New "Frame" {
         BackgroundColor3 = Theme.TableItem.Default,
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -94,7 +104,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                         DefaultState = true
                     }),
 
-                    GetInfoFrame("Map Whitelisting", { --// Whitelisting
+                    getInfoFrame("Map Whitelisting", { --// Whitelisting
                         New "TextBox" { --// Insert Whitelist ID
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                             BorderColor3 = Theme.InputFieldBorder.Default,
@@ -149,7 +159,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                         }
                     }),
 
-                    GetInfoFrame("Map Publishing", { --// Publishing
+                    getInfoFrame("Map Publishing", { --// Publishing
                         New "TextLabel" {
                             RichText = true,
                             LayoutOrder = 2,
@@ -259,7 +269,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                         }
                     }),
 
-                    GetInfoFrame("TRIA Map Creator Key", { --// API Key
+                    getInfoFrame("TRIA Map Creator Key", { --// API Key
                         Components.Dropdown({
                             LayoutOrder = 2,
                             Header = "How This Works",
@@ -281,24 +291,59 @@ You cannot whitelist or publish maps without doing this You only need to do this
                             TextWrapped = true,
                             BackgroundTransparency = 1,
                             Text = Computed(function()
-                                return if #apiKey:get() > 0
+                                return if apiData.submittedApiKey:get()
                                     then '<u>Status:</u> <font color="rgb(25,255,0)"> Submitted</font>' 
                                     else '<u>Status:</u> <font color="rgb(255,75,0)"> Not Submitted</font>'
                             end)
                         },
 
-                        New "TextBox" { --// Insert API Key
+                        New "Frame" { --// Insert API Key
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                             BorderColor3 = Theme.InputFieldBorder.Default,
                             BorderSizePixel = 1,
                             LayoutOrder = 4,
                             Size = UDim2.new(1, 0, 0, 32),
-                            PlaceholderColor3 = Theme.DimmedText.Default,
-                            PlaceholderText = "Insert TRIA Map Creator Key",
-                            TextColor3 = Theme.SubText.Default,
 
-                            [Out "Text"] = apiKeyText,
-                            [Ref] = apiTextbox
+                            [Children] = {
+                                New "TextButton" { --// Filtered text box
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
+                                    BackgroundTransparency = 1,
+                                    Position = UDim2.fromScale(0.5, 0.5),
+                                    Size = UDim2.fromScale(1, 1),
+
+                                    Text = Computed(function()
+                                        return apiData.apiKey[apiData.isShowingApiKey:get() and "unfiltered" or "filtered"]:get()
+                                    end),
+                                    TextTransparency = 0,
+                                    TextColor3 = Color3.new(1, 1, 1),
+
+                                    [Ref] = apiData.apiTextbox.filtered,
+
+                                    [OnEvent "Activated"] = function()
+                                        apiData.apiTextbox.unfiltered:get():CaptureFocus()
+                                    end,
+
+                                    [Children] = {
+                                        New "TextBox" { --// Hidden text box
+                                            AnchorPoint = Vector2.new(0.5, 0.5),
+                                            BackgroundTransparency = 1,
+                                            ClipsDescendants = true,
+                                            Position = UDim2.fromScale(0.5, 0.5),
+
+                                            Size = UDim2.fromScale(0, 0),
+
+                                            [Ref] = apiData.apiTextbox.unfiltered,
+
+
+                                            [OnChange "Text"] = function(newText: string)
+                                                local filteredText = string.rep("*", #newText)
+                                                apiData.apiKey.filtered:set(filteredText)
+                                                apiData.apiKey.unfiltered:set(newText)
+                                            end
+                                        }
+                                    }
+                                }
+                            }
                         },
 
                         New "Frame" {
@@ -307,8 +352,9 @@ You cannot whitelist or publish maps without doing this You only need to do this
                             LayoutOrder = 5,
 
                             [Children] = {
-                                Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
-                                
+                                Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 4)),
+                                Components.Constraints.UIPadding(UDim.new(0, 4), nil, nil, nil),
+
                                 Components.TextButton({
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BorderSizePixel = 2,
@@ -336,10 +382,8 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     end),
 
                                     Callback = function()
-                                        apiKey:set(apiTextbox:get().Text)
-                                        plugin:SetSetting("TRIA_apikey", apiKey:get())
-                                        apiTextbox:get().Text = ""
-                                        print("API key stored: ", plugin:GetSetting("TRIA_apikey"))
+                                        print("API Key Recieved:\n\tFiltered:", apiData.apiKey.filtered:get(), "\n\tUnfiltered:", apiData.apiKey.unfiltered:get())
+                                        apiData.submittedApiKey:set(true)
                                     end,
 
                                     Children = Components.Constraints.UICorner(0, 6)
@@ -373,10 +417,24 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     end),
     
                                     Callback = function()
-                                        apiKey:set("")
-                                        apiTextbox:get().Text = ""
-                                        plugin:SetSetting("TRIA_apikey", "")
-                                        print("API key stored: ", plugin:GetSetting("TRIA_apikey"))
+                                        apiData.apiTextbox.unfiltered:get().Text = ""
+                                        apiData.submittedApiKey:set(false)
+                                    end,
+
+                                    Children = Components.Constraints.UICorner(0, 8)
+                                }),
+
+                                Components.TextButton({
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
+                                    BackgroundColor3 = Theme.WarnText.Default,
+                                    BorderSizePixel = 2,
+                                    Position = UDim2.fromScale(0.5, 0.45),
+                                    Size = UDim2.new(0.4, 0, 0, 24),
+                                    Text = "Toggle API Key",
+                                    TextColor3 = Theme.BrightText.Default,
+    
+                                    Callback = function()
+                                        apiData.isShowingApiKey:set(not apiData.isShowingApiKey:get())
                                     end,
 
                                     Children = Components.Constraints.UICorner(0, 6)
@@ -395,15 +453,6 @@ You cannot whitelist or publish maps without doing this You only need to do this
             }
         }
     }
-
-    local apiBox = apiTextbox:get()
-    apiBox:GetPropertyChangedSignal("Text"):Connect(function()
-        local currentText = apiBox.Text
-        if currentText:match("[%a%w]") ~= nil then
-            currentText = currentText:gsub(".", "*")
-            apiBox.Text = currentText
-        end
-    end)
 
     return newFrame
 end

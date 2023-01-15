@@ -34,6 +34,9 @@ local themes = {
     TitlebarText = {
         Default = Value(StudioTheme:GetColor(GuideColor.TitlebarText))
     },
+    WarnText = {
+        Default = Value(StudioTheme:GetColor(GuideColor.WarningText))
+    },
     ErrorText = {
         Default = Value(StudioTheme:GetColor(GuideColor.ErrorText))
     },
@@ -105,7 +108,6 @@ local themes = {
 
 settings().Studio.ThemeChanged:Connect(function()
     StudioTheme = settings().Studio.Theme
-    --TODO this doesnt work
     for Name, Value in pairs(themes) do
         for Theme, _ in pairs(Value) do
             themes[Name][Theme]:set(StudioTheme:GetColor(GuideColor[Name], GuideModifier[Theme]))

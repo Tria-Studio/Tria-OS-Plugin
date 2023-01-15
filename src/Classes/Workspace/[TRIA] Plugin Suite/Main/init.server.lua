@@ -137,7 +137,7 @@ New "Frame" {
 }
 
 
-local function OnOpen()
+local function onOpen()
 	SelectMap:AutoSelect()
 	task.wait(2)
 	-- ColorWheel:GetColor() --// Debug
@@ -147,10 +147,10 @@ OpenButton.Click:Connect(function()
 	Widget.Enabled = not Widget.Enabled
 
 	if Widget.Enabled then
-		OnOpen()
+		onOpen()
 	end
 end)
 
 if Widget.Enabled then
-	OnOpen()
+	onOpen()
 end
