@@ -283,7 +283,7 @@ function Components.Dropdown(data)
                         Position = UDim2.fromScale(1, 0.5),
                         Size = UDim2.fromScale(1.25, 1.25),
                         Image = Computed(function()
-                            return if dropdownVisible:get() then "rbxassetid://6031091004" else "rbxassetid://6031090990"
+                            return if dropdownVisible:get() then "rbxassetid://6031090990" else "rbxassetid://6031091004" 
                         end),
         
                         [Children] = Components.Constraints.UIAspectRatio(1)
@@ -291,19 +291,21 @@ function Components.Dropdown(data)
                 }
             }),
             New "TextLabel" {
-                AutomaticSize = Computed(function()
-                    return if dropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
-                 end),
+                 TextXAlignment = data.TextXAlignment,
                  BackgroundColor3 = Theme.Notification.Default,
                  BorderColor3 = Theme.Border.Default,
                  TextColor3 = Theme.MainText.Default,
                  BorderSizePixel = 1,
-                 Visible = dropdownVisible,
                  Size = UDim2.fromScale(1, 0),
                  Position = UDim2.fromOffset(0, 24),
                  Text = data.Text,
                  RichText = true,
-                 TextWrapped = true
+                 TextWrapped = true,
+
+                 AutomaticSize = Computed(function()
+                    return if dropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
+                 end),
+                 Visible = dropdownVisible
             }
         }
     }

@@ -22,7 +22,8 @@ local themes = {
         Default = Value(StudioTheme:GetColor(GuideColor.MainText))
     },
     MainButton = {
-        Default = Value(StudioTheme:GetColor(GuideColor.MainButton))
+        Default = Value(StudioTheme:GetColor(GuideColor.MainButton)),
+        Pressed = Value(StudioTheme:GetColor(GuideColor.MainButton, GuideModifier.Pressed))
     },
     BrightText = {
         Default = Value(StudioTheme:GetColor(GuideColor.BrightText))
@@ -99,6 +100,9 @@ local themes = {
     },
     CheckedFieldIndicator = {
         Default = Value(StudioTheme:GetColor(GuideColor.CheckedFieldIndicator))
+    },
+    DiffTextDeletionBackground = {
+        Default = Value(StudioTheme:GetColor(GuideColor.DiffTextDeletionBackground))
     },
 }
 
