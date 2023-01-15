@@ -5,6 +5,7 @@ local Package = script.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
+local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -205,7 +206,45 @@ Your creator token is a long phrase of characters which authenticates and allows
                                                 }
                                             else
                                                 --// GRIF CREATE A MAP FRAME U LAZY NERD
-                                                --// https://cdn.discordapp.com/attachments/895042217331261472/1063969336307482704/nerd.png
+                                                    --// https://cdn.discordapp.com/attachments/895042217331261472/1063969336307482704/nerd.png
+                                                    -- fine
+                                                return New "ImageButton" {
+                                                    Components.ImageButton({
+                                                        Image = value.MapImage,
+                                                        ScaleType = Enum.ScaleType.Crop,
+
+                                                        [Children] = {
+                                                            BackgroundColor3 = Color3.new(0, 0, 0),
+                                                            AnchorPoint = Vector2.new(0, 1),
+                                                            BackgroundTransparency = .625,
+                                                            Position = UDim2.fromScale(0, 1),
+                                                            Size = UDim2.new(1, 0, 0, 34),
+
+                                                            [Children] = {
+                                                                New "TextLabel" { --// Map Name
+                                                                    Text = value.MapName,
+                                                                    AnchorPoint = Vector2.new(.5, 0),
+                                                                    Position = UDim2.fromScale(.5, .45),
+                                                                    Size = UDim2.new(0, 110, 0.55, 0),
+                                                                    FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                                                                    TextColor3 = Theme.MainText.Default,
+                                                                    TextSize = 18,
+                                                                },
+                                                                New "TextLabel" { --// Difficulty
+                                                                    Text = string.format("[%s]", Util.Difficulty[value.Difficulty].Name),
+                                                                    AnchorPoint = Vector2.new(.5, 0),
+                                                                    Position = UDim2.fromScale(.5, 0),
+                                                                    Size = UDim2.new(0, 110, 0.45, 0),
+                                                                    FontFace = Font.new("SourceSansPro", Enum.FontWeight.SemiBold),
+                                                                    TextColor3 = Util.Difficulty[value.Difficulty].Color,
+                                                                    TextStrokeColor3 = Theme.Border.Default,
+                                                                    TextStrokeTransparency = 0,
+                                                                },
+                                                                
+                                                            }
+                                                        }
+                                                    })
+                                                }
                                             end
                                         end, Fusion.cleanup)
                                     }
@@ -314,11 +353,11 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Position = UDim2.fromScale(0.5, 0.5),
                                     Size = UDim2.fromScale(1, 1),
 
+                                    TextTransparency = 0,
+                                    TextColor3 = Color3.new(1, 1, 1),
                                     Text = Computed(function()
                                         return apiData.apiKey[apiData.isShowingApiKey:get() and "unfiltered" or "filtered"]:get()
                                     end),
-                                    TextTransparency = 0,
-                                    TextColor3 = Color3.new(1, 1, 1),
 
                                     [Ref] = apiData.apiTextbox.filtered,
 
@@ -328,6 +367,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
 
                                     [Children] = {
                                         Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 22)),
+                                       
                                         New "TextBox" { --// Hidden text box
                                             AnchorPoint = Vector2.new(0.5, 0.5),
                                             BackgroundTransparency = 1,
@@ -349,6 +389,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                                 apiData.apiTextbox.placeholderTransparency:set(#newText == 0 and 0 or 1)
                                             end,
                                         },
+                                        
                                         Components.ImageButton({
                                             AutoButtonColor = false,
                                             AnchorPoint = Vector2.new(0, 0.5),
