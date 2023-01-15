@@ -54,7 +54,8 @@ function Components.ImageButton(data)
         BorderMode = Enum.BorderMode.Inset,
         AutoButtonColor = true,
 
-        [OnEvent "Activated"] = data.Callback
+        [OnEvent "Activated"] = data.Callback,
+        [Children] = data.Children
     }
 end
 
@@ -150,7 +151,7 @@ function Components.PageHeader(Name: string)
                 AnchorPoint = Vector2.new(0, 0.5),
                 Size = UDim2.new(1, 0, 0, 2),
                 ZIndex = 2
-            },
+            }
         }
     }
 end
