@@ -97,7 +97,7 @@ function frame:GetFrame(data)
         - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
              
     <b>2)</b> In the TRIA.os Map Manager, click on the [ ] tab and generate a TRIA API key for your account
-        - NOTE: do <u>NOT</u> share this with anyone.
+        - NOTE: Do <u>NOT</u> share this with anyone.
         - This API key will enable you to remotely whitelist & publish maps. you cannot do this without generating this key.
                         
     <b>3)</b> Below, enter the TRIA Map Key you generated in the Map Manager into the textbox below and click 'Set'
@@ -373,6 +373,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                             AnchorPoint = Vector2.new(0.5, 0.5),
                                             BackgroundTransparency = 1,
                                             ClipsDescendants = true,
+                                            ClearTextOnFocus = false,
                                             Position = UDim2.fromScale(0.5, 0.5),
 
                                             PlaceholderText = "Insert TRIA Map Creator Key",
@@ -380,14 +381,14 @@ You cannot whitelist or publish maps without doing this You only need to do this
 
                                             Size = UDim2.fromScale(1, 1),
 
-                                            [Ref] = apiData.apiTextbox.unfiltered,
-
                                             [OnChange "Text"] = function(newText: string)
                                                 local filteredText = string.rep("*", #newText)
                                                 apiData.apiKey.filtered:set(filteredText)
                                                 apiData.apiKey.unfiltered:set(newText)
                                                 apiData.apiTextbox.placeholderTransparency:set(#newText == 0 and 0 or 1)
                                             end,
+
+                                            [Ref] = apiData.apiTextbox.unfiltered
                                         }),
 
                                         Components.ImageButton({
