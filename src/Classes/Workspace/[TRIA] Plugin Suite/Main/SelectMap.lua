@@ -276,6 +276,8 @@ function selectMap:AutoSelect()
         return true
     end
 
+    -- FIXME: We might need to make a better way to check this because some studio
+    -- projects have hundreds of models under workspace.
     for _, v: Instance in pairs(workspace:GetChildren()) do
         if v:IsA("Model") then
             local isMap, value = selectMap:IsTriaMap(v)

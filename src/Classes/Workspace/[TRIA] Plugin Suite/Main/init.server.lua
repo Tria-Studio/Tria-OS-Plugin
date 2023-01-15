@@ -9,7 +9,7 @@ local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
 local SelectMap = require(script.SelectMap)
 local Util = require(script.Util)
-local ColorWheel = require(script.Colorwheel)
+local ColorWheel = require(script.ColorWheel)
 local Message = require(script.Message)
 
 local New = Fusion.New
