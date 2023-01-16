@@ -1,5 +1,6 @@
 local Package = script.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
+local Util = require(Package.Util)
 
 local Value = Fusion.Value
 
@@ -101,6 +102,18 @@ return {
     },
 
     {
+        Text = "Default Oxygen",
+        Type = "String",
+        Modifiable = true,
+
+        Directory = "Main",
+        Attribute = "DefaultOxygen",
+        Fallback = "100",
+
+        Value = Value("")
+    },
+
+    {
         Text = "Allow Sliding",
         Type = "Checkbox",
         Modifiable = true,
@@ -109,7 +122,7 @@ return {
         Attribute = "AllowSliding",
         Fallback = true,
 
-        Value = Value("")
+        Value = Value(false)
     },
 
     {
@@ -121,18 +134,18 @@ return {
         Attribute = "LinearSliding",
         Fallback = false,
 
-        Value = Value("")
+        Value = Value(false)
     },
 
     {
-        Text = "Default Oxygen",
-        Type = "String",
+        Text = "Ambient",
+        Type = "Color",
         Modifiable = true,
 
-        Directory = "Main",
-        Attribute = "DefaultOxygen",
-        Fallback = "100",
+        Directory = "Lighting",
+        Attribute = "Ambient",
+        Fallback = Util.colorToRGB(Color3.fromRGB(118, 118, 118)),
 
-        Value = Value("")
+        Value = Value(Color3.new())
     },
 }

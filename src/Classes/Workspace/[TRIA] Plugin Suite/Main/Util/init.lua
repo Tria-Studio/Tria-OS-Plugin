@@ -100,7 +100,7 @@ function util:ShowMessage(header: string, text: string, option1: any?, option2: 
     util._Message.Option2:set(option2 or {})
 end
 
-function getSettingsDirFolder(directory)
+function getSettingsDirFolder(directory: string)
     local currentMap = util.mapModel:get()
     if currentMap == nil then
         return
@@ -115,7 +115,7 @@ function getSettingsDirFolder(directory)
     return dirFolder
 end
 
-function util.updateMapSetting(directory, attribute, value)
+function util.updateMapSetting(directory: string, attribute: string, value: any)
     local dirFolder = getSettingsDirFolder(directory)
     if not dirFolder then
         return
@@ -130,8 +130,16 @@ function util.prefixWarn(...)
     warn("[TRIA.os Map Plugin]:", ...)
 end
 
-function util.getDirFolder(directory)
+function util.getDirFolder(directory: string)
     return getSettingsDirFolder(directory)
+end
+
+function util.colorToRGB(color: Color3): string
+    return string.format("%i, %i, %i", 
+        math.min(math.floor(color.R * 255), 255), 
+        math.min(math.floor(color.G * 255), 255),
+        math.min(math.floor(color.B * 255), 255)
+    )
 end
 
 updateButtonsActive()

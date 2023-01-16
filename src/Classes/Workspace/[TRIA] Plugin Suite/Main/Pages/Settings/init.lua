@@ -19,6 +19,11 @@ local SettingTypes = require(script:WaitForChild("SettingTypes"))
 local SettingData = require(script:WaitForChild("SettingData"))
 
 local settingConnections = {}
+local settingTypeToMatchStringMap = {
+    ["String"] = function(str)
+        return str:match("%w")
+    end
+}
 
 local function settingOption(optionType, optionData): Instance
     optionData.Modifiable = if optionData.Modifiable == nil then false else optionData.Modifiable
@@ -41,6 +46,10 @@ function onMapChanged()
 
         -- Initially retrieve setting value
         local currentValue = dirFolder:GetAttribute(tbl.Attribute)
+        if tbl.Type == "String" and settingTypeToMatchStringMap[tbl.Type](tostring(currentValue)) == false then
+            return
+        end
+
         tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
         
         -- Connect change signal
@@ -55,11 +64,6 @@ function onMapChanged()
         end))
     end
 end
-
-onMapChanged()
-Util.MapChanged:Connect(function()
-    onMapChanged()
-end)
 
 function settingDropdownFrame(data)
     local baseFrame = Components.DropdownHolderFrame({DropdownVisible = data.DropdownVisible})
@@ -131,5 +135,11 @@ function frame:GetFrame(data)
         }
     }
 end
+
+
+onMapChanged()
+Util.MapChanged:Connect(function()
+    onMapChanged()
+end)
 
 return frame
