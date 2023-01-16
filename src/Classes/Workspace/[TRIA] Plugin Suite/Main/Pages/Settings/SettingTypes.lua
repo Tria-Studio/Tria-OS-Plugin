@@ -71,7 +71,7 @@ function SettingTypes.String(data): Instance
                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8), nil)
             },
 
-            [OnChange "FocusLost"] = function(newText: string)
+            [OnChange "Text"] = function(newText: string)
                 data.Value:set(newText)
                 Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
             end
