@@ -66,17 +66,21 @@ function frame:GetFrame(data)
     local publishedMaps = {}
 
     if #publishedMaps == 0 then
-        -- table.insert(publishedMaps, NoMapsFoundText:get())
-        table.insert(publishedMaps, { --// debug 
-            Name = "Cubic Void",
-            Difficulty = 6,
-            Image = "rbxassetid://8877261367",
-        })
-        table.insert(publishedMaps, { --// debug 
-            Name = "Cubic Ruins",
-            Difficulty = 6,
-            Image = "rbxassetid://11715750538",
-        })
+        table.insert(publishedMaps, NoMapsFoundText:get())
+        -- table.insert(publishedMaps, { --// debug 
+        --     Name = "Cubic Void",
+        --     Difficulty = 6,
+        --     Image = "rbxassetid://8877261367",
+        --     ID = 2,
+        --     IsPublished = false
+        -- })
+        -- table.insert(publishedMaps, { --// debug 
+        --     Name = "Cubic Ruins",
+        --     Difficulty = 6,
+        --     Image = "rbxassetid://11715750538",
+        --     ID= 1,
+        --     IsPublished = true,
+        -- })
     end
 
     local newFrame = New "Frame" {
@@ -138,7 +142,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             LayoutOrder = 3,
                             Position = UDim2.new(0.5, 0, 0.45, 0),
                             Size = UDim2.new(0.4, 0, 0, 24),
-                            Text = "Whitelist",
+                            Text = "Whitelist Map",
 
                             Active = Computed(function()
                                 return whitelistMapId:get() ~= ""
@@ -221,7 +225,11 @@ Your creator token is a long phrase of characters which authenticates and allows
                             LayoutOrder = 5,
                             Position = UDim2.fromScale(0.5, 0.45),
                             Size = UDim2.new(0.4, 0, 0, 24),
-                            Text = "Publish",
+                            Text = Computed(function()
+                                return if selectedPublishMap:get() and selectedPublishMap:get().IsPublished
+                                    then "Update Map"
+                                    else "Publish Map"
+                            end),
 
                             Active = Computed(function()
                                 return selectedPublishMap:get() ~= nil
@@ -276,14 +284,18 @@ Your creator token is a long phrase of characters which authenticates and allows
                                                 return New "TextLabel" {
                                                     Size = UDim2.new(1, 0, 0, 20),
                                                     Text = NoMapsFoundText:get(),
-                                                    BackgroundTransparency = 1,
+                                                    BackgroundTransparency = 0,
+                                                    BackgroundColor3 = Theme.InputFieldBackground.Default,
                                                     TextColor3 = Theme.ErrorText.Default,
+                                                    Font = Enum.Font.SourceSansSemibold,
+                                                    TextSize = 15
                                                 }
                                             else
                                                 local colorMultiplier = Value(1)
                                                 -- fine
                                                 -- yay :D
                                                 return Components.ImageButton {
+                                                    LayoutOrder = value.ID,
                                                     Image = value.Image,
                                                     ScaleType = Enum.ScaleType.Crop,
                                                     ImageColor3 = Computed(function()
@@ -293,17 +305,14 @@ Your creator token is a long phrase of characters which authenticates and allows
                                                     [OnEvent "MouseEnter"] = function()
                                                         colorMultiplier:set(.7)
                                                     end,
-
                                                     [OnEvent "MouseButton1Down"] = function()
                                                         colorMultiplier:set(1.15)
 
                                                     end,
-
                                                     [OnEvent "MouseButton1Up"] = function()
                                                         colorMultiplier:set(.7)
                                                         selectedPublishMap:set(value)
                                                     end,
-
                                                     [OnEvent "MouseLeave"] = function()
                                                         colorMultiplier:set(1)
                                                     end,
@@ -328,6 +337,15 @@ Your creator token is a long phrase of characters which authenticates and allows
                                                                 TextColor3 = Computed(function()
                                                                     return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
                                                                 end)
+                                                            },
+                                                            New "TextLabel" { --// Whitelisted?
+                                                                Text = "Whitelisted",
+                                                                BackgroundTransparency = 1,
+                                                                Position = UDim2.fromOffset(8, 0),
+                                                                TextSize = 13,
+                                                                Size = UDim2.new(0, 45, 0.45, 0),
+                                                                TextColor3 = Theme.MainText.Default,
+                                                                Visible = not value.IsPublished
                                                             },
                                                             New "TextLabel" { --// Difficulty
                                                                 Text = string.format("[%s]", Util.Difficulty[value.Difficulty].Name),
@@ -407,6 +425,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Position = UDim2.fromScale(0.5, 0.5),
                                     Size = UDim2.fromScale(1, 1),
 
+                                    TextSize = 16,
                                     TextTransparency = 0,
                                     TextColor3 = Color3.new(1, 1, 1),
                                     Text = Computed(function()
