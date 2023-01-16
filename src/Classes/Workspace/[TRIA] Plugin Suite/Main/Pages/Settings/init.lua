@@ -166,7 +166,6 @@ function frame:GetFrame(data)
 end
 
 -- TODO:
--- > Time option
 -- > Export lighting frame
 -- > Liquids
 
