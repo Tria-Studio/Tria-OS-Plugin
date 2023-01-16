@@ -117,6 +117,7 @@ function frame:GetFrame(data)
                         DefaultState = true
                     }, function(visible)
                         return Components.DropdownTextlabel({
+                            DropdownVisible = visible,
                             Text = [[
 Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
                             
@@ -265,9 +266,6 @@ Your creator token is a long phrase of characters which authenticates and allows
                                                     TextColor3 = Theme.ErrorText.Default,
                                                 }
                                             else
-                                                -- fine
-                                                -- yay :D
-
                                                 return Components.ImageButton {
                                                     Image = value.Image,
                                                     ScaleType = Enum.ScaleType.Crop,
@@ -326,6 +324,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             DefaultState = true
                         }, function(visible)
                             return Components.DropdownTextlabel({
+                                DropdownVisible = visible,
                                 Text = [[
 To get your TRIA Map Creator Key, follow the steps at the top of this page. This is where you will enter your TRIA Map Creator Key.
 

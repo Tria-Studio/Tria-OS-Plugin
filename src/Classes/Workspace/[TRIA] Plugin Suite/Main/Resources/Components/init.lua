@@ -54,11 +54,11 @@ function Components.TopbarButton(data)
     return New "TextButton" {
         Active = Util.buttonsActive,
         AutoButtonColor = Util.buttonsActive,
-        BackgroundColor3 = Computed(function()
+        BackgroundColor3 = Spring(Computed(function()
             local hoverColor = Theme.RibbonButton.Hover:get()
             local titlebarColor = Theme.RibbonButton.Default:get()
             return if data.Visible:get() then hoverColor else titlebarColor
-        end),
+        end), 20),
         Text = "",
         Size = UDim2.fromScale(0.167, 1),
         
@@ -249,7 +249,8 @@ function Components.Dropdown(data, childrenProcessor)
 
     local dropdown = New "Frame" {
         Size = UDim2.fromScale(1, 0),
-        BackgroundTransparency = 1,
+        BackgroundColor3 = Theme.Button.Default,
+        BackgroundTransparency = 0,
         AutomaticSize = Enum.AutomaticSize.Y,
         LayoutOrder = data.LayoutOrder,
 
@@ -257,10 +258,11 @@ function Components.Dropdown(data, childrenProcessor)
             Components.TextButton({
                 Active = Computed(Util.buttonActiveFunc),
                 AutoButtonColor = Computed(Util.buttonActiveFunc),
-                BackgroundColor3 = Theme.Button.Default,
+                BackgroundTransparency = 1,
 
                 FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),
-                Size = UDim2.new(1, 0, 0, 24),
+                Size = UDim2.new(1, -20, 0, 24),
+                Position = UDim2.fromOffset(24, 0),
 
                 TextSize = 16,
                 Text = data.Header,
@@ -268,29 +270,29 @@ function Components.Dropdown(data, childrenProcessor)
 
                 [OnEvent "Activated"] = function()
                     dropdownVisible:set(not dropdownVisible:get())
-                end,
-        
-                [Children] = {
-                    Components.Constraints.UIPadding(nil, nil, UDim.new(0, 20), nil),
-                    New "ImageLabel" {
-                        AnchorPoint = Vector2.new(1, 0),
-                        BackgroundTransparency = 1,
-                        Position = UDim2.fromScale(0, 0),
-                        Size = UDim2.fromOffset(20, 20),
-                        Image = "http://www.roblox.com/asset/?id=6031094687",
+                end
+            }),
 
-                        Rotation = Spring(Computed(function()
-                            return dropdownVisible:get() and 0 or 180
-                        end), 20),
-        
-                        [Children] = Components.Constraints.UIAspectRatio(1)
-                    },
+            New "ImageButton" {
+                AnchorPoint = Vector2.new(1, 0),
+                BackgroundTransparency = 1,
+                Position = UDim2.fromOffset(20, 2),
+                Size = UDim2.fromOffset(20, 20),
+                Image = "http://www.roblox.com/asset/?id=6031094687",
 
-                    Computed(function()
-                        return childrenProcessor(dropdownVisible)
-                    end, Fusion.cleanup)
-                }
-            })
+                Rotation = Spring(Computed(function()
+                    return dropdownVisible:get() and 0 or 180
+                end), 20),
+
+                [Children] = Components.Constraints.UIAspectRatio(1),
+                [OnEvent "Activated"] = function()
+                    dropdownVisible:set(not dropdownVisible:get())
+                end
+            },
+
+            Computed(function()
+                return childrenProcessor(dropdownVisible)
+            end, Fusion.cleanup)
         }
     }
     return dropdown
@@ -300,9 +302,8 @@ function Components.DropdownTextlabel(data)
     return New "TextLabel" {
         TextXAlignment = data.TextXAlignment,
         BackgroundColor3 = Theme.Notification.Default,
-        BorderColor3 = Theme.Border.Default,
         TextColor3 = Theme.MainText.Default,
-        BorderSizePixel = 1,
+        BorderSizePixel = 0,
         Size = UDim2.fromScale(1, 0),
         Position = UDim2.fromOffset(0, 24),
         Text = data.Text,
@@ -314,6 +315,21 @@ function Components.DropdownTextlabel(data)
         end),
         Visible = data.DropdownVisible
    }
+end
+
+function Components.DropdownHolderFrame(data)
+    return New "ScrollingFrame" {
+        BackgroundTransparency = 1,
+        Position = UDim2.fromOffset(0, 24),
+        Size = UDim2.fromScale(1, 1),
+        Visible = data.DropdownVisible,
+        AutomaticSize = Computed(function()
+            return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
+        end),
+        AutomaticCanvasSize = Computed(function()
+            return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
+        end),
+    }
 end
 
 return Components
