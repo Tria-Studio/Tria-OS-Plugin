@@ -25,7 +25,7 @@ function frame:GetFrame(data)
                 CanvasSize = UDim2.fromOffset(0, 180),
                 BackgroundColor3 = Theme.MainBackground.Default,
 
-                Children = {
+                [Children] = {
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
                     Components.ScrollingFrameHeader("Button Event Tags", 1),
                     New "Frame" {
