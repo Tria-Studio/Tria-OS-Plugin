@@ -4,10 +4,14 @@ local Package = script.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Components = require(Package.Resources.Components)
 local Theme = require(Package.Resources.Themes)
+local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Hydrate = Fusion.Hydrate
+local OnChange = Fusion.OnChange
+local Computed = Fusion.Computed
+local OnEvent = Fusion.OnEvent
 
 function BaseSettingButton(data)
     return Components.TextButton {
@@ -65,12 +69,55 @@ function SettingTypes.String(data): Instance
 
             [Children] = {
                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8), nil)
-            }
+            },
+
+            [OnChange "FocusLost"] = function(newText: string)
+                data.Value:set(newText)
+                Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+            end
         }
     }
 end
 
-function SettingTypes.Checkbox()
+function SettingTypes.Checkbox(data)
+    local images = {
+        checked = "http://www.roblox.com/asset/?id=6031094667",
+        unchecked = "http://www.roblox.com/asset/?id=6031068420"
+    }
+
+    return Hydrate(BaseSettingButton(data)) {
+        [Children] = Components.ImageButton {
+            AnchorPoint = Vector2.new(0, 0.5),
+            BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+            BackgroundTransparency = 0,
+            BorderColor3 = Color3.fromRGB(34, 34, 34),
+            BorderMode = Enum.BorderMode.Outline,
+            BorderSizePixel = 1,
+
+            Position = UDim2.new(0.45, 8, 0.5, 0),
+            Size = UDim2.fromOffset(14, 14),
+            Image = Computed(function()
+                return images[data.Value:get() == true and "checked" or "unchecked"]
+            end),
+            ImageColor3 = Computed(function()
+                return data.Value:get() == true and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+            end),
+
+            [OnEvent "Activated"] = function()
+                if data.Modifiable then
+                    data.Value:set(not data.Value:get(false))
+                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                end
+            end
+        }
+    }
+end
+
+function SettingTypes.Color()
+    
+end
+
+function SettingTypes.Time()
     
 end
 

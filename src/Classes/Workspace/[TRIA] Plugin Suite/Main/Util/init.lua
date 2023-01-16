@@ -100,6 +100,40 @@ function util:ShowMessage(header: string, text: string, option1: any?, option2: 
     util._Message.Option2:set(option2 or {})
 end
 
+function getSettingsDirFolder(directory)
+    local currentMap = util.mapModel:get()
+    if currentMap == nil then
+        return
+    end
+
+    local mapSettings = currentMap:FindFirstChild("Settings")
+    if not mapSettings then
+        return
+    end
+
+    local dirFolder = mapSettings:FindFirstChild(directory)
+    return dirFolder
+end
+
+function util.updateMapSetting(directory, attribute, value)
+    local dirFolder = getSettingsDirFolder(directory)
+    if not dirFolder then
+        return
+    end
+    if value == nil then
+        return
+    end
+    dirFolder:SetAttribute(attribute, value)
+end
+
+function util.prefixWarn(...)
+    warn("[TRIA.os Map Plugin]:", ...)
+end
+
+function util.getDirFolder(directory)
+    return getSettingsDirFolder(directory)
+end
+
 updateButtonsActive()
 Observer(util._Message.Text):onChange(updateButtonsActive)
 
