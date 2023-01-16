@@ -74,38 +74,6 @@ function InputBox(data)
     end
 end
 
-function parseColor3Text(str: string): string
-    local multiplier = 1
-
-    str = string.gsub(str, " ", "")
-    if string.find(str, "Color3%.%a%a%a%(", 1) then
-        str = string.gsub(str, 'Color3%.%a%a%a%(', "")
-        multiplier = 255
-    elseif string.find(str, "Color3.%a%a%a%a%a%a%a%(", 1) then
-        str = string.gsub(str, 'Color3%.%a%a%a%a%a%a%a%(', "")
-    end
-    str = string.gsub(str, "%)", "")
-
-    local split = string.split(str, ",")
-    for _, v in pairs(split) do
-        if not tonumber(v) then
-            return false, nil
-        end
-    end
-
-    if #split < 3 then
-        return false, nil
-    end
-
-    local r, g, b = 
-        math.min(math.floor(split[1] * multiplier + 0.5), 255), 
-        math.min(math.floor(split[2] * multiplier + 0.5), 255), 
-        math.min(math.floor(split[3] * multiplier + 0.5), 255)
-
-    local newColor = Color3.fromRGB(r, g, b)
-    return true, newColor
-end
-
 function SettingTypes.String(data): Instance
     local inputBox
     return Hydrate(BaseSettingButton(data)) {
@@ -116,7 +84,6 @@ function SettingTypes.String(data): Instance
 
             [Ref] = inputBox,
             [OnEvent "FocusLost"] = function()
-                print(inputBox)
                 local inputBoxObject = inputBox:get()
                 if data.Modifiable then
                     local newText = inputBoxObject.Text
@@ -200,7 +167,7 @@ function SettingTypes.Color(data)
                 BackgroundColor3 = Color3.fromRGB(34, 34, 34),
                 BackgroundTransparency = 0,
                 BorderSizePixel = 0,
-                Position = UDim2.new(0.45, 24, 0, 0),
+                Position = UDim2.new(0.45, 28, 0, 0),
                 Size = UDim2.new(0, 1, 1, 0)
             },
 
@@ -216,7 +183,7 @@ function SettingTypes.Color(data)
                     if data.Modifiable then
                         local inputBoxObject = inputBox:get()
                         local currentText = inputBoxObject.Text
-                        local didParse, parsedColor = parseColor3Text(currentText)
+                        local didParse, parsedColor = Util.parseColor3Text(currentText)
                         if not didParse then
                             inputBoxObject.Text = data.Value:get()
                         else
@@ -236,5 +203,7 @@ end
 function SettingTypes.Time()
     
 end
+
+SettingTypes.Number = SettingTypes.String
 
 return SettingTypes

@@ -20,8 +20,17 @@ local SettingData = require(script:WaitForChild("SettingData"))
 
 local settingConnections = {}
 local settingTypeToMatchStringMap = {
-    ["String"] = function(str)
-        return str:match("%w")
+    ["String"] = function(val)
+        return val:match("%w") ~= nil
+    end,
+    ["Number"] = function(val)
+        return val:match("%d") ~= nil
+    end,
+    ["Checkbox"] = function(val)
+        return val == "false" or val == "true"
+    end,
+    ["Color"] = function(val)
+        return val:gsub(" ", ""):match("%d+,%d+,%d+") ~= nil
     end
 }
 
@@ -46,7 +55,7 @@ function onMapChanged()
 
         -- Initially retrieve setting value
         local currentValue = dirFolder:GetAttribute(tbl.Attribute)
-        if tbl.Type == "String" and settingTypeToMatchStringMap[tbl.Type](tostring(currentValue)) == false then
+        if settingTypeToMatchStringMap[tbl.Type](tostring(currentValue)) == false then
             return
         end
 
@@ -68,11 +77,6 @@ end
 function settingDropdownFrame(data)
     local baseFrame = Components.DropdownHolderFrame({DropdownVisible = data.DropdownVisible})
     return Hydrate(baseFrame) {
-        Name = "MainDropdown",
-        BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-        MidImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-        TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-        VerticalScrollBarInset = Enum.ScrollBarInset.None,
         [Children] = data.Children
     }
 end
@@ -81,26 +85,49 @@ local directories = {
     {
         Name = "Main",
         Default = true,
-        Display = "Main"
+        Display = "Main",
+        LayoutOrder = 1
     },
     {
         Name = "Skills",
         Default = true,
-        Display = "Skills and Features"
+        Display = "Skills and Features",
+        LayoutOrder = 2
     },
     {
         Name = "Lighting",
         Default = true,
-        Display = "Lighting"
+        Display = "Lighting",
+        LayoutOrder = 3
     }
 }
 
+for _, tbl in ipairs(SettingData) do
+    for _, v in ipairs(directories) do
+        if not v.Items then
+            v.Items = {}
+        end
+        if tbl.Directory == v.Name then
+            table.insert(v.Items, tbl)
+        end
+    end
+end
+for _, t in ipairs(directories) do
+    table.sort(t.Items, function(a, b)
+        return a.Text < b.Text
+    end)
+end
+
 function frame:GetFrame(data)
-    return New "Frame" {
-        Size = UDim2.fromScale(1, 1),
+    return New "ScrollingFrame" {
         BackgroundColor3 = Theme.MainBackground.Default,
-        Visible = data.Visible,
+        BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+        MidImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
         Name = "Settings",
+        Size = UDim2.fromScale(1, 1),
+        TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+        Visible = data.Visible,
+        VerticalScrollBarInset = Enum.ScrollBarInset.None,
 
         [Children] = {
             Components.PageHeader("Map Settings"),
@@ -121,11 +148,11 @@ function frame:GetFrame(data)
                                 Children = {
                                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
 
-                                    ForValues(SettingData, function(data)
-                                        if data.Directory == dirData.Name then
-                                            return settingOption(data.Type, data)
-                                        end
+                                    ForValues(dirData.Items, function(data)
+                                        return settingOption(data.Type, data)
                                     end, Fusion.cleanup),
+
+                                    -- Make export frame but use layoutorder=4 because liquids uses 5
                                 }
                             })
                         end)

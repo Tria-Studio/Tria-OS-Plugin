@@ -86,20 +86,6 @@ function updateButtonsActive()
     util.buttonsActive:set(util._Message.Text:get() == "")
 end
 
-function util.CloseMessage()
-    util._Message.Text:set("")
-    util._Message.Header:set("")
-    util._Message.Option1:set({})
-    util._Message.Option2:set({})
-end
-
-function util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
-    util._Message.Text:set(text)
-    util._Message.Header:set(header)
-    util._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = util.CloseMessage})
-    util._Message.Option2:set(option2 or {})
-end
-
 function getSettingsDirFolder(directory: string)
     local currentMap = util.mapModel:get()
     if currentMap == nil then
@@ -113,6 +99,20 @@ function getSettingsDirFolder(directory: string)
 
     local dirFolder = mapSettings:FindFirstChild(directory)
     return dirFolder
+end
+
+function util.CloseMessage()
+    util._Message.Text:set("")
+    util._Message.Header:set("")
+    util._Message.Option1:set({})
+    util._Message.Option2:set({})
+end
+
+function util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
+    util._Message.Text:set(text)
+    util._Message.Header:set(header)
+    util._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = util.CloseMessage})
+    util._Message.Option2:set(option2 or {})
 end
 
 function util.updateMapSetting(directory: string, attribute: string, value: any)
@@ -140,6 +140,38 @@ function util.colorToRGB(color: Color3): string
         math.min(math.floor(color.G * 255), 255),
         math.min(math.floor(color.B * 255), 255)
     )
+end
+
+function util.parseColor3Text(str: string): (boolean, nil | Color3)
+    local multiplier = 1
+
+    str = string.gsub(str, " ", "")
+    if string.find(str, "Color3%.%a%a%a%(", 1) then
+        str = string.gsub(str, 'Color3%.%a%a%a%(', "")
+        multiplier = 255
+    elseif string.find(str, "Color3.%a%a%a%a%a%a%a%(", 1) then
+        str = string.gsub(str, 'Color3%.%a%a%a%a%a%a%a%(', "")
+    end
+    str = string.gsub(str, "%)", "")
+
+    local split = string.split(str, ",")
+    for _, v in pairs(split) do
+        if not tonumber(v) then
+            return false, nil
+        end
+    end
+
+    if #split < 3 then
+        return false, nil
+    end
+
+    local r, g, b = 
+        math.min(math.floor(split[1] * multiplier + 0.5), 255), 
+        math.min(math.floor(split[2] * multiplier + 0.5), 255), 
+        math.min(math.floor(split[3] * multiplier + 0.5), 255)
+
+    local newColor = Color3.fromRGB(r, g, b)
+    return true, newColor
 end
 
 updateButtonsActive()

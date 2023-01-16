@@ -124,7 +124,7 @@ function Components.TopbarButton(data)
 end
 
 function Components.PageHeader(Name: string)
-    return  New "TextLabel" {
+    return New "TextLabel" {
         ZIndex = 2,
         Size = UDim2.new(1, 0, 0, 16),
         BackgroundColor3 = Theme.Titlebar.Default,
@@ -221,7 +221,7 @@ function Components.ScrollingFrameHeader(text: string, layoutOrder: number, colo
         Font = Enum.Font.SourceSansBold,
         Text = text,
         TextColor3 = Theme.MainText.Default,
-        TextSize = 17,
+        TextSize = 14,
     }
 end
 
@@ -318,17 +318,14 @@ function Components.DropdownTextlabel(data)
 end
 
 function Components.DropdownHolderFrame(data)
-    return New "ScrollingFrame" {
+    return New "Frame" {
         BackgroundTransparency = 1,
         Position = UDim2.fromOffset(0, 24),
         Size = UDim2.fromScale(1, 1),
         Visible = data.DropdownVisible,
         AutomaticSize = Computed(function()
             return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
-        end),
-        AutomaticCanvasSize = Computed(function()
-            return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
-        end),
+        end)
     }
 end
 

@@ -31,60 +31,60 @@ return {
 
     {
         Text = "Difficulty",
-        Type = "String",
+        Type = "Number",
         Modifiable = true,
 
         Directory = "Main",
         Attribute = "Difficulty",
-        Fallback = "6",
+        Fallback = 6,
 
         Value = Value("")
     },
 
     {
         Text = "Thumbnail Image",
-        Type = "String",
+        Type = "Number",
         Modifiable = true,
 
         Directory = "Main",
         Attribute = "MapImage",
-        Fallback = "10672852399",
+        Fallback = 10672852399,
 
         Value = Value("")
     },
 
     {
         Text = "Max Time",
-        Type = "String",
+        Type = "Number",
         Modifiable = true,
 
         Directory = "Main",
         Attribute = "MaxTime",
-        Fallback = "120",
+        Fallback = 120,
 
         Value = Value("")
     },
 
     {
         Text = "Background Music",
-        Type = "String",
+        Type = "Number",
         Modifiable = true,
 
         Directory = "Main",
         Attribute = "Music",
-        Fallback = "6366407687",
+        Fallback = 6366407687,
 
         Value = Value("")
     },
 
     {
         Text = "BGM Volume",
-        Type = "String",
+        Type = "Number",
         Modifiable = true,
 
         Directory = "Main",
         Attribute = "MusicVolume",
-        Fallback = "0.5",
+        Fallback = 0.5,
 
         Value = Value("")
     },
@@ -103,7 +103,7 @@ return {
 
     {
         Text = "Default Oxygen",
-        Type = "String",
+        Type = "Number",
         Modifiable = true,
 
         Directory = "Main",
@@ -145,6 +145,150 @@ return {
         Directory = "Lighting",
         Attribute = "Ambient",
         Fallback = Util.colorToRGB(Color3.fromRGB(118, 118, 118)),
+
+        Value = Value(Color3.new())
+    },
+
+    {
+        Text = "Brightness",
+        Type = "Number",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "Brightness",
+        Fallback = 2,
+
+        Value = Value(2)
+    },
+
+    -- {
+    --     Text = "ClockTime",
+    --     Type = "Time",
+    --     Modifiable = true,
+
+    --     Directory = "Lighting",
+    --     Attribute = "TimeOfDay",
+    --     Fallback = "12:00:00",
+
+    --     Value = Value("12:00:00")
+    -- },
+
+    {
+        Text = "ColorShift - Bottom",
+        Type = "Color",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "ColorShift_Bottom",
+        Fallback = Util.colorToRGB(Color3.fromRGB()),
+
+        Value = Value(Color3.new())
+    },
+
+    {
+        Text = "ColorShift - Top",
+        Type = "Color",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "ColorShift_Top",
+        Fallback = Util.colorToRGB(Color3.fromRGB()),
+
+        Value = Value(Color3.new())
+    },
+
+    {
+        Text = "EnvironmentDiffuseScale",
+        Type = "Number",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "EnvironmentDiffuseScale",
+        Fallback = 0,
+
+        Value = Value(0)
+    },
+
+    {
+        Text = "EnvironmentSpecularScale",
+        Type = "Number",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "EnvironmentSpecularScale",
+        Fallback = 0,
+
+        Value = Value(0)
+    },
+
+    {
+        Text = "Fog Color",
+        Type = "Color",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "FogColor",
+        Fallback = Util.colorToRGB(Color3.fromRGB()),
+
+        Value = Value(Color3.new())
+    },
+
+    {
+        Text = "Fog Start",
+        Type = "Number",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "FogStart",
+        Fallback = 0,
+
+        Value = Value(0)
+    },
+
+    {
+        Text = "Fog End",
+        Type = "Number",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "FogEnd",
+        Fallback = 0,
+
+        Value = Value(0)
+    },
+
+    {
+        Text = "GeographicLatitude",
+        Type = "Number",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "GeographicLatitude",
+        Fallback = 0,
+
+        Value = Value(0)
+    },
+
+    {
+        Text = "Global Shadows",
+        Type = "Checkbox",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "GlobalShadows",
+        Fallback = false,
+
+        Value = Value(false)
+    },
+
+    {
+        Text = "Outdoor Ambient",
+        Type = "Color",
+        Modifiable = true,
+
+        Directory = "Lighting",
+        Attribute = "OutdoorAmbient",
+        Fallback = Util.colorToRGB(Color3.fromRGB(70, 70, 70)),
 
         Value = Value(Color3.new())
     },
