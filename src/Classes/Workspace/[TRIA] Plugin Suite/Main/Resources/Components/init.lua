@@ -264,9 +264,10 @@ function Components.Dropdown(data, childrenProcessor)
                 Size = UDim2.new(1, -20, 0, 24),
                 Position = UDim2.fromOffset(24, 0),
 
-                TextSize = 16,
+                TextSize = 14,
                 Text = data.Header,
                 TextXAlignment = Enum.TextXAlignment.Left,
+                Visible = true,
 
                 [OnEvent "Activated"] = function()
                     dropdownVisible:set(not dropdownVisible:get())
@@ -290,9 +291,7 @@ function Components.Dropdown(data, childrenProcessor)
                 end
             },
 
-            Computed(function()
-                return childrenProcessor(dropdownVisible)
-            end, Fusion.cleanup)
+            childrenProcessor(dropdownVisible)
         }
     }
     return dropdown
@@ -319,13 +318,15 @@ end
 
 function Components.DropdownHolderFrame(data)
     return New "Frame" {
+        AutomaticSize = Computed(function()
+            return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None
+        end),
         BackgroundTransparency = 1,
         Position = UDim2.fromOffset(0, 24),
-        Size = UDim2.fromScale(1, 1),
+        Size = UDim2.fromScale(1, 0),
         Visible = data.DropdownVisible,
-        AutomaticSize = Computed(function()
-            return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
-        end)
+
+        [Children] = data.Children
     }
 end
 

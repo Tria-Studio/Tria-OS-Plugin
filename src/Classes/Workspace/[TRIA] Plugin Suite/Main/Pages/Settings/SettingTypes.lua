@@ -75,22 +75,17 @@ function InputBox(data)
 end
 
 function SettingTypes.String(data): Instance
-    local inputBox
     return Hydrate(BaseSettingButton(data)) {
         [Children] = InputBox(data){
             Position = UDim2.fromScale(1, 0),
             Size = UDim2.fromScale(0.55, 1),
             Text = data.Value,
+            TextEditable = data.Modifiable,
 
-            [Ref] = inputBox,
-            [OnEvent "FocusLost"] = function()
-                local inputBoxObject = inputBox:get()
+            [OnChange "Text"] = function(newText)
                 if data.Modifiable then
-                    local newText = inputBoxObject.Text
                     data.Value:set(newText)
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
-                else
-                    inputBoxObject.Text = data.Value:get(false)
                 end
             end
         }
@@ -177,6 +172,7 @@ function SettingTypes.Color(data)
                 Text = Computed(function()
                     return Util.colorToRGB(data.Value:get())
                 end),
+                TextEditable = data.Modifiable,
 
                 [Ref] = inputBox,
                 [OnEvent "FocusLost"] = function()
@@ -191,8 +187,6 @@ function SettingTypes.Color(data)
                             inputBoxObject.Text = Util.colorToRGB(parsedColor)
                             Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                         end
-                    else
-                        inputBoxObject.Text = data.Value:get()
                     end
                 end
             }

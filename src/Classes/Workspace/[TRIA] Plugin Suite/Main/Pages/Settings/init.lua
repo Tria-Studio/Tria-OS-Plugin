@@ -74,13 +74,6 @@ function onMapChanged()
     end
 end
 
-function settingDropdownFrame(data)
-    local baseFrame = Components.DropdownHolderFrame({DropdownVisible = data.DropdownVisible})
-    return Hydrate(baseFrame) {
-        [Children] = data.Children
-    }
-end
-
 local directories = {
     {
         Name = "Main",
@@ -119,21 +112,25 @@ for _, t in ipairs(directories) do
 end
 
 function frame:GetFrame(data)
-    return New "ScrollingFrame" {
-        BackgroundColor3 = Theme.MainBackground.Default,
-        BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-        MidImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+    return New "Frame" {
+        BackgroundTransparency = 0,
         Name = "Settings",
         Size = UDim2.fromScale(1, 1),
-        TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
         Visible = data.Visible,
-        VerticalScrollBarInset = Enum.ScrollBarInset.None,
 
         [Children] = {
             Components.PageHeader("Map Settings"),
-            Components.ScrollingFrame{
-                Size = UDim2.fromScale(1, 1),
+
+            Components.ScrollingFrame {
                 BackgroundColor3 = Theme.MainBackground.Default,
+                BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+                MidImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+                Name = "Settings",
+                Position = UDim2.fromScale(0, 0.5),
+                Size = UDim2.fromScale(1, 1),
+                TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
+                Visible = data.Visible,
+                VerticalScrollBarInset = Enum.ScrollBarInset.None,
 
                 Children = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
@@ -143,18 +140,17 @@ function frame:GetFrame(data)
                             Header = dirData.Display, 
                             LayoutOrder = index
                         }, function(visible)
-                            return settingDropdownFrame({
+                            return Components.DropdownHolderFrame {
                                 DropdownVisible = visible,
                                 Children = {
                                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
-
                                     ForValues(dirData.Items, function(data)
                                         return settingOption(data.Type, data)
                                     end, Fusion.cleanup),
 
-                                    -- Make export frame but use layoutorder=4 because liquids uses 5
+                                    --Make export frame but use layoutorder=4 because liquids uses 5
                                 }
-                            })
+                            }
                         end)
                     end, Fusion.cleanup)
                 }
@@ -163,6 +159,15 @@ function frame:GetFrame(data)
     }
 end
 
+-- TODO:
+-- > Time option
+-- > Export lighting frame
+-- > Liquids
+
+-- GRIF TODO:
+-- I'm putting this here because I don't know how but when you can, could you:
+-- > Fix all the colors to be Theme indexes (like subtext, border etc)
+-- > Make the properties non editable when the ui is frozen (no map is selected.)
 
 onMapChanged()
 Util.MapChanged:Connect(function()

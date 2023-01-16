@@ -35,9 +35,9 @@ New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				Pages:NewPage({Name = "ObjectTags", Default = true}),
+				Pages:NewPage({Name = "ObjectTags", Default = false}),
 				Pages:NewPage({Name = "ViewModes"}),
-				Pages:NewPage({Name = "Settings"}),
+				Pages:NewPage({Name = "Settings", Default = true}),
 				Pages:NewPage({Name = "Compatibility"}),
 				Pages:NewPage({Name = "Publish"}),
 				Pages:NewPage({Name = "Insert"}),
@@ -142,7 +142,8 @@ New "Frame" {
 					Position = UDim2.new(1, -2, 0.5, 0),
 					Image = SelectMap.selectCancelImage,
 					ImageColor3 = SelectMap.selectCancelColor,
-					BorderSizePixel = 0,
+					BorderSizePixel = 1,
+					BorderColor3 = Theme.Border.Default,
 
 					[OnEvent "Activated"] = function()
 						if SelectMap.selectingMap:get() then
