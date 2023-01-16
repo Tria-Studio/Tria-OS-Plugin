@@ -52,7 +52,7 @@ end
 
 function SettingTypes.String(data): Instance
     return Hydrate(BaseSettingButton(data)) {
-        [Children] = Components.TextBox {
+        [Children] = (if data.Modifiable then Components.TextBox else New "TextLabel") {
             AnchorPoint = Vector2.new(1, 0),
             BackgroundTransparency = 1,
             BorderSizePixel = 1,

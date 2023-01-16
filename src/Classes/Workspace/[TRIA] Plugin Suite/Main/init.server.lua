@@ -142,6 +142,7 @@ New "Frame" {
 					Position = UDim2.new(1, -2, 0.5, 0),
 					Image = SelectMap.selectCancelImage,
 					ImageColor3 = SelectMap.selectCancelColor,
+					BorderSizePixel = 0,
 
 					[OnEvent "Activated"] = function()
 						if SelectMap.selectingMap:get() then

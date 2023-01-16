@@ -9,15 +9,18 @@ local Computed = Fusion.Computed
 local Spring = Fusion.Spring
 local Hydrate = Fusion.Hydrate
 local ForValues = Fusion.ForValues
+local OnChange = Fusion.OnChange
 
 local frame = {}
 
 local SettingTypes = require(script:WaitForChild("SettingTypes"))
 local SettingsData = require(script:WaitForChild("settingsData"))
 
-function settingOption(optionType: string, optionData: SettingTypes.OptionConfig): Instance
-    optionData.Modifiable = if optionData.Modifiable == nil then false else true
-    return SettingTypes[optionType](optionData)
+function settingOption(optionType, optionData): Instance
+    optionData.Modifiable = if optionData.Modifiable == nil then false else optionData.Modifiable
+    
+    local newOption = SettingTypes[optionType](optionData)
+    return newOption 
 end
 
 function frame:GetFrame(data)
@@ -49,10 +52,7 @@ function frame:GetFrame(data)
                             VerticalScrollBarInset = Enum.ScrollBarInset.None,
 
                             [Children] = {
-                                Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
-                                ForValues(SettingsData, function(data)
-                                    return settingOption(data.Type, data)
-                                end, Fusion.cleanup)
+                                Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top)
                             }
                         }
                     end)
