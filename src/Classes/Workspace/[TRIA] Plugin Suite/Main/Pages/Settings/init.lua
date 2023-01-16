@@ -19,23 +19,9 @@ local SettingTypes = require(script:WaitForChild("SettingTypes"))
 local SettingData = require(script:WaitForChild("SettingData"))
 
 local settingConnections = {}
-local settingTypeToMatchStringMap = {
-    ["String"] = function(val)
-        return val:match("%w") ~= nil
-    end,
-    ["Number"] = function(val)
-        return val:match("%d") ~= nil
-    end,
-    ["Checkbox"] = function(val)
-        return val == "false" or val == "true"
-    end,
-    ["Color"] = function(val)
-        return val:gsub(" ", ""):match("%d+,%d+,%d+") ~= nil
-    end
-}
 
 local function settingOption(optionType, optionData): Instance
-    optionData.Modifiable = if optionData.Modifiable == nil then false else optionData.Modifiable
+    optionData.Modifiable:set(if optionData.Modifiable:get() == nil then false else optionData.Modifiable:get())
     
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
@@ -50,26 +36,46 @@ function onMapChanged()
 
         local dirFolder = Util.getDirFolder(tbl.Directory)
         if not dirFolder then
-            return
+            continue
         end
 
         -- Initially retrieve setting value
         local currentValue = dirFolder:GetAttribute(tbl.Attribute)
-        if settingTypeToMatchStringMap[tbl.Type](tostring(currentValue)) == false then
-            return
-        end
+        local acceptedValues = {
+            ["String"] = {"string", "number"},
+            ["Number"] = {"string", "number"},
+            ["Checkbox"] = {"boolean"},
+            ["Color"] = {"Color3"},
+            ["Time"] = {"string"}
+        }
 
-        tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
+        local originalModifiableState = tbl.Modifiable:get()
+        local function updateStateValue()
+            print("Update called")
+            -- if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
+            --     tbl.Modifiable:set(false)
+            --     tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
+            --     Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
+            -- else
+            --     if originalModifiableState ~= tbl.Modifiable:get() then
+            --         tbl.Modifiable:set(originalModifiableState)
+            --     end
+            --     tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
+            -- end
+        end
         
+        updateStateValue()
         -- Connect change signal
         table.insert(settingConnections, dirFolder:GetAttributeChangedSignal(tbl.Attribute):Connect(function()
-            if isUpdating then
-                return
-            end
-            isUpdating = true
-            currentValue = dirFolder:GetAttribute(tbl.Attribute)
-            tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
-            isUpdating = false
+            print("Attribute changed for " .. tbl.Text)
+            
+            -- task.wait()
+            -- if not isUpdating then
+            --     isUpdating = true
+            --     print("State changed")
+            --     currentValue = dirFolder:GetAttribute(tbl.Attribute)
+            --     updateStateValue()
+            -- end
         end))
     end
 end

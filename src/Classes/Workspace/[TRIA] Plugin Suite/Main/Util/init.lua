@@ -174,6 +174,25 @@ function util.parseColor3Text(str: string): (boolean, nil | Color3)
     return true, newColor
 end
 
+function util.parseTimeString(str: string): (boolean, string)
+    local split = string.split(str, ":")
+
+    if #split ~= 3 then
+        return false, nil
+    end
+
+    for i, v in pairs(split) do
+        if not tonumber(v) then
+            return false, nil
+        end
+        if #v > 2 then
+            split[i] = string.sub(v, 1, 2)
+        end
+        split[i] = ("%02i"):format(split[i])
+    end
+    return true, table.concat(split, ":")
+end
+
 updateButtonsActive()
 Observer(util._Message.Text):onChange(updateButtonsActive)
 

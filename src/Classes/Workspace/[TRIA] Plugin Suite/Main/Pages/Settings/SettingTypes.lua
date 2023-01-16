@@ -28,7 +28,7 @@ function BaseSettingButton(data)
         Size = UDim2.new(1, 0, 0, 20),
         FontFace = Font.new("SourceSansPro"),
         Text = data.Text,
-        TextColor3 = if data.Modifiable then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
+        TextColor3 = if data.Modifiable:get() then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
         TextXAlignment = Enum.TextXAlignment.Left,
 
         [Children] = {
@@ -64,7 +64,7 @@ function InputBox(data)
             BackgroundTransparency = 1,
             BorderSizePixel = 1,
             FontFace = Font.new("SourceSansPro"),
-            TextColor3 = if data.Modifiable then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
+            TextColor3 = if data.Modifiable:get() then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
             TextXAlignment = Enum.TextXAlignment.Left,
     
             [Children] = {
@@ -75,6 +75,7 @@ function InputBox(data)
 end
 
 function SettingTypes.String(data): Instance
+    local inputBox = Value()
     return Hydrate(BaseSettingButton(data)) {
         [Children] = InputBox(data){
             Position = UDim2.fromScale(1, 0),
@@ -82,9 +83,13 @@ function SettingTypes.String(data): Instance
             Text = data.Value,
             TextEditable = data.Modifiable,
 
-            [OnChange "Text"] = function(newText)
-                if data.Modifiable then
-                    data.Value:set(newText)
+            [Ref] = inputBox,
+            [OnEvent "FocusLost"] = function()
+                if data.Modifiable:get() then
+                    local inputBoxObject = inputBox:get()
+                    local currentText = inputBoxObject.Text
+
+                    data.Value:set(currentText)
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                 end
             end
@@ -117,7 +122,7 @@ function SettingTypes.Checkbox(data)
             end),
 
             [OnEvent "Activated"] = function()
-                if data.Modifiable then
+                if data.Modifiable:get() then
                     data.Value:set(not data.Value:get(false))
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                 end
@@ -143,7 +148,7 @@ function SettingTypes.Color(data)
                 Size = UDim2.fromOffset(12, 12),
 
                 [OnEvent "Activated"] = function()
-                    if not data.Modifiable then
+                    if not data.Modifiable:get() then
                         return
                     end
 
@@ -176,7 +181,7 @@ function SettingTypes.Color(data)
 
                 [Ref] = inputBox,
                 [OnEvent "FocusLost"] = function()
-                    if data.Modifiable then
+                    if data.Modifiable:get() then
                         local inputBoxObject = inputBox:get()
                         local currentText = inputBoxObject.Text
                         local didParse, parsedColor = Util.parseColor3Text(currentText)
@@ -194,8 +199,33 @@ function SettingTypes.Color(data)
     }
 end
 
-function SettingTypes.Time()
-    
+function SettingTypes.Time(data)
+    local inputBox = Value()
+    return Hydrate(BaseSettingButton(data)) {
+        [Children] = InputBox(data){
+            Position = UDim2.fromScale(1, 0),
+            Size = UDim2.fromScale(0.55, 1),
+            Text = data.Value,
+            TextEditable = data.Modifiable,
+
+            [Ref] = inputBox,
+            [OnEvent "FocusLost"] = function()
+                if data.Modifiable:get() then
+                    local inputBoxObject = inputBox:get()
+                    local currentText = inputBoxObject.Text
+
+                    local didParse, parsedTime = Util.parseTimeString(currentText)
+                    if not didParse then
+                        inputBoxObject.Text = data.Value:get()
+                    else
+                        data.Value:set(parsedTime)
+                        inputBoxObject.Text = parsedTime
+                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    end
+                end
+            end
+        }
+    }
 end
 
 SettingTypes.Number = SettingTypes.String
