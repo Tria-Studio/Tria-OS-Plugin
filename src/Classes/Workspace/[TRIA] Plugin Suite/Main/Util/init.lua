@@ -116,6 +116,7 @@ function util:ShowMessage(header: string, text: string, option1: any?, option2: 
 end
 
 function util.updateMapSetting(directory: string, attribute: string, value: any)
+    print("Updating map setting")
     local dirFolder = getSettingsDirFolder(directory)
     if not dirFolder then
         return

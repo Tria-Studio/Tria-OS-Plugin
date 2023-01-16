@@ -17,6 +17,7 @@ local frame = {}
 
 local SettingTypes = require(script:WaitForChild("SettingTypes"))
 local SettingData = require(script:WaitForChild("SettingData"))
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local settingConnections = {}
 
@@ -32,8 +33,6 @@ function onMapChanged()
         conn:Disconnect()
     end
     for _, tbl in ipairs(SettingData) do
-        local isUpdating = false
-
         local dirFolder = Util.getDirFolder(tbl.Directory)
         if not dirFolder then
             continue
@@ -50,33 +49,37 @@ function onMapChanged()
         }
 
         local originalModifiableState = tbl.Modifiable:get()
+        local changeConnection
+
         local function updateStateValue()
-            print("Update called")
-            -- if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
-            --     tbl.Modifiable:set(false)
-            --     tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
-            --     Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
-            -- else
-            --     if originalModifiableState ~= tbl.Modifiable:get() then
-            --         tbl.Modifiable:set(originalModifiableState)
-            --     end
-            --     tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
-            -- end
+            currentValue = dirFolder:GetAttribute(tbl.Attribute)
+            if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
+                tbl.Modifiable:set(false)
+                tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
+                Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
+            else
+                if originalModifiableState ~= tbl.Modifiable:get() then
+                    tbl.Modifiable:set(originalModifiableState)
+                end
+                tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
+            end
+        end
+
+        local function hookConnection()
+            changeConnection = dirFolder:GetAttributeChangedSignal(tbl.Attribute):Once(function()
+                changeConnection:Disconnect()
+                task.defer(function()
+                    updateStateValue()
+                    task.defer(hookConnection)
+                end)
+            end)
+            table.insert(settingConnections, changeConnection)
         end
         
-        updateStateValue()
-        -- Connect change signal
-        table.insert(settingConnections, dirFolder:GetAttributeChangedSignal(tbl.Attribute):Connect(function()
-            print("Attribute changed for " .. tbl.Text)
-            
-            -- task.wait()
-            -- if not isUpdating then
-            --     isUpdating = true
-            --     print("State changed")
-            --     currentValue = dirFolder:GetAttribute(tbl.Attribute)
-            --     updateStateValue()
-            -- end
-        end))
+        task.defer(function()
+            updateStateValue()
+            task.defer(hookConnection)
+        end)
     end
 end
 
@@ -177,6 +180,13 @@ end
 onMapChanged()
 Util.MapChanged:Connect(function()
     onMapChanged()
+end)
+
+plugin.Unloading:Connect(function()
+    warn("Unloading")
+    for _, conn in ipairs(settingConnections) do
+        conn:Disconnect()
+    end
 end)
 
 return frame
