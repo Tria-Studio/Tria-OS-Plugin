@@ -69,7 +69,7 @@ function frame:GetFrame(data)
     local whitelistedMaps = {}
 
     local function createMapList(list, LayoutOrder)
-       return Components.Dropdown {
+       return New "Frame" {
             LayoutOrder = LayoutOrder,
             AutomaticSize = Enum.AutomaticSize.Y,
             Size = UDim2.fromScale(1, 0),
