@@ -182,7 +182,7 @@ end
 function optionButtonComponent(data)
     return Components.TextButton({
         LayoutOrder = 1,
-        BackgroundColor3 = Theme.Button.Selected,
+        BackgroundColor3 = data.BackgroundColor3:get(),
         Size = UDim2.fromOffset(56, 18),
         Text = data.Text, 
         AutomaticSize = Enum.AutomaticSize.X,

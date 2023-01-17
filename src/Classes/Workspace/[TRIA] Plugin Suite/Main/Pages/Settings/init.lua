@@ -12,6 +12,7 @@ local Hydrate = Fusion.Hydrate
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
 local OnChange = Fusion.OnChange
+local OnEvent = Fusion.OnEvent
 
 local frame = {}
 
@@ -120,6 +121,31 @@ for _, t in ipairs(directories) do
     end)
 end
 
+function ExportButton(props)
+    return Hydrate(Components.TextButton {
+        Active = true,
+        AutoButtonColor = true,
+        AutomaticSize = Enum.AutomaticSize.None,
+        BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+        BackgroundTransparency = 0,
+        BorderColor3 = Color3.fromRGB(53, 53, 53),
+        BorderMode = Enum.BorderMode.Inset,
+        BorderSizePixel = 3,
+        Size = UDim2.new(1, 0, 0, 22),
+        TextColor3 = Color3.fromRGB(204, 204, 204),
+        TextXAlignment = Enum.TextXAlignment.Center,
+        TextYAlignment = Enum.TextYAlignment.Center
+    })(props)
+end
+
+function exportLighting()
+    
+end
+
+function importLighting()
+    
+end
+
 function frame:GetFrame(data)
     return New "Frame" {
         BackgroundTransparency = 0,
@@ -147,21 +173,59 @@ function frame:GetFrame(data)
                         return index, Components.Dropdown({
                             DefaultState = dirData.Default, 
                             Header = dirData.Display, 
-                            LayoutOrder = index
+                            LayoutOrder = dirData.LayoutOrder
                         }, function(visible)
                             return Components.DropdownHolderFrame {
                                 DropdownVisible = visible,
                                 Children = {
                                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+                                    
                                     ForValues(dirData.Items, function(data)
                                         return settingOption(data.Type, data)
-                                    end, Fusion.cleanup),
-
-                                    --Make export frame but use layoutorder=4 because liquids uses 5
+                                    end, Fusion.cleanup)
                                 }
                             }
                         end)
-                    end, Fusion.cleanup)
+                    end, Fusion.cleanup),
+
+                    New "Frame" {
+                        BackgroundTransparency = 1,
+                        BorderSizePixel = 1,
+                        LayoutOrder = 4,
+                        Size = UDim2.new(1, 0, 0, 50),
+
+                        [Children] = {
+                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
+                            ExportButton {
+                                LayoutOrder = 1,
+                                Text = "Export to Lighting",
+                                [OnEvent "Activated"] = function()
+
+                                    local option1 = {
+                                        Text = "Export",
+                                        Callback = exportLighting,
+                                        BackgroundColor3 = Theme.Button.Selected
+                                    }
+                            
+                                    local option2 = {
+                                        Text = "Cancel",
+                                        BackgroundColor3 = Theme.Button.Default
+                                    }
+
+                                    Util:ShowMessage(
+                                        "Export to lighting?", 
+                                        "This will export the current lighting settings into your game's lighting.", 
+                                        option1, 
+                                        option2
+                                    )
+                                end
+                            },
+                            ExportButton {
+                                LayoutOrder = 2,
+                                Text = "Import from Lighting"
+                            }
+                        }
+                    }
                 }
             }
         }

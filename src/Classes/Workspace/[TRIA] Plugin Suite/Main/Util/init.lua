@@ -18,7 +18,7 @@ local defaultMessageResponses = {
     "Ok thanks"
 }
 
-local util = {
+local Util = {
     Signal = Signal,
     Maid = Maid,
 
@@ -78,16 +78,12 @@ local util = {
     }
 }
 
-util.buttonActiveFunc = function()
-    return util.mapModel:get() and util.buttonsActive:get()
-end
-
 function updateButtonsActive()
-    util.buttonsActive:set(util._Message.Text:get() == "")
+    Util.buttonsActive:set(Util._Message.Text:get() == "")
 end
 
 function getSettingsDirFolder(directory: string)
-    local currentMap = util.mapModel:get()
+    local currentMap = Util.mapModel:get()
     if currentMap == nil then
         return
     end
@@ -101,22 +97,25 @@ function getSettingsDirFolder(directory: string)
     return dirFolder
 end
 
-function util.CloseMessage()
-    util._Message.Text:set("")
-    util._Message.Header:set("")
-    util._Message.Option1:set({})
-    util._Message.Option2:set({})
+function Util.buttonActiveFunc()
+    return Util.mapModel:get() and Util.buttonsActive:get()
 end
 
-function util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
-    util._Message.Text:set(text)
-    util._Message.Header:set(header)
-    util._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = util.CloseMessage})
-    util._Message.Option2:set(option2 or {})
+function Util.CloseMessage()
+    Util._Message.Text:set("")
+    Util._Message.Header:set("")
+    Util._Message.Option1:set({})
+    Util._Message.Option2:set({})
 end
 
-function util.updateMapSetting(directory: string, attribute: string, value: any)
-    print("Updating map setting")
+function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
+    self._Message.Text:set(text)
+    self._Message.Header:set(header)
+    self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
+    self._Message.Option2:set(option2 or {})
+end
+
+function Util.updateMapSetting(directory: string, attribute: string, value: any)
     local dirFolder = getSettingsDirFolder(directory)
     if not dirFolder then
         return
@@ -127,15 +126,15 @@ function util.updateMapSetting(directory: string, attribute: string, value: any)
     dirFolder:SetAttribute(attribute, value)
 end
 
-function util.prefixWarn(...)
+function Util.prefixWarn(...)
     warn("[TRIA.os Map Plugin]:", ...)
 end
 
-function util.getDirFolder(directory: string)
+function Util.getDirFolder(directory: string)
     return getSettingsDirFolder(directory)
 end
 
-function util.colorToRGB(color: Color3): string
+function Util.colorToRGB(color: Color3): string
     return string.format("%i, %i, %i", 
         math.min(math.floor(color.R * 255), 255), 
         math.min(math.floor(color.G * 255), 255),
@@ -143,7 +142,7 @@ function util.colorToRGB(color: Color3): string
     )
 end
 
-function util.parseColor3Text(str: string): (boolean, nil | Color3)
+function Util.parseColor3Text(str: string): (boolean, nil | Color3)
     local multiplier = 1
 
     str = string.gsub(str, " ", "")
@@ -175,7 +174,7 @@ function util.parseColor3Text(str: string): (boolean, nil | Color3)
     return true, newColor
 end
 
-function util.parseTimeString(str: string): (boolean, string)
+function Util.parseTimeString(str: string): (boolean, string)
     local split = string.split(str, ":")
 
     if #split ~= 3 then
@@ -195,6 +194,6 @@ function util.parseTimeString(str: string): (boolean, string)
 end
 
 updateButtonsActive()
-Observer(util._Message.Text):onChange(updateButtonsActive)
+Observer(Util._Message.Text):onChange(updateButtonsActive)
 
-return util
+return Util

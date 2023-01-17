@@ -28,6 +28,7 @@ function BaseSettingButton(data)
         Size = UDim2.new(1, 0, 0, 20),
         FontFace = Font.new("SourceSansPro"),
         Text = data.Text,
+        TextTruncate = Enum.TextTruncate.AtEnd,
         TextColor3 = if data.Modifiable:get() then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
         TextXAlignment = Enum.TextXAlignment.Left,
 
