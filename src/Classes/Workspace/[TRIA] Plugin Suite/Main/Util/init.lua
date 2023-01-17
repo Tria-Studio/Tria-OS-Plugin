@@ -85,15 +85,24 @@ end
 function getSettingsDirFolder(directory: string)
     local currentMap = Util.mapModel:get()
     if currentMap == nil then
-        return
+        return nil
     end
 
     local mapSettings = currentMap:FindFirstChild("Settings")
     if not mapSettings then
-        return
+        return nil
     end
 
-    local dirFolder = mapSettings:FindFirstChild(directory)
+    local dirFolder = mapSettings
+    local split = directory:split(".")
+
+    for index, child in pairs(split) do
+        dirFolder = dirFolder:FindFirstChild(child)
+        if not dirFolder then
+            return nil
+        end
+    end
+
     return dirFolder
 end
 

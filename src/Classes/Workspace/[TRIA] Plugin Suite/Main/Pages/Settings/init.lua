@@ -14,6 +14,7 @@ local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
 local OnChange = Fusion.OnChange
 local OnEvent = Fusion.OnEvent
+local Value = Fusion.Value
 
 local frame = {}
 
@@ -22,18 +23,133 @@ local SettingData = require(script:WaitForChild("SettingData"))
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local settingConnections = {}
+local originalModifiableStates = {}
+
+local directories = {
+    Main = {
+        Default = true,
+        Display = "Main",
+        LayoutOrder = 1,
+        Items = Value({})
+    },
+    Skills = {
+        Default = true,
+        Display = "Skills and Features",
+        LayoutOrder = 2,
+        Items = Value({})
+    },
+    Lighting = {
+        Default = true,
+        Display = "Lighting",
+        LayoutOrder = 3,
+        Items = Value({})
+    },
+    Liquids = {
+        Default = true,
+        Display = "Liquids and Gas",
+        LayoutOrder = 5,
+        Items = Value({})
+    }
+}
+
+function insertToStateTable(state, item)
+    local newTbl = state:get()
+    table.insert(newTbl, item)
+    state:set(newTbl, true)
+end
 
 local function settingOption(optionType, optionData): Instance
-    optionData.Modifiable:set(if optionData.Modifiable:get() == nil then false else optionData.Modifiable:get())
+    if optionData.Modifiable == nil then
+        optionData.Modifiable = Value(true)
+    end
     
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
 end
 
+local function hookAttributeChanged(parent, attribute, callback)
+    local conn; conn = parent:GetAttributeChangedSignal(attribute):Once(function()
+        conn:Disconnect()
+        task.defer(callback)
+    end)
+    table.insert(settingConnections, conn)
+end
+
+local function updateStateValue(currentValue, newValue, tbl)
+    local acceptedValues = {
+        ["String"] = {"string", "number"},
+        ["Number"] = {"string", "number"},
+        ["Checkbox"] = {"boolean"},
+        ["Color"] = {"Color3"},
+        ["Time"] = {"string"}
+    }
+
+    if originalModifiableStates[tbl] == nil then
+        originalModifiableStates[tbl] = if tbl.Modifiable then tbl.Modifiable:get() else true 
+    end
+
+    currentValue = newValue
+    if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
+        tbl.Modifiable:set(false)
+        tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
+        Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
+    else
+        if originalModifiableStates[tbl] ~= nil and originalModifiableStates[tbl] ~= tbl.Modifiable:get() then
+            tbl.Modifiable:set(originalModifiableState)
+        end
+        tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
+    end
+end
+
+function insertLiquids()
+    directories.Liquids.Items:set({})
+    
+    local liquidFolder = Util.getDirFolder("Liquids")
+    if not liquidFolder then
+        return
+    end
+
+    for _, liquid in ipairs(liquidFolder:GetChildren()) do
+        local liquidData = {
+            {Text = "Color", Type = "Color", Modifiable = Value(true), Attribute = "Color", Fallback = Color3.new(1, 1, 1), Value = Value(Color3.new(1, 1, 1))},
+            {Text = "Oxygen Depletion", Type = "Number", Modifiable = Value(true), Attribute = "OxygenDepletion", Fallback = 1, Value = Value(1)},
+            {Text = "Splash Sound", Type = "Number", Modifiable = Value(true), Attribute = "SplashSound", Fallback = "water", Value = Value("")}
+        }
+
+        for _, tbl in ipairs(liquidData) do
+            tbl.Directory = "Liquids." .. liquid.Name
+        end
+
+        for _, liquidSetting in ipairs(liquidData) do
+            local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
+            local function updateConnection()
+                updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
+                hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
+            end
+            
+            updateConnection()
+        end
+
+        insertToStateTable(directories.Liquids.Items, {Name = liquid.Name, Data = liquidData})
+    end
+end
+
 function onMapChanged()
+    -- Disconnect old connections
     for _, conn in ipairs(settingConnections) do
         conn:Disconnect()
     end
+
+    do
+        insertLiquids()
+        local liquidFolder = Util.getDirFolder("Liquids")
+        if liquidFolder then
+            table.insert(settingConnections, liquidFolder.ChildAdded:Connect(insertLiquids))
+            table.insert(settingConnections, liquidFolder.ChildRemoved:Connect(insertLiquids))
+        end
+    end
+    
+    -- Setup properties
     for _, tbl in ipairs(SettingData) do
         local dirFolder = Util.getDirFolder(tbl.Directory)
         if not dirFolder then
@@ -42,81 +158,22 @@ function onMapChanged()
 
         -- Initially retrieve setting value
         local currentValue = dirFolder:GetAttribute(tbl.Attribute)
-        local acceptedValues = {
-            ["String"] = {"string", "number"},
-            ["Number"] = {"string", "number"},
-            ["Checkbox"] = {"boolean"},
-            ["Color"] = {"Color3"},
-            ["Time"] = {"string"}
-        }
 
         local originalModifiableState = tbl.Modifiable:get()
         local changeConnection
 
-        local function updateStateValue()
-            currentValue = dirFolder:GetAttribute(tbl.Attribute)
-            if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
-                tbl.Modifiable:set(false)
-                tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
-                Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
-            else
-                if originalModifiableState ~= tbl.Modifiable:get() then
-                    tbl.Modifiable:set(originalModifiableState)
-                end
-                tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
-            end
+        local function updateConnection()
+            updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
+            hookAttributeChanged(dirFolder, tbl.Attribute, updateConnection)
         end
-
-        local function hookConnection()
-            changeConnection = dirFolder:GetAttributeChangedSignal(tbl.Attribute):Once(function()
-                changeConnection:Disconnect()
-                task.defer(function()
-                    updateStateValue()
-                    task.defer(hookConnection)
-                end)
-            end)
-            table.insert(settingConnections, changeConnection)
-        end
-        
-        task.defer(function()
-            updateStateValue()
-            task.defer(hookConnection)
+        updateConnection()
+    end
+    
+    for _, t in pairs(directories) do
+        table.sort(t.Items, function(a, b)
+            return a.Text < b.Text
         end)
     end
-end
-
-local directories = {
-    Main = {
-        Default = true,
-        Display = "Main",
-        LayoutOrder = 1
-    },
-    Skills = {
-        Default = true,
-        Display = "Skills and Features",
-        LayoutOrder = 2
-    },
-    Lighting = {
-        Default = true,
-        Display = "Lighting",
-        LayoutOrder = 3
-    }
-}
-
-for _, tbl in ipairs(SettingData) do
-    for k, v in pairs(directories) do
-        if not v.Items then
-            v.Items = {}
-        end
-        if tbl.Directory == k then
-            table.insert(v.Items, tbl)
-        end
-    end
-end
-for _, t in ipairs(directories) do
-    table.sort(t.Items, function(a, b)
-        return a.Text < b.Text
-    end)
 end
 
 function ExportButton(props)
@@ -167,6 +224,35 @@ function importLighting()
     end
 end
 
+function DirectoryDropdown(dirData, childProcessor)
+    return Components.Dropdown({
+        DefaultState = dirData.Default, 
+        Header = dirData.Display, 
+        LayoutOrder = dirData.LayoutOrder
+    }, childProcessor)
+end
+
+insertLiquids()
+for _, tbl in ipairs(SettingData) do
+    for k, v in pairs(directories) do
+        if tbl.Directory == k then
+            insertToStateTable(v.Items, tbl)
+        end
+    end
+end
+
+onMapChanged()
+Util.MapChanged:Connect(function()
+    local newMap = Util.mapModel:get(false)
+    local settingsFolder = newMap:FindFirstChild("Settings")
+
+    onMapChanged()
+    
+    -- Make sure we update when a major folder is deleted.
+    table.insert(settingConnections, settingsFolder.ChildAdded:Connect(onMapChanged))
+    table.insert(settingConnections, settingsFolder.ChildRemoved:Connect(onMapChanged))
+end)
+
 function frame:GetFrame(data)
     return New "Frame" {
         BackgroundTransparency = 0,
@@ -190,23 +276,48 @@ function frame:GetFrame(data)
 
                 Children = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+
                     ForPairs(directories, function(dirKey, dirData)
-                        return dirKey, Components.Dropdown({
-                            DefaultState = dirData.Default, 
-                            Header = dirData.Display, 
-                            LayoutOrder = dirData.LayoutOrder
-                        }, function(visible)
-                            return Components.DropdownHolderFrame {
-                                DropdownVisible = visible,
-                                Children = {
-                                    Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
-                                    
-                                    ForValues(dirData.Items, function(data)
-                                        return settingOption(data.Type, data)
-                                    end, Fusion.cleanup)
+                        local dirDropdown = DirectoryDropdown(dirData, function(visible)
+                            if dirKey ~= "Liquids" then
+                                return Components.DropdownHolderFrame {
+                                    DropdownVisible = visible,
+                                    Children = {
+                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+                                        
+                                        ForValues(dirData.Items, function(data)
+                                            return settingOption(data.Type, data)
+                                        end, Fusion.cleanup)
+                                    }
                                 }
-                            }
+                            else
+                                return Components.DropdownHolderFrame {
+                                    DropdownVisible = visible,
+                                    Children = {
+                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+
+                                        ForPairs(dirData.Items, function(index, data)
+                                            local itemData = data.Data
+                                            local itemName = data.Name
+
+                                            return index, DirectoryDropdown({Default = true, Display = itemName, LayoutOrder = index}, function(isSectionVisible)
+                                                return Components.DropdownHolderFrame {
+                                                    DropdownVisible = isSectionVisible,
+                                                    Children = {
+                                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+                                                        ForValues(itemData, function(liquidData)
+                                                            return settingOption(liquidData.Type, liquidData)
+                                                        end, Fusion.cleanup)
+                                                    }
+                                                }
+                                            end)
+                                        end, Fusion.cleanup)
+                                    }
+                                }
+                            end
                         end)
+
+                        return dirKey, dirDropdown
                     end, Fusion.cleanup),
 
                     New "Frame" {
@@ -272,19 +383,10 @@ function frame:GetFrame(data)
     }
 end
 
--- TODO:
--- > Export lighting frame
--- > Liquids
-
 -- GRIF TODO:
 -- I'm putting this here because I don't know how but when you can, could you:
 -- > Fix all the colors to be Theme indexes (like subtext, border etc)
 -- > Make the properties non editable when the ui is frozen (no map is selected.)
-
-onMapChanged()
-Util.MapChanged:Connect(function()
-    onMapChanged()
-end)
 
 plugin.Unloading:Connect(function()
     warn("Unloading")
