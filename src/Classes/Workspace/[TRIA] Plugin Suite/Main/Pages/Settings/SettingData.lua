@@ -162,7 +162,7 @@ return {
     },
 
     {
-        Text = "ClockTime",
+        Text = "Time of Day",
         Type = "Time",
         Modifiable = Value(true),
 

@@ -242,14 +242,26 @@ end
 
 function Components.Dropdown(data, childrenProcessor)
     local dropdownVisible = Value(data.DefaultState)
+    local headerColor = Value(Theme.Button.Default)
 
     local dropdown = New "Frame" {
         Size = UDim2.fromScale(1, 0),
-        BackgroundColor3 = Theme.Button.Default,
+        BackgroundColor3 = Computed(function()
+            return headerColor:get():get()
+        end),
         BackgroundTransparency = 0,
+        BorderSizePixel = 1,
+        BorderColor3 = Theme.Border.Default,
         AutomaticSize = Enum.AutomaticSize.Y,
         LayoutOrder = data.LayoutOrder,
 
+        [OnEvent "MouseEnter"] = function()
+            headerColor:set(Theme.Button.Hover)
+        end,
+        [OnEvent "MouseLeave"] = function()
+            headerColor:set(Theme.Button.Default)
+        end,
+        
         [Children] = {
             Components.TextButton({
                 Active = Computed(Util.buttonActiveFunc),
@@ -275,7 +287,7 @@ function Components.Dropdown(data, childrenProcessor)
                 BackgroundTransparency = 1,
                 Position = UDim2.fromOffset(20, 2),
                 Size = UDim2.fromOffset(20, 20),
-                Image = "http://www.roblox.com/asset/?id=6031094687",
+                Image = "rbxassetid://6031094687",
 
                 Rotation = Spring(Computed(function()
                     return dropdownVisible:get() and 0 or 180
