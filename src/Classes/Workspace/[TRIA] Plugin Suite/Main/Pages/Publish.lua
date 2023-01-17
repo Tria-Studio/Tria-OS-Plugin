@@ -16,6 +16,7 @@ local Ref = Fusion.Ref
 local OnEvent = Fusion.OnEvent
 local OnChange = Fusion.OnChange
 local Out = Fusion.Out
+local Spring = Fusion.Spring
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
@@ -101,9 +102,9 @@ function frame:GetFrame(data)
                             Size = Computed(function()
                                 return UDim2.new(1, 0, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75)
                             end),
-                            ImageColor3 = Computed(function()
+                            ImageColor3 = Spring(Computed(function()
                                 return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
-                            end),
+                            end), 20),
 
                             [OnEvent "MouseEnter"] = function()
                                 colorMultiplier:set(.7)
@@ -138,9 +139,9 @@ function frame:GetFrame(data)
                                         FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
                                         TextSize = 18,
 
-                                        TextColor3 = Computed(function()
+                                        TextColor3 = Spring(Computed(function()
                                             return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
-                                        end)
+                                        end), 20)
                                     },
                                     New "TextLabel" { --// Difficulty
                                         Text = string.format("[%s]", Util.Difficulty[value.Difficulty].Name),
@@ -152,10 +153,10 @@ function frame:GetFrame(data)
                                         TextStrokeColor3 = Theme.Border.Default,
                                         TextStrokeTransparency = 0,
 
-                                        TextColor3 = Computed(function()
+                                        TextColor3 = Spring(Computed(function()
                                             local Color = Util.Difficulty[value.Difficulty].Color
                                             return Color3.new(Color.R * colorMultiplier:get(), Color.G * colorMultiplier:get(), Color.B * colorMultiplier:get())
-                                        end)
+                                        end), 20)
                                     },
                                     New "ImageLabel" {--// Difficulty Icon
                                         BackgroundTransparency = 1,
@@ -163,9 +164,9 @@ function frame:GetFrame(data)
                                         Size = UDim2.fromOffset(26, 26),
                                         Image = Util.Difficulty[value.Difficulty].ImageID,
 
-                                        ImageColor3 = Computed(function()
+                                        ImageColor3 = Spring(Computed(function()
                                             return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
-                                        end)
+                                        end), 20)
                                     }
                                 }
                             }
@@ -272,18 +273,19 @@ Your creator token is a long phrase of characters which authenticates and allows
                                 return whitelistMapId:get() ~= ""
                             end),
 
-                            TextColor3 = Computed(function()
+                            TextColor3 = Spring(Computed(function()
                                 local EnabledColor = Theme.BrightText.Default
                                 local DisabledColor = Theme.SubText.Default
 
                                 return whitelistMapId:get() ~= "" and EnabledColor:get() or DisabledColor:get()
-                            end),
-                            BackgroundColor3 = Computed(function()
+                            end), 20),
+                            
+                            BackgroundColor3 = Spring(Computed(function()
                                 local EnabledColor = Theme.MainButton.Default
                                 local DisabledColor = Theme.MainButton.Pressed
 
                                 return whitelistMapId:get() ~= "" and EnabledColor:get() or DisabledColor:get()
-                            end),
+                            end), 20),
 
                             [OnEvent "Activated"] = function()
                                  -- this function will call to whitelist
@@ -318,11 +320,11 @@ Your creator token is a long phrase of characters which authenticates and allows
                                 return if selectedPublishMap:get() then selectedPublishMap:get().Name else "No map selected"
                             end),
 
-                            TextColor3 = Computed(function()
+                            TextColor3 = Spring(Computed(function()
                                 local selectedColor = Theme.MainText.Default:get()
                                 local inactiveColor = Theme.DimmedText.Default:get()
                                 return if selectedPublishMap:get() then selectedColor else inactiveColor
-                            end),
+                            end), 20),
 
                             [Children] = Components.ImageButton({
                                 AnchorPoint = Vector2.new(1, 0.5),
@@ -356,18 +358,19 @@ Your creator token is a long phrase of characters which authenticates and allows
                                 return selectedPublishMap:get() ~= nil
                             end),
 
-                            TextColor3 = Computed(function()
+                            TextColor3 = Spring(Computed(function()
                                 local EnabledColor = Theme.BrightText.Default
                                 local DisabledColor = Theme.SubText.Default
 
                                 return selectedPublishMap:get() and EnabledColor:get() or DisabledColor:get()
-                            end),
-                            BackgroundColor3 = Computed(function()
+                            end), 20),
+
+                            BackgroundColor3 = Spring(Computed(function()
                                 local EnabledColor = Theme.MainButton.Default
                                 local DisabledColor = Theme.MainButton.Pressed
 
                                 return selectedPublishMap:get() and EnabledColor:get() or DisabledColor:get()
-                            end),
+                            end), 20),
 
                             [OnEvent "Activated"] = function()
                                  -- this function will call to publish
@@ -520,16 +523,16 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     AutoButtonColor = Computed(function()
                                         return apiData.apiKey.unfiltered:get() ~= ""
                                     end),
-                                    TextColor3 = Computed(function()
+                                    TextColor3 = Spring(Computed(function()
                                         return if apiData.apiKey.unfiltered:get() ~= "" 
                                             then Theme.BrightText.Default:get()
                                             else Theme.SubText.Default:get()
-                                    end),
-                                    BackgroundColor3 = Computed(function()
+                                    end), 20),
+                                    BackgroundColor3 = Spring(Computed(function()
                                         return if apiData.apiKey.unfiltered:get() ~= "" 
                                             then Theme.MainButton.Default:get() 
                                             else Theme.MainButton.Pressed:get()
-                                    end),
+                                    end), 20),
 
                                     [OnEvent "Activated"] = function()
                                         plugin:SetSetting("TRIA_WebserverKey", apiData.apiKey.unfiltered:get())
@@ -549,16 +552,16 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Active = apiData.submittedApiKey,
                                     AutoButtonColor = apiData.submittedApiKey,
 
-                                    TextColor3 = Computed(function()
+                                    TextColor3 = Spring(Computed(function()
                                         return if apiData.submittedApiKey:get()
                                             then Theme.BrightText.Default:get() 
                                             else Theme.SubText.Default:get()
-                                    end),
-                                    BackgroundColor3 = Computed(function()
+                                    end), 20),
+                                    BackgroundColor3 = Spring(Computed(function()
                                         return if apiData.submittedApiKey:get() 
                                             then Theme.ErrorText.Default:get() 
                                             else Theme.DiffTextDeletionBackground.Default:get()
-                                    end),
+                                    end), 20),
     
                                     [OnEvent "Activated"] = function()
                                         apiData.apiTextbox.unfiltered:get().Text = ""
