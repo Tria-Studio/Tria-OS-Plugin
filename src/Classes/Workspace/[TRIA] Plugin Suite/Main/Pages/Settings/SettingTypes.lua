@@ -17,7 +17,7 @@ local Ref = Fusion.Ref
 local Value = Fusion.Value
 
 function BaseSettingButton(data)
-    return Components.TextButton {
+    return New "Frame" {
         BackgroundColor3 = Color3.fromRGB(46, 46, 46), -- Can't find out what this is.
         BackgroundTransparency = 0,
         BorderColor3 = Theme.Border.Default,
@@ -25,33 +25,40 @@ function BaseSettingButton(data)
         BorderSizePixel = 1,
         Name = data.Text or data.Name,
         Size = UDim2.new(1, 0, 0, 20),
-        FontFace = Font.new("SourceSansPro"),
-        Text = data.Text,
-        TextTruncate = Enum.TextTruncate.AtEnd,
-        TextColor3 = if data.Modifiable:get() then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
-        TextXAlignment = Enum.TextXAlignment.Left,
-
+        
         [Children] = {
-            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 20), nil),
-            New "Frame" {
-                AnchorPoint = Vector2.new(0.5, 0),
-                BackgroundColor3 = Color3.fromRGB(34, 34, 34),
-                BackgroundTransparency = 0,
-                BorderSizePixel = 0,
-                Position = UDim2.fromScale(0.45, 0),
-                Size = UDim2.new(0, 1, 1, 0)
+            New "TextLabel" {
+                BackgroundTransparency = 1,
+                Size = UDim2.fromScale(0.45, 1),
+                FontFace = Font.new("SourceSansPro"),
+                Text = data.Text,
+                TextTruncate = Enum.TextTruncate.AtEnd,
+                TextColor3 = if data.Modifiable:get() then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
+                TextXAlignment = Enum.TextXAlignment.Left,
             },
-            New "ImageButton" {
-                AnchorPoint = Vector2.new(1, 0.5),
-                BackgroundColor3 = Color3.fromRGB(46, 46, 46),
-                BackgroundTransparency = 0,
-                BorderColor3 = Color3.fromRGB(34, 34, 34),
-                BorderMode = Enum.BorderMode.Inset,
-                BorderSizePixel = 1,
-                Position = UDim2.new(0, -2, 0.5, 0),
-                Size = UDim2.fromOffset(16, 16),
-                Image = "http://www.roblox.com/asset/?id=6034281900",
-                ImageColor3 = Color3.fromRGB(170, 170, 170)
+
+            [Children] = {
+                Components.Constraints.UIPadding(nil, nil, UDim.new(0, 20), nil),
+                New "Frame" {
+                    AnchorPoint = Vector2.new(0.5, 0),
+                    BackgroundColor3 = Color3.fromRGB(34, 34, 34),
+                    BackgroundTransparency = 0,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromScale(0.45, 0),
+                    Size = UDim2.new(0, 1, 1, 0)
+                },
+                New "ImageButton" {
+                    AnchorPoint = Vector2.new(1, 0.5),
+                    BackgroundColor3 = Color3.fromRGB(46, 46, 46),
+                    BackgroundTransparency = 0,
+                    BorderColor3 = Color3.fromRGB(34, 34, 34),
+                    BorderMode = Enum.BorderMode.Inset,
+                    BorderSizePixel = 1,
+                    Position = UDim2.new(0, -2, 0.5, 0),
+                    Size = UDim2.fromOffset(16, 16),
+                    Image = "http://www.roblox.com/asset/?id=6034281900",
+                    ImageColor3 = Color3.fromRGB(170, 170, 170)
+                }
             }
         }
     }
