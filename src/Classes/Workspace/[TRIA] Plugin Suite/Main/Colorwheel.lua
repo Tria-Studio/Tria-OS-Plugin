@@ -370,13 +370,15 @@ function ColorWheel:GetUI()
                         Text = "Confirm",
                         Callback = function()
                             colorChosen:Fire()
-                        end
+                        end,
+                        BackgroundColor3 = Theme.Button.Selected
                     }, {
                         Text = "Cancel",
                         Callback = function()
                             chosenColor:set(nil)
                             colorChosen:Fire()
-                        end
+                        end,
+                        BackgroundColor3 = Theme.Button.Default
                     }),
                     Components.TextBox { --// Hex input
                         Position = UDim2.fromScale(0.05, 0.92),

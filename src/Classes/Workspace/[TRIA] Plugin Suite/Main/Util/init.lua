@@ -18,7 +18,7 @@ local defaultMessageResponses = {
     "Ok thanks"
 }
 
-local util = {
+local Util = {
     Signal = Signal,
     Maid = Maid,
 
@@ -78,29 +78,131 @@ local util = {
     }
 }
 
-util.buttonActiveFunc = function()
-    return util.mapModel:get() and util.buttonsActive:get()
-end
-
 function updateButtonsActive()
-    util.buttonsActive:set(util._Message.Text:get() == "")
+    Util.buttonsActive:set(Util._Message.Text:get() == "")
 end
 
-function util.CloseMessage()
-    util._Message.Text:set("")
-    util._Message.Header:set("")
-    util._Message.Option1:set({})
-    util._Message.Option2:set({})
+function getSettingsDirFolder(directory: string)
+    local currentMap = Util.mapModel:get()
+    if currentMap == nil then
+        return nil
+    end
+
+    local mapSettings = currentMap:FindFirstChild("Settings")
+    if not mapSettings then
+        return nil
+    end
+
+    local dirFolder = mapSettings
+    local split = directory:split(".")
+
+    for index, child in pairs(split) do
+        dirFolder = dirFolder:FindFirstChild(child)
+        if not dirFolder then
+            return nil
+        end
+    end
+
+    return dirFolder
 end
 
-function util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
-    util._Message.Text:set(text)
-    util._Message.Header:set(header)
-    util._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = util.CloseMessage})
-    util._Message.Option2:set(option2 or {})
+function Util.buttonActiveFunc()
+    return Util.mapModel:get() and Util.buttonsActive:get()
+end
+
+function Util.CloseMessage()
+    Util._Message.Text:set("")
+    Util._Message.Header:set("")
+    Util._Message.Option1:set({})
+    Util._Message.Option2:set({})
+end
+
+function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
+    self._Message.Text:set(text)
+    self._Message.Header:set(header)
+    self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
+    self._Message.Option2:set(option2 or {})
+end
+
+function Util.updateMapSetting(directory: string, attribute: string, value: any)
+    local dirFolder = getSettingsDirFolder(directory)
+    if not dirFolder then
+        return
+    end
+    if value == nil then
+        return
+    end
+    dirFolder:SetAttribute(attribute, value)
+end
+
+function Util.prefixWarn(...)
+    warn("[TRIA.os Map Plugin]:", ...)
+end
+
+function Util.getDirFolder(directory: string)
+    return getSettingsDirFolder(directory)
+end
+
+function Util.colorToRGB(color: Color3): string
+    return string.format("%i, %i, %i", 
+        math.min(math.floor(color.R * 255), 255), 
+        math.min(math.floor(color.G * 255), 255),
+        math.min(math.floor(color.B * 255), 255)
+    )
+end
+
+function Util.parseColor3Text(str: string): (boolean, nil | Color3)
+    local multiplier = 1
+
+    str = string.gsub(str, " ", "")
+    if string.find(str, "Color3%.%a%a%a%(", 1) then
+        str = string.gsub(str, 'Color3%.%a%a%a%(', "")
+        multiplier = 255
+    elseif string.find(str, "Color3.%a%a%a%a%a%a%a%(", 1) then
+        str = string.gsub(str, 'Color3%.%a%a%a%a%a%a%a%(', "")
+    end
+    str = string.gsub(str, "%)", "")
+
+    local split = string.split(str, ",")
+    for _, v in pairs(split) do
+        if not tonumber(v) then
+            return false, nil
+        end
+    end
+
+    if #split < 3 then
+        return false, nil
+    end
+
+    local r, g, b = 
+        math.min(math.floor(split[1] * multiplier + 0.5), 255), 
+        math.min(math.floor(split[2] * multiplier + 0.5), 255), 
+        math.min(math.floor(split[3] * multiplier + 0.5), 255)
+
+    local newColor = Color3.fromRGB(r, g, b)
+    return true, newColor
+end
+
+function Util.parseTimeString(str: string): (boolean, string)
+    local split = string.split(str, ":")
+
+    if #split ~= 3 then
+        return false, nil
+    end
+
+    for i, v in pairs(split) do
+        if not tonumber(v) then
+            return false, nil
+        end
+        if #v > 2 then
+            split[i] = string.sub(v, 1, 2)
+        end
+        split[i] = ("%02i"):format(split[i])
+    end
+    return true, table.concat(split, ":")
 end
 
 updateButtonsActive()
-Observer(util._Message.Text):onChange(updateButtonsActive)
+Observer(Util._Message.Text):onChange(updateButtonsActive)
 
-return util
+return Util
