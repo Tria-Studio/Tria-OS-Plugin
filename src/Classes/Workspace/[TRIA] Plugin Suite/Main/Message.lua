@@ -65,6 +65,10 @@ return New "Frame" { --// Message
 						Util._Message.Option1:get().Callback()
 						Util:CloseMessage()
 					end,
+
+					BackgroundColor3 = Computed(function()
+						return Util._Message.Option1:get() and Util._Message.Option1:get().BackgroundColor3 or Theme.Button.Selected
+					end)
 				}, {
 					Text = Computed(function()
 						return Util._Message.Option2:get() and Util._Message.Option2:get().Text or ""
@@ -80,7 +84,11 @@ return New "Frame" { --// Message
 							Util._Message.Option2:get().Callback()
 						end
 						Util:CloseMessage()
-					end
+					end,
+
+					BackgroundColor3 = Computed(function()
+						return Util._Message.Option2:get() and Util._Message.Option2:get().BackgroundColor3 or Theme.Button.Default
+					end)
 				})
 			}
 		}

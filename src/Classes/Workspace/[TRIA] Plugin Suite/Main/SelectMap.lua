@@ -122,8 +122,8 @@ function selectMap:SetMap(Map: Model|Workspace)
         selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
         selectMap.selectTextColor:set(Theme.MainText.Default:get())
         Util.mapModel:set(Map)
+        Util.MapChanged:Fire()
         Util.MainMaid:DoCleaning()
-
 
         local ObjectType = {}
 
@@ -196,6 +196,7 @@ function selectMap:SetMap(Map: Model|Workspace)
         
     else
         Util.mapModel:set(nil)
+        Util.MapChanged:Fire()
         selectMap.hasOptimizedStructure:set(false)
         selectMap.selectCancelColor:set(Theme.SubText.Default:get())
         selectMap.selectTextState:set("No map selected")
