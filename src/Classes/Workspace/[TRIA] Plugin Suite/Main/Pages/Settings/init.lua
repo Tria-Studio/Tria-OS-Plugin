@@ -15,6 +15,7 @@ local ForPairs = Fusion.ForPairs
 local OnChange = Fusion.OnChange
 local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
+local Out = Fusion.Out
 
 local frame = {}
 
@@ -227,6 +228,8 @@ function DirectoryDropdown(dirData, childProcessor)
 end
 
 function frame:GetFrame(data)
+    local lightingDropdownVisible = Value(true)
+
     return New "Frame" {
         BackgroundTransparency = 0,
         Name = "Settings",
@@ -252,19 +255,26 @@ function frame:GetFrame(data)
 
                     ForPairs(directories, function(dirKey, dirData)
                         local dirDropdown = DirectoryDropdown(dirData, function(visible)
+                            local dropdown
                             if dirKey ~= "Liquids" then
-                                return Components.DropdownHolderFrame {
+                                dropdown = Components.DropdownHolderFrame {
                                     DropdownVisible = visible,
                                     Children = {
                                         Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-                                        
                                         ForValues(dirData.Items, function(data)
                                             return settingOption(data.Type, data)
                                         end, Fusion.cleanup)
                                     }
                                 }
+
+                                if dirKey == "Lighting" then
+                                    dropdown = Hydrate(dropdown) {
+                                        [Out "Visible"] = lightingDropdownVisible
+                                    }
+                                end
+                                return dropdown
                             else
-                                return Components.DropdownHolderFrame {
+                                dropdown = Components.DropdownHolderFrame {
                                     DropdownVisible = visible,
                                     Children = {
                                         Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
@@ -287,6 +297,7 @@ function frame:GetFrame(data)
                                         end, Fusion.cleanup)
                                     }
                                 }
+                                return dropdown
                             end
                         end)
 
@@ -298,6 +309,7 @@ function frame:GetFrame(data)
                         BorderSizePixel = 1,
                         LayoutOrder = 4,
                         Size = UDim2.new(1, 0, 0, 50),
+                        Visible = lightingDropdownVisible,
 
                         [Children] = {
                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
