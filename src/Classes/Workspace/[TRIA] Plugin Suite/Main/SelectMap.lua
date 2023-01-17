@@ -119,11 +119,17 @@ function selectMap:SetMap(Map: Model|Workspace)
         end
 
         selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
-        selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
         selectMap.selectTextColor:set(Theme.MainText.Default:get())
         Util.mapModel:set(Map)
         Util.MapChanged:Fire()
         Util.MainMaid:DoCleaning()
+
+        selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
+
+        local nameChangedSignal; nameChangedSignal = Map.Settings.Main:GetAttributeChangedSignal("Name"):Connect(function()
+            selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
+        end)
+        Util.MainMaid:GiveTask(nameChangedSignal)
 
         local ObjectType = {}
 
