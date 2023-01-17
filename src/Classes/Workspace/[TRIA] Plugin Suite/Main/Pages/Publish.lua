@@ -22,6 +22,7 @@ local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local NoMapsFoundText = Value("No whitelisted maps found.")
 local whitelistMapId = Value("")
 
+local publishButtonText = Value("Publish Map")
 local selectedPublishMap = Value(nil)
 
 local apiData = {
@@ -58,20 +59,140 @@ local function getInfoFrame(name, frames)
     }
 end
 
+function frame.OnClose()
+    publishButtonText:set("Publish Map")
+    selectedPublishMap:set(nil)
+end
+
 function frame:GetFrame(data)
     local publishedMaps = {}
+    local whitelistedMaps = {}
 
-    if #publishedMaps == 0 then
-        -- table.insert(publishedMaps, NoMapsFoundText:get())
-        table.insert(publishedMaps, {
-            Name = "Cubic Void",
-            Difficulty = 6,
-            Image = "rbxassetid://8877261367",
-        })
-        table.insert(publishedMaps, {
+    local function createMapList(list, LayoutOrder)
+       return New "Frame" {
+            LayoutOrder = LayoutOrder,
+            AutomaticSize = Enum.AutomaticSize.Y,
+            Size = UDim2.fromScale(1, 0),
+            BackgroundTransparency = 1,
+
+            [Children] = {
+                Components.Constraints.UISizeConstraint(nil, Vector2.new(math.huge, 256)),
+                Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
+                
+                ForValues(list, function(value)
+                    if value == NoMapsFoundText:get() then
+                        return New "TextLabel" {
+                            Size = UDim2.new(1, 0, 0, 20),
+                            Text = NoMapsFoundText:get(),
+                            BackgroundTransparency = 0,
+                            BackgroundColor3 = Theme.InputFieldBackground.Default,
+                            TextColor3 = Theme.ErrorText.Default,
+                            Font = Enum.Font.SourceSansSemibold,
+                            TextSize = 15
+                        }
+                    else
+                        local colorMultiplier = Value(1)
+                        -- fine
+                        -- yay :D
+                        return Components.ImageButton {
+                            LayoutOrder = value.ID,
+                            Image = value.Image,
+                            ScaleType = Enum.ScaleType.Crop,
+                            Size = Computed(function()
+                                return UDim2.new(1, 0, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75)
+                            end),
+                            ImageColor3 = Computed(function()
+                                return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
+                            end),
+
+                            [OnEvent "MouseEnter"] = function()
+                                colorMultiplier:set(.7)
+                            end,
+                            [OnEvent "MouseButton1Down"] = function()
+                                colorMultiplier:set(1.15)
+
+                            end,
+                            [OnEvent "MouseButton1Up"] = function()
+                                colorMultiplier:set(.7)
+                                selectedPublishMap:set(value)
+                                publishButtonText:set(list == whitelistedMaps and "Publish Map" or "Update Map")
+                            end,
+                            [OnEvent "MouseLeave"] = function()
+                                colorMultiplier:set(1)
+                            end,
+
+                            [Children] = New "Frame" {
+                                BackgroundColor3 = Color3.new(0, 0, 0),
+                                BackgroundTransparency = .625,
+                                Position = UDim2.fromScale(0, 1),
+                                Size = UDim2.new(1, 0, 0, 34),
+                                AnchorPoint = Vector2.new(0, 1),
+
+                                [Children] = {
+                                    New "TextLabel" { --// Map Name
+                                        Text = value.Name,
+                                        AnchorPoint = Vector2.new(.5, 0),
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.fromScale(.5, .45),
+                                        Size = UDim2.new(0, 110, 0.55, 0),
+                                        FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                                        TextSize = 18,
+
+                                        TextColor3 = Computed(function()
+                                            return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
+                                        end)
+                                    },
+                                    New "TextLabel" { --// Difficulty
+                                        Text = string.format("[%s]", Util.Difficulty[value.Difficulty].Name),
+                                        AnchorPoint = Vector2.new(.5, 0),
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.fromScale(.5, 0),
+                                        Size = UDim2.new(0, 110, 0.45, 0),
+                                        FontFace = Font.new("SourceSansPro", Enum.FontWeight.SemiBold),
+                                        TextStrokeColor3 = Theme.Border.Default,
+                                        TextStrokeTransparency = 0,
+
+                                        TextColor3 = Computed(function()
+                                            local Color = Util.Difficulty[value.Difficulty].Color
+                                            return Color3.new(Color.R * colorMultiplier:get(), Color.G * colorMultiplier:get(), Color.B * colorMultiplier:get())
+                                        end)
+                                    },
+                                    New "ImageLabel" {--// Difficulty Icon
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.new(1, -34, 0, 4),
+                                        Size = UDim2.fromOffset(26, 26),
+                                        Image = Util.Difficulty[value.Difficulty].ImageID,
+
+                                        ImageColor3 = Computed(function()
+                                            return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
+                                        end)
+                                    }
+                                }
+                            }
+                        }
+                    end
+                end, Fusion.cleanup)
+            }
+        }
+    end
+
+
+    if #whitelistedMaps == 0 then
+        -- table.insert(whitelistedMaps, NoMapsFoundText:get())
+        table.insert(whitelistedMaps, { --// debug 
             Name = "Cubic Ruins",
             Difficulty = 6,
             Image = "rbxassetid://11715750538",
+            ID= 1,
+        })
+    end
+    if #publishedMaps == 0 then
+        -- table.insert(publishedMaps, NoMapsFoundText:get())
+        table.insert(publishedMaps, { --// debug 
+            Name = "Cubic Void",
+            Difficulty = 6,
+            Image = "rbxassetid://8877261367",
+            ID = 2,
         })
     end
 
@@ -87,7 +208,7 @@ function frame:GetFrame(data)
                 Size = UDim2.fromScale(1, 1),
                 BackgroundColor3 = Theme.MainBackground.Default,
 
-                Children = {
+                [Children] = {
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 12)),
                     Components.Dropdown({
                         Header = "Setup Instructions",
@@ -130,6 +251,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                         Components.TextBox { --// Insert Whitelist ID
                             LayoutOrder = 2,
                             Size = UDim2.new(1, 0, 0, 32),
+                            TextSize = 16,
                             PlaceholderText = "Insert map model ID",
 
                             [Out "Text"] = whitelistMapId
@@ -141,7 +263,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             LayoutOrder = 3,
                             Position = UDim2.new(0.5, 0, 0.45, 0),
                             Size = UDim2.new(0.4, 0, 0, 24),
-                            Text = "Whitelist",
+                            Text = "Whitelist Map",
 
                             Active = Computed(function()
                                 return whitelistMapId:get() ~= ""
@@ -188,6 +310,8 @@ Your creator token is a long phrase of characters which authenticates and allows
                             BorderColor3 = Theme.InputFieldBorder.Default,
                             BorderSizePixel = 1,
                             LayoutOrder = 4,
+                            Font = Enum.Font.SourceSansSemibold,
+                            TextSize = 16,
                             Size = UDim2.new(1, 0, 0, 32),
                             
                             Text = Computed(function()
@@ -195,10 +319,26 @@ Your creator token is a long phrase of characters which authenticates and allows
                             end),
 
                             TextColor3 = Computed(function()
-                                local selectedColor = Theme.SubText.Default:get()
+                                local selectedColor = Theme.MainText.Default:get()
                                 local inactiveColor = Theme.DimmedText.Default:get()
                                 return if selectedPublishMap:get() then selectedColor else inactiveColor
-                            end)
+                            end),
+
+                            [Children] = Components.ImageButton({
+                                AnchorPoint = Vector2.new(1, 0.5),
+                                BackgroundTransparency = 1,
+                                Position = UDim2.new(1, -4, 0.5, 0),
+                                Size = UDim2.new(0, 18, 1, 0),
+                                ScaleType = Enum.ScaleType.Fit,
+
+                                ImageColor3 = Theme.SubText.Default,
+                                Image = "rbxassetid://6022668885",
+
+                                [OnEvent "Activated"] = function()
+                                    selectedPublishMap:set(nil)
+                                    publishButtonText:set("Publish Map")
+                                end,
+                            })
                         },
 
                         Components.TextButton({
@@ -207,7 +347,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             LayoutOrder = 5,
                             Position = UDim2.fromScale(0.5, 0.45),
                             Size = UDim2.new(0.4, 0, 0, 24),
-                            Text = "Publish",
+                            Text = publishButtonText,
 
                             Active = Computed(function()
                                 return selectedPublishMap:get() ~= nil
@@ -246,73 +386,10 @@ Your creator token is a long phrase of characters which authenticates and allows
 
                             [Children] = {
                                 Components.Constraints.UIListLayout(),
-                                Components.ScrollingFrameHeader("Your Whitelisted Maps:", -1, nil, 20),
-                                New "Frame" {
-                                    AutomaticSize = Enum.AutomaticSize.Y,
-                                    Size = UDim2.fromScale(1, 0),
-                                    BackgroundTransparency = 1,
-
-                                    [Children] = {
-                                        Computed(function()
-                                            return Components.Constraints.UIGridLayout(UDim2.new(1, 0, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75), UDim2.fromOffset(6, 6))
-                                        end, Fusion.cleanup),
-                                        
-                                        ForValues(publishedMaps, function(value)
-                                            if value == NoMapsFoundText:get() then
-                                                return New "TextLabel" {
-                                                    Size = UDim2.new(1, 0, 0, 20),
-                                                    Text = NoMapsFoundText:get(),
-                                                    BackgroundTransparency = 1,
-                                                    TextColor3 = Theme.ErrorText.Default,
-                                                }
-                                            else
-                                                return Components.ImageButton {
-                                                    Image = value.Image,
-                                                    ScaleType = Enum.ScaleType.Crop,
-
-                                                    [Children] = New "Frame" {
-                                                        BackgroundColor3 = Color3.new(0, 0, 0),
-                                                        BackgroundTransparency = .625,
-                                                        Position = UDim2.fromScale(0, 1),
-                                                        Size = UDim2.new(1, 0, 0, 34),
-                                                        AnchorPoint = Vector2.new(0, 1),
-
-                                                        [Children] = {
-                                                            New "TextLabel" { --// Map Name
-                                                                Text = value.Name,
-                                                                AnchorPoint = Vector2.new(.5, 0),
-                                                                BackgroundTransparency = 1,
-                                                                Position = UDim2.fromScale(.5, .45),
-                                                                Size = UDim2.new(0, 110, 0.55, 0),
-                                                                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                                                                TextColor3 = Theme.MainText.Default,
-                                                                TextSize = 18,
-                                                            },
-                                                            New "TextLabel" { --// Difficulty
-                                                                Text = string.format("[%s]", Util.Difficulty[value.Difficulty].Name),
-                                                                AnchorPoint = Vector2.new(.5, 0),
-                                                                BackgroundTransparency = 1,
-                                                                Position = UDim2.fromScale(.5, 0),
-                                                                Size = UDim2.new(0, 110, 0.45, 0),
-                                                                FontFace = Font.new("SourceSansPro", Enum.FontWeight.SemiBold),
-                                                                TextColor3 = Util.Difficulty[value.Difficulty].Color,
-                                                                TextStrokeColor3 = Theme.Border.Default,
-                                                                TextStrokeTransparency = 0,
-                                                            },
-                                                            New "ImageLabel" {--// Difficulty Icon
-                                                                AnchorPoint = Vector2.new(1, .5),
-                                                                BackgroundTransparency = 1,
-                                                                Position = UDim2.new(1, -8, .5, 0),
-                                                                Size = UDim2.fromOffset(26, 26),
-                                                                Image = Util.Difficulty[value.Difficulty].ImageID
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            end
-                                        end, Fusion.cleanup)
-                                    }
-                                }
+                                Components.ScrollingFrameHeader("Your Whitelisted Maps:", 1, nil, 20),
+                                createMapList(whitelistedMaps, 2),
+                                Components.ScrollingFrameHeader("Your Published Maps:", 3, nil, 20),
+                                createMapList(publishedMaps, 4)
                             }
                         },
                     }),
@@ -363,6 +440,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Position = UDim2.fromScale(0.5, 0.5),
                                     Size = UDim2.fromScale(1, 1),
 
+                                    TextSize = 16,
                                     TextTransparency = 0,
                                     TextColor3 = Color3.new(1, 1, 1),
                                     Text = Computed(function()
@@ -401,7 +479,6 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                         }),
 
                                         Components.ImageButton({
-                                            AutoButtonColor = false,
                                             AnchorPoint = Vector2.new(0, 0.5),
                                             BackgroundTransparency = 1,
                                             Position = UDim2.fromScale(1, 0.5),
@@ -433,7 +510,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                 Components.TextButton({
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BorderSizePixel = 2,
-                                    Position = UDim2.fromScale(0.25, 0.45),
+                                    Position = UDim2.fromScale(0.26, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Submit",
     
@@ -465,7 +542,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                 Components.TextButton({
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BorderSizePixel = 2,
-                                    Position = UDim2.fromScale(0.75, 0.45),
+                                    Position = UDim2.fromScale(0.73, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Remove",
 

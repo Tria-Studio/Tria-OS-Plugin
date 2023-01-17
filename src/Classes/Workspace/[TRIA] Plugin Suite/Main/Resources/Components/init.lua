@@ -226,22 +226,17 @@ function Components.ScrollingFrameHeader(text: string, layoutOrder: number, colo
 end
 
 function Components.ScrollingFrame(data)
-    return New "ScrollingFrame" {
+    return Hydrate(New "ScrollingFrame" {
         BorderColor3 = Theme.Border.Default,
         CanvasSize = UDim2.fromScale(0, 0),
         BorderSizePixel = 1,
         VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
-        BackgroundColor3 = data.BackgroundColor3 or Theme.ScrollBarBackground.Default,
+        BackgroundColor3 = Theme.ScrollBarBackground.Default,
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
         ScrollBarImageColor3 = Theme.ScrollBar.Default,
         BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
         TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-
-        Size = data.Size,
-        Visible = data.Visible or true,
-
-        [Children] = data.Children
-    }
+    })(data)
 end
 
 function Components.Dropdown(data, childrenProcessor)

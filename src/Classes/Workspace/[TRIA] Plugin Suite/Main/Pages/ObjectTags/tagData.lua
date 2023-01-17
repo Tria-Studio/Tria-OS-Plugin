@@ -9,60 +9,55 @@ local data = {}
 ]]
 
 data.metadataTypes = {
+    Button = {
+        type = "EndOfName",
+        dataType = "number",
+        displayName = "Button #",
+        default = 1,
+        textBoxSize = -60
+    },
     ButtonNum = {
         type = "EndOfName",
         dataType = "number",
         displayName = "Button & Path #",
         default = 1,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -122
     },
     GroupButton = {
         type = "Attribute",
         dataType = "boolean",
         displayName = "Group Button",
         default = false,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     ActiveColor = {
         type = "Attribute",
         dataType = "color",
         displayName = "Active Color",
         default = nil,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     ActivatedColor = {
         type = "Attribute",
         dataType = "color",
         displayName = "Activated Color",
         default = nil,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     InactiveColor = {
         type = "Attribute",
         dataType = "color",
         displayName = "Inactive Color",
         default = nil,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     DisabledColor = {
         type = "Attribute",
         dataType = "color",
         displayName = "Disabled Color",
         default = nil,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     LocatorImage = {
         type = "Attribute",
         dataType = "string",
         displayName = "Locator Image",
         default = nil,
-        textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
     },
     ActivatedSound = {
@@ -70,7 +65,6 @@ data.metadataTypes = {
         dataType = "string",
         displayName = "Activated Sound",
         default = nil,
-        textLabelSize = UDim2.new(),
         textBoxSize = UDim2.new()
     },
 
@@ -79,72 +73,62 @@ data.metadataTypes = {
         dataType = "number",
         displayName = "Delay",
         default = 0,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -44
     },
     SoundId = {
         type = "ChildInstanceValue",
         dataType = "string",
         displayName = "Sound ID",
         default = "",
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -60
     },
     LiquidNum = {
         type = "EndOfName",
         dataType = "number",
         displayName = "Liquid #",
         default = 1,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -179
     },
     LiquidType = {
         type = "Attribute",
         dataType = "liquidSelect",
         displayName = "Type",
         default = 1,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     Oxygen = {
         type = "Attribute",
         dataType = "number",
         displayName = "Amount",
         default = 300,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -166
     },
     Speed = {
         type = "Attribute",
         dataType = "number",
         displayName = "WalkSpeed",
         default = 40,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -48
     },
     Momentum = {
         type = "Attribute",
         dataType = "number",
         displayName = "Momentum",
         default = 0,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -48   
     },
     WalkSpeed = {
         type = "Attribute",
         dataType = "number",
         displayName = "WalkSpeed",
         default = 100,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -166  
     },
     JumpPower = {
         type = "Attribute",
         dataType = "number",
         displayName = "JumpPower",
         default = 100,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -166
     },
 
 
@@ -153,56 +137,44 @@ data.metadataTypes = {
         dataType = "color",
         displayName = "Wire Color",
         default = Color3.fromRGB(255, 10 , 10),
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     ZiplineJumpable = {
         type = "ConfigAttribute",
         dataType = "boolean",
         displayName = "Jumpable Ziplines",
         default = false,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     ZiplineMaterial = {
         type = "ConfigAttribute",
         dataType = "dropdown_materials",
         default = "Fabric",
         displayName = "Wire Material",
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     ZiplineMomentum = {
         type = "ConfigAttribute",
         dataType = "boolean",
         displayName = "Momentum",
         default = true,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     ZiplineSparkle = {
         type = "ConfigAttribute",
         dataType = "boolean",
         displayName = "Wire Sparkles",
         default = true,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
     },
     ZiplineSpeed = {
         type = "ConfigAttribute",
         dataType = "number",
         displayName = "Speed",
         default = 40,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -44
     },
     ZiplineWidth = {
         type = "ConfigAttribute",
         dataType = "number",
         displayName = "Wire Thickness",
         default = 0.25,
-        textLabelSize = UDim2.new(),
-        textBoxSize = UDim2.new()
+        textBoxSize = -48
     },
 }
 
@@ -214,7 +186,7 @@ data.dataTypes = {
             LayoutOrder = 1,
             metadata = {
                 {
-                    data = data.metadataTypes.ButtonNum,
+                    data = data.metadataTypes.Button,
                     location = 1
                 }, {
                     data = data.metadataTypes._Delay,
@@ -230,7 +202,7 @@ data.dataTypes = {
             LayoutOrder = 2,
             metadata = {
                 {
-                    data = data.metadataTypes.ButtonNum,
+                    data = data.metadataTypes.Button,
                     location = 1
                 }, {
                     data = data.metadataTypes._Delay,
@@ -246,7 +218,7 @@ data.dataTypes = {
             LayoutOrder = 3,
             metadata = {
                 {
-                    data = data.metadataTypes.ButtonNum,
+                    data = data.metadataTypes.Button,
                     location = 1
                 }, {
                     data = data.metadataTypes._Delay,
@@ -262,7 +234,7 @@ data.dataTypes = {
             LayoutOrder = 5,
             metadata = {
                 {
-                    data = data.metadataTypes.ButtonNum,
+                    data = data.metadataTypes.Button,
                     location = 1
                 }, {
                     data = data.metadataTypes._Delay,
@@ -278,7 +250,7 @@ data.dataTypes = {
             LayoutOrder = 4,
             metadata = {
                 {
-                    data = data.metadataTypes.ButtonNum,
+                    data = data.metadataTypes.Button,
                     location = 1,
                     isFullSize = false,
                 }, {
@@ -300,7 +272,7 @@ data.dataTypes = {
             LayoutOrder = 6,
             metadata = {
                 {
-                    data = data.metadataTypes.ButtonNum,
+                    data = data.metadataTypes.Button,
                     location = 1,
                     isFullSize = false,
                 }, {
@@ -349,7 +321,7 @@ data.dataTypes = {
                 {
                     data = data.metadataTypes.ButtonNum,
                     location = 1,
-                    isFullSize = false,
+                    isFullSize = true,
                 }, {
                     data = data.metadataTypes.GroupButton,
                     location = 3,
@@ -393,32 +365,32 @@ data.dataTypes = {
             LayoutOrder = 6,
             metadata = {
                 {
-                    data = data.metadataTypes.ZiplineColor,
+                    data = data.metadataTypes.ZiplineSpeed,
                     location = 1,
-                    isFullSize = true,
+                    isFullSize = false,
                 }, {
-                    data = data.metadataTypes.ZiplineMaterial,
+                    data = data.metadataTypes.ZiplineMomentum,
+                    location = 2,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.ZiplineJumpable,
                     location = 3,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ZiplineWidth,
+                    data = data.metadataTypes.ZiplineColor,
                     location = 5,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ZiplineSparkle,
+                    data = data.metadataTypes.ZiplineMaterial,
                     location = 7,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ZiplineSpeed,
+                    data = data.metadataTypes.ZiplineWidth,
                     location = 9,
                     isFullSize = true,
-                }, {
-                    data = data.metadataTypes.ZiplineMomentum,
+                },   {
+                    data = data.metadataTypes.ZiplineSparkle,
                     location = 11,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.ZiplineJumpable,
-                    location = 13,
                     isFullSize = true,
                 },
             },
@@ -441,7 +413,7 @@ data.dataTypes = {
                 {
                     data = data.metadataTypes.Oxygen,
                     location = 1,
-                    isFullSize = false,
+                    isFullSize = true,
                 },
             },
             tagFormat = nil,
@@ -455,7 +427,7 @@ data.dataTypes = {
                 {
                     data = data.metadataTypes.WalkSpeed,
                     location = 1,
-                    isFullSize = false,
+                    isFullSize = true,
                 },
             },
             tagFormat = "_Action",
@@ -469,7 +441,7 @@ data.dataTypes = {
                 {
                     data = data.metadataTypes.JumpPower,
                     location = 1,
-                    isFullSize = false,
+                    isFullSize = true,
                 },
             },
             tagFormat = "_Action",
