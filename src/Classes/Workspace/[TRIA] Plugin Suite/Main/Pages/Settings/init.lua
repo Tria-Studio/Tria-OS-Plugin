@@ -241,7 +241,7 @@ function frame:GetFrame(data)
                 BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
                 MidImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
                 Name = "Settings",
-                Position = UDim2.fromScale(0, 0.5),
+                Position = UDim2.fromScale(0, 0),
                 Size = UDim2.fromScale(1, 1),
                 TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
                 Visible = data.Visible,
