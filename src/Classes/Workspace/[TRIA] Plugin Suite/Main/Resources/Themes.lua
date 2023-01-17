@@ -18,6 +18,9 @@ local themes = {
         Hover = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover)),
         Selected = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Selected))
     },
+    ButtonBorder = {
+        Default = Value(StudioTheme:GetColor(GuideColor.ButtonBorder)),
+    },
     MainText = {
         Default = Value(StudioTheme:GetColor(GuideColor.MainText))
     },

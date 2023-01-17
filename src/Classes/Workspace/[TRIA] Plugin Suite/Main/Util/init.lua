@@ -80,14 +80,17 @@ local Util = {
         }
     }
 }
+function updateButtonsActive()
+    Util.buttonsActive:set(Util._Message.Text:get() == "")
+end
+
+function Util.buttonActiveFunc()
+    return Util.mapModel:get() and Util.buttonsActive:get()
+end
 
 Selection.SelectionChanged:Connect(function()
     Util.selectedParts:set(Selection:Get())
 end)
-
-function updateButtonsActive()
-    Util.buttonsActive:set(Util._Message.Text:get() == "")
-end
 
 function getSettingsDirFolder(directory: string)
     local currentMap = Util.mapModel:get()
@@ -111,10 +114,6 @@ function getSettingsDirFolder(directory: string)
     end
 
     return dirFolder
-end
-
-function Util.buttonActiveFunc()
-    return Util.mapModel:get() and Util.buttonsActive:get()
 end
 
 function Util.CloseMessage()

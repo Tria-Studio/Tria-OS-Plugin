@@ -48,6 +48,9 @@ function BaseSettingButton(data)
                     Size = UDim2.new(0, 1, 1, 0)
                 },
                 New "ImageButton" {
+                    Active = Computed(Util.buttonActiveFunc),
+                    AutoButtonColor = Computed(Util.buttonActiveFunc),
+
                     AnchorPoint = Vector2.new(1, 0.5),
                     BackgroundColor3 = Color3.fromRGB(46, 46, 46),
                     BackgroundTransparency = 0,
@@ -67,6 +70,9 @@ end
 function InputBox(data)
     return function (props)
         return Hydrate(Components.TextBox {
+            Active = Computed(Util.buttonActiveFunc),
+            TextEditable = Computed(Util.buttonActiveFunc),
+
             AnchorPoint = Vector2.new(1, 0),
             BackgroundTransparency = 1,
             BorderSizePixel = 1,
@@ -112,6 +118,9 @@ function SettingTypes.Checkbox(data)
 
     return Hydrate(BaseSettingButton(data)) {
         [Children] = Components.ImageButton {
+            Active = Computed(Util.buttonActiveFunc),
+            AutoButtonColor = Computed(Util.buttonActiveFunc),
+
             AnchorPoint = Vector2.new(0, 0.5),
             BackgroundColor3 = Color3.fromRGB(40, 40, 40),
             BackgroundTransparency = 0,
@@ -144,6 +153,9 @@ function SettingTypes.Color(data)
     return Hydrate(BaseSettingButton(data)) {
         [Children] = {
             Components.TextButton {
+                Active = Computed(Util.buttonActiveFunc),
+                AutoButtonColor = Computed(Util.buttonActiveFunc),
+
                 AnchorPoint = Vector2.new(0, 0.5),
                 BackgroundColor3 = data.Value,
                 BackgroundTransparency = 0,

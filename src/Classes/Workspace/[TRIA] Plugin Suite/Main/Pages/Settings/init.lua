@@ -173,16 +173,17 @@ end
 
 function ExportButton(props)
     return Hydrate(Components.TextButton {
-        Active = true,
-        AutoButtonColor = true,
+        Active = Computed(Util.buttonActiveFunc),
+        AutoButtonColor = Computed(Util.buttonActiveFunc),
+
         AutomaticSize = Enum.AutomaticSize.None,
-        BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+        BackgroundColor3 = Theme.Button.Default,
         BackgroundTransparency = 0,
-        BorderColor3 = Color3.fromRGB(53, 53, 53),
+        BorderColor3 = Theme.ButtonBorder.Default,
         BorderMode = Enum.BorderMode.Inset,
         BorderSizePixel = 3,
         Size = UDim2.new(1, 0, 0, 22),
-        TextColor3 = Color3.fromRGB(204, 204, 204),
+        TextColor3 = Theme.MainText.Default,
         TextXAlignment = Enum.TextXAlignment.Center,
         TextYAlignment = Enum.TextYAlignment.Center
     })(props)
@@ -396,11 +397,6 @@ Util.MapChanged:Connect(function()
     onMapChanged()
     handleLiquids()
 end)
-
--- GRIF TODO:
--- I'm putting this here because I don't know how but when you can, could you:
--- > Fix all the colors to be Theme indexes (like subtext, border etc)
--- > Make the properties non editable when the ui is frozen (no map is selected.)
 
 plugin.Unloading:Connect(function()
     warn("Unloading")
