@@ -227,6 +227,7 @@ end
 
 function Components.ScrollingFrame(data)
     return Hydrate(New "ScrollingFrame" {
+        ScrollingEnabled = Computed(Util.buttonActiveFunc),
         BorderColor3 = Theme.Border.Default,
         CanvasSize = UDim2.fromScale(0, 0),
         BorderSizePixel = 1,
