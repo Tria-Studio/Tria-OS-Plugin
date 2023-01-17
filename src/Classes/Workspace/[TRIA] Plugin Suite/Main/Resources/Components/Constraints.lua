@@ -4,13 +4,13 @@ local New = Fusion.New
 
 local Constraints = {}
 
-function Constraints.UIListLayout(FillDirection: Enum.FillDirection, HorizontalAlignment: Enum.HorizontalAlignment, Padding: UDim?, VerticalAlignment: Enum.VerticalAlignment?)
+function Constraints.UIListLayout(FillDirection: Enum.FillDirection, HorizontalAlignment: Enum.HorizontalAlignment, Padding: UDim?, VerticalAlignment: Enum.VerticalAlignment?, SortOrder: Enum.SortOrder?)
     return New "UIListLayout" {
         Padding = Padding,
         FillDirection = FillDirection,
         HorizontalAlignment = HorizontalAlignment,
         VerticalAlignment = VerticalAlignment,
-        SortOrder = Enum.SortOrder.LayoutOrder,
+        SortOrder = SortOrder or Enum.SortOrder.LayoutOrder,
     }
 end
 

@@ -95,7 +95,7 @@ local function updateStateValue(currentValue, newValue, tbl)
         Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
     else
         if originalModifiableStates[tbl] ~= nil and originalModifiableStates[tbl] ~= tbl.Modifiable:get() then
-            tbl.Modifiable:set(originalModifiableState)
+            tbl.Modifiable:set(originalModifiableStates[tbl])
         end
         tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
     end
@@ -126,10 +126,10 @@ function insertLiquids()
                 updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
                 hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
             end
-            
             updateConnection()
         end
 
+        table.insert(settingConnections, liquid:GetPropertyChangedSignal("Name"):Connect(onMapChanged))
         insertToStateTable(directories.Liquids.Items, {Name = liquid.Name, Data = liquidData})
     end
 end
@@ -168,12 +168,6 @@ function onMapChanged()
         end
         updateConnection()
     end
-    
-    for _, t in pairs(directories) do
-        table.sort(t.Items, function(a, b)
-            return a.Text < b.Text
-        end)
-    end
 end
 
 function ExportButton(props)
@@ -194,7 +188,7 @@ function ExportButton(props)
 end
 
 function exportLighting()
-    for _, item in ipairs(directories.Lighting.Items) do
+    for _, item in ipairs(directories.Lighting.Items:get()) do
         local settingToChange = if item.ExportAttribute then item.ExportAttribute else item.Attribute
         local settingValue = item.Value:get(false)
 
@@ -209,7 +203,7 @@ function exportLighting()
 end
 
 function importLighting()
-    for _, item in ipairs(directories.Lighting.Items) do
+    for _, item in ipairs(directories.Lighting.Items:get()) do
         local settingToRetrieve = if item.ExportAttribute then item.ExportAttribute else item.Attribute
 
         local fired, settingValue = pcall(function()
@@ -231,27 +225,6 @@ function DirectoryDropdown(dirData, childProcessor)
         LayoutOrder = dirData.LayoutOrder
     }, childProcessor)
 end
-
-insertLiquids()
-for _, tbl in ipairs(SettingData) do
-    for k, v in pairs(directories) do
-        if tbl.Directory == k then
-            insertToStateTable(v.Items, tbl)
-        end
-    end
-end
-
-onMapChanged()
-Util.MapChanged:Connect(function()
-    local newMap = Util.mapModel:get(false)
-    local settingsFolder = newMap:FindFirstChild("Settings")
-
-    onMapChanged()
-    
-    -- Make sure we update when a major folder is deleted.
-    table.insert(settingConnections, settingsFolder.ChildAdded:Connect(onMapChanged))
-    table.insert(settingConnections, settingsFolder.ChildRemoved:Connect(onMapChanged))
-end)
 
 function frame:GetFrame(data)
     return New "Frame" {
@@ -283,7 +256,7 @@ function frame:GetFrame(data)
                                 return Components.DropdownHolderFrame {
                                     DropdownVisible = visible,
                                     Children = {
-                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
                                         
                                         ForValues(dirData.Items, function(data)
                                             return settingOption(data.Type, data)
@@ -294,7 +267,7 @@ function frame:GetFrame(data)
                                 return Components.DropdownHolderFrame {
                                     DropdownVisible = visible,
                                     Children = {
-                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
 
                                         ForPairs(dirData.Items, function(index, data)
                                             local itemData = data.Data
@@ -304,7 +277,7 @@ function frame:GetFrame(data)
                                                 return Components.DropdownHolderFrame {
                                                     DropdownVisible = isSectionVisible,
                                                     Children = {
-                                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
+                                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
                                                         ForValues(itemData, function(liquidData)
                                                             return settingOption(liquidData.Type, liquidData)
                                                         end, Fusion.cleanup)
@@ -382,6 +355,35 @@ function frame:GetFrame(data)
         }
     }
 end
+
+local function handleLiquids()
+    local map = Util.mapModel:get(false)
+    if not map then
+        return
+    end
+
+    local settingsFolder = map:FindFirstChild("Settings")
+
+    -- Make sure we update when a major folder is deleted.
+    table.insert(settingConnections, settingsFolder.ChildAdded:Connect(onMapChanged))
+    table.insert(settingConnections, settingsFolder.ChildRemoved:Connect(onMapChanged))
+end
+
+insertLiquids()
+for _, tbl in ipairs(SettingData) do
+    for k, v in pairs(directories) do
+        if tbl.Directory == k then
+            insertToStateTable(v.Items, tbl)
+        end
+    end
+end
+
+onMapChanged()
+handleLiquids()
+Util.MapChanged:Connect(function()
+    onMapChanged()
+    handleLiquids()
+end)
 
 -- GRIF TODO:
 -- I'm putting this here because I don't know how but when you can, could you:
