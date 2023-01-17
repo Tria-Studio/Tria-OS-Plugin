@@ -1,3 +1,5 @@
+local Selection = game:GetService("Selection")
+
 local Fusion = require(script.Parent.Resources.Fusion)
 local Signal = require(script.Signal)
 local Maid = require(script.Maid)
@@ -28,6 +30,7 @@ local util = {
     MainMaid = Maid.new(),
 
     buttonsActive = Value(true),
+    selectedParts = Value({}),
 
     _Topbar = {
         FreezeFrame = Value(false)
@@ -77,6 +80,10 @@ local util = {
         }
     }
 }
+
+Selection.SelectionChanged:Connect(function()
+    util.selectedParts:set(Selection:Get())
+end)
 
 util.buttonActiveFunc = function()
     return util.mapModel:get() and util.buttonsActive:get()

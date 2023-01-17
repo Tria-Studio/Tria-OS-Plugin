@@ -14,14 +14,12 @@ data.metadataTypes = {
         dataType = "number",
         displayName = "Button #",
         default = 1,
-        textBoxSize = -60
     },
     ButtonNum = {
         type = "EndOfName",
         dataType = "number",
         displayName = "Button & Path #",
         default = 1,
-        textBoxSize = -122
     },
     GroupButton = {
         type = "Attribute",
@@ -58,14 +56,12 @@ data.metadataTypes = {
         dataType = "string",
         displayName = "Locator Image",
         default = nil,
-        textBoxSize = UDim2.new()
     },
     ActivatedSound = {
         type = "Attribute",
         dataType = "string",
         displayName = "Activated Sound",
         default = nil,
-        textBoxSize = UDim2.new()
     },
 
     _Delay = {
@@ -91,7 +87,8 @@ data.metadataTypes = {
     },
     LiquidType = {
         type = "Attribute",
-        dataType = "liquidSelect",
+        dataType = "dropdown",
+        dropdownType = "liquids",
         displayName = "Type",
         default = 1,
     },
@@ -146,7 +143,8 @@ data.metadataTypes = {
     },
     ZiplineMaterial = {
         type = "ConfigAttribute",
-        dataType = "dropdown_materials",
+        dataType = "dropdown",
+        dropdownType = "materials",
         default = "Fabric",
         displayName = "Wire Material",
     },
