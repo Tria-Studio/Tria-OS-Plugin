@@ -247,7 +247,7 @@ function frame:GetFrame(data)
                 Visible = data.Visible,
                 VerticalScrollBarInset = Enum.ScrollBarInset.None,
 
-                Children = {
+                [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
 
                     ForPairs(directories, function(dirKey, dirData)

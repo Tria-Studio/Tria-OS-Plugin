@@ -35,9 +35,9 @@ New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				Pages:NewPage({Name = "ObjectTags", Default = false}),
+				Pages:NewPage({Name = "ObjectTags", Default = true}),
 				Pages:NewPage({Name = "ViewModes"}),
-				Pages:NewPage({Name = "Settings", Default = true}),
+				Pages:NewPage({Name = "Settings"}),
 				Pages:NewPage({Name = "Compatibility"}),
 				Pages:NewPage({Name = "Publish"}),
 				Pages:NewPage({Name = "Insert"}),
