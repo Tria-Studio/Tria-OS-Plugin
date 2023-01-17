@@ -1,3 +1,5 @@
+local Selection = game:GetService("Selection")
+
 local Fusion = require(script.Parent.Resources.Fusion)
 local Signal = require(script.Signal)
 local Maid = require(script.Maid)
@@ -28,6 +30,7 @@ local Util = {
     MainMaid = Maid.new(),
 
     buttonsActive = Value(true),
+    selectedParts = Value({}),
 
     _Topbar = {
         FreezeFrame = Value(false)
@@ -77,6 +80,10 @@ local Util = {
         }
     }
 }
+
+Selection.SelectionChanged:Connect(function()
+    Util.selectedParts:set(Selection:Get())
+end)
 
 function updateButtonsActive()
     Util.buttonsActive:set(Util._Message.Text:get() == "")

@@ -9,6 +9,7 @@ local Children = Fusion.Children
 local ForValues = Fusion.ForValues
 local Value = Fusion.Value
 local Computed = Fusion.Computed
+local Out = Fusion.Out
 
 return function(name, data)
     local tagSelected = Value(false)
@@ -97,7 +98,11 @@ return function(name, data)
                                 LayoutOrder = 2,
 
                                 [Children] = ForValues(data.metadata, function(metadataType)
+                                    local textBounds = Value(Vector2.new())
+
                                     return New "TextLabel" {
+                                        [Out "TextBounds"] = textBounds,
+
                                         BackgroundColor3 = Theme.ScrollBarBackground.Default,
                                         BorderColor3 = Theme.Border.Default,
                                         BorderSizePixel = 1,
@@ -112,11 +117,29 @@ return function(name, data)
 
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
-                                            -- Components.TextBox({ --// i forgot that not only number types exist lol
-                                            --     Size = metadataType.data.textBoxSize,
-                                            --     AnchorPoint = Vector2.new(1, 0),
-                                            --     Position = UDim2.new(1, -4, .5, 0),
-                                            -- })
+                                            Computed(function()
+                                                local TextXSize = textBounds:get() and textBounds:get().X + 12 or 0
+                                                local Types = {}
+
+                                                function Types.number()
+                                                    
+                                                end
+                                                Types.string = Types.number
+
+                                                function Types.boolean()
+                                                    
+                                                end
+
+                                                function Types.color()
+                                                    
+                                                end
+
+                                                function Types.dropdown()
+                                                    
+                                                end
+                                                
+                                                return Types[metadataType.data.dataType]()
+                                            end, Fusion.cleanup)
                                         }
                                     }
                                 end, Fusion.cleanup)
