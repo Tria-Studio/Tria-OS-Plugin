@@ -1,3 +1,4 @@
+local Lighting = game:GetService("Lighting")
 local Package = script.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
@@ -85,20 +86,17 @@ function onMapChanged()
 end
 
 local directories = {
-    {
-        Name = "Main",
+    Main = {
         Default = true,
         Display = "Main",
         LayoutOrder = 1
     },
-    {
-        Name = "Skills",
+    Skills = {
         Default = true,
         Display = "Skills and Features",
         LayoutOrder = 2
     },
-    {
-        Name = "Lighting",
+    Lighting = {
         Default = true,
         Display = "Lighting",
         LayoutOrder = 3
@@ -106,11 +104,11 @@ local directories = {
 }
 
 for _, tbl in ipairs(SettingData) do
-    for _, v in ipairs(directories) do
+    for k, v in pairs(directories) do
         if not v.Items then
             v.Items = {}
         end
-        if tbl.Directory == v.Name then
+        if tbl.Directory == k then
             table.insert(v.Items, tbl)
         end
     end
@@ -139,11 +137,34 @@ function ExportButton(props)
 end
 
 function exportLighting()
-    
+    for _, item in ipairs(directories.Lighting.Items) do
+        local settingToChange = if item.ExportAttribute then item.ExportAttribute else item.Attribute
+        local settingValue = item.Value:get(false)
+
+        local fired, _ = pcall(function()
+            Lighting[settingToChange] = settingValue
+        end)
+
+        if not fired then
+            Util.prefixWarn(("Failed to set lighting setting '%s'"):format(tostring(settingToChange)))
+        end
+    end
 end
 
 function importLighting()
-    
+    for _, item in ipairs(directories.Lighting.Items) do
+        local settingToRetrieve = if item.ExportAttribute then item.ExportAttribute else item.Attribute
+
+        local fired, settingValue = pcall(function()
+            return Lighting[settingToRetrieve]
+        end)
+
+        if not fired then
+            Util.prefixWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToChange)))
+        else
+            item.Value:set(settingValue)
+        end
+    end
 end
 
 function frame:GetFrame(data)
@@ -169,8 +190,8 @@ function frame:GetFrame(data)
 
                 Children = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
-                    ForPairs(directories, function(index, dirData)
-                        return index, Components.Dropdown({
+                    ForPairs(directories, function(dirKey, dirData)
+                        return dirKey, Components.Dropdown({
                             DefaultState = dirData.Default, 
                             Header = dirData.Display, 
                             LayoutOrder = dirData.LayoutOrder
@@ -199,8 +220,8 @@ function frame:GetFrame(data)
                             ExportButton {
                                 LayoutOrder = 1,
                                 Text = "Export to Lighting",
-                                [OnEvent "Activated"] = function()
 
+                                [OnEvent "Activated"] = function()
                                     local option1 = {
                                         Text = "Export",
                                         Callback = exportLighting,
@@ -214,7 +235,7 @@ function frame:GetFrame(data)
 
                                     Util:ShowMessage(
                                         "Export to lighting?", 
-                                        "This will export the current lighting settings into your game's lighting.", 
+                                        "This will export the current lighting settings into your game's lighting system.", 
                                         option1, 
                                         option2
                                     )
@@ -222,7 +243,26 @@ function frame:GetFrame(data)
                             },
                             ExportButton {
                                 LayoutOrder = 2,
-                                Text = "Import from Lighting"
+                                Text = "Import from Lighting",
+                                [OnEvent "Activated"] = function()
+                                    local option1 = {
+                                        Text = "Import",
+                                        Callback = importLighting,
+                                        BackgroundColor3 = Theme.Button.Selected
+                                    }
+                            
+                                    local option2 = {
+                                        Text = "Cancel",
+                                        BackgroundColor3 = Theme.Button.Default
+                                    }
+
+                                    Util:ShowMessage(
+                                        "Import from lighting?", 
+                                        "This will import the current lighting settings from your game into the map's settings.", 
+                                        option1, 
+                                        option2
+                                    )
+                                end
                             }
                         }
                     }
