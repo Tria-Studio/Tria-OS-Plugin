@@ -3,12 +3,14 @@ local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components )
 local Util = require(Package.Util)
+local TagUtils = require(Package.Util.TagUtils)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local ForValues = Fusion.ForValues
 local Value = Fusion.Value
 local Computed = Fusion.Computed
+local Observer = Fusion.Observer
 local Out = Fusion.Out
 
 return function(name, data)
@@ -65,6 +67,14 @@ return function(name, data)
                     Image = data.DisplayIcon,
                 },
                 Computed(function()
+                    local metaDataVisible = Computed(function()
+                        return #Util.selectedParts:get() > 0 and TagUtils:PartsHaveTag(Util.selectedParts:get(), name) == Enum.TriStateBoolean.True
+                    end)
+                    local dataVisible = Value(false)
+                    Observer(metaDataVisible):onChange(function()
+                        dataVisible:set(metaDataVisible:get())
+                    end)
+
                     if #data.metadata == 0 then
                         return
                     end
@@ -76,13 +86,16 @@ return function(name, data)
                         BorderSizePixel = 1,
                         BorderMode = Enum.BorderMode.Inset,
                         Position = UDim2.new(0, -56, 0, 24),
-                        Size = UDim2.new(1, 56, 0, 10),
-                        Visible = true,
+                        Size = Computed(function()
+                            return UDim2.new(1, 56, 0, dataVisible:get() and 10 or 0)
+                        end),
+                        Visible = dataVisible,
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
                             New "TextLabel" {
                                 Text = "Metadata",
+                                Visible = dataVisible,
                                 BackgroundColor3 = Theme.MainBackground.Default,
                                 BorderColor3 = Theme.Border.Default,
                                 BorderSizePixel = 1,
@@ -92,6 +105,7 @@ return function(name, data)
                                 TextSize = 16
                             },
                             New "Frame" {
+                                Visible = dataVisible,
                                 AutomaticSize = Enum.AutomaticSize.Y,
                                 Size = UDim2.new(1, 0, 0, 24),
                                 BackgroundTransparency = 1,

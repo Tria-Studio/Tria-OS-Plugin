@@ -33,7 +33,7 @@ local tagTypes = {
         "Detail"
     }
 }
-
+ 
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local Children = part:GetChildren()
     local firstAttempt
@@ -55,13 +55,13 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     function Types.ModelTags()
-        if part:IsA("Model") and (part.Name == tag or string.find(part.name, "_Button%d", 1)) then
+        if part:IsA("Model") and (part.Name == tag or string.find(part.Name, "_Button%d", 1)) then
             return true
         end
     end
 
     function Types.DetailTag()
-        local DetailFolder = Util.mapModel:FindFirstChild("Detail")
+        local DetailFolder = Util.mapModel:get() and Util.mapModel:get():FindFirstChild("Detail")
         return DetailFolder and part:IsDescendantOf(DetailFolder)
     end
 
@@ -76,6 +76,16 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
             end
        end 
     end
+end
+
+function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
+    for _, part in pairs(parts) do
+        if not tagUtils:PartHasTag(part, tag) then
+            return false
+        end
+    end
+
+    return Enum.TriStateBoolean.True
 end
 
 return tagUtils

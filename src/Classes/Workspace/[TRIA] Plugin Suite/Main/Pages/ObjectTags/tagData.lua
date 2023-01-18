@@ -284,7 +284,7 @@ data.dataTypes = {
         },
     },
     objectTags = {
-        WallRun = {
+        _WallRun = {
             DisplayText = "WallRun",
             DisplayIcon = "rbxassetid://9468872087",
             LayoutOrder = 3,
@@ -302,7 +302,7 @@ data.dataTypes = {
             tagFormat = "_Action",
             IsTagApplicable = true,
         },
-        WallJump = {
+        _WallJump = {
             DisplayText = "WallJump",
             DisplayIcon = "rbxassetid://9468872087",
             LayoutOrder = 2,
@@ -395,7 +395,7 @@ data.dataTypes = {
             tagFormat = nil,
             IsTagApplicable = false,
         },
-        Kill = {
+        _Kill = {
             DisplayText = "Killbrick",
             DisplayIcon = "rbxassetid://6022668916",
             LayoutOrder = 5,
@@ -417,7 +417,7 @@ data.dataTypes = {
             tagFormat = nil,
             IsTagApplicable = false,
         },
-        SpeedBoost = {
+        _SpeedBooster = {
             DisplayText = "SpeedBooster",
             DisplayIcon = "rbxassetid://6034754445",
             LayoutOrder = 7,
@@ -431,7 +431,7 @@ data.dataTypes = {
             tagFormat = "_Action",
             IsTagApplicable = true,
         },
-        JumpBoost = {
+        _JumpBooster = {
             DisplayText = "JumpBooster",
             DisplayIcon = "rbxassetid://6034754445",
             LayoutOrder = 8,
