@@ -14,7 +14,10 @@ return {
         Attribute = "_KitVersion",
         Fallback = 0,
 
-        Value = Value("")
+        Value = Value(""),
+        Tooltip = {
+            Text = "An unused variable which was used to denote the current version of the MapKit."
+        }
     },
 
     {
@@ -25,8 +28,7 @@ return {
         Directory = "Main",
         Attribute = "Creator",
         Fallback = "TRIA",
-
-        Value = Value("")
+        Value = Value(""),
     },
 
     {

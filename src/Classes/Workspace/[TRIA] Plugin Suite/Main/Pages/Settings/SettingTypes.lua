@@ -88,9 +88,17 @@ function BaseSettingButton(data)
 
                     [OnEvent "Activated"] = function()
                         if data.Tooltip then
-                            Util:ShowMessage(data.Text, data.Tooltip)
+                            Util:ShowMessage(data.Text, data.Tooltip.Text)
                         end
-                    end
+                    end,
+
+                    [Children] = New "UIGradient" {
+                        Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255)),
+                        Rotation = 45,
+                        Enabled = Computed(function()
+                            return data.Tooltip ~= nil
+                        end):get(false)
+                    }
                 }
             }
         }
