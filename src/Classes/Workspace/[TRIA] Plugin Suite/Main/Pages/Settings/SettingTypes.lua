@@ -54,7 +54,9 @@ function BaseSettingButton(data)
                 FontFace = Font.new("SourceSansPro"),
                 Text = data.Text,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextColor3 = if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default,
+                TextColor3 = Computed(function()
+                    return if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default
+                end),
                 TextXAlignment = Enum.TextXAlignment.Left,
             },
 
@@ -91,8 +93,12 @@ end
 function InputBox(data, baseButton)
     return function (props)
         return Hydrate(Components.TextBox {
-            Active = if not data.Modifiable:get() then false else Util.interfaceActive,
-            TextEditable = if not data.Modifiable:get() then false else Util.interfaceActive,
+            Active = Computed(function()
+                return if not data.Modifiable:get() then false else Util.interfaceActive
+            end),
+            TextEditable = Computed(function()
+                return if not data.Modifiable:get() then false else Util.interfaceActive
+            end),
 
             AnchorPoint = Vector2.new(1, 0),
             BackgroundTransparency = Computed(function()
@@ -101,7 +107,9 @@ function InputBox(data, baseButton)
             BackgroundColor3 = Theme.InputFieldBackground.Default,
             BorderSizePixel = 1,
             FontFace = Font.new("SourceSansPro"),
-            TextColor3 = if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default,
+            TextColor3 = Computed(function()
+                if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default
+            end),
             TextXAlignment = Enum.TextXAlignment.Left,
     
             [Children] = {

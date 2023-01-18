@@ -509,7 +509,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                             end),
 
                                             [OnEvent "Activated"] = function()
-                                                apiData.isShowingApiKey:set(not apiData.isShowingApiKey:get())
+                                                apiData.isShowingApiKey:set(not apiData.isShowingApiKey:get(false))
                                             end,
                                         })
                                     }
