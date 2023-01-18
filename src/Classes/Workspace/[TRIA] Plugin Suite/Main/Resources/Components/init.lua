@@ -169,6 +169,7 @@ function Components.MiniTopbar(data)
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, -24, 1, 0),
                 Text = data.Text,
+                RichText = true,
                 TextColor3 = Theme.MainText.Default,
                 Font = Enum.Font.SourceSansBold,
                 TextXAlignment = Enum.TextXAlignment.Left,

@@ -88,7 +88,7 @@ function BaseSettingButton(data)
 
                     [OnEvent "Activated"] = function()
                         if data.Tooltip then
-                            Util:ShowMessage(data.Text, data.Tooltip.Text)
+                            Util:ShowMessage("<font color='#ffd700'>Tooltip</font> - " .. data.Text, data.Tooltip.Text)
                         end
                     end,
 
