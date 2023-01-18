@@ -1,5 +1,7 @@
 local Lighting = game:GetService("Lighting")
+
 local Package = script.Parent.Parent
+local SelectMap = require(Package.SelectMap)
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
@@ -400,6 +402,7 @@ end)
 
 plugin.Unloading:Connect(function()
     warn("Unloading")
+    SelectMap._Util:Destroy()
     for _, conn in ipairs(settingConnections) do
         conn:Disconnect()
     end

@@ -7,12 +7,13 @@ local Theme = require(Package.Resources.Themes)
 local Util = require(Package.Util)
 local Pages = require(Package.Resources.Components.Pages)
 
-local Maid = Util.Maid.new()
 local Value = Fusion.Value
 local Computed = Fusion.Computed
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local selectMap = {
+    _Maid = Util.Maid.new(),
+
     hasOptimizedStructure = Value(false),
     selectingMap = Value(false),
     selectTextState = Value("No map selected"),
@@ -227,11 +228,11 @@ function selectMap:StartMapSelection()
     selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
     selectMap.selectTextState:set("Click to select")
     selectMap.selectTextColor:set(Theme.SubText.Default:get())
-    Maid:GiveTask(mapHighlight)
+    selectMap._Maid:GiveTask(mapHighlight)
     selectMap.selectingMap:set(true)
     plugin:Activate(true)
 
-    Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
+    selectMap._Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
         local target = mouse.Target
 
         if target ~= lastTarget then
@@ -255,18 +256,18 @@ function selectMap:StartMapSelection()
         end
     end))
 
-    Maid:GiveTask(mouse.Button1Down:Connect(function()
+    selectMap._Maid:GiveTask(mouse.Button1Down:Connect(function()
         selectMap:SetMap(currentTarget)
         selectMap.selectingMap:set(false)
         selectMap.selectCancelImage:set("rbxassetid://6022668885")
-        Maid:DoCleaning()
+        selectMap._Maid:DoCleaning()
         plugin:Deactivate()
     end))
 end
 
 function selectMap:StopManualSelection()
     selectMap.selectingMap:set(false)
-    Maid:DoCleaning()
+    selectMap._Maid:DoCleaning()
     plugin:Deactivate()
 
     selectMap.selectCancelImage:set("rbxassetid://6022668885")
