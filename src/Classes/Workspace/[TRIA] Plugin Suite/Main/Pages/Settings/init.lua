@@ -421,6 +421,10 @@ function frame:GetFrame(data)
     }
 end
 
+function frame:GetDirectories()
+    return directories
+end
+
 local function handleLiquids()
     local map = Util.mapModel:get(false)
     if not map then

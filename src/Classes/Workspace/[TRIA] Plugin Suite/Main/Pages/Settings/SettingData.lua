@@ -22,7 +22,7 @@ return {
     {
         Text = "Difficulty",
         Type = "Number",
-        Modifiable = Value(false),
+        Modifiable = Value(true),
 
         Directory = "Main",
         Attribute = "Difficulty",
