@@ -16,6 +16,7 @@ local themes = {
     Button = {
         Default = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Default)),
         Hover = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Hover)),
+        Pressed = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Pressed)),
         Selected = Value(StudioTheme:GetColor(GuideColor.Button, GuideModifier.Selected))
     },
     ButtonBorder = {

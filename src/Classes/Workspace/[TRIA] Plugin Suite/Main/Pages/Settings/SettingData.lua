@@ -160,7 +160,7 @@ return {
         Tooltip = {
             Text = [[Determines the type of sliding which is used in the map.
 <b>Linear: </b>Sliding speed is constant throughout the duration of the slide.
-<b>Non-linear: </b>Sliding speed is based on two combined sine waves which both speedup and slowdown the player.]]
+<b>Non-linear: </b>Sliding speed is based on two combined tweens which both speedup and slowdown the player.]]
         }
     },
 

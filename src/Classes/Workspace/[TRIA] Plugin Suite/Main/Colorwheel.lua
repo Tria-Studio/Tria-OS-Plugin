@@ -9,6 +9,7 @@ local Children = Fusion.Children
 local Value = Fusion.Value
 local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
+local Hydrate = Fusion.Hydrate
 local Out = Fusion.Out
 
 local SliderAbsPos = Value(UDim2.new())
@@ -366,7 +367,7 @@ function ColorWheel:GetUI()
                             }),
                         }
                     },
-                   Components.TwoOptions({ --// Two buttons
+                   Hydrate(Components.TwoOptions({ --// Two buttons
                         Text = "Confirm",
                         Callback = function()
                             colorChosen:Fire()
@@ -379,7 +380,9 @@ function ColorWheel:GetUI()
                             colorChosen:Fire()
                         end,
                         BackgroundColor3 = Theme.Button.Default
-                    }),
+                    })) {
+                        AnchorPoint = Vector2.new(0, 1)
+                    },
                     Components.TextBox { --// Hex input
                         Position = UDim2.fromScale(0.05, 0.92),
                         Size = UDim2.fromScale(0.26, 0.06),

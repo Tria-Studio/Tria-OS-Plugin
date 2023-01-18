@@ -246,12 +246,56 @@ function importLighting()
     end
 end
 
-function DirectoryDropdown(dirData, childProcessor)
+function DirectoryDropdown(data, childProcessor)
     return Components.Dropdown({
-        DefaultState = dirData.Default, 
-        Header = dirData.Display, 
-        LayoutOrder = dirData.LayoutOrder
+        DefaultState = data.Default, 
+        Header = data.Display, 
+        LayoutOrder = data.LayoutOrder,
+        HeaderColor = data.HeaderColor
     }, childProcessor)
+end
+
+function getStandardDropdown(dirKey, dirData, visible)
+    return Components.DropdownHolderFrame {
+        DropdownVisible = visible,
+        Children = {
+            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
+            ForValues(dirData.Items, function(data)
+                return settingOption(data.Type, data)
+            end, Fusion.cleanup)
+        }
+    }
+end
+
+function getLiquidDropdown(dirData, visible)
+    return Components.DropdownHolderFrame {
+        DropdownVisible = visible,
+        Children = {
+            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
+
+            ForPairs(dirData.Items, function(index, data)
+                local itemData = data.Data
+                local itemName = data.Name
+
+                local liquidDropdown = DirectoryDropdown({
+                    Default = true, 
+                    Display = itemName, 
+                    LayoutOrder = index
+                }, function(isSectionVisible)
+                    return Components.DropdownHolderFrame {
+                        DropdownVisible = isSectionVisible,
+                        Children = {
+                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
+                            ForValues(itemData, function(liquidData)
+                                return settingOption(liquidData.Type, liquidData)
+                            end, Fusion.cleanup)
+                        }
+                    }
+                end)
+                return index, liquidDropdown
+            end, Fusion.cleanup)
+        }
+    }
 end
 
 function frame:GetFrame(data)
@@ -284,16 +328,7 @@ function frame:GetFrame(data)
                         local dirDropdown = DirectoryDropdown(dirData, function(visible)
                             local dropdown
                             if dirKey ~= "Liquids" then
-                                dropdown = Components.DropdownHolderFrame {
-                                    DropdownVisible = visible,
-                                    Children = {
-                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-                                        ForValues(dirData.Items, function(data)
-                                            return settingOption(data.Type, data)
-                                        end, Fusion.cleanup)
-                                    }
-                                }
-
+                                dropdown = getStandardDropdown(dirKey, dirData, visible)
                                 if dirKey == "Lighting" then
                                     dropdown = Hydrate(dropdown) {
                                         [Out "Visible"] = lightingDropdownVisible
@@ -301,29 +336,7 @@ function frame:GetFrame(data)
                                 end
                                 return dropdown
                             else
-                                dropdown = Components.DropdownHolderFrame {
-                                    DropdownVisible = visible,
-                                    Children = {
-                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-
-                                        ForPairs(dirData.Items, function(index, data)
-                                            local itemData = data.Data
-                                            local itemName = data.Name
-
-                                            return index, DirectoryDropdown({Default = true, Display = itemName, LayoutOrder = index}, function(isSectionVisible)
-                                                return Components.DropdownHolderFrame {
-                                                    DropdownVisible = isSectionVisible,
-                                                    Children = {
-                                                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-                                                        ForValues(itemData, function(liquidData)
-                                                            return settingOption(liquidData.Type, liquidData)
-                                                        end, Fusion.cleanup)
-                                                    }
-                                                }
-                                            end)
-                                        end, Fusion.cleanup)
-                                    }
-                                }
+                                dropdown = getLiquidDropdown(dirData, visible)
                                 return dropdown
                             end
                         end)
