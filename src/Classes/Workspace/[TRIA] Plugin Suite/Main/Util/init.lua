@@ -218,7 +218,16 @@ function updateButtonsActive()
 end
 
 Selection.SelectionChanged:Connect(function()
-    Util.selectedParts:set(Selection:Get())
+    local newTable = {}
+    for _, Thing: Instance in pairs(Selection:Get()) do
+        if Thing:IsDescendantOf(Util.mapModel:get()) then
+            table.insert(newTable, Thing)
+        end
+    end
+
+    if not (#newTable == 0 and #Util.selectedParts:get() == 0) then
+        Util.selectedParts:set(newTable)
+    end
 end)
 
 updateButtonsActive()
