@@ -55,9 +55,15 @@ local directories = {
     }
 }
 
-function insertToStateTable(state, item)
+function modifyStateTable(state, action, ...)
     local newTbl = state:get(false)
-    table.insert(newTbl, item)
+    local args = {...}
+
+    if action == "insert" then
+        table.insert(newTbl, args[1])
+    elseif action == "set" then
+        newTbl[args[1]] = args[2]
+    end
     state:set(newTbl, true)
 end
 
@@ -104,14 +110,13 @@ local function updateStateValue(currentValue, newValue, tbl)
     end
 end
 
-function insertLiquids()
-    directories.Liquids.Items:set({})
-    
+function insertLiquids()    
     local liquidFolder = Util.getDirFolder("Liquids")
     if not liquidFolder then
         return
     end
 
+    directories.Liquids.Items:set({})
     for _, liquid in ipairs(liquidFolder:GetChildren()) do
         local liquidData = {
             {
@@ -157,7 +162,7 @@ function insertLiquids()
         end
 
         table.insert(settingConnections, liquid:GetPropertyChangedSignal("Name"):Connect(onMapChanged))
-        insertToStateTable(directories.Liquids.Items, {Name = liquid.Name, Data = liquidData})
+        modifyStateTable(directories.Liquids.Items, "insert", {Name = liquid.Name, Data = liquidData})
     end
 end
 
@@ -272,10 +277,9 @@ function getLiquidDropdown(dirData, visible)
         DropdownVisible = visible,
         Children = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-
             ForPairs(dirData.Items, function(index, data)
-                local itemData = data.Data
                 local itemName = data.Name
+                local itemData = data.Data
 
                 local liquidDropdown = DirectoryDropdown({
                     Default = true, 
@@ -425,7 +429,7 @@ insertLiquids()
 for _, tbl in ipairs(SettingData) do
     for k, v in pairs(directories) do
         if tbl.Directory == k then
-            insertToStateTable(v.Items, tbl)
+            modifyStateTable(v.Items, "insert", tbl)
         end
     end
 end
