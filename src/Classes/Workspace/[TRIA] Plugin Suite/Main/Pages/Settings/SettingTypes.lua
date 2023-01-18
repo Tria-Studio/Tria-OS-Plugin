@@ -108,7 +108,7 @@ function InputBox(data, baseButton)
             BorderSizePixel = 1,
             FontFace = Font.new("SourceSansPro"),
             TextColor3 = Computed(function()
-                if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default
+                return if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default
             end),
             TextXAlignment = Enum.TextXAlignment.Left,
     
