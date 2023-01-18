@@ -45,16 +45,15 @@ return {
 
         Value = Value(""),
         Tooltip = {
-            Text = [[
-                <font color = "rgb(175,175,175)">Map difficulties determine show how hard the map is:</font>
-                <font color ="rgb(255,255,255)">  0 - Unrated </font>
-                <font color ="rgb(0,255,0)"> 1 - Easy </font>
-                <font color ="rgb(255,255,0)"> 2 - Normal </font>
-                <font color ="rgb(255,0,0)"> 3 - Hard </font>
-                <font color ="rgb(180,0,180)"> 4 - Insane </font>
-                <font color ="rgb(255,155,0)"> 5 - Extreme </font>
-                <font color ="rgb(255,0,255)"> 6 - Divine </font>
-                <font color ="rgb(175,0,0)"> [Other] - Unknown (cannot be published to the map list) </font>
+            Text = [[<font color = "rgb(175,175,175)">Map difficulties determine show how hard the map is:</font>
+<font color ="rgb(255,255,255)">  0 - Unrated </font>
+<font color ="rgb(0,255,0)"> 1 - Easy </font>
+<font color ="rgb(255,255,0)"> 2 - Normal </font>
+<font color ="rgb(255,0,0)"> 3 - Hard </font>
+<font color ="rgb(180,0,180)"> 4 - Insane </font>
+<font color ="rgb(255,155,0)"> 5 - Extreme </font>
+<font color ="rgb(255,0,255)"> 6 - Divine </font>
+<font color ="rgb(175,0,0)"> [Other] - Unknown (cannot be published to the map list) </font>
             ]]
         }
     },
@@ -173,7 +172,12 @@ return {
         Attribute = "LinearSliding",
         Fallback = false,
 
-        Value = Value(false)
+        Value = Value(false),
+        Tooltip = {
+            Text = [[Determines the type of sliding which is used in the map.
+<b>Linear: </b>Sliding speed is constant throughout the duration of the slide.
+<b>Non-linear: </b>Sliding speed is based on two combined sine waves which both speedup and slowdown the player.]]
+        }
     },
 
     {

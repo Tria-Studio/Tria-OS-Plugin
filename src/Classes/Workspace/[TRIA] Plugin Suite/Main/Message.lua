@@ -29,12 +29,14 @@ return New "Frame" { --// Message
 			SliceCenter = Rect.new(200, 200, 300, 300),
 			SliceScale = 0.075
 		},
+
 		New "Frame" {
+			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundColor3 = Theme.Notification.Default,
 			BorderColor3 = Theme.Border.Default,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
-			Size = UDim2.new(1, -36, 0, 128),
+			Size = UDim2.new(1, -36, 0, 0),
 
 			[Children] = {
 				Components.MiniTopbar({
@@ -43,13 +45,15 @@ return New "Frame" { --// Message
 				}),
 
 				New "TextLabel" { --// Body
+					AutomaticSize = Enum.AutomaticSize.Y,
 					BackgroundTransparency = 1,
 					Position = UDim2.fromOffset(0, 24),
-					Size = UDim2.new(1, 0, 1, -48),
+					Size = UDim2.fromScale(1, 0),
 					Text = Util._Message.Text,
 					TextColor3 = Theme.MainText.Default,
-					TextSize = 13,
+					TextSize = 14,
 					TextWrapped = true,
+					RichText = true,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					TextYAlignment = Enum.TextYAlignment.Top,
 
