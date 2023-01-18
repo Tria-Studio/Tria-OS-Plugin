@@ -62,7 +62,7 @@ return New "Frame" { --// Message
 
 				Components.TwoOptions({
 					Text = Computed(function()
-						return string.format(" %s ", Util._Message.Option1:get().Text or "")
+						return string.format("%s", Util._Message.Option1:get().Text or "")
 					end),
 
 					Callback = function()
