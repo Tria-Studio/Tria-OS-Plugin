@@ -257,7 +257,7 @@ function SettingTypes.Color(data)
                         local currentText = inputBoxObject.Text
                         local didParse, parsedColor = Util.parseColor3Text(currentText)
                         if not didParse then
-                            inputBoxObject.Text = data.Value:get()
+                            inputBoxObject.Text = Util.colorToRGB(data.Value:get())
                         else
                             data.Value:set(parsedColor)
                             inputBoxObject.Text = Util.colorToRGB(parsedColor)
