@@ -402,7 +402,7 @@ end)
 
 plugin.Unloading:Connect(function()
     warn("Unloading")
-    SelectMap._Maid:Destroy()
+    SelectMap._Maid:DoCleaning()
     for _, conn in ipairs(settingConnections) do
         conn:Disconnect()
     end
