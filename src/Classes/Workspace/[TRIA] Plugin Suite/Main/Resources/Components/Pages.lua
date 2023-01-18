@@ -37,7 +37,7 @@ function PageHandler:NewPage(data)
     newPageData.onClose = newPage.OnClose
     PageHandler.pageData.pages[data.Name] = newPageData
 
-    if newPageData.Visible:get() then
+    if newPageData.Visible:get(false) then
         PageHandler.pageData.currentPage = newPageData.Name
     end
 

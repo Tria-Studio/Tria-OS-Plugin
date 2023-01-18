@@ -468,7 +468,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     [Ref] = apiData.apiTextbox.filtered,
 
                                     [OnEvent "Activated"] = function()
-                                        apiData.apiTextbox.unfiltered:get():CaptureFocus()
+                                        apiData.apiTextbox.unfiltered:get(false):CaptureFocus()
                                     end,
 
                                     [Children] = {
@@ -550,9 +550,9 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     end), 20),
 
                                     [OnEvent "Activated"] = function()
-                                        plugin:SetSetting("TRIA_WebserverKey", apiData.apiKey.unfiltered:get())
+                                        plugin:SetSetting("TRIA_WebserverKey", apiData.apiKey.unfiltered:get(false))
                                         apiData.submittedApiKey:set(true)
-                                        apiData.playerApiKey:set(apiData.apiKey.unfiltered:get())
+                                        apiData.playerApiKey:set(apiData.apiKey.unfiltered:get(false))
                                     end,
 
                                     [Children] = Components.Constraints.UICorner(0, 6)
@@ -580,7 +580,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     end), 20),
     
                                     [OnEvent "Activated"] = function()
-                                        apiData.apiTextbox.unfiltered:get().Text = ""
+                                        apiData.apiTextbox.unfiltered:get(false).Text = ""
                                         plugin:SetSetting("TRIA_WebserverKey", nil)
                                         apiData.submittedApiKey:set(false)
                                     end,
@@ -602,7 +602,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
         }
     }
 
-    apiData.apiTextbox.unfiltered:get().Text = apiData.apiKey.unfiltered:get()
+    apiData.apiTextbox.unfiltered:get(false).Text = apiData.apiKey.unfiltered:get(false)
     return newFrame
 end
 

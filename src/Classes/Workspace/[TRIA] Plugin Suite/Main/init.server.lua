@@ -146,7 +146,7 @@ New "Frame" {
 					BorderColor3 = Theme.Border.Default,
 
 					[OnEvent "Activated"] = function()
-						if SelectMap.selectingMap:get() then
+						if SelectMap.selectingMap:get(false) then
 							SelectMap:StopManualSelection()
 						else
 							SelectMap:SetMap(nil)

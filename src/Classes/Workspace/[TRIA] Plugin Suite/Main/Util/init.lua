@@ -92,7 +92,7 @@ local Util = {
 }
 
 function getSettingsDirFolder(directory: string)
-    local currentMap = Util.mapModel:get()
+    local currentMap = Util.mapModel:get(false)
     if currentMap == nil then
         return nil
     end

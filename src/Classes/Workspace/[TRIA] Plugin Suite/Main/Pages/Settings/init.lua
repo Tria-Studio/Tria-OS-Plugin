@@ -56,7 +56,7 @@ local directories = {
 }
 
 function insertToStateTable(state, item)
-    local newTbl = state:get()
+    local newTbl = state:get(false)
     table.insert(newTbl, item)
     state:set(newTbl, true)
 end
@@ -88,7 +88,7 @@ local function updateStateValue(currentValue, newValue, tbl)
     }
 
     if originalModifiableStates[tbl] == nil then
-        originalModifiableStates[tbl] = if tbl.Modifiable then tbl.Modifiable:get() else true 
+        originalModifiableStates[tbl] = if tbl.Modifiable then tbl.Modifiable:get(false) else true 
     end
 
     currentValue = newValue
@@ -97,7 +97,7 @@ local function updateStateValue(currentValue, newValue, tbl)
         tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
         Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
     else
-        if originalModifiableStates[tbl] ~= nil and originalModifiableStates[tbl] ~= tbl.Modifiable:get() then
+        if originalModifiableStates[tbl] ~= nil and originalModifiableStates[tbl] ~= tbl.Modifiable:get(false) then
             tbl.Modifiable:set(originalModifiableStates[tbl])
         end
         tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
@@ -162,7 +162,7 @@ function onMapChanged()
         -- Initially retrieve setting value
         local currentValue = dirFolder:GetAttribute(tbl.Attribute)
 
-        local originalModifiableState = tbl.Modifiable:get()
+        local originalModifiableState = tbl.Modifiable:get(false)
         local changeConnection
 
         local function updateConnection()
@@ -192,7 +192,7 @@ function ExportButton(props)
 end
 
 function exportLighting()
-    for _, item in ipairs(directories.Lighting.Items:get()) do
+    for _, item in ipairs(directories.Lighting.Items:get(false)) do
         local settingToChange = if item.ExportAttribute then item.ExportAttribute else item.Attribute
         local settingValue = item.Value:get(false)
 
@@ -207,7 +207,7 @@ function exportLighting()
 end
 
 function importLighting()
-    for _, item in ipairs(directories.Lighting.Items:get()) do
+    for _, item in ipairs(directories.Lighting.Items:get(false)) do
         local settingToRetrieve = if item.ExportAttribute then item.ExportAttribute else item.Attribute
 
         local fired, settingValue = pcall(function()

@@ -19,7 +19,7 @@ local Value = Fusion.Value
 local currentEditing = Value(nil)
 
 function BaseSettingButton(data)
-    local backgroundColor = Value(Theme.MainBackground.Default:get())
+    local backgroundColor = Value(Theme.MainBackground.Default:get(false))
     local mouseInside = Value(false)
     local Frame = Value()
 
@@ -36,14 +36,14 @@ function BaseSettingButton(data)
 
         [OnEvent "MouseEnter"] = function()
             mouseInside:set(true)
-            if not currentEditing:get() and Util.interfaceActive:get() then
-                backgroundColor:set(Theme.CurrentMarker.Default:get())
+            if not currentEditing:get(false) and Util.interfaceActive:get(false) then
+                backgroundColor:set(Theme.CurrentMarker.Default:get(false))
             end
         end,
         [OnEvent "MouseLeave"] = function()
             mouseInside:set(false)
-            if Frame:get() ~= currentEditing:get() then
-                backgroundColor:set(Theme.MainBackground.Default:get()) 
+            if Frame:get(false) ~= currentEditing:get(false) then
+                backgroundColor:set(Theme.MainBackground.Default:get(false)) 
             end
         end,
 
@@ -126,16 +126,16 @@ function SettingTypes.String(data): Instance
             [OnEvent "Focused"] = function()
                 if data.Modifiable then
                     currentEditing:set(baseButton)
-                    backgroundColor:set(Theme.CurrentMarker.Default:get())
+                    backgroundColor:set(Theme.CurrentMarker.Default:get(false))
                 end
             end,
             [OnEvent "FocusLost"] = function()
-                if not buttonInside:get() then
-                    backgroundColor:set(Theme.MainBackground.Default:get())
+                if not buttonInside:get(false) then
+                    backgroundColor:set(Theme.MainBackground.Default:get(false))
                 end
                 currentEditing:set(nil)
-                if data.Modifiable:get() then
-                    local inputBoxObject = inputBox:get()
+                if data.Modifiable:get(false) then
+                    local inputBoxObject = inputBox:get(false)
                     local currentText = inputBoxObject.Text
 
                     data.Value:set(currentText)
@@ -156,7 +156,7 @@ function SettingTypes.Checkbox(data)
             BackgroundTransparency = 1,
 
             [OnEvent "Activated"] = function()
-                if data.Modifiable:get() then
+                if data.Modifiable:get(false) then
                     data.Value:set(not data.Value:get(false))
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                 end
@@ -202,16 +202,16 @@ function SettingTypes.Color(data)
                 Size = UDim2.fromOffset(12, 12),
 
                 [OnEvent "Activated"] = function()
-                    if not data.Modifiable:get() then
+                    if not data.Modifiable:get(false) then
                         return
                     end
                     currentEditing:set(baseButton)
-                    backgroundColor:set(Theme.CurrentMarker.Default:get())
+                    backgroundColor:set(Theme.CurrentMarker.Default:get(false))
 
                     local chosenColor = ColorWheel:GetColor()
 
-                    if not buttonInside:get() then
-                        backgroundColor:set(Theme.MainBackground.Default:get())
+                    if not buttonInside:get(false) then
+                        backgroundColor:set(Theme.MainBackground.Default:get(false))
                     end
                     currentEditing:set(nil)
                    
@@ -243,21 +243,21 @@ function SettingTypes.Color(data)
                 [Ref] = inputBox,
 
                 [OnEvent "Focused"] = function()
-                    backgroundColor:set(Theme.CurrentMarker.Default:get())
+                    backgroundColor:set(Theme.CurrentMarker.Default:get(false))
                     currentEditing:set(baseButton)
                 end,
                 [OnEvent "FocusLost"] = function()
-                    if not buttonInside:get() then
-                        backgroundColor:set(Theme.MainBackground.Default:get())
+                    if not buttonInside:get(false) then
+                        backgroundColor:set(Theme.MainBackground.Default:get(false))
                     end
                     currentEditing:set(nil)
 
-                    if data.Modifiable:get() then
-                        local inputBoxObject = inputBox:get()
+                    if data.Modifiable:get(false) then
+                        local inputBoxObject = inputBox:get(false)
                         local currentText = inputBoxObject.Text
                         local didParse, parsedColor = Util.parseColor3Text(currentText)
                         if not didParse then
-                            inputBoxObject.Text = Util.colorToRGB(data.Value:get())
+                            inputBoxObject.Text = Util.colorToRGB(data.Value:get(false))
                         else
                             data.Value:set(parsedColor)
                             inputBoxObject.Text = Util.colorToRGB(parsedColor)
@@ -285,21 +285,21 @@ function SettingTypes.Time(data)
 
             [OnEvent "Focused"] = function()
                 currentEditing:set(baseButton)
-                backgroundColor:set(Theme.CurrentMarker.Default:get())
+                backgroundColor:set(Theme.CurrentMarker.Default:get(false))
             end,
             [OnEvent "FocusLost"] = function()
-                if not buttonInside:get() then
-                    backgroundColor:set(Theme.MainBackground.Default:get())
+                if not buttonInside:get(false) then
+                    backgroundColor:set(Theme.MainBackground.Default:get(false))
                 end
                 currentEditing:set(nil)
 
-                if data.Modifiable:get() then
-                    local inputBoxObject = inputBox:get()
+                if data.Modifiable:get(false) then
+                    local inputBoxObject = inputBox:get(false)
                     local currentText = inputBoxObject.Text
 
                     local didParse, parsedTime = Util.parseTimeString(currentText)
                     if not didParse then
-                        inputBoxObject.Text = data.Value:get()
+                        inputBoxObject.Text = data.Value:get(false)
                     else
                         data.Value:set(parsedTime)
                         inputBoxObject.Text = parsedTime

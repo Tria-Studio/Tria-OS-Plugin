@@ -63,7 +63,7 @@ function Components.TopbarButton(data)
         Size = UDim2.fromScale(0.167, 1),
         
         [OnEvent "Activated"] = function()
-            if not Util._Topbar.FreezeFrame:get() then
+            if not Util._Topbar.FreezeFrame:get(false) then
                 Pages:ChangePage(data.Name)
             end
         end,
@@ -256,7 +256,7 @@ function Components.Dropdown(data, childrenProcessor)
         LayoutOrder = data.LayoutOrder,
 
         [OnEvent "MouseEnter"] = function()
-            if Util.interfaceActive:get() then
+            if Util.interfaceActive:get(false) then
                 headerColor:set(Theme.Button.Hover)
             end
         end,
@@ -280,7 +280,7 @@ function Components.Dropdown(data, childrenProcessor)
                 Visible = true,
 
                 [OnEvent "Activated"] = function()
-                    dropdownVisible:set(not dropdownVisible:get())
+                    dropdownVisible:set(not dropdownVisible:get(false))
                 end
             }),
 
@@ -297,7 +297,7 @@ function Components.Dropdown(data, childrenProcessor)
 
                 [Children] = Components.Constraints.UIAspectRatio(1),
                 [OnEvent "Activated"] = function()
-                    dropdownVisible:set(not dropdownVisible:get())
+                    dropdownVisible:set(not dropdownVisible:get(false))
                 end
             },
 

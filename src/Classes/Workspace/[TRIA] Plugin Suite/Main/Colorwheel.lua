@@ -31,7 +31,7 @@ local colorChosen = Util.Signal.new()
 local ColorWheel = {}
 
 local function updateColor()
-    local H, S, V = chosenColor:get():ToHSV()
+    local H, S, V = chosenColor:get(false):ToHSV()
     local Angle = -(H * 360) - 90
 
     sliderPointerPos:set(UDim2.fromScale(0.5, 1 - V))
@@ -65,15 +65,15 @@ local function getColorDisplay(data)
                     local NewColor
                     local success = pcall(function()
                         if data.Display == "R" or data.Display == "G" or data.Display == "B" then
-                            local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255)
+                            local textNumber = math.clamp(tonumber(Text:get(false)) or 0, 0, 255)
                             NewColor = Color3.fromRGB(
-                                data.Display == "R" and textNumber or chosenColor:get().R * 255,
-                                data.Display == "G" and textNumber or chosenColor:get().G * 255,
-                                data.Display == "B" and textNumber or chosenColor:get().B * 255
+                                data.Display == "R" and textNumber or chosenColor:get(false).R * 255,
+                                data.Display == "G" and textNumber or chosenColor:get(false).G * 255,
+                                data.Display == "B" and textNumber or chosenColor:get(false).B * 255
                             )
                         else
-                            local textNumber = math.clamp(tonumber(Text:get()) or 0, 0, 255) / 255
-                            local H, S, V = chosenColor:get():ToHSV()
+                            local textNumber = math.clamp(tonumber(Text:get(false)) or 0, 0, 255) / 255
+                            local H, S, V = chosenColor:get(false):ToHSV()
                             NewColor = Color3.fromHSV(
                                 data.Display == "H" and textNumber or H,
                                 data.Display == "S" and textNumber or S,
@@ -92,20 +92,20 @@ local function getColorDisplay(data)
 end
 
 local function updatePos(type)
-    local H, S, V = chosenColor:get():ToHSV()
+    local H, S, V = chosenColor:get(false):ToHSV()
     local types = {}
 
     function types.Slider()
-        local MousePos = SliderAbsPos:get() - Util.Widget:GetRelativeMousePosition()
-        local SliderPos = math.clamp(-1 + ((MousePos.Y + SliderAbsSize:get().Y) / 2 / SliderAbsSize:get().Y + 0.5) * 2, 0, 1)
+        local MousePos = SliderAbsPos:get(false) - Util.Widget:GetRelativeMousePosition()
+        local SliderPos = math.clamp(-1 + ((MousePos.Y + SliderAbsSize:get(false).Y) / 2 / SliderAbsSize:get(false).Y + 0.5) * 2, 0, 1)
 
         V = if SliderPos > 0.985 then 1 elseif SliderPos < 0.015 then 0 else SliderPos
     end
 
     function types.Wheel()
-        local MousePos = WheelAbsPos:get() + WheelAbsSize:get() / 2 - Util.Widget:GetRelativeMousePosition()
+        local MousePos = WheelAbsPos:get(false) + WheelAbsSize:get(false) / 2 - Util.Widget:GetRelativeMousePosition()
 		local Angle = math.deg(math.atan2(MousePos.X, MousePos.Y))
-		local Diameter = math.max(-MousePos.Magnitude / WheelAbsSize:get().Y, -0.5)
+		local Diameter = math.max(-MousePos.Magnitude / WheelAbsSize:get(false).Y, -0.5)
 
         H = -((Angle + 90) / 360) + if -((Angle + 90) / 360) + 0.5 < 0 then 1.5 else 0.5
 		S = -Diameter * 2
@@ -195,7 +195,7 @@ function ColorWheel:GetUI()
                                 ZIndex = 2,
 
                                 [OnEvent "MouseMoved"] = function()
-                                    if mouseDownWheel:get() then
+                                    if mouseDownWheel:get(false) then
                                         updatePos("Wheel")
                                     end
                                 end,
@@ -205,10 +205,10 @@ function ColorWheel:GetUI()
                                 end,
 
                                 [OnEvent "MouseButton1Down"] = function()
-                                    local MousePos = Util.Widget:GetRelativeMousePosition() - WheelAbsPos:get()
-                                    local CenterPos = WheelAbsSize:get() / 2
+                                    local MousePos = Util.Widget:GetRelativeMousePosition() - WheelAbsPos:get(false)
+                                    local CenterPos = WheelAbsSize:get(false) / 2
 
-                                    if (MousePos - CenterPos).Magnitude < WheelAbsSize:get().X / 2 then
+                                    if (MousePos - CenterPos).Magnitude < WheelAbsSize:get(false).X / 2 then
                                         mouseDownWheel:set(true)
                                         updatePos("Wheel")
                                     end
@@ -257,7 +257,7 @@ function ColorWheel:GetUI()
                                 ZIndex = 2,
 
                                 [OnEvent "MouseMoved"] = function()
-                                    if mouseDownSlider:get() then
+                                    if mouseDownSlider:get(false) then
                                         updatePos("Slider")
                                     end
                                 end,
@@ -267,8 +267,8 @@ function ColorWheel:GetUI()
                                 end,
 
                                 [OnEvent "MouseButton1Down"] = function()
-                                    local MousePos = SliderAbsPos:get() - Util.Widget:GetRelativeMousePosition()
-                                    if MousePos.X * -1 > 0 and MousePos.X * -1 < SliderAbsSize:get().Y and MousePos.Y * -1 > 0 and MousePos.Y * -1 < SliderAbsSize:get().Y then
+                                    local MousePos = SliderAbsPos:get(false) - Util.Widget:GetRelativeMousePosition()
+                                    if MousePos.X * -1 > 0 and MousePos.X * -1 < SliderAbsSize:get(false).Y and MousePos.Y * -1 > 0 and MousePos.Y * -1 < SliderAbsSize:get(false).Y then
                                         mouseDownSlider:set(true)
                                         updatePos("Slider")
                                     end
@@ -399,7 +399,7 @@ function ColorWheel:GetUI()
                         [OnEvent "FocusLost"] = function()
                             local NewColor
                             local success = pcall(function()
-                                NewColor = Color3.fromHex(hexText:get())
+                                NewColor = Color3.fromHex(hexText:get(false))
                             end)
 
                             NewColor = if success then NewColor else Color3.fromRGB(0, 0, 0)
@@ -421,7 +421,7 @@ function ColorWheel:GetColor()
     visible:set(true)
 
     colorChosen:Wait()
-    local Color = chosenColor:get()
+    local Color = chosenColor:get(false)
    
     Util:ToggleInterface(true)
     Util._Topbar.FreezeFrame:set(false)

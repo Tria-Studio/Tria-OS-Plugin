@@ -17,8 +17,8 @@ local selectMap = {
     hasOptimizedStructure = Value(false),
     selectingMap = Value(false),
     selectTextState = Value("No map selected"),
-    selectTextColor = Value(Theme.ErrorText.Default:get()),
-    selectCancelColor = Value(Theme.SubText.Default:get()),
+    selectTextColor = Value(Theme.ErrorText.Default:get(false)),
+    selectCancelColor = Value(Theme.SubText.Default:get(false)),
     selectCancelImage = Value("rbxassetid://6022668885")
 }
 
@@ -119,8 +119,8 @@ function selectMap:SetMap(Map: Model|Workspace)
             return false, message
         end
 
-        selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
-        selectMap.selectTextColor:set(Theme.MainText.Default:get())
+        selectMap.selectCancelColor:set(Theme.ErrorText.Default:get(false))
+        selectMap.selectTextColor:set(Theme.MainText.Default:get(false))
         Util.mapModel:set(Map)
         Util.MapChanged:Fire()
         Util.MainMaid:DoCleaning()
@@ -196,7 +196,7 @@ function selectMap:SetMap(Map: Model|Workspace)
         local optimizedStructure = Map:FindFirstChild("Special")
         selectMap.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
-        if not selectMap.hasOptimizedStructure:get() then
+        if not selectMap.hasOptimizedStructure:get(false) then
             task.wait()
             Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
         end
@@ -205,9 +205,9 @@ function selectMap:SetMap(Map: Model|Workspace)
         Util.mapModel:set(nil)
         Util.MapChanged:Fire()
         selectMap.hasOptimizedStructure:set(false)
-        selectMap.selectCancelColor:set(Theme.SubText.Default:get())
+        selectMap.selectCancelColor:set(Theme.SubText.Default:get(false))
         selectMap.selectTextState:set("No map selected")
-        selectMap.selectTextColor:set(Theme.ErrorText.Default:get())
+        selectMap.selectTextColor:set(Theme.ErrorText.Default:get(false))
     end
 
     return true
@@ -225,9 +225,9 @@ function selectMap:StartMapSelection()
     local mouse = plugin:GetMouse()
 
     selectMap.selectCancelImage:set("rbxassetid://6031094678")
-    selectMap.selectCancelColor:set(Theme.ErrorText.Default:get())
+    selectMap.selectCancelColor:set(Theme.ErrorText.Default:get(false))
     selectMap.selectTextState:set("Click to select")
-    selectMap.selectTextColor:set(Theme.SubText.Default:get())
+    selectMap.selectTextColor:set(Theme.SubText.Default:get(false))
     selectMap._Maid:GiveTask(mapHighlight)
     selectMap.selectingMap:set(true)
     plugin:Activate(true)
@@ -271,9 +271,9 @@ function selectMap:StopManualSelection()
     plugin:Deactivate()
 
     selectMap.selectCancelImage:set("rbxassetid://6022668885")
-    selectMap.selectCancelColor:set(if Util.mapModel:get() then Theme.ErrorText.Default:get() else Theme.SubText.Default:get())
-    selectMap.selectTextState:set(if Util.mapModel:get() then Util.mapModel:get().Settings.Main:GetAttribute("Name") else "No map selected")
-    selectMap.selectTextColor:set(if Util.mapModel:get() then Theme.MainText.Default:get() else Theme.ErrorText.Default:get())
+    selectMap.selectCancelColor:set(if Util.mapModel:get(false) then Theme.ErrorText.Default:get(false) else Theme.SubText.Default:get(false))
+    selectMap.selectTextState:set(if Util.mapModel:get(false) then Util.mapModel:get(false).Settings.Main:GetAttribute("Name") else "No map selected")
+    selectMap.selectTextColor:set(if Util.mapModel:get(false) then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
 end
 
 function selectMap:AutoSelect()
