@@ -189,7 +189,12 @@ function optionButtonComponent(data)
         TextColor3 = Theme.BrightText.Default,
         Font = Enum.Font.SourceSansSemibold,
         BorderMode = Enum.BorderMode.Outline,
-        
+        Visible = Computed(function()
+            if typeof(data.Text) == "table" then
+                return data.Text:get() ~= ""
+            end
+            return true
+        end),
         [OnEvent "Activated"] = data.Callback
     })
 end

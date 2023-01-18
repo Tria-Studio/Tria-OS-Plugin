@@ -21,10 +21,10 @@ local currentEditing = Value(nil)
 function BaseSettingButton(data)
     local backgroundColor = Value(Theme.MainBackground.Default:get(false))
     local mouseInside = Value(false)
-    local Frame = Value()
+    local settingFrame = Value()
 
     return New "Frame" {
-        [Ref] = Frame,
+        [Ref] = settingFrame,
 
         BackgroundColor3 = backgroundColor,
         BackgroundTransparency = 0,
@@ -42,7 +42,7 @@ function BaseSettingButton(data)
         end,
         [OnEvent "MouseLeave"] = function()
             mouseInside:set(false)
-            if Frame:get(false) ~= currentEditing:get(false) then
+            if settingFrame:get(false) ~= currentEditing:get(false) then
                 backgroundColor:set(Theme.MainBackground.Default:get(false)) 
             end
         end,
@@ -80,10 +80,17 @@ function BaseSettingButton(data)
                     BorderColor3 = Theme.Border.Default,
                     BorderMode = Enum.BorderMode.Inset,
                     BorderSizePixel = 1,
+                    Name = "Tooltip",
                     Position = UDim2.new(0, -2, 0.5, 0),
                     Size = UDim2.fromOffset(16, 16),
                     Image = "rbxassetid://6034281900",
                     ImageColor3 = Theme.SubText.Default,
+
+                    [OnEvent "Activated"] = function()
+                        if data.Tooltip then
+                            Util:ShowMessage(data.Text, data.Tooltip)
+                        end
+                    end
                 }
             }
         }

@@ -38,7 +38,7 @@ return {
         Attribute = "Difficulty",
         Fallback = 6,
 
-        Value = Value("")
+        Value = Value(""),
     },
 
     {
