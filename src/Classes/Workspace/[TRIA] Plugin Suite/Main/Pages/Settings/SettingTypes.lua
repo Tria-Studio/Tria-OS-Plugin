@@ -54,7 +54,7 @@ function BaseSettingButton(data)
                 FontFace = Font.new("SourceSansPro"),
                 Text = data.Text,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextColor3 = Theme.SubText.Default,
+                TextColor3 = if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default,
                 TextXAlignment = Enum.TextXAlignment.Left,
             },
 
@@ -91,8 +91,8 @@ end
 function InputBox(data, baseButton)
     return function (props)
         return Hydrate(Components.TextBox {
-            Active = Util.interfaceActive,
-            TextEditable = Util.interfaceActive,
+            Active = if not data.Modifiable:get() then false else Util.interfaceActive,
+            TextEditable = if not data.Modifiable:get() then false else Util.interfaceActive,
 
             AnchorPoint = Vector2.new(1, 0),
             BackgroundTransparency = Computed(function()
@@ -101,7 +101,7 @@ function InputBox(data, baseButton)
             BackgroundColor3 = Theme.InputFieldBackground.Default,
             BorderSizePixel = 1,
             FontFace = Font.new("SourceSansPro"),
-            TextColor3 = Theme.SubText.Default,
+            TextColor3 = if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default,
             TextXAlignment = Enum.TextXAlignment.Left,
     
             [Children] = {
@@ -124,19 +124,23 @@ function SettingTypes.String(data): Instance
             [Ref] = inputBox,
 
             [OnEvent "Focused"] = function()
-                currentEditing:set(baseButton)
-                backgroundColor:set(Theme.CurrentMarker.Default:get())
+                if data.Modifiable then
+                    currentEditing:set(baseButton)
+                    backgroundColor:set(Theme.CurrentMarker.Default:get())
+                end
             end,
             [OnEvent "FocusLost"] = function()
                 if not buttonInside:get() then
                     backgroundColor:set(Theme.MainBackground.Default:get())
                 end
                 currentEditing:set(nil)
-                local inputBoxObject = inputBox:get()
-                local currentText = inputBoxObject.Text
+                if data.Modifiable:get() then
+                    local inputBoxObject = inputBox:get()
+                    local currentText = inputBoxObject.Text
 
-                data.Value:set(currentText)
-                Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    data.Value:set(currentText)
+                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                end
             end
         }
     }
@@ -152,8 +156,10 @@ function SettingTypes.Checkbox(data)
             BackgroundTransparency = 1,
 
             [OnEvent "Activated"] = function()
-                data.Value:set(not data.Value:get(false))
-                Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                if data.Modifiable:get() then
+                    data.Value:set(not data.Value:get(false))
+                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                end
             end,
 
             [Children] = New "ImageLabel" {
@@ -196,6 +202,9 @@ function SettingTypes.Color(data)
                 Size = UDim2.fromOffset(12, 12),
 
                 [OnEvent "Activated"] = function()
+                    if not data.Modifiable:get() then
+                        return
+                    end
                     currentEditing:set(baseButton)
                     backgroundColor:set(Theme.CurrentMarker.Default:get())
 
@@ -229,6 +238,7 @@ function SettingTypes.Color(data)
                 Text = Computed(function()
                     return Util.colorToRGB(data.Value:get())
                 end),
+                TextEditable = data.Modifiable,
 
                 [Ref] = inputBox,
 
@@ -242,15 +252,17 @@ function SettingTypes.Color(data)
                     end
                     currentEditing:set(nil)
 
-                    local inputBoxObject = inputBox:get()
-                    local currentText = inputBoxObject.Text
-                    local didParse, parsedColor = Util.parseColor3Text(currentText)
-                    if not didParse then
-                        inputBoxObject.Text = data.Value:get()
-                    else
-                        data.Value:set(parsedColor)
-                        inputBoxObject.Text = Util.colorToRGB(parsedColor)
-                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    if data.Modifiable:get() then
+                        local inputBoxObject = inputBox:get()
+                        local currentText = inputBoxObject.Text
+                        local didParse, parsedColor = Util.parseColor3Text(currentText)
+                        if not didParse then
+                            inputBoxObject.Text = data.Value:get()
+                        else
+                            data.Value:set(parsedColor)
+                            inputBoxObject.Text = Util.colorToRGB(parsedColor)
+                            Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                        end
                     end
                 end
             }
@@ -267,6 +279,7 @@ function SettingTypes.Time(data)
             Position = UDim2.fromScale(1, 0),
             Size = UDim2.fromScale(0.55, 1),
             Text = data.Value,
+            TextEditable = data.Modifiable,
 
             [Ref] = inputBox,
 
@@ -280,16 +293,18 @@ function SettingTypes.Time(data)
                 end
                 currentEditing:set(nil)
 
-                local inputBoxObject = inputBox:get()
-                local currentText = inputBoxObject.Text
+                if data.Modifiable:get() then
+                    local inputBoxObject = inputBox:get()
+                    local currentText = inputBoxObject.Text
 
-                local didParse, parsedTime = Util.parseTimeString(currentText)
-                if not didParse then
-                    inputBoxObject.Text = data.Value:get()
-                else
-                    data.Value:set(parsedTime)
-                    inputBoxObject.Text = parsedTime
-                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    local didParse, parsedTime = Util.parseTimeString(currentText)
+                    if not didParse then
+                        inputBoxObject.Text = data.Value:get()
+                    else
+                        data.Value:set(parsedTime)
+                        inputBoxObject.Text = parsedTime
+                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    end
                 end
             end
         }
