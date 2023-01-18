@@ -194,7 +194,7 @@ function Util.parseColor3Text(str: string): (boolean, nil | Color3)
     return true, newColor
 end
 
-function Util.parseTimeString(str: string): (boolean, string)
+function Util.parseTimeString(str: string): (boolean, string | nil)
     local split = string.split(str, ":")
 
     if #split ~= 3 then
