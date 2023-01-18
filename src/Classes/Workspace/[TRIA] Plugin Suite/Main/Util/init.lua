@@ -5,6 +5,7 @@ local Signal = require(script.Signal)
 local Maid = require(script.Maid)
 
 local Value = Fusion.Value
+local Computed = Fusion.Computed
 local Observer = Fusion.Observer
 
 local defaultMessageResponses = {
@@ -29,7 +30,9 @@ local Util = {
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
 
-    buttonsActive = Value(true),
+    _manualActive = Value(true),
+    interfaceActive = Value(false),
+
     selectedParts = Value({}),
 
     _Topbar = {
@@ -78,19 +81,15 @@ local Util = {
             Color = Color3.fromRGB(255, 8, 152),
             ImageID = "rbxassetid://12132025606"
         }
+    },  
+    Images = {
+        Checkbox = {
+            Checked = "rbxassetid://6031068421",
+            Unchecked = "rbxassetid://6031068420",
+            Unknown = "rbxassetid://6031068445"
+        }
     }
 }
-function updateButtonsActive()
-    Util.buttonsActive:set(Util._Message.Text:get() == "")
-end
-
-function Util.buttonActiveFunc()
-    return Util.mapModel:get() and Util.buttonsActive:get()
-end
-
-Selection.SelectionChanged:Connect(function()
-    Util.selectedParts:set(Selection:Get())
-end)
 
 function getSettingsDirFolder(directory: string)
     local currentMap = Util.mapModel:get()
@@ -116,7 +115,12 @@ function getSettingsDirFolder(directory: string)
     return dirFolder
 end
 
+function Util:ToggleInterface(value: boolean)
+    Util._manualActive:set(value)
+end
+
 function Util.CloseMessage()
+    Util:ToggleInterface(true)
     Util._Message.Text:set("")
     Util._Message.Header:set("")
     Util._Message.Option1:set({})
@@ -124,6 +128,7 @@ function Util.CloseMessage()
 end
 
 function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
+    Util:ToggleInterface(false)
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
@@ -208,7 +213,17 @@ function Util.parseTimeString(str: string): (boolean, string)
     return true, table.concat(split, ":")
 end
 
+function updateButtonsActive()
+    Util.interfaceActive:set(Util.mapModel:get() and Util._manualActive:get())
+end
+
+Selection.SelectionChanged:Connect(function()
+    Util.selectedParts:set(Selection:Get())
+end)
+
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
+Observer(Util.mapModel):onChange(updateButtonsActive)
+Observer(Util._manualActive):onChange(updateButtonsActive)
 
 return Util

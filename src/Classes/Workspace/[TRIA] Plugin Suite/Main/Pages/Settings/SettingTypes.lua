@@ -10,22 +10,43 @@ local ColorWheel = require(Package.Colorwheel)
 local New = Fusion.New
 local Children = Fusion.Children
 local Hydrate = Fusion.Hydrate
-local OnChange = Fusion.OnChange
+local Observer = Fusion.Observer
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Ref = Fusion.Ref
 local Value = Fusion.Value
 
+local currentEditing = Value(nil)
+
 function BaseSettingButton(data)
+    local backgroundColor = Value(Theme.MainBackground.Default:get())
+    local mouseInside = Value(false)
+    local Frame = Value()
+
     return New "Frame" {
-        BackgroundColor3 = Color3.fromRGB(46, 46, 46), -- Can't find out what this is.
+        [Ref] = Frame,
+
+        BackgroundColor3 = backgroundColor,
         BackgroundTransparency = 0,
         BorderColor3 = Theme.Border.Default,
         BorderMode = Enum.BorderMode.Outline,
         BorderSizePixel = 1,
         Name = data.Text or data.Name,
         Size = UDim2.new(1, 0, 0, 20),
-        
+
+        [OnEvent "MouseEnter"] = function()
+            mouseInside:set(true)
+            if not currentEditing:get() and Util.interfaceActive:get() then
+                backgroundColor:set(Theme.CurrentMarker.Default:get())
+            end
+        end,
+        [OnEvent "MouseLeave"] = function()
+            mouseInside:set(false)
+            if Frame:get() ~= currentEditing:get() then
+                backgroundColor:set(Theme.MainBackground.Default:get()) 
+            end
+        end,
+
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
@@ -33,7 +54,7 @@ function BaseSettingButton(data)
                 FontFace = Font.new("SourceSansPro"),
                 Text = data.Text,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextColor3 = if data.Modifiable:get() then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
+                TextColor3 = if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default,
                 TextXAlignment = Enum.TextXAlignment.Left,
             },
 
@@ -41,43 +62,46 @@ function BaseSettingButton(data)
                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 20), nil),
                 New "Frame" {
                     AnchorPoint = Vector2.new(0.5, 0),
-                    BackgroundColor3 = Color3.fromRGB(34, 34, 34),
+                    BackgroundColor3 = Theme.Border.Default,
                     BackgroundTransparency = 0,
                     BorderSizePixel = 0,
                     Position = UDim2.fromScale(0.45, 0),
                     Size = UDim2.new(0, 1, 1, 0)
                 },
                 New "ImageButton" {
-                    Active = Computed(Util.buttonActiveFunc),
-                    AutoButtonColor = Computed(Util.buttonActiveFunc),
+                    Active = Util.interfaceActive,
+                    AutoButtonColor = Util.interfaceActive,
 
                     AnchorPoint = Vector2.new(1, 0.5),
-                    BackgroundColor3 = Color3.fromRGB(46, 46, 46),
+                    BackgroundColor3 = Theme.MainBackground.Default,
                     BackgroundTransparency = 0,
-                    BorderColor3 = Color3.fromRGB(34, 34, 34),
+                    BorderColor3 = Theme.Border.Default,
                     BorderMode = Enum.BorderMode.Inset,
                     BorderSizePixel = 1,
                     Position = UDim2.new(0, -2, 0.5, 0),
                     Size = UDim2.fromOffset(16, 16),
-                    Image = "http://www.roblox.com/asset/?id=6034281900",
-                    ImageColor3 = Color3.fromRGB(170, 170, 170)
+                    Image = "rbxassetid://6034281900",
+                    ImageColor3 = Theme.SubText.Default,
                 }
             }
         }
-    }
+    }, backgroundColor, mouseInside
 end
 
-function InputBox(data)
+function InputBox(data, baseButton)
     return function (props)
         return Hydrate(Components.TextBox {
-            Active = Computed(Util.buttonActiveFunc),
-            TextEditable = Computed(Util.buttonActiveFunc),
+            Active = if not data.Modifiable:get() then false else Util.interfaceActive,
+            TextEditable = if not data.Modifiable:get() then false else Util.interfaceActive,
 
             AnchorPoint = Vector2.new(1, 0),
-            BackgroundTransparency = 1,
+            BackgroundTransparency = Computed(function()
+                return baseButton == currentEditing:get() and Util.interfaceActive:get() and 0 or 1
+            end),
+            BackgroundColor3 = Theme.InputFieldBackground.Default,
             BorderSizePixel = 1,
             FontFace = Font.new("SourceSansPro"),
-            TextColor3 = if data.Modifiable:get() then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(102, 102, 102),
+            TextColor3 = if data.Modifiable:get() then Theme.SubText.Default else Theme.DimmedText.Default,
             TextXAlignment = Enum.TextXAlignment.Left,
     
             [Children] = {
@@ -89,15 +113,27 @@ end
 
 function SettingTypes.String(data): Instance
     local inputBox = Value()
-    return Hydrate(BaseSettingButton(data)) {
-        [Children] = InputBox(data){
+    local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
+
+    return Hydrate(baseButton) {
+        [Children] = InputBox(data, baseButton){
             Position = UDim2.fromScale(1, 0),
             Size = UDim2.fromScale(0.55, 1),
             Text = data.Value,
-            TextEditable = data.Modifiable,
 
             [Ref] = inputBox,
+
+            [OnEvent "Focused"] = function()
+                if data.Modifiable then
+                    currentEditing:set(baseButton)
+                    backgroundColor:set(Theme.CurrentMarker.Default:get())
+                end
+            end,
             [OnEvent "FocusLost"] = function()
+                if not buttonInside:get() then
+                    backgroundColor:set(Theme.MainBackground.Default:get())
+                end
+                currentEditing:set(nil)
                 if data.Modifiable:get() then
                     local inputBoxObject = inputBox:get()
                     local currentText = inputBoxObject.Text
@@ -110,56 +146,55 @@ function SettingTypes.String(data): Instance
     }
 end
 
-function SettingTypes.Checkbox(data)
-    local images = {
-        checked = "http://www.roblox.com/asset/?id=6031094667",
-        unchecked = "http://www.roblox.com/asset/?id=6031068420"
-    }
-
+function SettingTypes.Checkbox(data) 
     return Hydrate(BaseSettingButton(data)) {
-        [Children] = Components.ImageButton {
-            Active = Computed(Util.buttonActiveFunc),
-            AutoButtonColor = Computed(Util.buttonActiveFunc),
+        [Children] = New "TextButton" {
+            Active = Util.interfaceActive,
 
-            AnchorPoint = Vector2.new(0, 0.5),
-            BackgroundColor3 = Color3.fromRGB(40, 40, 40),
-            BackgroundTransparency = 0,
-            BorderColor3 = Color3.fromRGB(34, 34, 34),
-            BorderMode = Enum.BorderMode.Outline,
-            BorderSizePixel = 1,
-
-            Position = UDim2.new(0.45, 8, 0.5, 0),
-            Size = UDim2.fromOffset(14, 14),
-            Image = Computed(function()
-                return images[data.Value:get() == true and "checked" or "unchecked"]
-            end),
-            ImageColor3 = Computed(function()
-                return data.Value:get() == true and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
-            end),
+            Size = UDim2.new(.55, 0, 1, 0),
+            Position = UDim2.new(.45, 0, 0, 0),
+            BackgroundTransparency = 1,
 
             [OnEvent "Activated"] = function()
                 if data.Modifiable:get() then
                     data.Value:set(not data.Value:get(false))
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                 end
-            end
+            end,
+
+            [Children] = New "ImageLabel" {
+                AnchorPoint = Vector2.new(0, 0.5),
+                BackgroundColor3 = Theme.CheckedFieldBackground.Default,
+                BackgroundTransparency = 0,
+                BorderColor3 = Theme.CheckedFieldBorder.Default,
+                BorderMode = Enum.BorderMode.Outline,
+                BorderSizePixel = 1,
+
+                Position = UDim2.new(0, 8, 0.5, 0),
+                Size = UDim2.fromOffset(14, 14),
+                Image = Computed(function() 
+                    return Util.Images.Checkbox[data.Value:get() == true and "Checked" or "Unchecked"]
+                end),
+                ImageColor3 = Theme.CheckedFieldIndicator.Default,
+            }
         }
     }
 end
 
 function SettingTypes.Color(data)
     local inputBox = Value()
+    local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
 
-    return Hydrate(BaseSettingButton(data)) {
+    return Hydrate(baseButton) {
         [Children] = {
             Components.TextButton {
-                Active = Computed(Util.buttonActiveFunc),
-                AutoButtonColor = Computed(Util.buttonActiveFunc),
+                Active = Util.interfaceActive,
+                AutoButtonColor = Util.interfaceActive,
 
                 AnchorPoint = Vector2.new(0, 0.5),
                 BackgroundColor3 = data.Value,
                 BackgroundTransparency = 0,
-                BorderColor3 = Color3.fromRGB(34, 34, 34),
+                BorderColor3 = Theme.Border.Default,
                 BorderMode = Enum.BorderMode.Outline,
                 BorderSizePixel = 1,
                 Name = "Color",
@@ -170,12 +205,19 @@ function SettingTypes.Color(data)
                     if not data.Modifiable:get() then
                         return
                     end
+                    currentEditing:set(baseButton)
+                    backgroundColor:set(Theme.CurrentMarker.Default:get())
 
                     local chosenColor = ColorWheel:GetColor()
+
+                    if not buttonInside:get() then
+                        backgroundColor:set(Theme.MainBackground.Default:get())
+                    end
+                    currentEditing:set(nil)
+                   
                     if chosenColor == nil then
                         return
                     end
-
                     data.Value:set(chosenColor)
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                 end
@@ -183,14 +225,14 @@ function SettingTypes.Color(data)
 
             New "Frame" {
                 AnchorPoint = Vector2.new(0.5, 0),
-                BackgroundColor3 = Color3.fromRGB(34, 34, 34),
+                BackgroundColor3 = Theme.Border.Default,
                 BackgroundTransparency = 0,
                 BorderSizePixel = 0,
                 Position = UDim2.new(0.45, 28, 0, 0),
                 Size = UDim2.new(0, 1, 1, 0)
             },
 
-            InputBox(data){
+            InputBox(data, baseButton){
                 Position = UDim2.fromScale(1, 0),
                 Size = UDim2.new(0.55, -28, 1, 0),
                 Text = Computed(function()
@@ -199,7 +241,17 @@ function SettingTypes.Color(data)
                 TextEditable = data.Modifiable,
 
                 [Ref] = inputBox,
+
+                [OnEvent "Focused"] = function()
+                    backgroundColor:set(Theme.CurrentMarker.Default:get())
+                    currentEditing:set(baseButton)
+                end,
                 [OnEvent "FocusLost"] = function()
+                    if not buttonInside:get() then
+                        backgroundColor:set(Theme.MainBackground.Default:get())
+                    end
+                    currentEditing:set(nil)
+
                     if data.Modifiable:get() then
                         local inputBoxObject = inputBox:get()
                         local currentText = inputBoxObject.Text
@@ -219,16 +271,28 @@ function SettingTypes.Color(data)
 end
 
 function SettingTypes.Time(data)
+    local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
     local inputBox = Value()
-    return Hydrate(BaseSettingButton(data)) {
-        [Children] = InputBox(data){
+
+    return Hydrate(baseButton) {
+        [Children] = InputBox(data, baseButton){
             Position = UDim2.fromScale(1, 0),
             Size = UDim2.fromScale(0.55, 1),
             Text = data.Value,
             TextEditable = data.Modifiable,
 
             [Ref] = inputBox,
+
+            [OnEvent "Focused"] = function()
+                currentEditing:set(baseButton)
+                backgroundColor:set(Theme.CurrentMarker.Default:get())
+            end,
             [OnEvent "FocusLost"] = function()
+                if not buttonInside:get() then
+                    backgroundColor:set(Theme.MainBackground.Default:get())
+                end
+                currentEditing:set(nil)
+
                 if data.Modifiable:get() then
                     local inputBoxObject = inputBox:get()
                     local currentText = inputBoxObject.Text

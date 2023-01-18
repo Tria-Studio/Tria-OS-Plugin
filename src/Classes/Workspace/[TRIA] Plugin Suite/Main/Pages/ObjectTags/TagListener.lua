@@ -38,8 +38,8 @@ return function(name, data)
                     TextColor3 = Theme.MainText.Default,
                     TextXAlignment = Enum.TextXAlignment.Left,
 
-                    AutoButtonColor = Computed(Util.buttonActiveFunc),
-                    Active = Computed(Util.buttonActiveFunc),
+                    AutoButtonColor = Util.interfaceActive,
+                    Active = Util.interfaceActive,
 
                     [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil)
                 },

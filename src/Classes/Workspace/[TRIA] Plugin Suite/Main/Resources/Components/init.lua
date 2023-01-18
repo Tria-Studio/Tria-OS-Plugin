@@ -52,8 +52,8 @@ function Components.TopbarButton(data)
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     return New "TextButton" {
-        Active = Util.buttonsActive,
-        AutoButtonColor = Util.buttonsActive,
+        Active = Util.interfaceActive,
+        AutoButtonColor = Util.interfaceActive,
         BackgroundColor3 = Spring(Computed(function()
             local hoverColor = Theme.RibbonButton.Hover:get()
             local titlebarColor = Theme.RibbonButton.Default:get()
@@ -227,7 +227,7 @@ end
 
 function Components.ScrollingFrame(data)
     return Hydrate(New "ScrollingFrame" {
-        ScrollingEnabled = Computed(Util.buttonActiveFunc),
+        ScrollingEnabled = Util.interfaceActive,
         BorderColor3 = Theme.Border.Default,
         CanvasSize = UDim2.fromScale(0, 0),
         BorderSizePixel = 1,
@@ -256,7 +256,9 @@ function Components.Dropdown(data, childrenProcessor)
         LayoutOrder = data.LayoutOrder,
 
         [OnEvent "MouseEnter"] = function()
-            headerColor:set(Theme.Button.Hover)
+            if Util.interfaceActive:get() then
+                headerColor:set(Theme.Button.Hover)
+            end
         end,
         [OnEvent "MouseLeave"] = function()
             headerColor:set(Theme.Button.Default)
@@ -264,8 +266,8 @@ function Components.Dropdown(data, childrenProcessor)
         
         [Children] = {
             Components.TextButton({
-                Active = Computed(Util.buttonActiveFunc),
-                AutoButtonColor = Computed(Util.buttonActiveFunc),
+                Active = Util.interfaceActive,
+                AutoButtonColor = Util.interfaceActive,
                 BackgroundTransparency = 1,
 
                 FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),

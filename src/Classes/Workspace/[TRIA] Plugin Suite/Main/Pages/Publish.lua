@@ -36,6 +36,7 @@ local apiData = {
         filtered = Value(),
         unfiltered = Value()
     },
+    playerApiKey = Value(plugin:GetSetting("TRIA_WebserverKey") or ""),
     submittedApiKey = Value(plugin:GetSetting("TRIA_WebserverKey") ~= nil),
     isShowingApiKey = Value(false)
 }
@@ -518,18 +519,18 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Text = "Submit",
     
                                     Active = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= ""
+                                        return apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
                                     end),
                                     AutoButtonColor = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= ""
+                                        return apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
                                     end),
                                     TextColor3 = Spring(Computed(function()
-                                        return if apiData.apiKey.unfiltered:get() ~= "" 
+                                        return if apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
                                             then Theme.BrightText.Default:get()
                                             else Theme.SubText.Default:get()
                                     end), 20),
                                     BackgroundColor3 = Spring(Computed(function()
-                                        return if apiData.apiKey.unfiltered:get() ~= "" 
+                                        return if apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
                                             then Theme.MainButton.Default:get() 
                                             else Theme.MainButton.Pressed:get()
                                     end), 20),
@@ -537,6 +538,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     [OnEvent "Activated"] = function()
                                         plugin:SetSetting("TRIA_WebserverKey", apiData.apiKey.unfiltered:get())
                                         apiData.submittedApiKey:set(true)
+                                        apiData.playerApiKey:set(apiData.apiKey.unfiltered:get())
                                     end,
 
                                     [Children] = Components.Constraints.UICorner(0, 6)

@@ -107,6 +107,9 @@ local themes = {
     DiffTextDeletionBackground = {
         Default = Value(StudioTheme:GetColor(GuideColor.DiffTextDeletionBackground))
     },
+    CurrentMarker = {
+        Default = Value(StudioTheme:GetColor(GuideColor.CurrentMarker))
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function()

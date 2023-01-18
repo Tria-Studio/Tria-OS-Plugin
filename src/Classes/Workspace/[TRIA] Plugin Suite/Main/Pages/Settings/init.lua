@@ -173,8 +173,8 @@ end
 
 function ExportButton(props)
     return Hydrate(Components.TextButton {
-        Active = Computed(Util.buttonActiveFunc),
-        AutoButtonColor = Computed(Util.buttonActiveFunc),
+        Active = Util.interfaceActive,
+        AutoButtonColor = Util.interfaceActive,
 
         AutomaticSize = Enum.AutomaticSize.None,
         BackgroundColor3 = Theme.Button.Default,
