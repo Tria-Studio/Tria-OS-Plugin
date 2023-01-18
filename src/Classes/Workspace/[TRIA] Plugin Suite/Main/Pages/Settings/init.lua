@@ -26,7 +26,6 @@ local SettingData = require(script:WaitForChild("SettingData"))
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local settingConnections = {}
-local originalModifiableStates = {}
 
 local directories = {
     Main = {
@@ -71,6 +70,9 @@ local function settingOption(optionType, optionData): Instance
     if optionData.Modifiable == nil then
         optionData.Modifiable = Value(true)
     end
+    if optionData.Errored == nil then
+        optionData.Errored = Value(false)
+    end
     
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
@@ -93,19 +95,15 @@ local function updateStateValue(currentValue, newValue, tbl)
         ["Time"] = {"string"}
     }
 
-    if originalModifiableStates[tbl] == nil then
-        originalModifiableStates[tbl] = if tbl.Modifiable then tbl.Modifiable:get(false) else true 
+    if currentValue then
+        currentValue = newValue
     end
-
-    currentValue = newValue
-    if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
-        tbl.Modifiable:set(false)
+    if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) and tbl.Modifiable:get(false) then
+        tbl.Errored:set(true)
         tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
         Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
     else
-        if originalModifiableStates[tbl] ~= nil and originalModifiableStates[tbl] ~= tbl.Modifiable:get(false) then
-            tbl.Modifiable:set(originalModifiableStates[tbl])
-        end
+        tbl.Errored:set(false)
         tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
     end
 end
@@ -154,8 +152,14 @@ function insertLiquids()
 
         for _, liquidSetting in ipairs(liquidData) do
             local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
+            
             local function updateConnection()
-                updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
+                if tbl.Modifiable:get(false) then
+                    updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
+                else
+                    updateStateValue(nil, nil, liquidSetting)
+                    Util.updateMapSetting(liquidSetting.Directory, liquidSetting.Attribute, liquidSetting.Fallback)
+                end
                 hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
             end
             updateConnection()
@@ -195,7 +199,12 @@ function onMapChanged()
         local changeConnection
 
         local function updateConnection()
-            updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
+            if tbl.Modifiable:get(false) then
+                updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
+            else
+                updateStateValue(nil, nil, tbl)
+                Util.updateMapSetting(tbl.Directory, tbl.Attribute, tbl.Fallback)
+            end
             hookAttributeChanged(dirFolder, tbl.Attribute, updateConnection)
         end
         updateConnection()

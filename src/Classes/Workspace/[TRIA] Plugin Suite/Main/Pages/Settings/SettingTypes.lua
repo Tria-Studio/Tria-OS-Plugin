@@ -18,6 +18,27 @@ local Value = Fusion.Value
 
 local currentEditing = Value(nil)
 
+local function isCurrentSettingModifiable(data)
+    local isModifiable = data.Modifiable:get()
+    local isErrored = data.Errored:get()
+
+    return (isModifiable and not isErrored and Util.interfaceActive:get())
+end
+
+local function getSettingTextColor(data)
+    local isModifiable = data.Modifiable:get()
+    local isErrored = data.Errored:get()
+
+    return (isErrored and Theme.ErrorText.Default:get()) or (isModifiable and Theme.SubText.Default:get()) or Theme.DimmedText.Default:get()
+end
+
+local function canEditSetting(data)
+    local isModifiable = data.Modifiable:get()
+    local isErrored = data.Errored:get()
+
+    return (isModifiable and not isErrored)
+end
+
 function BaseSettingButton(data)
     local backgroundColor = Value(Theme.MainBackground.Default:get(false))
     local mouseInside = Value(false)
@@ -55,7 +76,7 @@ function BaseSettingButton(data)
                 Text = data.Text,
                 TextTruncate = Enum.TextTruncate.AtEnd,
                 TextColor3 = Computed(function()
-                    return if data.Modifiable:get() then Theme.SubText.Default:get() else Theme.DimmedText.Default:get()
+                    return getSettingTextColor(data)
                 end),
                 TextXAlignment = Enum.TextXAlignment.Left,
             },
@@ -109,10 +130,10 @@ function InputBox(data, baseButton)
     return function (props)
         return Hydrate(Components.TextBox {
             Active = Computed(function()
-                return if not data.Modifiable:get() then false else Util.interfaceActive:get()
+                return isCurrentSettingModifiable(data)
             end),
             TextEditable = Computed(function()
-                return if not data.Modifiable:get() then false else Util.interfaceActive:get()
+                return isCurrentSettingModifiable(data)
             end),
 
             AnchorPoint = Vector2.new(1, 0),
@@ -123,7 +144,7 @@ function InputBox(data, baseButton)
             BorderSizePixel = 1,
             FontFace = Font.new("SourceSansPro"),
             TextColor3 = Computed(function()
-                return if data.Modifiable:get() then Theme.SubText.Default:get() else Theme.DimmedText.Default:get()
+                return getSettingTextColor(data)
             end),
             TextXAlignment = Enum.TextXAlignment.Left,
     
@@ -147,7 +168,7 @@ function SettingTypes.String(data): Instance
             [Ref] = inputBox,
 
             [OnEvent "Focused"] = function()
-                if data.Modifiable then
+                if canEditSetting(data) then
                     currentEditing:set(baseButton)
                     backgroundColor:set(Theme.CurrentMarker.Default:get(false))
                 end
@@ -157,7 +178,7 @@ function SettingTypes.String(data): Instance
                     backgroundColor:set(Theme.MainBackground.Default:get(false))
                 end
                 currentEditing:set(nil)
-                if data.Modifiable:get(false) then
+                if canEditSetting(data) then
                     local inputBoxObject = inputBox:get(false)
                     local currentText = inputBoxObject.Text
 
@@ -179,7 +200,7 @@ function SettingTypes.Checkbox(data)
             BackgroundTransparency = 1,
 
             [OnEvent "Activated"] = function()
-                if data.Modifiable:get(false) then
+                if canEditSetting(data) then
                     data.Value:set(not data.Value:get(false))
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                 end
@@ -225,7 +246,7 @@ function SettingTypes.Color(data)
                 Size = UDim2.fromOffset(12, 12),
 
                 [OnEvent "Activated"] = function()
-                    if not data.Modifiable:get(false) then
+                    if not canEditSetting(data) then
                         return
                     end
                     currentEditing:set(baseButton)
@@ -261,7 +282,9 @@ function SettingTypes.Color(data)
                 Text = Computed(function()
                     return Util.colorToRGB(data.Value:get())
                 end),
-                TextEditable = data.Modifiable,
+                TextEditable = Computed(function()
+                    return canEditSetting(data)
+                end),
 
                 [Ref] = inputBox,
 
@@ -275,7 +298,7 @@ function SettingTypes.Color(data)
                     end
                     currentEditing:set(nil)
 
-                    if data.Modifiable:get(false) then
+                    if canEditSetting(data) then
                         local inputBoxObject = inputBox:get(false)
                         local currentText = inputBoxObject.Text
                         local didParse, parsedColor = Util.parseColor3Text(currentText)
@@ -302,7 +325,9 @@ function SettingTypes.Time(data)
             Position = UDim2.fromScale(1, 0),
             Size = UDim2.fromScale(0.55, 1),
             Text = data.Value,
-            TextEditable = data.Modifiable,
+            TextEditable = Computed(function()
+                return canEditSetting(data)
+            end),
 
             [Ref] = inputBox,
 
@@ -316,7 +341,7 @@ function SettingTypes.Time(data)
                 end
                 currentEditing:set(nil)
 
-                if data.Modifiable:get(false) then
+                if canEditSetting(data) then
                     local inputBoxObject = inputBox:get(false)
                     local currentText = inputBoxObject.Text
 
