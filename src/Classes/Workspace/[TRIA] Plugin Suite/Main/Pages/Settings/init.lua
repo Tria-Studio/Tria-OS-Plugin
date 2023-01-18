@@ -114,9 +114,33 @@ function insertLiquids()
 
     for _, liquid in ipairs(liquidFolder:GetChildren()) do
         local liquidData = {
-            {Text = "Color", Type = "Color", Modifiable = Value(true), Attribute = "Color", Fallback = Color3.new(1, 1, 1), Value = Value(Color3.new(1, 1, 1))},
-            {Text = "Oxygen Depletion", Type = "Number", Modifiable = Value(true), Attribute = "OxygenDepletion", Fallback = 1, Value = Value(1)},
-            {Text = "Splash Sound", Type = "Number", Modifiable = Value(true), Attribute = "SplashSound", Fallback = "water", Value = Value("")}
+            {
+                Text = "Color", 
+                Type = "Color", 
+                Modifiable = Value(true), 
+                Attribute = "Color", 
+                Fallback = Color3.new(1, 1, 1), 
+                Value = Value(Color3.new(1, 1, 1)),
+                Tooltip = {Text = "The color of this liquid/gas."}
+            },
+            {
+                Text = "Oxygen Depletion", 
+                Type = "Number", 
+                Modifiable = Value(true), 
+                Attribute = "OxygenDepletion", 
+                Fallback = 1, 
+                Value = Value(1),
+                Tooltip = {Text = "How fast the oxygen will deplete when a player is inside this liquid/gas."}
+            },
+            {
+                Text = "Splash Sound", 
+                Type = "Number", 
+                Modifiable = Value(true), 
+                Attribute = "SplashSound", 
+                Fallback = "water", 
+                Value = Value(""),
+                Tooltip = {Text = "The assetID of the sound that will play when entering/exiting this liquid/gas. Defaults to 'water'"}
+            }
         }
 
         for _, tbl in ipairs(liquidData) do

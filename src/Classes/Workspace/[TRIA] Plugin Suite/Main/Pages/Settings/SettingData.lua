@@ -16,7 +16,7 @@ return {
 
         Value = Value(""),
         Tooltip = {
-            Text = "An unused variable which was used to denote the current version of the MapKit."
+            Text = "The current map kit version you are on. This <b>should not</b> be edited."
         }
     },
 
@@ -29,6 +29,9 @@ return {
         Attribute = "Creator",
         Fallback = "TRIA",
         Value = Value(""),
+        Tooltip = {
+            Text = "The name(s) of the creators of the map."
+        }
     },
 
     {
@@ -41,6 +44,19 @@ return {
         Fallback = 6,
 
         Value = Value(""),
+        Tooltip = {
+            Text = [[
+                <font color = "rgb(175,175,175)">Map difficulties determine show how hard the map is:</font>
+                <font color ="rgb(255,255,255)">  0 - Unrated </font>
+                <font color ="rgb(0,255,0)"> 1 - Easy </font>
+                <font color ="rgb(255,255,0)"> 2 - Normal </font>
+                <font color ="rgb(255,0,0)"> 3 - Hard </font>
+                <font color ="rgb(180,0,180)"> 4 - Insane </font>
+                <font color ="rgb(255,155,0)"> 5 - Extreme </font>
+                <font color ="rgb(255,0,255)"> 6 - Divine </font>
+                <font color ="rgb(175,0,0)"> [Other] - Unknown (cannot be published to the map list) </font>
+            ]]
+        }
     },
 
     {
@@ -52,7 +68,10 @@ return {
         Attribute = "Image",
         Fallback = 10672852399,
 
-        Value = Value("")
+        Value = Value(""),
+        Tooltip = {
+            Text = "The image that will display in the map list + lobby"
+        }
     },
 
     {
@@ -64,7 +83,10 @@ return {
         Attribute = "MaxTime",
         Fallback = 120,
 
-        Value = Value("")
+        Value = Value(""),
+        Tooltip = {
+            Text = "How long the map should last. Any players after this time will be killed. Maximum value of 420 seconds (7 minutes)"
+        }
     },
 
     {
@@ -76,7 +98,10 @@ return {
         Attribute = "Music",
         Fallback = 6366407687,
 
-        Value = Value("")
+        Value = Value(""),
+        Tooltip = {
+            Text = "The AssetID of the music that plays in the background of your map."
+        }
     },
 
     {
@@ -88,7 +113,10 @@ return {
         Attribute = "MusicVolume",
         Fallback = 0.5,
 
-        Value = Value("")
+        Value = Value(""),
+        Tooltip = {
+            Text = "Volume of the music that plays in the background."
+        }
     },
 
     {
@@ -100,7 +128,10 @@ return {
         Attribute = "Name",
         Fallback = "Map Kit",
 
-        Value = Value("")
+        Value = Value(""),
+        Tooltip = {
+            Text = "The name of your map."
+        }
     },
 
     {
@@ -112,7 +143,10 @@ return {
         Attribute = "DefaultOxygen",
         Fallback = "100",
 
-        Value = Value("")
+        Value = Value(""),
+        Tooltip = {
+            Text = "The total amount of oxygen you can have without an air tank."
+        }
     },
 
     {
@@ -124,7 +158,10 @@ return {
         Attribute = "AllowSliding",
         Fallback = true,
 
-        Value = Value(false)
+        Value = Value(false),
+        Tooltip = {
+            Text = "Determines whether or not players are allowed to slide in the map"
+        }
     },
 
     {
@@ -148,7 +185,10 @@ return {
         Attribute = "Ambient",
         Fallback = Util.colorToRGB(Color3.fromRGB(118, 118, 118)),
 
-        Value = Value(Color3.new())
+        Value = Value(Color3.new()),
+        Tooltip = {
+            Text = "The ambient of the map."
+        }
     },
 
     {
@@ -160,7 +200,10 @@ return {
         Attribute = "Brightness",
         Fallback = 2,
 
-        Value = Value(2)
+        Value = Value(2),
+        Tooltip = {
+            Text = "How bright the map is."
+        }
     },
 
     {
@@ -172,7 +215,10 @@ return {
         Attribute = "TimeOfDay",
         Fallback = "12:00:00",
 
-        Value = Value("12:00:00")
+        Value = Value("12:00:00"),
+        Tooltip = {
+            Text = "The time of day during the map."
+        }
     },
 
     {
@@ -184,7 +230,10 @@ return {
         Attribute = "ColorShift_Bottom",
         Fallback = Util.colorToRGB(Color3.fromRGB()),
 
-        Value = Value(Color3.new())
+        Value = Value(Color3.new()),
+        Tooltip = {
+            Text = "The hue represented in light reflected in the opposite surfaces to those facing the sun or moon."
+        }
     },
 
     {
@@ -196,7 +245,10 @@ return {
         Attribute = "ColorShift_Top",
         Fallback = Util.colorToRGB(Color3.fromRGB()),
 
-        Value = Value(Color3.new())
+        Value = Value(Color3.new()),
+        Tooltip = {
+            Text = "The hue represented in light reflected from surfaces facing the sun or moon."
+        }
     },
 
     {
@@ -232,7 +284,10 @@ return {
         Attribute = "FogColor",
         Fallback = Util.colorToRGB(Color3.fromRGB()),
 
-        Value = Value(Color3.new())
+        Value = Value(Color3.new()),
+        Tooltip = {
+            Text = "The color of the fog."
+        }
     },
 
     {
@@ -244,7 +299,10 @@ return {
         Attribute = "FogStart",
         Fallback = 0,
 
-        Value = Value(0)
+        Value = Value(0),
+        Tooltip = {
+            Text = "The distance from the camera in which the fog will begin to show."
+        }
     },
 
     {
@@ -256,7 +314,10 @@ return {
         Attribute = "FogEnd",
         Fallback = 0,
 
-        Value = Value(0)
+        Value = Value(0),
+        Tooltip = {
+            Text = "The distance from the camera where the fog will be completely opaque."
+        }
     },
 
     {
