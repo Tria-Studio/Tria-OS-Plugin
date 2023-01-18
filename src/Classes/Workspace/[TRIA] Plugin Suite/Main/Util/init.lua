@@ -214,18 +214,18 @@ function Util.parseTimeString(str: string): (boolean, string)
 end
 
 function updateButtonsActive()
-    Util.interfaceActive:set(Util.mapModel:get() and Util._manualActive:get())
+    Util.interfaceActive:set(Util.mapModel:get(false) and Util._manualActive:get(false))
 end
 
 Selection.SelectionChanged:Connect(function()
     local newTable = {}
     for _, Thing: Instance in pairs(Selection:Get()) do
-        if Thing:IsDescendantOf(Util.mapModel:get()) then
+        if Thing:IsDescendantOf(Util.mapModel:get(false)) then
             table.insert(newTable, Thing)
         end
     end
 
-    if not (#newTable == 0 and #Util.selectedParts:get() == 0) then
+    if not (#newTable == 0 and #Util.selectedParts:get(false) == 0) then
         Util.selectedParts:set(newTable)
     end
 end)
