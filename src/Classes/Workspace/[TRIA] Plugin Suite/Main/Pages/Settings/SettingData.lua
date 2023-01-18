@@ -6,21 +6,6 @@ local Value = Fusion.Value
 
 return {
     {
-        Text = "Mapkit Version",
-        Type = "String",
-        Modifiable = Value(false),
-
-        Directory = "Main",
-        Attribute = "_KitVersion",
-        Fallback = 0,
-
-        Value = Value(""),
-        Tooltip = {
-            Text = "The current map kit version you are on. This <b>should not</b> be edited."
-        }
-    },
-
-    {
         Text = "Creator (s)",
         Type = "String",
         Modifiable = Value(true),
@@ -53,7 +38,6 @@ return {
 <font color ="rgb(180,0,180)"> 4 - Insane </font>
 <font color ="rgb(255,155,0)"> 5 - Extreme </font>
 <font color ="rgb(255,0,255)"> 6 - Divine </font>
-<font color ="rgb(175,0,0)"> [Other] - Unknown (cannot be published to the map list) </font>
             ]]
         }
     },
@@ -89,7 +73,7 @@ return {
     },
 
     {
-        Text = "Background Music",
+        Text = "BGM",
         Type = "Number",
         Modifiable = Value(true),
 
@@ -221,12 +205,12 @@ return {
 
         Value = Value("12:00:00"),
         Tooltip = {
-            Text = "The time of day during the map."
+            Text = "The time of day during the map. Not to be confused with ClockTime."
         }
     },
 
     {
-        Text = "ColorShift - Bottom",
+        Text = "ColorShift_Bottom",
         Type = "Color",
         Modifiable = Value(true),
 
@@ -241,7 +225,7 @@ return {
     },
 
     {
-        Text = "ColorShift - Top",
+        Text = "ColorShift_Top",
         Type = "Color",
         Modifiable = Value(true),
 
@@ -264,7 +248,10 @@ return {
         Attribute = "EnvironmentDiffuseScale",
         Fallback = 0,
 
-        Value = Value(0)
+        Value = Value(0),
+        Tooltip = {
+            Text = "A value 0 - 1 on how much the environment should blend with the sky."
+        }
     },
 
     {
@@ -276,7 +263,10 @@ return {
         Attribute = "EnvironmentSpecularScale",
         Fallback = 0,
 
-        Value = Value(0)
+        Value = Value(0),
+        Tooltip = {
+            Text = "A value 0 - 1 on how much the environment should reflect the sky."
+        }
     },
 
     {
@@ -345,7 +335,10 @@ return {
         Attribute = "GlobalShadows",
         Fallback = false,
 
-        Value = Value(false)
+        Value = Value(false),
+        Tooltip = {
+            Text = "Whether or not the sun will cast shadows."
+        }
     },
 
     {
@@ -357,6 +350,9 @@ return {
         Attribute = "OutdoorAmbient",
         Fallback = Util.colorToRGB(Color3.fromRGB(70, 70, 70)),
 
-        Value = Value(Color3.new())
+        Value = Value(Color3.new()),
+        Tooltip = {
+            Text = "The ambient in any setting which has sunlight."
+        }
     },
 }
