@@ -27,7 +27,7 @@ end
 local function getSettingTextColor(data)
     local isErrored = data.Errored:get()
 
-    return (isErrored and Theme.ErrorText.Default:get()) or Theme.DimmedText.Default:get()
+    return (isErrored and Theme.ErrorText.Default:get()) or Theme.SubText.Default:get()
 end
 
 local function canEditSetting(data)
