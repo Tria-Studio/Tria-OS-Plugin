@@ -346,4 +346,35 @@ function Components.DropdownHolderFrame(data)
     }
 end
 
+function Components.TooltipImage(data)
+    return New "ImageButton" {
+        Active = Util.interfaceActive,
+        AutoButtonColor = Util.interfaceActive,
+
+        AnchorPoint = Vector2.new(1, 0.5),
+        BackgroundColor3 = Theme.MainBackground.Default,
+        BackgroundTransparency = 0,
+        BorderColor3 = Theme.Border.Default,
+        BorderMode = Enum.BorderMode.Inset,
+        BorderSizePixel = 1,
+        Name = "Tooltip",
+        Position = data.Position,
+        Size = UDim2.fromOffset(16, 16),
+        Image = "rbxassetid://6034281900",
+        ImageColor3 = Theme.SubText.Default,
+
+        [OnEvent "Activated"] = function()
+            Util:ShowTooltip({Header = tostring(data.Header), Tooltip = tostring(data.Tooltip)})
+        end,
+
+        [Children] = New "UIGradient" {
+            Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255)),
+            Rotation = 45,
+            Enabled = Computed(function()
+                return data.Tooltip ~= nil
+            end):get(false)
+        }
+    }
+end
+
 return Components

@@ -91,35 +91,10 @@ function BaseSettingButton(data)
                     Position = UDim2.fromScale(0.45, 0),
                     Size = UDim2.new(0, 1, 1, 0)
                 },
-                New "ImageButton" {
-                    Active = Util.interfaceActive,
-                    AutoButtonColor = Util.interfaceActive,
-
-                    AnchorPoint = Vector2.new(1, 0.5),
-                    BackgroundColor3 = Theme.MainBackground.Default,
-                    BackgroundTransparency = 0,
-                    BorderColor3 = Theme.Border.Default,
-                    BorderMode = Enum.BorderMode.Inset,
-                    BorderSizePixel = 1,
-                    Name = "Tooltip",
-                    Position = UDim2.new(0, -2, 0.5, 0),
-                    Size = UDim2.fromOffset(16, 16),
-                    Image = "rbxassetid://6034281900",
-                    ImageColor3 = Theme.SubText.Default,
-
-                    [OnEvent "Activated"] = function()
-                        if data.Tooltip then
-                            Util:ShowTooltip({Header = data.Text, Tooltip = data.Tooltip.Text})
-                        end
-                    end,
-
-                    [Children] = New "UIGradient" {
-                        Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255)),
-                        Rotation = 45,
-                        Enabled = Computed(function()
-                            return data.Tooltip ~= nil
-                        end):get(false)
-                    }
+                Components.TooltipImage {
+                    Header = data.Text or data.Name,
+                    Tooltip = if data.Tooltip then data.Tooltip.Text else "",
+                    Position = UDim2.new(0, -2, 0.5, 0)
                 }
             }
         }
