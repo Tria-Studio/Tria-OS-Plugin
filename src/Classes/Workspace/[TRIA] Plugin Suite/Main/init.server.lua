@@ -1,10 +1,6 @@
 local PluginBar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local OpenButton = PluginBar:CreateButton("TRIA.os Companion Plugin", "Tools to help map making easier!", "rbxassetid://12032105372", "Mapmaking Companion")
-<<<<<<< HEAD
-local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 225, 300) 
-=======
 local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 300)
->>>>>>> b02b534414910f42d4e22719cf0d6c78e83ef25d
 local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
 
 local Fusion = require(script.Resources.Fusion)
