@@ -1,5 +1,6 @@
 
 local InsertService = game:GetService("InsertService")
+local Players = game:GetService("Players")
 
 local Package = script.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
@@ -10,10 +11,11 @@ local Util = require(Package.Util)
 local New = Fusion.New
 local Children = Fusion.Children
 local OnEvent = Fusion.OnEvent
+local Computed = Fusion.Computed
 
 local frame = {}
 
-local function attemptTask(functionName: string, ...): (boolean, any)
+local function attemptTask(service, functionName: string, ...): (boolean, any)
     local MAX_ATTEMPTS = 5
 
     local attemptCount = 0
@@ -22,7 +24,7 @@ local function attemptTask(functionName: string, ...): (boolean, any)
     repeat
         attemptCount += 1
         print(("Calling '%s', attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
-        success, result = pcall(InsertService[functionName], InsertService, ...)
+        success, result = pcall(service[functionName], service, ...)
         if not success then
             warn(("Attempt to call '%s' failed, attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
             task.wait(1)
@@ -40,10 +42,10 @@ end
 function attemptToInsertModel(assetID: number)
     local success, result
 
-    success, result = attemptTask("GetLatestAssetVersionAsync", assetID)
+    success, result = attemptTask(InsertService, "GetLatestAssetVersionAsync", assetID)
     if not success then return end
 
-    success, result = attemptTask("LoadAssetVersion", result)
+    success, result = attemptTask(InsertService, "LoadAssetVersion", result)
     if not success then return end
 
     result = result:GetChildren()[1]
@@ -77,7 +79,7 @@ end
 
 function KitInsertButton(data)
     return Components.ImageButton {
-        BackgroundColor3 = Color3.new(1, 1, 1),
+        BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
         BackgroundTransparency = 0,
         Size = data.BoxSize,
 
@@ -109,6 +111,22 @@ function KitInsertButton(data)
                 Text = data.Text,
                 TextColor3 = Color3.new(1, 1, 1),
                 TextSize = 16
+            },
+
+            New "TextLabel" {
+                AnchorPoint = Vector2.new(0, 1),
+                BackgroundTransparency = 1,
+                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                Position = UDim2.fromScale(0, 0.65),
+                Size = UDim2.new(1, 0, -0.325, 24),
+                ZIndex = 2,
+                Text = "by @" .. tostring(data.Creator),
+                TextColor3 = Color3.new(1, 1, 1),
+                TextSize = 12,
+
+                Visible = Computed(function()
+                    return data.Creator ~= nil
+                end):get()
             }
         }
     }
@@ -145,7 +163,38 @@ function frame:GetFrame(data)
                                 Image = "rbxassetid://9441561539",
                                 Text = "Official TRIA.OS Map Kit",
                                 AssetID = 6404661021
-                            })
+                            }),
+
+                            New "Frame" {
+                                BackgroundTransparency = 1,
+                                Name = "InnerFrame",
+                                LayoutOrder = 2,
+                                Size = UDim2.new(1, 0, 0, 64),
+
+                                [Children] = {
+                                    Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 8), Enum.VerticalAlignment.Top),
+                                    KitInsertButton({
+                                        BackgroundColor = Color3.fromRGB(43, 124, 255),
+                                        BoxSize = UDim2.new(0.5, -16, 0, 64),
+                                        GradientColor = ColorSequence.new(Color3.new(1, 1, 1)),
+                                        Image = "rbxassetid://9441689114",
+                                        Text = "Map Textures Kit",
+                                        Creator = "Phexonia",
+                                        AssetID = 6404661021
+                                    }),
+        
+                                    KitInsertButton({
+                                        BackgroundColor = Color3.fromRGB(58, 220, 0),
+                                        BoxSize = UDim2.new(0.5, -16, 0, 64),
+                                        GradientColor = ColorSequence.new(Color3.new(1, 1, 1)),
+                                        Image = "rbxassetid://9441751309",
+                                        Text = "TRIA.OS Jump Kit",
+                                        Creator = "epicflamingo100",
+                                        AssetID = 6404661021
+                                    }),
+                                }
+                            },
+
                         }
                     },
                 }
