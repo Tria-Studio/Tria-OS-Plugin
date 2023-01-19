@@ -19,24 +19,21 @@ local Value = Fusion.Value
 local currentEditing = Value(nil)
 
 local function isCurrentSettingModifiable(data)
-    local isModifiable = data.Modifiable:get()
     local isErrored = data.Errored:get()
 
-    return (isModifiable and not isErrored and Util.interfaceActive:get())
+    return (not isErrored and Util.interfaceActive:get())
 end
 
 local function getSettingTextColor(data)
-    local isModifiable = data.Modifiable:get()
     local isErrored = data.Errored:get()
 
-    return (isErrored and Theme.ErrorText.Default:get()) or (isModifiable and Theme.SubText.Default:get()) or Theme.DimmedText.Default:get()
+    return (isErrored and Theme.ErrorText.Default:get()) or Theme.DimmedText.Default:get()
 end
 
 local function canEditSetting(data)
-    local isModifiable = data.Modifiable:get()
     local isErrored = data.Errored:get()
 
-    return (isModifiable and not isErrored)
+    return (not isErrored)
 end
 
 function BaseSettingButton(data)

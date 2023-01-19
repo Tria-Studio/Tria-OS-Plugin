@@ -8,8 +8,7 @@ return {
     {
         Text = "Creator (s)",
         Type = "String",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "Creator",
         Fallback = "TRIA",
@@ -22,8 +21,7 @@ return {
     {
         Text = "Difficulty",
         Type = "Number",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "Difficulty",
         Fallback = 6,
@@ -45,8 +43,7 @@ return {
     {
         Text = "Thumbnail Image",
         Type = "Number",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "Image",
         Fallback = 10672852399,
@@ -60,8 +57,7 @@ return {
     {
         Text = "Max Time",
         Type = "Number",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "MaxTime",
         Fallback = 120,
@@ -75,8 +71,7 @@ return {
     {
         Text = "BGM",
         Type = "Number",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "Music",
         Fallback = 6366407687,
@@ -90,8 +85,7 @@ return {
     {
         Text = "BGM Volume",
         Type = "Number",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "MusicVolume",
         Fallback = 0.5,
@@ -105,8 +99,7 @@ return {
     {
         Text = "Map Name",
         Type = "String",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "Name",
         Fallback = "Map Kit",
@@ -120,8 +113,7 @@ return {
     {
         Text = "Default Oxygen",
         Type = "Number",
-        Modifiable = Value(true),
-
+        
         Directory = "Main",
         Attribute = "DefaultOxygen",
         Fallback = "100",
@@ -135,8 +127,7 @@ return {
     {
         Text = "Allow Sliding",
         Type = "Checkbox",
-        Modifiable = Value(true),
-
+        
         Directory = "Skills",
         Attribute = "AllowSliding",
         Fallback = true,
@@ -150,7 +141,6 @@ return {
     {
         Text = "Linear Sliding",
         Type = "Checkbox",
-        Modifiable = Value(true),
 
         Directory = "Skills",
         Attribute = "LinearSliding",
@@ -167,7 +157,6 @@ return {
     {
         Text = "Ambient",
         Type = "Color",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "Ambient",
@@ -182,7 +171,6 @@ return {
     {
         Text = "Brightness",
         Type = "Number",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "Brightness",
@@ -197,7 +185,6 @@ return {
     {
         Text = "Time of Day",
         Type = "Time",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "TimeOfDay",
@@ -212,7 +199,6 @@ return {
     {
         Text = "ColorShift_Bottom",
         Type = "Color",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "ColorShift_Bottom",
@@ -227,7 +213,6 @@ return {
     {
         Text = "ColorShift_Top",
         Type = "Color",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "ColorShift_Top",
@@ -242,7 +227,6 @@ return {
     {
         Text = "EnvironmentDiffuseScale",
         Type = "Number",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "EnvironmentDiffuseScale",
@@ -257,7 +241,6 @@ return {
     {
         Text = "EnvironmentSpecularScale",
         Type = "Number",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "EnvironmentSpecularScale",
@@ -272,7 +255,6 @@ return {
     {
         Text = "Fog Color",
         Type = "Color",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "FogColor",
@@ -287,7 +269,6 @@ return {
     {
         Text = "Fog Start",
         Type = "Number",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "FogStart",
@@ -302,7 +283,6 @@ return {
     {
         Text = "Fog End",
         Type = "Number",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "FogEnd",
@@ -317,7 +297,6 @@ return {
     {
         Text = "GeographicLatitude",
         Type = "Number",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "GeographicLatitude",
@@ -329,7 +308,6 @@ return {
     {
         Text = "Global Shadows",
         Type = "Checkbox",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "GlobalShadows",
@@ -344,7 +322,6 @@ return {
     {
         Text = "Outdoor Ambient",
         Type = "Color",
-        Modifiable = Value(true),
 
         Directory = "Lighting",
         Attribute = "OutdoorAmbient",
