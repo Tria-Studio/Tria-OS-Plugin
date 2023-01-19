@@ -1,6 +1,6 @@
 
 local InsertService = game:GetService("InsertService")
-local Players = game:GetService("Players")
+local Selection = game:GetService("Selection")
 
 local Package = script.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
@@ -53,7 +53,9 @@ function attemptToInsertModel(assetID: number)
 
     result = result:GetChildren()[1]
     result.Name = "[INSERTED] - " .. result.Name
-    result.Parent = workspace --Util.mapModel:get(false)
+    result:PivotTo(CFrame.new())
+    result.Parent = workspace
+    Selection:Set({result})
 end
 
 function HeaderText(data)
