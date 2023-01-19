@@ -135,10 +135,6 @@ function Util:ShowMessage(header: string, text: string, option1: any?, option2: 
     self._Message.Option2:set(option2 or {})
 end
 
-function Util:ShowTooltip(data)
-    self:ShowMessage("<font color='#ffd700'>Tooltip</font> - " .. data.Header, data.Tooltip)
-end
-
 function Util.updateMapSetting(directory: string, attribute: string, value: any)
     local dirFolder = getSettingsDirFolder(directory)
     if not dirFolder then
