@@ -110,7 +110,8 @@ function KitInsertButton(data)
                 Position = UDim2.fromScale(0.5, 0.5),
                 Size = UDim2.fromScale(0.8, 1),
                 Image = data.Image,
-                ImageTransparency = 0.5
+                ImageTransparency = 0.5,
+                ScaleType = Enum.ScaleType.Crop
             },
 
             New "TextLabel" {
