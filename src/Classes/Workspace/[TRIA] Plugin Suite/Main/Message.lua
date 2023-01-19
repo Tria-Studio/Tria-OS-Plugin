@@ -19,6 +19,7 @@ return New "Frame" { --// Message
 	Visible = Computed(function()
 		return Util._Message.Text:get() ~= ""
 	end),
+	ZIndex = 1000,
 
 	[Children] = {
 		New "ImageLabel" {
