@@ -67,9 +67,6 @@ function modifyStateTable(state, action, ...)
 end
 
 local function settingOption(optionType, optionData): Instance
-    if optionData.Modifiable == nil then
-        optionData.Modifiable = Value(true)
-    end
     if optionData.Errored == nil then
         optionData.Errored = Value(false)
     end
@@ -98,7 +95,7 @@ local function updateStateValue(currentValue, newValue, tbl)
     if currentValue then
         currentValue = newValue
     end
-    if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) and tbl.Modifiable:get(false) then
+    if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
         tbl.Errored:set(true)
         tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
         Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
@@ -119,8 +116,7 @@ function insertLiquids()
         local liquidData = {
             {
                 Text = "Color", 
-                Type = "Color", 
-                Modifiable = Value(true), 
+                Type = "Color",  
                 Attribute = "Color", 
                 Fallback = Color3.new(1, 1, 1), 
                 Value = Value(Color3.new(1, 1, 1)),
@@ -128,8 +124,7 @@ function insertLiquids()
             },
             {
                 Text = "Oxygen Depletion", 
-                Type = "Number", 
-                Modifiable = Value(true), 
+                Type = "Number",  
                 Attribute = "OxygenDepletion", 
                 Fallback = 1, 
                 Value = Value(1),
@@ -137,8 +132,7 @@ function insertLiquids()
             },
             {
                 Text = "Splash Sound", 
-                Type = "Number", 
-                Modifiable = Value(true), 
+                Type = "Number",  
                 Attribute = "SplashSound", 
                 Fallback = "water", 
                 Value = Value(""),
@@ -154,12 +148,14 @@ function insertLiquids()
             local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
             
             local function updateConnection()
-                if tbl.Modifiable:get(false) then
-                    updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
-                else
-                    updateStateValue(nil, nil, liquidSetting)
-                    Util.updateMapSetting(liquidSetting.Directory, liquidSetting.Attribute, liquidSetting.Fallback)
-                end
+                -- if tbl.Modifiable:get(false) then
+                --     updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
+                -- else
+                --     updateStateValue(nil, nil, liquidSetting)
+                --     Util.updateMapSetting(liquidSetting.Directory, liquidSetting.Attribute, liquidSetting.Fallback)
+                -- end
+
+                updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
                 hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
             end
             updateConnection()
@@ -195,16 +191,16 @@ function onMapChanged()
         -- Initially retrieve setting value
         local currentValue = dirFolder:GetAttribute(tbl.Attribute)
 
-        local originalModifiableState = tbl.Modifiable:get(false)
         local changeConnection
 
         local function updateConnection()
-            if tbl.Modifiable:get(false) then
-                updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
-            else
-                updateStateValue(nil, nil, tbl)
-                Util.updateMapSetting(tbl.Directory, tbl.Attribute, tbl.Fallback)
-            end
+            -- if tbl.Modifiable:get(false) then
+            --     updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
+            -- else
+            --     updateStateValue(nil, nil, tbl)
+            --     Util.updateMapSetting(tbl.Directory, tbl.Attribute, tbl.Fallback)
+            -- end
+            updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
             hookAttributeChanged(dirFolder, tbl.Attribute, updateConnection)
         end
         updateConnection()
