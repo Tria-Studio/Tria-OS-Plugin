@@ -114,6 +114,7 @@ local themes = {
 }
 
 settings().Studio.ThemeChanged:Connect(function()
+    -- TODO: fix this mess
     StudioTheme = settings().Studio.Theme
     for name, data in pairs(themes) do
         for key, _ in pairs(data) do

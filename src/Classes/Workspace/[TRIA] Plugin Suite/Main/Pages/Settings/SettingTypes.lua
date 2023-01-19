@@ -20,19 +20,16 @@ local currentEditing = Value(nil)
 
 local function isCurrentSettingModifiable(data)
     local isErrored = data.Errored:get()
-
     return (not isErrored and Util.interfaceActive:get())
 end
 
 local function getSettingTextColor(data)
     local isErrored = data.Errored:get()
-
     return (isErrored and Theme.ErrorText.Default:get()) or Theme.SubText.Default:get()
 end
 
 local function canEditSetting(data)
     local isErrored = data.Errored:get()
-
     return (not isErrored)
 end
 
