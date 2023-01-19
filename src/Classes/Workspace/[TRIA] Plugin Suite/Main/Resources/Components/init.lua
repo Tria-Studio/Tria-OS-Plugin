@@ -352,7 +352,7 @@ function Components.TooltipImage(data)
         AutoButtonColor = Util.interfaceActive,
 
         AnchorPoint = Vector2.new(1, 0.5),
-        BackgroundColor3 = Theme.MainBackground.Default,
+        BackgroundColor3 = Theme.Button.Default,
         BackgroundTransparency = 0,
         BorderColor3 = Theme.Border.Default,
         BorderMode = Enum.BorderMode.Inset,
@@ -366,14 +366,6 @@ function Components.TooltipImage(data)
         [OnEvent "Activated"] = function()
             Util:ShowMessage(tostring(data.Header), tostring(data.Tooltip))
         end,
-
-        [Children] = New "UIGradient" {
-            Color = ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255)),
-            Rotation = 45,
-            Enabled = Computed(function()
-                return data.Tooltip ~= nil
-            end):get(false)
-        }
     }
 end
 
