@@ -352,7 +352,7 @@ function Components.TooltipImage(data)
         AutoButtonColor = Util.interfaceActive,
 
         AnchorPoint = Vector2.new(1, 0.5),
-        BackgroundColor3 = Theme.Button.Default,
+        BackgroundColor3 = Theme.CurrentMarker.Default,
         BackgroundTransparency = 0,
         BorderColor3 = Theme.Border.Default,
         BorderMode = Enum.BorderMode.Inset,
