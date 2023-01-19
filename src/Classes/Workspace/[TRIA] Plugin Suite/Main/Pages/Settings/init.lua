@@ -67,10 +67,6 @@ function modifyStateTable(state, action, ...)
 end
 
 local function settingOption(optionType, optionData): Instance
-    if optionData.Errored == nil then
-        optionData.Errored = Value(false)
-    end
-    
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
 end
@@ -142,19 +138,13 @@ function insertLiquids()
 
         for _, tbl in ipairs(liquidData) do
             tbl.Directory = "Liquids." .. liquid.Name
+            tbl.Errored = Value(false)
         end
 
         for _, liquidSetting in ipairs(liquidData) do
             local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
             
             local function updateConnection()
-                -- if tbl.Modifiable:get(false) then
-                --     updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
-                -- else
-                --     updateStateValue(nil, nil, liquidSetting)
-                --     Util.updateMapSetting(liquidSetting.Directory, liquidSetting.Attribute, liquidSetting.Fallback)
-                -- end
-
                 updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
                 hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
             end
@@ -194,12 +184,6 @@ function onMapChanged()
         local changeConnection
 
         local function updateConnection()
-            -- if tbl.Modifiable:get(false) then
-            --     updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
-            -- else
-            --     updateStateValue(nil, nil, tbl)
-            --     Util.updateMapSetting(tbl.Directory, tbl.Attribute, tbl.Fallback)
-            -- end
             updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
             hookAttributeChanged(dirFolder, tbl.Attribute, updateConnection)
         end
@@ -434,8 +418,8 @@ local function handleLiquids()
     table.insert(settingConnections, settingsFolder.ChildRemoved:Connect(onMapChanged))
 end
 
-insertLiquids()
 for _, tbl in ipairs(SettingData) do
+    tbl.Errored = Value(false)
     for k, v in pairs(directories) do
         if tbl.Directory == k then
             modifyStateTable(v.Items, "insert", tbl)
@@ -443,9 +427,12 @@ for _, tbl in ipairs(SettingData) do
     end
 end
 
+insertLiquids()
 onMapChanged()
 handleLiquids()
+
 Util.MapChanged:Connect(function()
+    insertLiquids()
     onMapChanged()
     handleLiquids()
 end)
