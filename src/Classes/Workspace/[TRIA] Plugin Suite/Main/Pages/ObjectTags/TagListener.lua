@@ -125,8 +125,8 @@ return function(name, data)
                                         BackgroundColor3 = Theme.ScrollBarBackground.Default,
                                         BorderColor3 = Theme.Border.Default,
                                         BorderSizePixel = 1,
-                                        Size = UDim2.new(metadataType.isFullSize and 1 or .5, 0, 0, 22),
-                                        Position = UDim2.new(metadataType.location % 2 == 1 and 0 or .5, 0, 0, (math.ceil(metadataType.location / 2) - 1) * 22),
+                                        Size = UDim2.new(metadataType.isFullSize and 1 or 0.5, 0, 0, 22),
+                                        Position = UDim2.new(metadataType.location % 2 == 1 and 0 or 0.5, 0, 0, (math.ceil(metadataType.location / 2) - 1) * 22),
                                         
                                         Text = metadataType.data.displayName .. ":",
                                         TextColor3 = Theme.MainText.Default,

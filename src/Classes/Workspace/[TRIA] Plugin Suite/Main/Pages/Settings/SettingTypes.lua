@@ -164,8 +164,8 @@ function SettingTypes.Checkbox(data)
         [Children] = New "TextButton" {
             Active = Util.interfaceActive,
 
-            Size = UDim2.new(.55, 0, 1, 0),
-            Position = UDim2.new(.45, 0, 0, 0),
+            Size = UDim2.new(0.55, 0, 1, 0),
+            Position = UDim2.new(0.45, 0, 0, 0),
             BackgroundTransparency = 1,
 
             [OnEvent "Activated"] = function()
