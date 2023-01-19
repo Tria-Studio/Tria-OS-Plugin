@@ -123,7 +123,8 @@ function KitInsertButton(data)
                 ZIndex = 2,
                 Text = data.Text,
                 TextColor3 = Color3.new(1, 1, 1),
-                TextSize = 16
+                TextSize = 16,
+                TextTruncate = Enum.TextTruncate.AtEnd,
             },
 
             New "TextLabel" {
@@ -136,6 +137,7 @@ function KitInsertButton(data)
                 Text = "by @" .. tostring(data.Creator),
                 TextColor3 = Color3.new(1, 1, 1),
                 TextSize = 12,
+                TextTruncate = Enum.TextTruncate.AtEnd,
 
                 Visible = Computed(function()
                     return data.Creator ~= nil
