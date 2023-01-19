@@ -14,8 +14,8 @@ local Observer = Fusion.Observer
 local Out = Fusion.Out
 
 return function(name, data)
-    local tagSelected = Value(false)
-    local tagEnabled = Value(false)
+    local dataVisible = Value(false)
+    local checkState = Value(Enum.TriStateBoolean.False)
 
     return New "Frame" {
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -53,11 +53,15 @@ return function(name, data)
                     AnchorPoint = Vector2.new(1, 0),
                     Position = UDim2.fromOffset(-30, 2),
                     Size = UDim2.fromOffset(20, 20),
-                    Image = "rbxassetid://6031094667",
+                    Image = Computed(function()
+                        print(checkState:get())
+                        return if checkState:get() == Enum.TriStateBoolean.True
+                            then Util.Images.Checkbox.Checked
+                            elseif checkState:get() == Enum.TriStateBoolean.False
+                            then Util.Images.Checkbox.Unchecked
+                            else Util.Images.Checkbox.Unknown 
+                    end),
                     ImageColor3 = Theme.CheckedFieldIndicator.Default,
-                    ImageTransparency = Computed(function()
-                        return tagEnabled:get() and 0 or 1
-                    end)
                 },
                 New "ImageLabel" { --// Icon
                     Size = UDim2.fromOffset(20, 20),
@@ -68,9 +72,10 @@ return function(name, data)
                 },
                 Computed(function()
                     local metaDataVisible = Computed(function()
-                        return #Util.selectedParts:get() > 0 and TagUtils:PartsHaveTag(Util.selectedParts:get(), name) == Enum.TriStateBoolean.True
+                        local value = TagUtils:PartsHaveTag(Util.selectedParts:get(), name)
+                        checkState:set(#Util.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
+                        return #Util.selectedParts:get() > 0 and value == Enum.TriStateBoolean.True
                     end)
-                    local dataVisible = Value(false)
                     Observer(metaDataVisible):onChange(function()
                         dataVisible:set(metaDataVisible:get())
                     end)

@@ -79,13 +79,15 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 end
 
 function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
+    local numYes = 0
     for _, part in pairs(parts) do
-        if not tagUtils:PartHasTag(part, tag) then
-            return false
-        end
+        local value = tagUtils:PartHasTag(part, tag)
+        numYes += if value then 1 else 0
     end
 
-    return Enum.TriStateBoolean.True
+    return #parts == numYes and Enum.TriStateBoolean.True
+        or numYes == 0 and Enum.TriStateBoolean.False
+        or Enum.TriStateBoolean.Unknown
 end
 
 return tagUtils
