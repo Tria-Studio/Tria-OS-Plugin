@@ -2,6 +2,7 @@ local Selection = game:GetService("Selection")
 
 local Fusion = require(script.Parent.Resources.Fusion)
 local Signal = require(script.Signal)
+local Pages = require(script.Parent.Resources.Components.Pages)
 local Maid = require(script.Maid)
 
 local Value = Fusion.Value
@@ -133,6 +134,10 @@ function Util:ShowMessage(header: string, text: string, option1: any?, option2: 
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
     self._Message.Option2:set(option2 or {})
+end
+
+function Util.isPluginFrozen()
+	return Util.mapModel:get() == nil and not table.find(Pages.pageData.bypassedPages, Pages.pageData.currentPage:get())
 end
 
 function Util.updateMapSetting(directory: string, attribute: string, value: any)

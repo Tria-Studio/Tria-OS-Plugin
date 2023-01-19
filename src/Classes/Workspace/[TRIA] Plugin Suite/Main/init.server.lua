@@ -35,21 +35,21 @@ New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				Pages:NewPage({Name = "ObjectTags", Default = false}),
+				Pages:NewPage({Name = "ObjectTags", Default = true}),
 				Pages:NewPage({Name = "ViewModes"}),
 				Pages:NewPage({Name = "Settings"}),
 				Pages:NewPage({Name = "Compatibility"}),
 				Pages:NewPage({Name = "Publish"}),
-				Pages:NewPage({Name = "Insert", Default = true}),
+				Pages:NewPage({Name = "Insert", Default = false}),
 
 				New "TextLabel" {
 					Active = Computed(function()
-						return Util.mapModel:get() == nil
+						return Util.isPluginFrozen()
 					end),
 					AnchorPoint = Vector2.new(0.5, 0.5),
 
 					BackgroundTransparency = Spring(Computed(function()
-						return Util.mapModel:get() == nil and 0.5 or 1
+						return Util.isPluginFrozen() and 0.5 or 1
 					end), 18),
 					BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 
@@ -60,16 +60,16 @@ New "Frame" {
 					Text = "Select a map to continue.",
 					TextColor3 = Color3.new(1, 1, 1),
 					TextSize = Spring(Computed(function()
-						return 28 * (Util.mapModel:get() == nil and 1 or 2)
+						return 28 * (Util.isPluginFrozen() and 1 or 2)
 					end), 18),
 					TextTransparency = Spring(Computed(function()
-						return Util.mapModel:get() == nil and 0 or 1
+						return Util.isPluginFrozen() and 0 or 1
 					end), 18),
 
 					[Children] = {
 						Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
 						Components.Constraints.UIStroke(nil, Color3.new(), nil, Spring(Computed(function()
-							return Util.mapModel:get() == nil and 0 or 1
+							return Util.isPluginFrozen() and 0 or 1
 						end), 18))
 					}
 				}
@@ -166,7 +166,7 @@ New "Frame" {
 			Size = UDim2.new(1, 0, 1, -76),
 			Position = UDim2.fromOffset(0, 52),
 			Visible = Computed(function()
-				return Util.mapModel:get() == nil
+				return Util.isPluginFrozen()
 			end)
 		}
 	}

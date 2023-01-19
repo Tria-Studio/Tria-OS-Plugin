@@ -7,12 +7,13 @@ local Value = Fusion.Value
 local PageHandler = {
     pageData = {
         pages = {},
-        currentPage = nil,
+        bypassedPages = {"Insert"},
+        currentPage = Value(nil),
     }
 }
 
 function PageHandler:ChangePage(NewPage: string)
-    local currentPage = self.pageData.currentPage
+    local currentPage = self.pageData.currentPage:get()
     if currentPage == NewPage then
         return
     end
@@ -22,7 +23,7 @@ function PageHandler:ChangePage(NewPage: string)
 
     self.pageData.pages[currentPage].Visible:set(false)
     self.pageData.pages[NewPage].Visible:set(true)
-    self.pageData.currentPage = NewPage
+    self.pageData.currentPage:set(NewPage)
 end
 
 function PageHandler:NewPage(data)
@@ -38,7 +39,7 @@ function PageHandler:NewPage(data)
     self.pageData.pages[data.Name] = newPageData
 
     if newPageData.Visible:get(false) then
-        self.pageData.currentPage = newPageData.Name
+        self.pageData.currentPage:set(newPageData.Name)
     end
 
     return newPageData.Frame

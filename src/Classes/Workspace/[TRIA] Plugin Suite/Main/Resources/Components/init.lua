@@ -2,6 +2,7 @@ local Resources = script.Parent
 local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Util = require(Resources.Parent.Util)
+local Pages = require(script.Pages)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -48,12 +49,11 @@ function Components.TextBox(data)
 end
 
 function Components.TopbarButton(data)
-    local Pages = require(script.Pages)
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     return New "TextButton" {
-        Active = Util.interfaceActive,
-        AutoButtonColor = Util.interfaceActive,
+        Active = true, --Util.interfaceActive,
+        AutoButtonColor = true, --Util.interfaceActive,
         BackgroundColor3 = Spring(Computed(function()
             local hoverColor = Theme.RibbonButton.Hover:get()
             local titlebarColor = Theme.RibbonButton.Default:get()
@@ -63,7 +63,7 @@ function Components.TopbarButton(data)
         Size = UDim2.fromScale(0.167, 1),
         
         [OnEvent "Activated"] = function()
-            if not Util._Topbar.FreezeFrame:get(false) then
+            if not Util._Topbar.FreezeFrame:get(false) or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil then
                 Pages:ChangePage(data.Name)
             end
         end,
