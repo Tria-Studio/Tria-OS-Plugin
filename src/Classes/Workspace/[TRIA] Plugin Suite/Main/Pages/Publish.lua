@@ -41,6 +41,27 @@ local apiData = {
     isShowingApiKey = Value(false)
 }
 
+local whitelistIdIsEmpty = Computed(function()
+    return whitelistMapId:get() ~= ""
+end)
+
+local selectedMapToPublishExists = Computed(function()
+    return selectedPublishMap:get() ~= nil
+end)
+
+local isUnfilteredKeySimilar = Computed(function()
+    return apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
+end)
+
+local springs = {
+    ["selectedMapSpring"] = Spring(Computed(function()
+        return if selectedPublishMap:get() then Theme.MainText.Default:get() else Theme.DimmedText.Default:get()
+    end), 20),
+
+    ["whitelistIdSpring"] = Spring(Computed(function()
+        return whitelistIdIsEmpty:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
+    end), 20)
+}
 local frame = {}
 
 local function getInfoFrame(name, frames)
@@ -88,7 +109,7 @@ function frame:GetFrame(data)
                         if value == NoMapsFoundText:get() then
                             return New "TextLabel" {
                                 Size = UDim2.new(1, 0, 0, 20),
-                                Text = NoMapsFoundText:get(),
+                                Text = NoMapsFoundText,
                                 BackgroundTransparency = 0,
                                 BackgroundColor3 = Theme.InputFieldBackground.Default,
                                 TextColor3 = Theme.ErrorText.Default,
@@ -98,8 +119,6 @@ function frame:GetFrame(data)
                             }
                         else
                             local colorMultiplier = Value(1)
-                            -- fine
-                            -- yay :D
                             return Components.ImageButton {
                                 Visible = visible,
                                 LayoutOrder = value.ID,
@@ -113,14 +132,14 @@ function frame:GetFrame(data)
                                 end), 20),
     
                                 [OnEvent "MouseEnter"] = function()
-                                    colorMultiplier:set(.7)
+                                    colorMultiplier:set(0.7)
                                 end,
                                 [OnEvent "MouseButton1Down"] = function()
                                     colorMultiplier:set(1.15)
     
                                 end,
                                 [OnEvent "MouseButton1Up"] = function()
-                                    colorMultiplier:set(.7)
+                                    colorMultiplier:set(0.7)
                                     selectedPublishMap:set(value)
                                     publishButtonText:set(list == whitelistedMaps and "Publish Map" or "Update Map")
                                 end,
@@ -130,7 +149,7 @@ function frame:GetFrame(data)
     
                                 [Children] = New "Frame" {
                                     BackgroundColor3 = Color3.new(0, 0, 0),
-                                    BackgroundTransparency = .625,
+                                    BackgroundTransparency = 0.625,
                                     Position = UDim2.fromScale(0, 1),
                                     Size = UDim2.new(1, 0, 0, 34),
                                     AnchorPoint = Vector2.new(0, 1),
@@ -138,9 +157,9 @@ function frame:GetFrame(data)
                                     [Children] = {
                                         New "TextLabel" { --// Map Name
                                             Text = value.Name,
-                                            AnchorPoint = Vector2.new(.5, 0),
+                                            AnchorPoint = Vector2.new(0.5, 0),
                                             BackgroundTransparency = 1,
-                                            Position = UDim2.fromScale(.5, .45),
+                                            Position = UDim2.fromScale(0.5, .45),
                                             Size = UDim2.new(0, 110, 0.55, 0),
                                             FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
                                             TextSize = 18,
@@ -272,26 +291,11 @@ Your creator token is a long phrase of characters which authenticates and allows
                             Size = UDim2.new(0.4, 0, 0, 24),
                             Text = "Whitelist Map",
 
-                            Active = Computed(function()
-                                return whitelistMapId:get() ~= ""
-                            end),
-                            AutoButtonColor = Computed(function()
-                                return whitelistMapId:get() ~= ""
-                            end),
+                            Active = whitelistIdIsEmpty,
+                            AutoButtonColor = whitelistIdIsEmpty,
 
-                            TextColor3 = Spring(Computed(function()
-                                local EnabledColor = Theme.BrightText.Default
-                                local DisabledColor = Theme.SubText.Default
-
-                                return whitelistMapId:get() ~= "" and EnabledColor:get() or DisabledColor:get()
-                            end), 20),
-                            
-                            BackgroundColor3 = Spring(Computed(function()
-                                local EnabledColor = Theme.MainButton.Default
-                                local DisabledColor = Theme.MainButton.Pressed
-
-                                return whitelistMapId:get() ~= "" and EnabledColor:get() or DisabledColor:get()
-                            end), 20),
+                            TextColor3 = springs.whitelistIdSpring,
+                            BackgroundColor3 = springs.selectedMapSpring,
 
                             [OnEvent "Activated"] = function()
                                  -- this function will call to whitelist
@@ -326,11 +330,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                                 return if selectedPublishMap:get() then selectedPublishMap:get().Name else "No map selected"
                             end),
 
-                            TextColor3 = Spring(Computed(function()
-                                local selectedColor = Theme.MainText.Default:get()
-                                local inactiveColor = Theme.DimmedText.Default:get()
-                                return if selectedPublishMap:get() then selectedColor else inactiveColor
-                            end), 20),
+                            TextColor3 = springs.selectedMapSpring,
 
                             [Children] = Components.ImageButton({
                                 AnchorPoint = Vector2.new(1, 0.5),
@@ -357,26 +357,11 @@ Your creator token is a long phrase of characters which authenticates and allows
                             Size = UDim2.new(0.4, 0, 0, 24),
                             Text = publishButtonText,
 
-                            Active = Computed(function()
-                                return selectedPublishMap:get() ~= nil
-                            end),
-                            AutoButtonColor = Computed(function()
-                                return selectedPublishMap:get() ~= nil
-                            end),
+                            Active = selectedMapToPublishExists,
+                            AutoButtonColor = selectedMapToPublishExists,
 
-                            TextColor3 = Spring(Computed(function()
-                                local EnabledColor = Theme.BrightText.Default
-                                local DisabledColor = Theme.SubText.Default
-
-                                return selectedPublishMap:get() and EnabledColor:get() or DisabledColor:get()
-                            end), 20),
-
-                            BackgroundColor3 = Spring(Computed(function()
-                                local EnabledColor = Theme.MainButton.Default
-                                local DisabledColor = Theme.MainButton.Pressed
-
-                                return selectedPublishMap:get() and EnabledColor:get() or DisabledColor:get()
-                            end), 20),
+                            TextColor3 = springs.whitelistIdSpring,
+                            BackgroundColor3 = springs.selectedMapSpring,
 
                             [OnEvent "Activated"] = function()
                                  -- this function will call to publish
@@ -531,20 +516,15 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     Position = UDim2.fromScale(0.26, 0.45),
                                     Size = UDim2.new(0.4, 0, 0, 24),
                                     Text = "Submit",
-    
-                                    Active = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
-                                    end),
-                                    AutoButtonColor = Computed(function()
-                                        return apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
-                                    end),
+                                    Active = isUnfilteredKeySimilar,
+                                    AutoButtonColor = isUnfilteredKeySimilar,
                                     TextColor3 = Spring(Computed(function()
-                                        return if apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
+                                        return if isUnfilteredKeySimilar:get()
                                             then Theme.BrightText.Default:get()
                                             else Theme.SubText.Default:get()
                                     end), 20),
                                     BackgroundColor3 = Spring(Computed(function()
-                                        return if apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
+                                        return if isUnfilteredKeySimilar:get()
                                             then Theme.MainButton.Default:get() 
                                             else Theme.MainButton.Pressed:get()
                                     end), 20),
