@@ -116,7 +116,7 @@ function getSettingsDirFolder(directory: string)
 end
 
 function Util:ToggleInterface(value: boolean)
-    Util._manualActive:set(value)
+    self._manualActive:set(value)
 end
 
 function Util.CloseMessage()
@@ -128,11 +128,15 @@ function Util.CloseMessage()
 end
 
 function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
-    Util:ToggleInterface(false)
+    self:ToggleInterface(false)
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
     self._Message.Option2:set(option2 or {})
+end
+
+function Util:ShowTooltip(data)
+    self:ShowMessage("<font color='#ffd700'>Tooltip</font> - " .. data.Header, data.Tooltip)
 end
 
 function Util.updateMapSetting(directory: string, attribute: string, value: any)

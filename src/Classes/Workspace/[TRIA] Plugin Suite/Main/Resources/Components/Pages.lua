@@ -12,17 +12,17 @@ local PageHandler = {
 }
 
 function PageHandler:ChangePage(NewPage: string)
-    local currentPage = PageHandler.pageData.currentPage
+    local currentPage = self.pageData.currentPage
     if currentPage == NewPage then
         return
     end
-    if PageHandler.pageData.pages[currentPage].onClose then
-        PageHandler.pageData.pages[currentPage].onClose()
+    if self.pageData.pages[currentPage].onClose then
+        self.pageData.pages[currentPage].onClose()
     end
 
-    PageHandler.pageData.pages[currentPage].Visible:set(false)
-    PageHandler.pageData.pages[NewPage].Visible:set(true)
-    PageHandler.pageData.currentPage = NewPage
+    self.pageData.pages[currentPage].Visible:set(false)
+    self.pageData.pages[NewPage].Visible:set(true)
+    self.pageData.currentPage = NewPage
 end
 
 function PageHandler:NewPage(data)
@@ -35,10 +35,10 @@ function PageHandler:NewPage(data)
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
     newPageData.onClose = newPage.OnClose
-    PageHandler.pageData.pages[data.Name] = newPageData
+    self.pageData.pages[data.Name] = newPageData
 
     if newPageData.Visible:get(false) then
-        PageHandler.pageData.currentPage = newPageData.Name
+        self.pageData.currentPage = newPageData.Name
     end
 
     return newPageData.Frame

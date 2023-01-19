@@ -17,7 +17,10 @@ function frame:GetFrame(data)
         Name = "Insert",
 
         [Children] = {
-            Components.PageHeader("Map Addons. Kits, Components")
+            Components.PageHeader("Map Addons, Kits, Components"),
+            Components.ScrollingFrame {
+                
+            }
         }
     }
 end

@@ -113,22 +113,22 @@ end
 
 function selectMap:SetMap(Map: Model|Workspace)
     if Map then -- add or change selection
-        local success, message = selectMap:IsTriaMap(Map)
+        local success, message = self:IsTriaMap(Map)
 
         if not success then
             return false, message
         end
 
-        selectMap.selectCancelColor:set(Theme.ErrorText.Default:get(false))
-        selectMap.selectTextColor:set(Theme.MainText.Default:get(false))
+        self.selectCancelColor:set(Theme.ErrorText.Default:get(false))
+        self.selectTextColor:set(Theme.MainText.Default:get(false))
         Util.mapModel:set(Map)
         Util.MapChanged:Fire()
         Util.MainMaid:DoCleaning()
 
-        selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
+        self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
 
         local nameChangedSignal; nameChangedSignal = Map.Settings.Main:GetAttributeChangedSignal("Name"):Connect(function()
-            selectMap.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
+            self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
         end)
         Util.MainMaid:GiveTask(nameChangedSignal)
 
@@ -140,11 +140,11 @@ function selectMap:SetMap(Map: Model|Workspace)
                 if not workspaceUpdate and (child.Name == "Settings" or child.Name == "MapScript") then
                     workspaceUpdate = true
 
-                     if not selectMap:IsTriaMap(Map, true) then
+                     if not self:IsTriaMap(Map, true) then
                         task.wait()
 
-                        if not selectMap:AutoSelect() then
-                            selectMap:SetMap(nil)
+                        if not self:AutoSelect() then
+                            self:SetMap(nil)
                         end
                     end
                     workspaceUpdate = false
@@ -158,8 +158,8 @@ function selectMap:SetMap(Map: Model|Workspace)
 				if not Map.Parent then
                     parentChanged = true
 
-	                if not selectMap:AutoSelect() then
-	                    selectMap:SetMap(nil)
+	                if not self:AutoSelect() then
+	                    self:SetMap(nil)
 	                end
 				end
             end))
@@ -170,9 +170,9 @@ function selectMap:SetMap(Map: Model|Workspace)
                 end
 
                 if child.Name == "Settings" or child.Name == "MapScript" then
-                    if #Map:GetChildren() == 0 and not selectMap:IsTriaMap(Map, true) then
-                        if not selectMap:AutoSelect() then
-                            selectMap:SetMap(nil)
+                    if #Map:GetChildren() == 0 and not self:IsTriaMap(Map, true) then
+                        if not self:AutoSelect() then
+                            self:SetMap(nil)
                             return 
                         end
                     end
@@ -194,28 +194,27 @@ function selectMap:SetMap(Map: Model|Workspace)
         }
 
         local optimizedStructure = Map:FindFirstChild("Special")
-        selectMap.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
+        self.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
-        if not selectMap.hasOptimizedStructure:get(false) then
+        if not self.hasOptimizedStructure:get(false) then
             task.wait()
             Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
         end
-        
     else
         Util.mapModel:set(nil)
         Util.MapChanged:Fire()
-        selectMap.hasOptimizedStructure:set(false)
-        selectMap.selectCancelColor:set(Theme.SubText.Default:get(false))
-        selectMap.selectTextState:set("No map selected")
-        selectMap.selectTextColor:set(Theme.ErrorText.Default:get(false))
+        self.hasOptimizedStructure:set(false)
+        self.selectCancelColor:set(Theme.SubText.Default:get(false))
+        self.selectTextState:set("No map selected")
+        self.selectTextColor:set(Theme.ErrorText.Default:get(false))
     end
 
     return true
 end
 
 function selectMap:StartMapSelection()
-    if selectMap:IsTriaMap(workspace) then
-        selectMap:SetMap(workspace)
+    if self:IsTriaMap(workspace) then
+        self:SetMap(workspace)
         return
     end
 
@@ -224,15 +223,15 @@ function selectMap:StartMapSelection()
     local mapHighlight = Instance.new("Highlight", workspace.CurrentCamera)
     local mouse = plugin:GetMouse()
 
-    selectMap.selectCancelImage:set("rbxassetid://6031094678")
-    selectMap.selectCancelColor:set(Theme.ErrorText.Default:get(false))
-    selectMap.selectTextState:set("Click to select")
-    selectMap.selectTextColor:set(Theme.SubText.Default:get(false))
-    selectMap._Maid:GiveTask(mapHighlight)
-    selectMap.selectingMap:set(true)
+    self.selectCancelImage:set("rbxassetid://6031094678")
+    self.selectCancelColor:set(Theme.ErrorText.Default:get(false))
+    self.selectTextState:set("Click to select")
+    self.selectTextColor:set(Theme.SubText.Default:get(false))
+    self._Maid:GiveTask(mapHighlight)
+    self.selectingMap:set(true)
     plugin:Activate(true)
 
-    selectMap._Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
+    self._Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
         local target = mouse.Target
 
         if target ~= lastTarget then
@@ -246,7 +245,7 @@ function selectMap:StartMapSelection()
                 return
             end
 
-            if target and selectMap:IsTriaMap(target) then
+            if target and self:IsTriaMap(target) then
                 mapHighlight.Adornee = target
                 currentTarget = target
             else
@@ -256,31 +255,31 @@ function selectMap:StartMapSelection()
         end
     end))
 
-    selectMap._Maid:GiveTask(mouse.Button1Down:Connect(function()
-        selectMap:SetMap(currentTarget)
-        selectMap.selectingMap:set(false)
-        selectMap.selectCancelImage:set("rbxassetid://6022668885")
-        selectMap._Maid:DoCleaning()
+    self._Maid:GiveTask(mouse.Button1Down:Connect(function()
+        self:SetMap(currentTarget)
+        self.selectingMap:set(false)
+        self.selectCancelImage:set("rbxassetid://6022668885")
+        self._Maid:DoCleaning()
         plugin:Deactivate()
     end))
 end
 
 function selectMap:StopManualSelection()
-    selectMap.selectingMap:set(false)
-    selectMap._Maid:DoCleaning()
+    self.selectingMap:set(false)
+    self._Maid:DoCleaning()
     plugin:Deactivate()
 
-    selectMap.selectCancelImage:set("rbxassetid://6022668885")
-    selectMap.selectCancelColor:set(if Util.mapModel:get(false) then Theme.ErrorText.Default:get(false) else Theme.SubText.Default:get(false))
-    selectMap.selectTextState:set(if Util.mapModel:get(false) then Util.mapModel:get(false).Settings.Main:GetAttribute("Name") else "No map selected")
-    selectMap.selectTextColor:set(if Util.mapModel:get(false) then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
+    self.selectCancelImage:set("rbxassetid://6022668885")
+    self.selectCancelColor:set(if Util.mapModel:get(false) then Theme.ErrorText.Default:get(false) else Theme.SubText.Default:get(false))
+    self.selectTextState:set(if Util.mapModel:get(false) then Util.mapModel:get(false).Settings.Main:GetAttribute("Name") else "No map selected")
+    self.selectTextColor:set(if Util.mapModel:get(false) then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
 end
 
 function selectMap:AutoSelect()
-    local isMap, value = selectMap:IsTriaMap(workspace)
+    local isMap, value = self:IsTriaMap(workspace)
 
     if isMap then
-        selectMap:SetMap(workspace)
+        self:SetMap(workspace)
         return true
     end
 
@@ -288,9 +287,9 @@ function selectMap:AutoSelect()
     -- projects have hundreds of models under workspace.
     for _, v: Instance in pairs(workspace:GetChildren()) do
         if v:IsA("Model") then
-            local isMap, value = selectMap:IsTriaMap(v)
+            local isMap, value = self:IsTriaMap(v)
             if isMap then
-                selectMap:SetMap(v)
+                self:SetMap(v)
                 return true
             end
         end
