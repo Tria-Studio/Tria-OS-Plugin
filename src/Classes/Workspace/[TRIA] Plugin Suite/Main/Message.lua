@@ -6,6 +6,10 @@ local Util = require(script.Parent.Util)
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
+local Value = Fusion.Value
+local Out = Fusion.Out
+
+local messageFrameSize = Value()
 
 return New "Frame" { --// Message
 	BackgroundTransparency = 0.75,
@@ -19,7 +23,10 @@ return New "Frame" { --// Message
 	[Children] = {
 		New "ImageLabel" {
 			BackgroundTransparency = 1,
-			Size = UDim2.new(1, -12, 0, 152),
+			Size = Computed(function()
+				local frameSize = messageFrameSize:get() or Vector2.new()
+				return UDim2.new(0, frameSize.X + 24, 0, frameSize.Y + 24)
+			end),
 			Position = UDim2.fromScale(0.5, 0.5),
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Image = "rbxassetid://8697780388",
@@ -31,6 +38,8 @@ return New "Frame" { --// Message
 		},
 
 		New "Frame" {
+			[Out "AbsoluteSize"] = messageFrameSize,
+
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundColor3 = Theme.Notification.Default,
 			BorderColor3 = Theme.Border.Default,
