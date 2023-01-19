@@ -364,7 +364,7 @@ function Components.TooltipImage(data)
         ImageColor3 = Theme.SubText.Default,
 
         [OnEvent "Activated"] = function()
-            Util:ShowTooltip({Header = tostring(data.Header), Tooltip = tostring(data.Tooltip)})
+            Util:ShowMessage(tostring(data.Header), tostring(data.Tooltip))
         end,
 
         [Children] = New "UIGradient" {

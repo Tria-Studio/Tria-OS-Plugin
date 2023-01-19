@@ -41,9 +41,7 @@ function frame:GetFrame(data)
 
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
-                        Size = Computed(function()
-                            return UDim2.new(1, 0, 0, buttonFrameSize:get() and buttonFrameSize:get().Y or 0)
-                        end),
+                        Size = UDim2.new(1, 0, 0, 0),
                         LayoutOrder = 2,
 
                         [Children] = {
