@@ -23,11 +23,21 @@ local tagTypes = {
         "_SpeedBooster",
         "_JumpBooster",
         "_Kill",
+        _convert = {
+            _SpeedBooster = "WalkSpeed",
+            _JumpBooster = "JumpPower",
+            _Kill = "Kill",
+            _WallJump = "WallJump",
+            _WallRun = "WallRun"
+        }
     },
     ModelTags = { --// They are a model named this and stuff
         "Zipline",
         "_Button",
-        "AirTank"
+        "AirTank",
+        _convert = {
+            _Button = "_Button%d"
+        }
     },
     DetailTag = { --// Parented to the detail folder
         "Detail"
@@ -49,13 +59,19 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     Types.ObjectTags = Types.ButtonTags
 
     function Types.ActionTags()
-        if part:GetAttribute("_action") == tag then
+        local secondary = tagTypes.ActionTags._convert[tag]
+        if part:GetAttribute("_action") == tag or part:GetAttribute("_action") == secondary then
             return true
         end
     end
 
     function Types.ModelTags()
-        if part:IsA("Model") and (part.Name == tag or string.find(part.Name, "_Button%d", 1)) then
+        local secondary = tagTypes.ModelTags._convert[tag]
+        local model = if part:IsA("Model") then part
+            elseif part.Parent:IsA("Model") then part.Parent
+            else nil
+
+        if model and (string.find(model.Name, tag, 1) or secondary and string.find(model.Name, secondary, 1)) then
             return true
         end
     end
@@ -69,8 +85,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
        for type, tags in pairs(tagTypes) do
             if table.find(tags, tag) and firstAttempt ~= tag then
                 firstAttempt = type
-                local success = Types[type]()
-                if success then
+                if Types[type]() then
                     return true
                 end
             end

@@ -54,7 +54,6 @@ return function(name, data)
                     Position = UDim2.fromOffset(-30, 2),
                     Size = UDim2.fromOffset(20, 20),
                     Image = Computed(function()
-                        print(checkState:get())
                         return if checkState:get() == Enum.TriStateBoolean.True
                             then Util.Images.Checkbox.Checked
                             elseif checkState:get() == Enum.TriStateBoolean.False
