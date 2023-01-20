@@ -55,11 +55,23 @@ end)
 
 local springs = {
     ["selectedMapSpring"] = Spring(Computed(function()
-        return if selectedPublishMap:get() then Theme.MainText.Default:get() else Theme.DimmedText.Default:get()
+        return if selectedPublishMap:get() then Theme.MainButton.Default:get() else Theme.CurrentMarker.Selected:get()
+    end), 20),
+
+    ["publishButtonSpring"] = Spring(Computed(function()
+        return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
+    end), 20),
+
+    ["whitelistMapSpring"] = Spring(Computed(function()
+        return whitelistIdIsEmpty:get() and Theme.MainButton.Default:get() or Theme.CurrentMarker.Selected:get()
     end), 20),
 
     ["whitelistIdSpring"] = Spring(Computed(function()
         return whitelistIdIsEmpty:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
+    end), 20),
+
+    ["whitelistedTextSpring"] = Spring(Computed(function()
+        return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
     end), 20)
 }
 local frame = {}
@@ -295,7 +307,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             AutoButtonColor = whitelistIdIsEmpty,
 
                             TextColor3 = springs.whitelistIdSpring,
-                            BackgroundColor3 = springs.selectedMapSpring,
+                            BackgroundColor3 = springs.whitelistMapSpring,
 
                             [OnEvent "Activated"] = function()
                                  -- this function will call to whitelist
@@ -322,7 +334,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             BorderColor3 = Theme.InputFieldBorder.Default,
                             BorderSizePixel = 1,
                             LayoutOrder = 4,
-                            Font = Enum.Font.SourceSansSemibold,
+                            Font = Enum.Font.SourceSansBold,
                             TextSize = 16,
                             Size = UDim2.new(1, 0, 0, 32),
                             
@@ -330,7 +342,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                                 return if selectedPublishMap:get() then selectedPublishMap:get().Name else "No map selected"
                             end),
 
-                            TextColor3 = springs.selectedMapSpring,
+                            TextColor3 = springs.whitelistedTextSpring,
 
                             [Children] = Components.ImageButton({
                                 AnchorPoint = Vector2.new(1, 0.5),
@@ -360,7 +372,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             Active = selectedMapToPublishExists,
                             AutoButtonColor = selectedMapToPublishExists,
 
-                            TextColor3 = springs.whitelistIdSpring,
+                            TextColor3 = springs.publishButtonSpring,
                             BackgroundColor3 = springs.selectedMapSpring,
 
                             [OnEvent "Activated"] = function()
@@ -526,7 +538,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     BackgroundColor3 = Spring(Computed(function()
                                         return if isUnfilteredKeySimilar:get()
                                             then Theme.MainButton.Default:get() 
-                                            else Theme.MainButton.Pressed:get()
+                                            else Theme.CurrentMarker.Selected:get()
                                     end), 20),
 
                                     [OnEvent "Activated"] = function()

@@ -26,8 +26,7 @@ local themes = {
         Default = Value(StudioTheme:GetColor(GuideColor.MainText))
     },
     MainButton = {
-        Default = Value(StudioTheme:GetColor(GuideColor.MainButton)),
-        Pressed = Value(StudioTheme:GetColor(GuideColor.MainButton, GuideModifier.Pressed))
+        Default = Value(StudioTheme:GetColor(GuideColor.MainButton))
     },
     BrightText = {
         Default = Value(StudioTheme:GetColor(GuideColor.BrightText))
@@ -109,7 +108,8 @@ local themes = {
         Default = Value(StudioTheme:GetColor(GuideColor.DiffTextDeletionBackground))
     },
     CurrentMarker = {
-        Default = Value(StudioTheme:GetColor(GuideColor.CurrentMarker))
+        Default = Value(StudioTheme:GetColor(GuideColor.CurrentMarker)),
+        Selected = Value(StudioTheme:GetColor(GuideColor.CurrentMarker, GuideModifier.Selected)),
     },
 }
 
