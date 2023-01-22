@@ -25,7 +25,7 @@ local SettingTypes = require(script:WaitForChild("SettingTypes"))
 local SettingData = require(script:WaitForChild("SettingData"))
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
-local settingConnections = {}
+local settingMaid = Util.Maid.new()
 
 local directories = {
     Main = {
@@ -76,7 +76,7 @@ local function hookAttributeChanged(parent, attribute, callback)
         conn:Disconnect()
         task.defer(callback)
     end)
-    table.insert(settingConnections, conn)
+    settingMaid:GiveTask(conn)
 end
 
 local function updateStateValue(currentValue, newValue, tbl)
@@ -151,23 +151,21 @@ function insertLiquids()
             updateConnection()
         end
 
-        table.insert(settingConnections, liquid:GetPropertyChangedSignal("Name"):Connect(onMapChanged))
+        settingMaid:GiveTask(liquid:GetPropertyChangedSignal("Name"):Connect(onMapChanged))
         modifyStateTable(directories.Liquids.Items, "insert", {Name = liquid.Name, Data = liquidData})
     end
 end
 
 function onMapChanged()
     -- Disconnect old connections
-    for _, conn in ipairs(settingConnections) do
-        conn:Disconnect()
-    end
+    settingMaid:DoCleaning()
 
     do
         insertLiquids()
         local liquidFolder = Util.getDirFolder("Liquids")
         if liquidFolder then
-            table.insert(settingConnections, liquidFolder.ChildAdded:Connect(insertLiquids))
-            table.insert(settingConnections, liquidFolder.ChildRemoved:Connect(insertLiquids))
+            settingMaid:GiveTask(liquidFolder.ChildAdded:Connect(insertLiquids))
+            settingMaid:GiveTask(liquidFolder.ChildRemoved:Connect(insertLiquids))
         end
     end
     
@@ -414,8 +412,8 @@ local function handleLiquids()
     local settingsFolder = map:FindFirstChild("Settings")
 
     -- Make sure we update when a major folder is deleted.
-    table.insert(settingConnections, settingsFolder.ChildAdded:Connect(onMapChanged))
-    table.insert(settingConnections, settingsFolder.ChildRemoved:Connect(onMapChanged))
+    settingMaid:GiveTask(settingsFolder.ChildAdded:Connect(onMapChanged))
+    settingMaid:GiveTask(settingsFolder.ChildRemoved:Connect(onMapChanged))
 end
 
 for _, tbl in ipairs(SettingData) do
@@ -439,9 +437,8 @@ end)
 
 plugin.Unloading:Connect(function()
     SelectMap._Maid:DoCleaning()
-    for _, conn in ipairs(settingConnections) do
-        conn:Disconnect()
-    end
+    Util.MainMaid:DoCleaning()
+    settingMaid:DoCleaning()
 end)
 
 return frame
