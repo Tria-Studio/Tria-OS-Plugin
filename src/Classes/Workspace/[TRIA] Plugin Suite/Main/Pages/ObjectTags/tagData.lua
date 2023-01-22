@@ -191,7 +191,6 @@ data.dataTypes = {
                     location = 2
                 }
             },
-            tagFormat = "ObjectValue",
             IsTagApplicable = true,
         },
         _Hide = {
@@ -207,7 +206,6 @@ data.dataTypes = {
                     location = 2
                 }
             },
-            tagFormat = "ObjectValue",
             IsTagApplicable = true,
         },
         _Fall = {
@@ -223,7 +221,6 @@ data.dataTypes = {
                     location = 2
                 }
             },
-            tagFormat = "ObjectValue",
             IsTagApplicable = true,
         },
         _Destroy = {
@@ -239,7 +236,6 @@ data.dataTypes = {
                     location = 2
                 }
             },
-            tagFormat = "ObjectValue",
             IsTagApplicable = true,
         },
         _Sound = {
@@ -261,7 +257,6 @@ data.dataTypes = {
                     isFullSize = true,
                 }
             },
-            tagFormat = "Sound",
             IsTagApplicable = true,
         },
         _Explode = {
@@ -279,7 +274,6 @@ data.dataTypes = {
                     isFullSize = false,
                 },
             },
-            tagFormat = "ObjectValue",
             IsTagApplicable = true,
         },
     },
@@ -299,7 +293,6 @@ data.dataTypes = {
                     isFullSize = false,
                 },
             },
-            tagFormat = "_Action",
             IsTagApplicable = true,
         },
         _WallJump = {
@@ -307,7 +300,6 @@ data.dataTypes = {
             DisplayIcon = "rbxassetid://9468872087",
             LayoutOrder = 2,
             metadata = {},
-            tagFormat = "_Action",
             IsTagApplicable = true,
         },
         _Liquid = {
@@ -325,7 +317,6 @@ data.dataTypes = {
                     isFullSize = true,
                 },
             },
-            tagFormat = nil,
             IsTagApplicable = false,
         },
         _Button = {
@@ -363,7 +354,6 @@ data.dataTypes = {
                     isFullSize = true,
                 },
             },
-            tagFormat = nil,
             IsTagApplicable = false,
         },
         Detail = {
@@ -371,7 +361,6 @@ data.dataTypes = {
             DisplayIcon = "rbxassetid://6034925618",
             LayoutOrder = 1,
             metadata = {},
-            tagFormat = "DetailFolder",
             IsTagApplicable = true,
         },
         Zipline = {
@@ -409,7 +398,6 @@ data.dataTypes = {
                     isFullSize = true,
                 },
             },
-            tagFormat = nil,
             IsTagApplicable = false,
         },
         _Kill = {
@@ -417,7 +405,6 @@ data.dataTypes = {
             DisplayIcon = "rbxassetid://6022668916",
             LayoutOrder = 6,
             metadata = {},
-            tagFormat = "_Action",
             IsTagApplicable = true,
         },
         AirTank = {
@@ -431,7 +418,6 @@ data.dataTypes = {
                     isFullSize = true,
                 },
             },
-            tagFormat = nil,
             IsTagApplicable = false,
         },
         _SpeedBooster = {
@@ -445,7 +431,6 @@ data.dataTypes = {
                     isFullSize = true,
                 },
             },
-            tagFormat = "_Action",
             IsTagApplicable = true,
         },
         _JumpBooster = {
@@ -459,7 +444,6 @@ data.dataTypes = {
                     isFullSize = true,
                 },
             },
-            tagFormat = "_Action",
             IsTagApplicable = true,
         },
     }

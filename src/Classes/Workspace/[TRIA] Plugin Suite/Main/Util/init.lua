@@ -30,6 +30,7 @@ local Util = {
     mapModel = Value(nil),
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
+    MapMaid = Maid.new(),
 
     _manualActive = Value(true),
     interfaceActive = Value(false),
@@ -239,5 +240,6 @@ updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
 Observer(Util.mapModel):onChange(updateButtonsActive)
 Observer(Util._manualActive):onChange(updateButtonsActive)
+Util.MainMaid:GiveTask(Util.MapMaid)
 
 return Util

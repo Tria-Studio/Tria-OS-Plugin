@@ -51,18 +51,22 @@ local tagTypes = {
 }
  
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
-    local Children = part:GetChildren()
     local Types = {}
 
     function Types.ButtonTags()
-        local secondary = tagTypes.ObjectTags[tag]
-        for _, Child in pairs(Children) do
-            if string.find(Child.Name, tag, 1, true) and Child:IsA("ValueBase") or table.find(tagTypes.ObjectTags, tag) and string.find(part.Name, secondary or tag) then
+        for _, Child in pairs(part:GetChildren()) do
+            if string.find(Child.Name, tag.."%d") then
                 return true
             end
          end
     end
-    Types.ObjectTags = Types.ButtonTags
+    function Types.ObjectTags()
+        local secondary = tagTypes.ObjectTags._convert[tag]
+        print(tag, secondary)
+        if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
+            return true
+        end
+    end
 
     function Types.ActionTags()
         local secondary = tagTypes.ActionTags._convert[tag]
@@ -95,7 +99,6 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 end
 
 function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
-    print"checking"
     local numYes = 0
     for _, part in pairs(parts) do
         local value = tagUtils:PartHasTag(part, tag)

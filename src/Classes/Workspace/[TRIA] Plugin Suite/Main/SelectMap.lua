@@ -123,20 +123,20 @@ function selectMap:SetMap(Map: Model|Workspace)
         self.selectTextColor:set(Theme.MainText.Default:get(false))
         Util.mapModel:set(Map)
         Util.MapChanged:Fire()
-        Util.MainMaid:DoCleaning()
+        Util.MapMaid:DoCleaning()
 
         self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
 
         local nameChangedSignal; nameChangedSignal = Map.Settings.Main:GetAttributeChangedSignal("Name"):Connect(function()
             self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
         end)
-        Util.MainMaid:GiveTask(nameChangedSignal)
+        Util.MapMaid:GiveTask(nameChangedSignal)
 
         local ObjectType = {}
 
         function ObjectType.Workspace()
             local workspaceUpdate = false
-            Util.MainMaid:GiveTask(Map.ChildRemoved:Connect(function(child)
+            Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(function(child)
                 if not workspaceUpdate and (child.Name == "Settings" or child.Name == "MapScript") then
                     workspaceUpdate = true
 
@@ -154,7 +154,7 @@ function selectMap:SetMap(Map: Model|Workspace)
 
         local parentChanged = false
         function ObjectType.Model()
-            Util.MainMaid:GiveTask(Map.AncestryChanged:Connect(function() --// Model was either ungrouped or deleted
+            Util.MapMaid:GiveTask(Map.AncestryChanged:Connect(function() --// Model was either ungrouped or deleted
 				if not Map.Parent then
                     parentChanged = true
 
@@ -163,7 +163,7 @@ function selectMap:SetMap(Map: Model|Workspace)
 	                end
 				end
             end))
-            Util.MainMaid:GiveTask(Map.ChildRemoved:Connect(function(child)
+            Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(function(child)
                 task.wait()
                 if parentChanged then 
                     return 
