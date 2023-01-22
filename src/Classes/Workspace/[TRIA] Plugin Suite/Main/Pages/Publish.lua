@@ -392,14 +392,12 @@ Your creator token is a long phrase of characters which authenticates and allows
 
                             [Children] = {
                                 Components.Constraints.UIListLayout(),
-                                -- Components.ScrollingFrameHeader("Your Whitelisted Maps:", 1, nil, 20),
                                 Components.Dropdown({
                                     DefaultState = true,
                                     Header = "Your Whitelisted Maps:",
                                     LayoutOrder = 2
                                 }, createMapList(whitelistedMaps, 2)),
-                                
-                                -- Components.ScrollingFrameHeader("Your Published Maps:", 3, nil, 20),
+
                                 Components.Dropdown({
                                     DefaultState = true,
                                     Header = "Your Published Maps:",
