@@ -17,6 +17,16 @@ return function(name, data)
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
 
+    local metaDataVisible = Computed(function()
+        print"update"
+        local value = #Util.selectedParts:get() == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(Util.selectedParts:get(), name)
+        checkState:set(#Util.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
+        return #Util.selectedParts:get() > 0 and value == Enum.TriStateBoolean.True
+    end)
+    Observer(metaDataVisible):onChange(function()
+        dataVisible:set(metaDataVisible:get())
+    end)
+    
     return New "Frame" {
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = Theme.Dropdown.Default,
@@ -70,15 +80,6 @@ return function(name, data)
                     Image = data.DisplayIcon,
                 },
                 Computed(function()
-                    local metaDataVisible = Computed(function()
-                        local value = TagUtils:PartsHaveTag(Util.selectedParts:get(), name)
-                        checkState:set(#Util.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
-                        return #Util.selectedParts:get() > 0 and value == Enum.TriStateBoolean.True
-                    end)
-                    Observer(metaDataVisible):onChange(function()
-                        dataVisible:set(metaDataVisible:get())
-                    end)
-
                     if #data.metadata == 0 then
                         return
                     end

@@ -310,7 +310,24 @@ data.dataTypes = {
             tagFormat = "_Action",
             IsTagApplicable = true,
         },
-        
+        _Liquid = {
+            DisplayText = "_Liquid",
+            DisplayIcon = "rbxassetid://6026568295",
+            LayoutOrder = 5,
+            metadata = {
+                {
+                    data = data.metadataTypes.LiquidNum,
+                    location = 1,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.LiquidType,
+                    location = 3,
+                    isFullSize = true,
+                },
+            },
+            tagFormat = nil,
+            IsTagApplicable = false,
+        },
         _Button = {
             DisplayText = "_Button",
             DisplayIcon = "rbxassetid://6026647916",
@@ -360,7 +377,7 @@ data.dataTypes = {
         Zipline = {
             DisplayText = "Zipline",
             DisplayIcon = "rbxassetid://6035067839",
-            LayoutOrder = 6,
+            LayoutOrder = 7,
             metadata = {
                 {
                     data = data.metadataTypes.ZiplineSpeed,
@@ -398,7 +415,7 @@ data.dataTypes = {
         _Kill = {
             DisplayText = "Killbrick",
             DisplayIcon = "rbxassetid://6022668916",
-            LayoutOrder = 5,
+            LayoutOrder = 6,
             metadata = {},
             tagFormat = "_Action",
             IsTagApplicable = true,
@@ -406,7 +423,7 @@ data.dataTypes = {
         AirTank = {
             DisplayText = "AirTank",
             DisplayIcon = "rbxassetid://6031068426",
-            LayoutOrder = 9,
+            LayoutOrder = 10,
             metadata = {
                 {
                     data = data.metadataTypes.Oxygen,
@@ -420,7 +437,7 @@ data.dataTypes = {
         _SpeedBooster = {
             DisplayText = "SpeedBooster",
             DisplayIcon = "rbxassetid://6034754445",
-            LayoutOrder = 7,
+            LayoutOrder = 8,
             metadata = {
                 {
                     data = data.metadataTypes.WalkSpeed,
@@ -434,7 +451,7 @@ data.dataTypes = {
         _JumpBooster = {
             DisplayText = "JumpBooster",
             DisplayIcon = "rbxassetid://6034754445",
-            LayoutOrder = 8,
+            LayoutOrder = 9,
             metadata = {
                 {
                     data = data.metadataTypes.JumpPower,

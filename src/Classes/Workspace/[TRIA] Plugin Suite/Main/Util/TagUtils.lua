@@ -16,6 +16,10 @@ local tagTypes = {
         "_WallRun",
         "_WallJump",
         "_Liquid",
+
+        _convert = {
+            _Liquid = "_Liquid%d"
+        }
     },
     ActionTags = { --// _action attribute
         "_WallRun",
@@ -23,6 +27,7 @@ local tagTypes = {
         "_SpeedBooster",
         "_JumpBooster",
         "_Kill",
+    
         _convert = {
             _SpeedBooster = "WalkSpeed",
             _JumpBooster = "JumpPower",
@@ -35,6 +40,7 @@ local tagTypes = {
         "Zipline",
         "_Button",
         "AirTank",
+
         _convert = {
             _Button = "_Button%d"
         }
@@ -46,12 +52,12 @@ local tagTypes = {
  
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local Children = part:GetChildren()
-    local firstAttempt
     local Types = {}
 
     function Types.ButtonTags()
+        local secondary = tagTypes.ObjectTags[tag]
         for _, Child in pairs(Children) do
-            if string.find(Child.Name, tag, 1, true) and Child:IsA("ValueBase") then
+            if string.find(Child.Name, tag, 1, true) and Child:IsA("ValueBase") or table.find(tagTypes.ObjectTags, tag) and string.find(part.Name, secondary or tag) then
                 return true
             end
          end
@@ -81,16 +87,12 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         return DetailFolder and part:IsDescendantOf(DetailFolder)
     end
 
-    for i = 1, 2 do
-       for type, tags in pairs(tagTypes) do
-            if table.find(tags, tag) and firstAttempt ~= tag then
-                firstAttempt = type
-                if Types[type]() then
-                    return true
-                end
-            end
-       end 
-    end
+    for type, tags in pairs(tagTypes) do
+        print(tag)
+        if table.find(tags, tag) and Types[type]() then
+            return true
+        end
+    end 
 end
 
 function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
