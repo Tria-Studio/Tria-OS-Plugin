@@ -88,7 +88,6 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     for type, tags in pairs(tagTypes) do
-        print(tag)
         if table.find(tags, tag) and Types[type]() then
             return true
         end
@@ -96,6 +95,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 end
 
 function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
+    print"checking"
     local numYes = 0
     for _, part in pairs(parts) do
         local value = tagUtils:PartHasTag(part, tag)
