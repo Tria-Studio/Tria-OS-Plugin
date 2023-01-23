@@ -39,7 +39,7 @@ New "Frame" {
 			[Children] = {
 				ForValues(MenuData.Pages, function(data)
 					Pages:NewPage(data)
-				end)
+				end),
 
 				New "TextLabel" {
 					Active = Computed(function()
