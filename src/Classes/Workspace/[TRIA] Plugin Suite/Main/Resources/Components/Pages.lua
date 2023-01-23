@@ -31,8 +31,8 @@ function PageHandler:NewPage(data)
         Name = data.Name,
         Frame = nil,
         Visible = Value(data.Default),
-
     }
+
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
     newPageData.onClose = newPage.OnClose
