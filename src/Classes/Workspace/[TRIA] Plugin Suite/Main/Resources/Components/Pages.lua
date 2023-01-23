@@ -7,7 +7,7 @@ local Value = Fusion.Value
 local PageHandler = {
     pageData = {
         pages = {},
-        bypassedPages = {"Insert"},
+        bypassedPages = {"Insert", "PluginSettings"},
         currentPage = Value(nil),
     }
 }
