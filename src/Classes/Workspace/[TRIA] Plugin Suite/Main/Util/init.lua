@@ -34,6 +34,7 @@ local Util = {
     MainMaid = Maid.new(),
     MapMaid = Maid.new(),
 
+    _currentPageNum = 1,
     _manualActive = Value(true),
     interfaceActive = Value(false),
 
@@ -50,7 +51,14 @@ local Util = {
         Option1 = Value({}),
         Option2 = Value({}),
     },
-
+    _PageOrder = {
+        "ObjectTags",
+        "ViewModes",
+        "Settings",
+        "Compatibility",
+        "Publish",
+        "Insert"
+    },
     Difficulty = {
         [0] = {
             Name = "Unrated",

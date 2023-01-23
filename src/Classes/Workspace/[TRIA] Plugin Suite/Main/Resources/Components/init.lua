@@ -64,6 +64,7 @@ function Components.TopbarButton(data)
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get(false) or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil then
                 Pages:ChangePage(data.Name)
+                Util._currentPageNum = table.find(Util._PageOrder, data.Name)
             end
         end,
 

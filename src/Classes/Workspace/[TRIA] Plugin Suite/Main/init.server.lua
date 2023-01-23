@@ -79,6 +79,12 @@ New "Frame" {
 			Size = UDim2.new(1, 0, 0, 36),
 			BackgroundColor3 = Theme.Titlebar.Default,
 
+			[OnEvent "InputChanged"] = function(InputObject: InputObject)
+				if InputObject.UserInputType == Enum.UserInputType.MouseWheel then
+					Util._currentPageNum = math.clamp(Util._currentPageNum - InputObject.Position.Z, 1, 6)
+					Pages:ChangePage(Util._PageOrder[Util._currentPageNum])
+				end
+			end,
 			[Children] = {
 				Components.Constraints.UIGridLayout(UDim2.fromScale(1 / #MenuData.Buttons, 1), UDim2.new(), Enum.FillDirection.Horizontal),
 				ForValues(MenuData.Buttons, function(data)
