@@ -11,12 +11,14 @@ local SelectMap = require(script.SelectMap)
 local Util = require(script.Util)
 local ColorWheel = require(script.Colorwheel)
 local Message = require(script.Message)
+local TopbarButtons = require(script.TopbarButtons)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
+local ForValues = Fusion.ForValues
 
 Widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = Widget
@@ -40,7 +42,8 @@ New "Frame" {
 				Pages:NewPage({Name = "Settings"}),
 				Pages:NewPage({Name = "Compatibility"}),
 				Pages:NewPage({Name = "Publish"}),
-				Pages:NewPage({Name = "Insert", Default = false}),
+				Pages:NewPage({Name = "Insert"}),
+				Pages:NewPage({Name = "PluginSettings"}),
 
 				New "TextLabel" {
 					Active = Computed(function()
@@ -81,31 +84,10 @@ New "Frame" {
 			BackgroundColor3 = Theme.Titlebar.Default,
 
 			[Children] = {
-				Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal),
-				Components.TopbarButton({
-					Name = "ObjectTags",
-					Icon = "rbxassetid://6031079158",
-				}),
-				Components.TopbarButton({
-					Name = "ViewModes",
-					Icon = "rbxassetid://6031260793",
-				}),
-				Components.TopbarButton({
-					Name = "Settings",
-					Icon = "rbxassetid://6031280882",
-				}),
-				Components.TopbarButton({
-					Name = "Compatibility",
-					Icon = "rbxassetid://6022668955",
-				}),
-				Components.TopbarButton({
-					Name = "Publish",
-					Icon = "rbxassetid://6034973085",
-				}),
-				Components.TopbarButton({
-					Name = "Insert",
-					Icon = "rbxassetid://6035047391",
-				})
+				Components.Constraints.UIGridLayout(UDim2.new(1 / #TopbarButtons, 0, 1, 0), UDim2.new(), Enum.FillDirection.Horizontal),
+				ForValues(TopbarButtons, function(data)
+					return Components.TopbarButton(data)
+				end, Fusion.cleanup)
 			},
 		},
 		New "Frame" { -- Bottom bar

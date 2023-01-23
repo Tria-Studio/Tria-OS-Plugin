@@ -60,7 +60,6 @@ function Components.TopbarButton(data)
             return if data.Visible:get() then hoverColor else titlebarColor
         end), 20),
         Text = "",
-        Size = UDim2.fromScale(0.167, 1),
         
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get(false) or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil then
