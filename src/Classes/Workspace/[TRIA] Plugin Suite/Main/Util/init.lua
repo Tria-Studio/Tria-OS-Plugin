@@ -152,7 +152,7 @@ function Util.updateMapSetting(directory: string, attribute: string, value: any)
     dirFolder:SetAttribute(attribute, value)
 end
 
-function Util.prefixWarn(...)
+function Util.debugWarn(...)
     warn("[TRIA.os Map Plugin]:", ...)
 end
 

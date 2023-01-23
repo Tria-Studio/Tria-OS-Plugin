@@ -38,8 +38,8 @@ New "Frame" {
 
 			[Children] = {
 				ForValues(MenuData.Pages, function(data)
-					Pages:NewPage(data)
-				end),
+					return Pages:NewPage(data)
+				end, Fusion.cleanup),
 
 				New "TextLabel" {
 					Active = Computed(function()
@@ -80,7 +80,7 @@ New "Frame" {
 			BackgroundColor3 = Theme.Titlebar.Default,
 
 			[Children] = {
-				Components.Constraints.UIGridLayout(UDim2.new(1 / #MenuData.Buttons, 0, 1, 0), UDim2.new(), Enum.FillDirection.Horizontal),
+				Components.Constraints.UIGridLayout(UDim2.fromScale(1 / #MenuData.Buttons, 1), UDim2.new(), Enum.FillDirection.Horizontal),
 				ForValues(MenuData.Buttons, function(data)
 					return Components.TopbarButton(data)
 				end, Fusion.cleanup)
