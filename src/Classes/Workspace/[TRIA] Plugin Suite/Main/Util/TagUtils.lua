@@ -62,7 +62,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
     function Types.ObjectTags()
         local secondary = tagTypes.ObjectTags._convert[tag]
-        print(tag, secondary)
+        Util.debugWarn(tag, secondary)
         if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
             return true
         end

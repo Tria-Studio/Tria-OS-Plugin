@@ -94,7 +94,7 @@ local function updateStateValue(currentValue, newValue, tbl)
     if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
         tbl.Errored:set(true)
         tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
-        Util.prefixWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
+        Util.debugWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
     else
         tbl.Errored:set(false)
         tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")
@@ -217,7 +217,7 @@ function exportLighting()
         end)
 
         if not fired then
-            Util.prefixWarn(("Failed to set lighting setting '%s'"):format(tostring(settingToChange)))
+            Util.debugWarn(("Failed to set lighting setting '%s'"):format(tostring(settingToChange)))
         end
     end
 end
@@ -231,7 +231,7 @@ function importLighting()
         end)
 
         if not fired then
-            Util.prefixWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToChange)))
+            Util.debugWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToChange)))
         else
             item.Value:set(settingValue)
         end

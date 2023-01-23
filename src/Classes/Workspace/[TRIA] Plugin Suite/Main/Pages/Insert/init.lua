@@ -23,7 +23,7 @@ local function attemptTask(service, functionName: string, ...): (boolean, any)
 
     repeat
         attemptCount += 1
-        print(("Calling '%s', attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
+        Util.debugWarn(("Calling '%s', attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
         success, result = pcall(service[functionName], service, ...)
         if not success then
             warn(("Attempt to call '%s' failed, attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
