@@ -229,17 +229,29 @@ Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(function()
         Util._Selection.selectedParts:set(newTable)
         
         for _, Thing: Instance in pairs(Selection:Get()) do
-            selectionMaid:GiveTask(Thing.Changed:Connect(function()
+            selectionMaid:GiveTask(Thing:GetPropertyChangedSignal("Name"):Connect(function()
                 Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
             end))
-            selectionMaid:GiveTask(Thing.ChildAdded:Connect(function()
+            selectionMaid:GiveTask(Thing:GetAttributeChangedSignal("_action"):Connect(function()
                 Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
             end))
-            selectionMaid:GiveTask(Thing.ChildRemoved :Connect(function()
+            selectionMaid:GiveTask(Thing.Destroying:Connect(function()
                 Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+            end))
+            selectionMaid:GiveTask(Thing.ChildRemoved:Connect(function()
+                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+            end))
+
+            selectionMaid:GiveTask(Thing.ChildAdded:Connect(function(newThing)
+                if newThing:IsA("ValueBase") then
+                    Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+                end
+                selectionMaid:GiveTask(newThing.Changed:Connect(function()
+                    Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+                end))
             end))
             for _, Child in pairs(Thing:GetChildren()) do
-                if Child:IsA("ValueBase") then 
+                if Child:IsA("ValueBase") then
                     selectionMaid:GiveTask(Thing.ChildRemoved :Connect(function()
                         Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
                     end))
