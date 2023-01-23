@@ -18,9 +18,10 @@ return function(name, data)
     local checkState = Value(Enum.TriStateBoolean.False)
 
     local metaDataVisible = Computed(function()
-        local value = #Util.selectedParts:get() == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(Util.selectedParts:get(), name)
-        checkState:set(#Util.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
-        return #Util.selectedParts:get() > 0 and value == Enum.TriStateBoolean.True
+        Util._Selection.selectedUpdate:get() --// update it when a part changes idk lol
+        local value = #Util._Selection.selectedParts:get() == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(Util._Selection.selectedParts:get(), name)
+        checkState:set(#Util._Selection.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
+        return #Util._Selection.selectedParts:get() > 0 and value == Enum.TriStateBoolean.True
     end)
     Observer(metaDataVisible):onChange(function()
         dataVisible:set(metaDataVisible:get())

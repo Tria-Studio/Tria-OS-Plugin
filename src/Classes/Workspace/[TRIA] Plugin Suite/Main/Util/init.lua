@@ -9,6 +9,8 @@ local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Observer = Fusion.Observer
 
+local selectionMaid = Maid.new()
+
 local defaultMessageResponses = {
     "Ok",
     "Fine",
@@ -35,8 +37,10 @@ local Util = {
     _manualActive = Value(true),
     interfaceActive = Value(false),
 
-    selectedParts = Value({}),
-
+    _Selection = {
+        selectedParts = Value({}),
+        selectedUpdate = Value(0)
+    },  
     _Topbar = {
         FreezeFrame = Value(false)
     },
@@ -231,8 +235,28 @@ Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(function()
         end
     end
 
-    if not (#newTable == 0 and #Util.selectedParts:get(false) == 0) then
-        Util.selectedParts:set(newTable)
+    if not (#newTable == 0 and #Util._Selection.selectedParts:get(false) == 0) then
+        selectionMaid:DoCleaning()
+        Util._Selection.selectedParts:set(newTable)
+        
+        for _, Thing: Instance in pairs(Selection:Get()) do
+            selectionMaid:GiveTask(Thing.Changed:Connect(function()
+                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+            end))
+            selectionMaid:GiveTask(Thing.ChildAdded:Connect(function()
+                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+            end))
+            selectionMaid:GiveTask(Thing.ChildRemoved :Connect(function()
+                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+            end))
+            for _, Child in pairs(Thing:GetChildren()) do
+                if Child:IsA("ValueBase") then 
+                    selectionMaid:GiveTask(Thing.ChildRemoved :Connect(function()
+                        Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+                    end))
+                end
+            end
+        end
     end
 end))
 
@@ -241,5 +265,6 @@ Observer(Util._Message.Text):onChange(updateButtonsActive)
 Observer(Util.mapModel):onChange(updateButtonsActive)
 Observer(Util._manualActive):onChange(updateButtonsActive)
 Util.MainMaid:GiveTask(Util.MapMaid)
+Util.MainMaid:GiveTask(selectionMaid)
 
 return Util

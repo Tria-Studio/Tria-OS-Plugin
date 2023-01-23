@@ -317,7 +317,24 @@ data.dataTypes = {
                     isFullSize = true,
                 },
             },
-            IsTagApplicable = false,
+            IsTagApplicable = true,
+        },
+        _Gas = {
+            DisplayText = "_Gas",
+            DisplayIcon = "rbxassetid://6026568295",
+            LayoutOrder = 5,
+            metadata = {
+                {
+                    data = data.metadataTypes.LiquidNum,
+                    location = 1,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.LiquidType,
+                    location = 3,
+                    isFullSize = true,
+                },
+            },
+            IsTagApplicable = true,
         },
         _Button = {
             DisplayText = "_Button",
