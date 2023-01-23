@@ -11,7 +11,7 @@ local SelectMap = require(script.SelectMap)
 local Util = require(script.Util)
 local ColorWheel = require(script.Colorwheel)
 local Message = require(script.Message)
-local TopbarButtons = require(script.TopbarButtons)
+local MenuData = require(script.MenuData)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -37,13 +37,9 @@ New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				Pages:NewPage({Name = "ObjectTags", Default = true}),
-				Pages:NewPage({Name = "ViewModes"}),
-				Pages:NewPage({Name = "Settings"}),
-				Pages:NewPage({Name = "Compatibility"}),
-				Pages:NewPage({Name = "Publish"}),
-				Pages:NewPage({Name = "Insert"}),
-				Pages:NewPage({Name = "PluginSettings"}),
+				ForValues(MenuData.Pages, function(data)
+					Pages:NewPage(data)
+				end)
 
 				New "TextLabel" {
 					Active = Computed(function()
@@ -84,8 +80,8 @@ New "Frame" {
 			BackgroundColor3 = Theme.Titlebar.Default,
 
 			[Children] = {
-				Components.Constraints.UIGridLayout(UDim2.new(1 / #TopbarButtons, 0, 1, 0), UDim2.new(), Enum.FillDirection.Horizontal),
-				ForValues(TopbarButtons, function(data)
+				Components.Constraints.UIGridLayout(UDim2.new(1 / #MenuData.Buttons, 0, 1, 0), UDim2.new(), Enum.FillDirection.Horizontal),
+				ForValues(MenuData.Buttons, function(data)
 					return Components.TopbarButton(data)
 				end, Fusion.cleanup)
 			},
