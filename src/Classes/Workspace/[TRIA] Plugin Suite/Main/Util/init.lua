@@ -152,7 +152,7 @@ function Util.updateMapSetting(directory: string, attribute: string, value: any)
     dirFolder:SetAttribute(attribute, value)
 end
 
-function Util.debugWarn(...)
+function Util.prefixWarn(...)
     warn("[TRIA.os Map Plugin]:", ...)
 end
 
@@ -169,17 +169,6 @@ function Util.colorToRGB(color: Color3): string
 end
 
 function Util.parseColor3Text(str: string): (boolean, nil | Color3)
-    local multiplier = 1
-
-    str = string.gsub(str, " ", "")
-    if string.find(str, "Color3%.%a%a%a%(", 1) then
-        str = string.gsub(str, 'Color3%.%a%a%a%(', "")
-        multiplier = 255
-    elseif string.find(str, "Color3.%a%a%a%a%a%a%a%(", 1) then
-        str = string.gsub(str, 'Color3%.%a%a%a%a%a%a%a%(', "")
-    end
-    str = string.gsub(str, "%)", "")
-
     local split = string.split(str, ",")
     for _, v in pairs(split) do
         if not tonumber(v) then
@@ -192,9 +181,9 @@ function Util.parseColor3Text(str: string): (boolean, nil | Color3)
     end
 
     local r, g, b = 
-        math.min(math.floor(split[1] * multiplier + 0.5), 255), 
-        math.min(math.floor(split[2] * multiplier + 0.5), 255), 
-        math.min(math.floor(split[3] * multiplier + 0.5), 255)
+        math.min(math.floor(split[1] + 0.5), 255), 
+        math.min(math.floor(split[2] + 0.5), 255), 
+        math.min(math.floor(split[3] + 0.5), 255)
 
     local newColor = Color3.fromRGB(r, g, b)
     return true, newColor
