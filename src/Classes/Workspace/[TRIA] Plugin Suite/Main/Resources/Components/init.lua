@@ -52,8 +52,8 @@ function Components.TopbarButton(data)
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     return New "TextButton" {
-        Active = true, --Util.interfaceActive,
-        AutoButtonColor = true, --Util.interfaceActive,
+        Active = true,
+        AutoButtonColor = true,
         BackgroundColor3 = Spring(Computed(function()
             local hoverColor = Theme.RibbonButton.Hover:get()
             local titlebarColor = Theme.RibbonButton.Default:get()

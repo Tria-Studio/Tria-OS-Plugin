@@ -32,7 +32,7 @@ local directories = {
         Default = true,
         Display = "Main",
         LayoutOrder = 1,
-        Items = Value({})
+        Items = Value({}),
     },
     Skills = {
         Default = true,
@@ -143,7 +143,6 @@ function insertLiquids()
 
         for _, liquidSetting in ipairs(liquidData) do
             local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
-            
             local function updateConnection()
                 updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
                 hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
@@ -178,9 +177,6 @@ function onMapChanged()
 
         -- Initially retrieve setting value
         local currentValue = dirFolder:GetAttribute(tbl.Attribute)
-
-        local changeConnection
-
         local function updateConnection()
             updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
             hookAttributeChanged(dirFolder, tbl.Attribute, updateConnection)
@@ -318,13 +314,10 @@ function frame:GetFrame(data)
                     ForPairs(directories, function(dirKey, dirData)
                         local dirDropdown = DirectoryDropdown(dirData, function(visible)
                             local dropdown
+
+                            dirData.Visible = visible
                             if dirKey ~= "Liquids" then
                                 dropdown = getStandardDropdown(dirKey, dirData, visible)
-                                if dirKey == "Lighting" then
-                                    dropdown = Hydrate(dropdown) {
-                                        [Out "Visible"] = lightingDropdownVisible
-                                    }
-                                end
                                 return dropdown
                             else
                                 dropdown = getLiquidDropdown(dirData, visible)
@@ -340,7 +333,7 @@ function frame:GetFrame(data)
                         BorderSizePixel = 1,
                         LayoutOrder = 4,
                         Size = UDim2.new(1, 0, 0, 50),
-                        Visible = lightingDropdownVisible,
+                        Visible = directories.Lighting.Visible,
 
                         [Children] = {
                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
