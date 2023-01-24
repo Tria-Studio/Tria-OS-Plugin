@@ -55,6 +55,7 @@ local tagTypes = {
 }
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
+    print(newTag, oldTag)
     if not newTag then
         --// Clear tag
     else

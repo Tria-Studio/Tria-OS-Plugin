@@ -146,7 +146,7 @@ function Util:ShowMessage(header: string, text: string, option1: any?, option2: 
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
-    self._Message.Option2:set(option2 or {})
+    self._Message.Option2:set(option2 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
 end
 
 function Util.isPluginFrozen()

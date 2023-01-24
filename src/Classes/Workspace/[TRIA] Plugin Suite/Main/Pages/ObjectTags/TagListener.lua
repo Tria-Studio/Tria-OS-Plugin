@@ -57,10 +57,12 @@ return function(name, data)
                     Active = Util.interfaceActive,
 
                     [OnEvent "Activated"] = function()
+                        local partError = false
+
                         if #Util._Selection.selectedParts:get() > 0 then
                             local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name]
                             if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
-                                Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br /> See the Insert page to add these map components to your map.", name), nil, {
+                                Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br /> See the Insert page to add these map components to your map.", name), {
                                     Text = "Take me there",
                                     Callback = function()
                                         Pages:ChangePage("Insert")
@@ -68,7 +70,15 @@ return function(name, data)
                                 })
                                 return
                             end
-                            
+
+                            local newState = if dataVisible:get() == Enum.TriStateBoolean.True then false else true
+                            for _, instance in pairs(Util._Selection.selectedParts:get()) do
+                                if not instance:IsA("BasePart") then
+                                    partError = true
+                                    continue
+                                end
+                                TagUtils:SetPartTag(instance, newState and name, not newState and name)
+                            end
                         end
                     end,
 
