@@ -281,7 +281,7 @@ data.dataTypes = {
         _WallRun = {
             DisplayText = "WallRun",
             DisplayIcon = "rbxassetid://9468872087",
-            LayoutOrder = 3,
+            LayoutOrder = 2,
             metadata = {
                 {
                     data = data.metadataTypes.Speed,
@@ -298,14 +298,14 @@ data.dataTypes = {
         _WallJump = {
             DisplayText = "WallJump",
             DisplayIcon = "rbxassetid://9468872087",
-            LayoutOrder = 2,
+            LayoutOrder = 1,
             metadata = {},
             IsTagApplicable = true,
         },
         _Liquid = {
             DisplayText = "_Liquid",
             DisplayIcon = "rbxassetid://6026568295",
-            LayoutOrder = 5,
+            LayoutOrder = 4,
             metadata = {
                 {
                     data = data.metadataTypes.LiquidNum,
@@ -339,7 +339,7 @@ data.dataTypes = {
         _Button = {
             DisplayText = "_Button",
             DisplayIcon = "rbxassetid://6026647916",
-            LayoutOrder = 4,
+            LayoutOrder = 3,
             metadata = {
                 {
                     data = data.metadataTypes.ButtonNum,
@@ -376,7 +376,7 @@ data.dataTypes = {
         Detail = {
             DisplayText = "Low Detail",
             DisplayIcon = "rbxassetid://6034925618",
-            LayoutOrder = 1,
+            LayoutOrder = 0,
             metadata = {},
             IsTagApplicable = true,
         },

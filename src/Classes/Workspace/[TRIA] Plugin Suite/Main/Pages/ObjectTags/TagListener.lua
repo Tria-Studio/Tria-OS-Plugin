@@ -12,6 +12,7 @@ local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Observer = Fusion.Observer
 local Out = Fusion.Out
+local OnEvent = Fusion.OnEvent
 
 return function(name, data)
     local dataVisible = Value(false)
@@ -52,6 +53,12 @@ return function(name, data)
 
                     AutoButtonColor = Util.interfaceActive,
                     Active = Util.interfaceActive,
+
+                    [OnEvent "Activated"] = function()
+                        if #Util._Selection.selectedParts:get() > 0 then
+                            print "CLICK"
+                        end
+                    end,
 
                     [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil)
                 },

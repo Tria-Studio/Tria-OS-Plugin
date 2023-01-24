@@ -1,3 +1,5 @@
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+
 local Package = script.Parent.Parent
 local TagData = require(Package.Pages.ObjectTags.tagData)
 local Util = require(script.Parent)
@@ -51,7 +53,20 @@ local tagTypes = {
         "Detail"
     }
 }
- 
+
+function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
+    local tagData = TagData.dataTypes.objectTags[newTag] or TagData.dataTypes.buttonTags[newTag]
+    if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
+        return false
+    end
+
+    if not newTag then
+        --// Clear tag
+    else
+        --// Assign new tag
+    end
+end
+
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local Types = {}
 
