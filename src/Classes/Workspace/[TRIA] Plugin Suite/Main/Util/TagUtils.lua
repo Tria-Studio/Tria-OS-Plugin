@@ -16,9 +16,11 @@ local tagTypes = {
         "_WallRun",
         "_WallJump",
         "_Liquid",
+        "_Gas",
 
         _convert = {
-            _Liquid = "_Liquid%d"
+            _Liquid = "_Liquid%d",
+            _Gas = "_Gas%d",
         }
     },
     ActionTags = { --// _action attribute

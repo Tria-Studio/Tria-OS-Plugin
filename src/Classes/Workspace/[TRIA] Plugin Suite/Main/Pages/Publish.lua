@@ -216,22 +216,10 @@ function frame:GetFrame(data)
     end
 
     if #whitelistedMaps == 0 then
-        -- table.insert(whitelistedMaps, NoMapsFoundText:get())
-        table.insert(whitelistedMaps, { --// debug 
-            Name = "Cubic Ruins",
-            Difficulty = 6,
-            Image = "rbxassetid://11715750538",
-            ID= 1,
-        })
+        table.insert(whitelistedMaps, NoMapsFoundText:get())
     end
     if #publishedMaps == 0 then
-        -- table.insert(publishedMaps, NoMapsFoundText:get())
-        table.insert(publishedMaps, { --// debug 
-            Name = "Cubic Void",
-            Difficulty = 6,
-            Image = "rbxassetid://8877261367",
-            ID = 2,
-        })
+        table.insert(publishedMaps, NoMapsFoundText:get())
     end
 
     local newFrame = New "Frame" {
