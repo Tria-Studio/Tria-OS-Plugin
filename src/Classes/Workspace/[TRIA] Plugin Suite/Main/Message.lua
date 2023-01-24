@@ -18,7 +18,7 @@ return New "Frame" { --// Message
 	Visible = Computed(function()
 		return Util._Message.Text:get() ~= ""
 	end),
-	ZIndex = 1000,
+	ZIndex = 10,
 
 	[Children] = {
 		New "ImageLabel" {
@@ -34,6 +34,7 @@ return New "Frame" { --// Message
 			ImageTransparency = 0.5,
 			ScaleType = Enum.ScaleType.Slice,
 			SliceCenter = Rect.new(200, 200, 300, 300),
+			ZIndex = 10,
 			SliceScale = 0.075
 		},
 
@@ -46,9 +47,11 @@ return New "Frame" { --// Message
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.new(1, -36, 0, 0),
+			ZIndex = 10,
 
 			[Children] = {
 				Components.MiniTopbar({
+					ZIndex = 10,
 					Text = Util._Message.Header,
 					Callback = Util.CloseMessage,
 				}),
@@ -65,6 +68,7 @@ return New "Frame" { --// Message
 					RichText = true,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					TextYAlignment = Enum.TextYAlignment.Top,
+					ZIndex = 10,
 
 					[Children] = Components.Constraints.UIPadding(UDim.new(0, 4), UDim.new(0, 4), UDim.new(0, 4), UDim.new(0, 4))
 				},
@@ -81,7 +85,8 @@ return New "Frame" { --// Message
 
 					BackgroundColor3 = Computed(function()
 						return Util._Message.Option1:get() and Util._Message.Option1:get().BackgroundColor3 or Theme.Button.Selected
-					end)
+					end),
+
 				}, {
 					Text = Computed(function()
 						return Util._Message.Option2:get() and Util._Message.Option2:get().Text or ""
@@ -102,7 +107,7 @@ return New "Frame" { --// Message
 					BackgroundColor3 = Computed(function()
 						return Util._Message.Option2:get() and Util._Message.Option2:get().BackgroundColor3 or Theme.Button.Default
 					end)
-				})
+				}, 10)
 			}
 		}
 	}

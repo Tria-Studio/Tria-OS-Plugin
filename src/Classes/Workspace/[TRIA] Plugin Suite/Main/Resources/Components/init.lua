@@ -149,23 +149,24 @@ function Components.MiniTopbar(data)
         BackgroundColor3 = Theme.CategoryItem.Default,
         BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
-        ZIndex = 2,
+        ZIndex = data.ZIndex or 2,
         Size = UDim2.new(1, 0, 0, 24),
     
         [Children] = {
             Components.ImageButton({
-                ZIndex = 2,
+                ZIndex = data.ZIndex or 2,
                 AnchorPoint = Vector2.new(1, 0),
                 Size = UDim2.fromOffset(24, 24),
                 Position = UDim2.fromScale(1, 0),
                 Image = "rbxassetid://6031094678",
                 ImageColor3 = Theme.ErrorText.Default,
                 BorderMode = Enum.BorderMode.Outline,
+                
 
                 [OnEvent "Activated"] = data.Callback
             }),
             New "TextLabel" {
-                ZIndex = 2,
+                ZIndex = data.ZIndex or 2,
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, -24, 1, 0),
                 Text = data.Text,
@@ -180,9 +181,10 @@ function Components.MiniTopbar(data)
     }
 end
 
-function optionButtonComponent(data)
+function optionButtonComponent(data, ZIndex)
     return Components.TextButton({
         LayoutOrder = 1,
+        ZIndex = ZIndex,
         BackgroundColor3 = data.BackgroundColor3:get(),
         Size = UDim2.fromOffset(56, 18),
         Text = data.Text, 
@@ -200,18 +202,19 @@ function optionButtonComponent(data)
     })
 end
 
-function Components.TwoOptions(option1Data, option2Data)
+function Components.TwoOptions(option1Data, option2Data, ZIndex)
     return New "Frame" { --// Buttons
         BackgroundTransparency = 1,
         AnchorPoint = Vector2.new(0, 0),
         Position = UDim2.fromScale(0, 1),
         Size = UDim2.new(1, 0, 0, 24),
+        ZIndex = ZIndex,
 
         [Children] = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Right, UDim.new(0, 6), Enum.VerticalAlignment.Center),
             Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 3)),
-            optionButtonComponent(option1Data),
-            optionButtonComponent(option2Data),
+            optionButtonComponent(option1Data, ZIndex),
+            optionButtonComponent(option2Data, ZIndex),
         },
     }
 end

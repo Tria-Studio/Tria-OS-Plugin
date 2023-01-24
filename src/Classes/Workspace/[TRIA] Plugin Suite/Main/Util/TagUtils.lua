@@ -55,11 +55,6 @@ local tagTypes = {
 }
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
-    local tagData = TagData.dataTypes.objectTags[newTag] or TagData.dataTypes.buttonTags[newTag]
-    if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
-        return false
-    end
-
     if not newTag then
         --// Clear tag
     else

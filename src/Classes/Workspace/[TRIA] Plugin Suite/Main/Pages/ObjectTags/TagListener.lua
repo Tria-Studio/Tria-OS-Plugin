@@ -4,6 +4,8 @@ local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components )
 local Util = require(Package.Util)
 local TagUtils = require(Package.Util.TagUtils)
+local TagData = require(script.Parent.tagData)
+local Pages = require(Package.Resources.Components.Pages)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -56,7 +58,17 @@ return function(name, data)
 
                     [OnEvent "Activated"] = function()
                         if #Util._Selection.selectedParts:get() > 0 then
-                            print "CLICK"
+                            local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name]
+                            if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
+                                Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br /> See the Insert page to add these map components to your map.", name), nil, {
+                                    Text = "Take me there",
+                                    Callback = function()
+                                        Pages:ChangePage("Insert")
+                                    end
+                                })
+                                return
+                            end
+                            
                         end
                     end,
 
