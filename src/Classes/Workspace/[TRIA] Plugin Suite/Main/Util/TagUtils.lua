@@ -102,6 +102,10 @@ function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.T
     for _, part in pairs(parts) do
         local value = tagUtils:PartHasTag(part, tag)
         numYes += if value then 1 else 0
+
+        if numYes > 0 and not value then
+            return Enum.TriStateBoolean.Unknown
+        end
     end
 
     return #parts == numYes and Enum.TriStateBoolean.True
