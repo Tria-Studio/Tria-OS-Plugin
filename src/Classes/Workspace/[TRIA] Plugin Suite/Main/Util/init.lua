@@ -146,7 +146,7 @@ function Util:ShowMessage(header: string, text: string, option1: any?, option2: 
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
-    self._Message.Option2:set(option2 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
+    self._Message.Option2:set(option2 or option1 and {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage} or {})
 end
 
 function Util.isPluginFrozen()
@@ -247,6 +247,9 @@ Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(function()
                 Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
             end))
             selectionMaid:GiveTask(Thing.ChildRemoved:Connect(function()
+                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+            end))
+            selectionMaid:GiveTask(Thing.AncestryChanged:Connect(function()
                 Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
             end))
 

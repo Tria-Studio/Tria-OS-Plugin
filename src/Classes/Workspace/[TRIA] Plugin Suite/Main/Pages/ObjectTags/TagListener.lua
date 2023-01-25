@@ -1,3 +1,4 @@
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Package = script.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
@@ -62,8 +63,8 @@ return function(name, data)
                         if #Util._Selection.selectedParts:get() > 0 then
                             local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name]
                             if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
-                                Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br /> See the Insert page to add these map components to your map.", name), {
-                                    Text = "Take me there",
+                                Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br />See the Insert page to add these map components to your map.", name), {
+                                    Text = "Show me",
                                     Callback = function()
                                         Pages:ChangePage("Insert")
                                     end
@@ -71,13 +72,22 @@ return function(name, data)
                                 return
                             end
 
-                            local newState = if dataVisible:get() == Enum.TriStateBoolean.True then false else true
+                            local Selected = Util._Selection.selectedParts:get()
+                            local newState = not dataVisible:get()
+
+                            ChangeHistoryService:SetWaypoint(string.format("Changing tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
                             for _, instance in pairs(Util._Selection.selectedParts:get()) do
                                 if not instance:IsA("BasePart") then
                                     partError = true
                                     continue
                                 end
                                 TagUtils:SetPartTag(instance, newState and name, not newState and name)
+                            end
+                            ChangeHistoryService:SetWaypoint(string.format("Set tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
+                            
+                            if partError and name ~= "Detail" then
+                                Util.debugWarn(string.format("Only BaseParts, Models, Folders, & Attachments can have Object Tags (excluding Low Detail). Selected parts which were not a BasePart were ignored.", name))
+                                Util:ShowMessage("Cannot Set Tag", string.format("Only <b>BaseParts</b>, <b>Models</b>, <b>Folders</b>, & <b>Attachments</b> can have Object Tags (excluding Low Detail).<br /><br />Selected parts which were not a BasePart were ignored.", name))
                             end
                         end
                     end,

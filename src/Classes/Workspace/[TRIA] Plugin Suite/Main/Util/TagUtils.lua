@@ -53,13 +53,73 @@ local tagTypes = {
         "Detail"
     }
 }
+local tagsWithNumbers = {
+    "_Button",
+    "_Gas",
+    "_Liquid",
+    "_Show",
+    "_Hide",
+    "_Fall",
+    "_Explode",
+    "_Destroy",
+    "_Sound",
+}
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
-    print(newTag, oldTag)
-    if not newTag then
-        --// Clear tag
-    else
-        --// Assign new tag
+    local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag]
+
+    if not newTag then --// Clear tag
+        local Methods = {}
+
+        function Methods._Action()
+            part:SetAttribute("_action", nil)
+        end
+
+        function Methods.Name()
+            part.Name = part.ClassName
+        end
+        function Methods.DetailParent()
+            if not Util.mapModel:get():FindFirstChild("Geometry") then
+                Instance.new("Folder", Util.mapModel:get()).Name = "Geometry"
+            end
+
+            part.Parent = Util.mapModel:get().Geometry
+        end
+        function Methods.Child()
+            for _, Child in pairs(part:GetChildren()) do
+                if string.find(Child.Name, oldTag, 1, true) then
+                    Child.Parent = nil
+                end
+            end
+        end
+
+        local method = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod
+        Methods[method]()
+    else --// Assign new tag
+    local Methods = {}
+
+    function Methods._Action()
+        part:SetAttribute("_action", newTag)
+    end
+
+    function Methods.Name()
+        part.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+    end
+    function Methods.DetailParent()
+        if not Util.mapModel:get():FindFirstChild("Detail") then
+            Instance.new("Folder", Util.mapModel:get()).Name = "Detail"
+        end
+
+        part.Parent = Util.mapModel:get().Detail
+    end
+    function Methods.Child()
+        local newChild = Instance.new("ObjectValue")
+        newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+        newChild.Parent = part
+    end
+
+    local method = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod
+    Methods[method]()
     end
 end
 
