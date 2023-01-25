@@ -66,61 +66,80 @@ local tagsWithNumbers = {
 }
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
+    local function VerifyFolder(Name: string?)
+        if not Util.mapModel:get():FindFirstChild(Name or "Geometry") then
+            Instance.new("Folder", Util.mapModel:get()).Name = Name or "Geometry"
+        end
+    end
+    --[[
+        Issues:
+         - [ ] Clearing tag doesnt remove its metadata
+         - [ ] Doesnt assign default metadata
+         - [x] Doesnt support optimized structure
+    ]]
+    local isOptimized = Util.mapModel:get():FindFirstChild("Special")
     local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag]
+    local Methods = {}
 
     if not newTag then --// Clear tag
-        local Methods = {}
-
         function Methods._Action()
+            if isOptimized then
+                VerifyFolder()
+            end
             part:SetAttribute("_action", nil)
+            part.Parent = if isOptimized then Util.mapModel:get().Geometry else part.Parent
         end
 
         function Methods.Name()
+            if isOptimized then
+                VerifyFolder()
+            end
             part.Name = part.ClassName
+            part.Parent = if isOptimized then Util.mapModel:get().Geometry else part.Parent
         end
         function Methods.DetailParent()
-            if not Util.mapModel:get():FindFirstChild("Geometry") then
-                Instance.new("Folder", Util.mapModel:get()).Name = "Geometry"
-            end
-
+            VerifyFolder()
             part.Parent = Util.mapModel:get().Geometry
         end
         function Methods.Child()
+            if isOptimized then
+                VerifyFolder()
+            end
             for _, Child in pairs(part:GetChildren()) do
                 if string.find(Child.Name, oldTag, 1, true) then
                     Child.Parent = nil
                 end
             end
+            part.Parent = if isOptimized then Util.mapModel:get().Geometry else part.Parent
         end
-
-        local method = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod
-        Methods[method]()
     else --// Assign new tag
-    local Methods = {}
-
-    function Methods._Action()
-        part:SetAttribute("_action", newTag)
-    end
-
-    function Methods.Name()
-        part.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
-    end
-    function Methods.DetailParent()
-        if not Util.mapModel:get():FindFirstChild("Detail") then
-            Instance.new("Folder", Util.mapModel:get()).Name = "Detail"
+        function Methods._Action()
+            VerifyFolder()
+            part:SetAttribute("_action", newTag)
+            part.Parent = if isOptimized and isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable else part.Parent
         end
 
-        part.Parent = Util.mapModel:get().Detail
-    end
-    function Methods.Child()
-        local newChild = Instance.new("ObjectValue")
-        newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
-        newChild.Parent = part
+        function Methods.Name()
+            VerifyFolder()
+            part.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+            part.Parent = if isOptimized and isOptimized:FindFirstChild("Fluid") then isOptimized.Interactable else part.Parent
+        end
+        function Methods.DetailParent()
+            VerifyFolder("Detail")
+            part.Parent = Util.mapModel:get().Detail
+        end
+        function Methods.Child()
+            VerifyFolder()
+
+            local newChild = Instance.new("ObjectValue")
+            newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+            newChild.Parent = part
+            part.Parent = if isOptimized and isOptimized:FindFirstChild("Button") then isOptimized.Interactable else part.Parent
+        end
     end
 
     local method = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod
     Methods[method]()
-    end
 end
 
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
