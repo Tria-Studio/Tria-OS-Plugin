@@ -1,3 +1,7 @@
+--[[
+    Issues:
+     - [ ] Api key remove button is clickable when no map is selected
+]]
 local ContentProvider = game:GetService("ContentProvider")
 local TextService = game:GetService("TextService")
 
