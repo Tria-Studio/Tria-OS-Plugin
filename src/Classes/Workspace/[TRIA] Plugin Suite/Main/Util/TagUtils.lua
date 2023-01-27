@@ -65,6 +65,46 @@ local tagsWithNumbers = {
     "_Sound",
 }
 
+function tagUtils:SetPartMetaData(part, metadata, newValue)
+    local Types = {}
+
+    if newValue then --// Assign or Change
+        function Types.Attribute()
+                
+        end
+
+        function Types.ConfigAttribute()
+            
+        end
+
+        function Types.ChildInstanceValue()
+            
+        end
+
+        function Types.EndOfName()
+            
+        end
+    else --// Clear
+        function Types.Attribute()
+            part:SetAttribute(metadata.dataName, nil)
+        end
+
+        function Types.ConfigAttribute()
+            part:FindFirstChild("Customization"):SetAttribute(metadata.dataName, nil)
+        end
+
+        function Types.ChildInstanceValue()
+            
+        end
+
+        function Types.EndOfName()
+            
+        end
+    end
+
+    Types[metadata.type]()
+end
+
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
     local function VerifyFolder(Name: string?)
         if not Util.mapModel:get():FindFirstChild(Name or "Geometry") then
@@ -112,6 +152,11 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             end
             part.Parent = if isOptimized then Util.mapModel:get().Geometry else part.Parent
         end
+
+        local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
+        for _, metaData in pairs(tagData.metadata) do
+            tagUtils:SetPartMetaData(part, metaData, nil)
+        end
     else --// Assign new tag
         function Methods._Action()
             VerifyFolder()
@@ -135,6 +180,11 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
             newChild.Parent = part
             part.Parent = if isOptimized and isOptimized:FindFirstChild("Button") then isOptimized.Interactable else part.Parent
+        end
+
+        local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
+        for _, metaData in pairs(tagData.metadata) do
+            tagUtils:SetPartMetaData(part, metaData, metaData.default)
         end
     end
 
