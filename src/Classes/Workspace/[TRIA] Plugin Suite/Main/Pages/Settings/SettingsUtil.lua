@@ -39,11 +39,9 @@ local SettingsUtil = {
 }
 
 function SettingsUtil.hookAttributeChanged(parent, attribute, callback)
-    local conn; conn = parent:GetAttributeChangedSignal(attribute):Once(function()
-        conn:Disconnect()
+    SettingsUtil.SettingMaid:GiveTask(parent:GetAttributeChangedSignal(attribute):Once(function()
         task.defer(callback)
-    end)
-    SettingsUtil.SettingMaid:GiveTask(conn)
+    end))
 end
 
 function SettingsUtil.updateStateValue(currentValue, newValue, tbl)
