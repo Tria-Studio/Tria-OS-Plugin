@@ -51,6 +51,17 @@ end
 function Components.TopbarButton(data)
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
+    local transparencySpring = Spring(Computed(function()
+        return data.Visible:get() and 0 or 1
+    end), 20)
+
+    local colorSpring = Spring(Computed(function()
+        local startColor = Color3.fromRGB(245, 158, 29)
+        local endColor = Color3.fromRGB(247, 0, 255)
+
+        return startColor:Lerp(endColor, Util._currentPageNum:get() / #Util._PageOrder)
+    end), 20)
+
     return New "TextButton" {
         Active = true,
         AutoButtonColor = true,
@@ -64,7 +75,7 @@ function Components.TopbarButton(data)
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get(false) or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil then
                 Pages:ChangePage(data.Name)
-                Util._currentPageNum = table.find(Util._PageOrder, data.Name)
+                Util._currentPageNum:set(table.find(Util._PageOrder, data.Name))
             end
         end,
 
@@ -73,23 +84,25 @@ function Components.TopbarButton(data)
                 Name = "Enabled",
                 Size = UDim2.fromScale(1, 1),
                 BackgroundTransparency = 1,
-                Visible = data.Visible,
 
                 [Children] = {
-                    New "Frame" {
+                    New "Frame" { -- Left border
                         BackgroundColor3 = Theme.Border.Default,
+                        BackgroundTransparency = transparencySpring,
                         Size = UDim2.new(0, 2, 1, 0),
                     },
-                    New "Frame" {
+                    New "Frame" { -- Right border
                         AnchorPoint = Vector2.new(1, 0),
                         Position = UDim2.fromScale(1, 0),
                         BackgroundColor3 = Theme.Border.Default,
+                        BackgroundTransparency = transparencySpring,
                         Size = UDim2.new(0, 2, 1, 0),
                     },
-                    New "Frame" {
+                    New "Frame" { -- Top line
                         AnchorPoint = Vector2.new(0.5, 0),
                         Position = UDim2.fromScale(0.5, 0),
-                        BackgroundColor3 = Theme.MainButton.Default,
+                        BackgroundColor3 = colorSpring,
+                        BackgroundTransparency = transparencySpring,
                         Size = UDim2.new(1, -4, 0, 2),
                     },
                 }
