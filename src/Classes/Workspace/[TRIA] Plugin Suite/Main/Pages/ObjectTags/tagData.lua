@@ -97,6 +97,13 @@ data.metadataTypes = {
         default = 0,
         textBoxSize = -179
     },
+    Meshlelss = {
+        type = "Attribute",
+        dataName = "Meshless",
+        dataType = "boolean",
+        displayName = "Meshless",
+        default = false,
+    },
     LiquidType = {
         type = "Attribute",
         dataType = "dropdown",
@@ -365,13 +372,18 @@ data.dataTypes = {
                     data = data.metadataTypes.LiquidType,
                     location = 3,
                     isFullSize = true,
+                }, {
+                    data = data.metadataTypes.Meshlelss,
+                    location = 5,
+                    isFullSize = true,
                 },
+
             },
             ApplyMethod = "Name",
             IsTagApplicable = true,
             OnlyBaseParts = true,
         },
-        _ = {
+        _Gas = {
             _nameStub = "_Gas",
             DisplayText = "_Gas",
             ActionText = nil,
