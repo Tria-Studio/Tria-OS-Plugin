@@ -170,7 +170,7 @@ function SettingTypes.Checkbox(data)
 
             [OnEvent "Activated"] = function()
                 if canEditSetting(data) then
-                    data.Value:set(not data.Value:get(false), true)
+                    data.Value:set(not data.Value:get(false))
                     Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                 end
             end,

@@ -53,7 +53,7 @@ function SettingsUtil.updateStateValue(currentValue, newValue, tbl)
         ["Time"] = {"string"}
     }
 
-    if currentValue then
+    if currentValue ~= nil then
         currentValue = newValue
     end
     if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
