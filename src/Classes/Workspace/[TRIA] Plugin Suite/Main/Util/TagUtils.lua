@@ -70,11 +70,11 @@ function tagUtils:SetPartMetaData(part, metadata, newValue)
 
     if newValue then --// Assign or Change
         function Types.Attribute()
-                
+            part:SetAttribute(metadata.data.dataName, newValue)
         end
 
         function Types.ConfigAttribute()
-            
+            part:FindFirstChild("Customization"):SetAttribute(metadata.data.dataName, newValue)
         end
 
         function Types.ChildInstanceValue()
@@ -86,11 +86,11 @@ function tagUtils:SetPartMetaData(part, metadata, newValue)
         end
     else --// Clear
         function Types.Attribute()
-            part:SetAttribute(metadata.dataName, nil)
+            part:SetAttribute(metadata.data.dataName, nil)
         end
 
         function Types.ConfigAttribute()
-            part:FindFirstChild("Customization"):SetAttribute(metadata.dataName, nil)
+            part:FindFirstChild("Customization"):SetAttribute(metadata.data.dataName, nil)
         end
 
         function Types.ChildInstanceValue()
@@ -101,8 +101,8 @@ function tagUtils:SetPartMetaData(part, metadata, newValue)
             
         end
     end
-    print(metadata)
-    Types[metadata.type]()
+
+    Types[metadata.data.type]()
 end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
@@ -157,10 +157,15 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
         for _, metaData in pairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, metaData, nil)
         end
+
+        local methods = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod or {tagData.ApplyMethod}
+        for _, method in  pairs(methods) do
+            Methods[method]()
+        end
     else --// Assign new tag
         function Methods._Action()
             VerifyFolder()
-            part:SetAttribute("_action", newTag)
+            part:SetAttribute("_action", string.gsub(newTag, "_", "", 1))
             part.Parent = if isOptimized and isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable else part.Parent
         end
 
@@ -184,7 +189,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
         local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag]
         for _, metaData in pairs(tagData.metadata) do
-            tagUtils:SetPartMetaData(part, metaData, metaData.default)
+            tagUtils:SetPartMetaData(part, metaData, metaData.data.default)
         end
     end
 
