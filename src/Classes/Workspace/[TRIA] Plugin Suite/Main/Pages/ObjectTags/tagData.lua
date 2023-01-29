@@ -97,7 +97,7 @@ data.metadataTypes = {
         default = 0,
         textBoxSize = -179
     },
-    Meshlelss = {
+    Meshless = {
         type = "Attribute",
         dataName = "Meshless",
         dataType = "boolean",
@@ -373,7 +373,7 @@ data.dataTypes = {
                     location = 3,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.Meshlelss,
+                    data = data.metadataTypes.Meshless,
                     location = 5,
                     isFullSize = true,
                 },
