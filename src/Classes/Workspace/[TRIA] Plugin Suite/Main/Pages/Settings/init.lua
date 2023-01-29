@@ -151,12 +151,10 @@ for directory, data in pairs(directories) do
     end
 end
 
--- insertLiquids()
 onMapChanged()
 handleFolderRemoval()
 
 Util.MapChanged:Connect(function()
-    -- insertLiquids()
     onMapChanged()
     handleFolderRemoval()
 end)
