@@ -23,11 +23,15 @@ local frame = {}
 
 local SettingData = require(script:WaitForChild("SettingData"))
 local SettingsUtil = require(script:WaitForChild("SettingsUtil"))
-local LightingExport = require(script:WaitForChild("LightingExport"))
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local directories = SettingsUtil.Directories
+for directory, data in pairs(directories) do
+    data.Visible = Value(true)
+end
+
+local LightingExport = require(script:WaitForChild("LightingExport"))
 
 function onMapChanged()
     -- Disconnect old connections
@@ -121,7 +125,7 @@ function frame:GetFrame(data)
                         return dirKey, dirDropdown
                     end, Fusion.cleanup),
 
-                    LightingExport
+                    LightingExport:GetUI()
                 }
             }
         }

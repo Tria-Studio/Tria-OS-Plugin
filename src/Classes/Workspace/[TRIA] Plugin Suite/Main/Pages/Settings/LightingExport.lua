@@ -63,61 +63,67 @@ function importLighting()
     end
 end
 
-return New "Frame" {
-	BackgroundTransparency = 1,
-	BorderSizePixel = 1,
-	LayoutOrder = 4,
-	Size = UDim2.new(1, 0, 0, 50),
-	Visible = directories.Lighting.Visible,
+local frame = {}
 
-	[Children] = {
-		Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
-		ExportButton {
-			LayoutOrder = 1,
-			Text = "Export to Lighting",
-
-			[OnEvent "Activated"] = function()
-				local option1 = {
-					Text = "Export",
-					Callback = exportLighting,
-					BackgroundColor3 = Theme.Button.Selected
-				}
-		
-				local option2 = {
-					Text = "Cancel",
-					BackgroundColor3 = Theme.Button.Default
-				}
-
-				Util:ShowMessage(
-					"Export to lighting?", 
-					"This will export the current lighting settings into your game's lighting system.", 
-					option1, 
-					option2
-				)
-			end
-		},
-		ExportButton {
-			LayoutOrder = 2,
-			Text = "Import from Lighting",
-			[OnEvent "Activated"] = function()
-				local option1 = {
-					Text = "Import",
-					Callback = importLighting,
-					BackgroundColor3 = Theme.Button.Selected
-				}
-		
-				local option2 = {
-					Text = "Cancel",
-					BackgroundColor3 = Theme.Button.Default
-				}
-
-				Util:ShowMessage(
-					"Import from lighting?", 
-					"This will import the current lighting settings from your game into the map's settings.", 
-					option1, 
-					option2
-				)
-			end
+function frame:GetUI()
+	return New "Frame" {
+		BackgroundTransparency = 1,
+		BorderSizePixel = 1,
+		LayoutOrder = 4,
+		Size = UDim2.new(1, 0, 0, 50),
+		Visible = directories.Lighting.Visible,
+	
+		[Children] = {
+			Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
+			ExportButton {
+				LayoutOrder = 1,
+				Text = "Export to Lighting",
+	
+				[OnEvent "Activated"] = function()
+					local option1 = {
+						Text = "Export",
+						Callback = exportLighting,
+						BackgroundColor3 = Theme.Button.Selected
+					}
+			
+					local option2 = {
+						Text = "Cancel",
+						BackgroundColor3 = Theme.Button.Default
+					}
+	
+					Util:ShowMessage(
+						"Export to lighting?", 
+						"This will export the current lighting settings into your game's lighting system.", 
+						option1, 
+						option2
+					)
+				end
+			},
+			ExportButton {
+				LayoutOrder = 2,
+				Text = "Import from Lighting",
+				[OnEvent "Activated"] = function()
+					local option1 = {
+						Text = "Import",
+						Callback = importLighting,
+						BackgroundColor3 = Theme.Button.Selected
+					}
+			
+					local option2 = {
+						Text = "Cancel",
+						BackgroundColor3 = Theme.Button.Default
+					}
+	
+					Util:ShowMessage(
+						"Import from lighting?", 
+						"This will import the current lighting settings from your game into the map's settings.", 
+						option1, 
+						option2
+					)
+				end
+			}
 		}
 	}
-}
+end
+
+return frame
