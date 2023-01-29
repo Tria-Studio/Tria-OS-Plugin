@@ -79,7 +79,8 @@ return function(name, data)
 
                             ChangeHistoryService:SetWaypoint(string.format("Changing tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
                             for _, instance in pairs(Util._Selection.selectedParts:get()) do
-                                if not instance:IsA("BasePart") then
+                                print(data.OnlyBaseParts, not instance:IsA("BasePart"))
+                                if data.OnlyBaseParts and not instance:IsA("BasePart") then
                                     partError = true
                                     continue
                                 end

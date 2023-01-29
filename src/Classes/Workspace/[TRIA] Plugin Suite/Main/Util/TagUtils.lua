@@ -101,7 +101,7 @@ function tagUtils:SetPartMetaData(part, metadata, newValue)
             
         end
     end
-
+    print(metadata)
     Types[metadata.type]()
 end
 
@@ -182,7 +182,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             part.Parent = if isOptimized and isOptimized:FindFirstChild("Button") then isOptimized.Interactable else part.Parent
         end
 
-        local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
+        local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag]
         for _, metaData in pairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, metaData, metaData.default)
         end

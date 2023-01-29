@@ -209,6 +209,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Child",
             IsTagApplicable = true,
+            OnlyBaseParts = false,
         },
         _Hide = {
             DisplayText = "_Hide#",
@@ -225,6 +226,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Child",
             IsTagApplicable = true,
+            OnlyBaseParts = false,
         },
         _Fall = {
             DisplayText = "_Fall#",
@@ -241,6 +243,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Child",
             IsTagApplicable = true,
+            OnlyBaseParts = false,
         },
         _Destroy = {
             DisplayText = "_Destroy#",
@@ -257,6 +260,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Child",
             IsTagApplicable = true,
+            OnlyBaseParts = false,
         },
         _Sound = {
             DisplayText = "_Sound#",
@@ -279,6 +283,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Child",
             IsTagApplicable = true,
+            OnlyBaseParts = false,
         },
         _Explode = {
             DisplayText = "_Explode#",
@@ -297,6 +302,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Child",
             IsTagApplicable = true,
+            OnlyBaseParts = false,
         },
     },
     objectTags = {
@@ -320,6 +326,7 @@ data.dataTypes = {
                 "Child"
             },
             IsTagApplicable = true,
+            OnlyBaseParts = true,
         },
         _WallJump = {
             DisplayText = "WallJump",
@@ -331,6 +338,7 @@ data.dataTypes = {
                 "Child"
             },
             IsTagApplicable = true,
+            OnlyBaseParts = true,
         },
         _Liquid = {
             DisplayText = "_Liquid",
@@ -349,6 +357,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Name",
             IsTagApplicable = true,
+            OnlyBaseParts = true,
         },
         _Gas = {
             DisplayText = "_Gas",
@@ -367,6 +376,7 @@ data.dataTypes = {
             },
             ApplyMethod = "Name",
             IsTagApplicable = true,
+            OnlyBaseParts = true,
         },
         _Button = {
             DisplayText = "_Button",
@@ -405,6 +415,7 @@ data.dataTypes = {
             },
             ApplyMethod = nil,
             IsTagApplicable = false,
+            OnlyBaseParts = nil,
         },
         Detail = {
             DisplayText = "Low Detail",
@@ -413,6 +424,7 @@ data.dataTypes = {
             metadata = {},
             ApplyMethod = "DetailParent",
             IsTagApplicable = true,
+            OnlyBaseParts = false,
         },
         Zipline = {
             DisplayText = "Zipline",
@@ -451,6 +463,7 @@ data.dataTypes = {
             },
             ApplyMethod = nil,
             IsTagApplicable = false,
+            OnlyBaseParts = nil,
         },
         _Kill = {
             DisplayText = "Killbrick",
@@ -459,6 +472,7 @@ data.dataTypes = {
             metadata = {},
             ApplyMethod = "_Action",
             IsTagApplicable = true,
+            OnlyBaseParts = true,
         },
         AirTank = {
             DisplayText = "AirTank",
@@ -473,6 +487,7 @@ data.dataTypes = {
             },
             ApplyMethod = nil,
             IsTagApplicable = false,
+            OnlyBaseParts = nil,
         },
         _SpeedBooster = {
             DisplayText = "SpeedBooster",
@@ -487,6 +502,7 @@ data.dataTypes = {
             },
             ApplyMethod = "_Action",
             IsTagApplicable = true,
+            OnlyBaseParts = true,
         },
         _JumpBooster = {
             DisplayText = "JumpBooster",
@@ -501,6 +517,7 @@ data.dataTypes = {
             },
             ApplyMethod = "_Action",
             IsTagApplicable = true,
+            OnlyBaseParts = true,
         },
     }
 }
