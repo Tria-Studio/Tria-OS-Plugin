@@ -3,6 +3,7 @@ local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Util = require(Resources.Parent.Util)
 local Pages = require(script.Pages)
+local lerpType = require(Resources.Fusion.Animation.lerpType)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -59,7 +60,7 @@ function Components.TopbarButton(data)
         local startColor = Color3.fromRGB(245, 158, 29)
         local endColor = Color3.fromRGB(247, 0, 255)
 
-        return startColor:Lerp(endColor, Util._currentPageNum:get() / #Util._PageOrder)
+        return lerpType(startColor, endColor, Util._currentPageNum:get() / #Util._PageOrder)
     end), 20)
 
     return New "TextButton" {
