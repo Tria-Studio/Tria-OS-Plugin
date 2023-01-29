@@ -148,12 +148,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             Instance.new("Folder", Util.mapModel:get()).Name = Name or "Geometry"
         end
     end
-    --[[
-        Issues:
-         - [ ] Clearing tag doesnt remove its metadata
-         - [ ] Doesnt assign default metadata
-         - [x] Doesnt support optimized structure
-    ]]
+
     local isOptimized = Util.mapModel:get():FindFirstChild("Special")
     local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag]
     local Methods = {}

@@ -278,7 +278,7 @@ function Components.Dropdown(data, childrenProcessor)
 
         [OnEvent "MouseEnter"] = function()
             if Util.interfaceActive:get(false) then
-                headerColor:set(Theme.Button.Pressed)
+                headerColor:set(Theme.Button.Hover)
             end
         end,
         [OnEvent "MouseLeave"] = function()
