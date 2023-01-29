@@ -77,11 +77,13 @@ data.metadataTypes = {
         type = "ChildInstanceValue",
         dataType = "number",
         displayName = "Delay",
+        dataName = "_Delay",
         default = 0,
         textBoxSize = -44
     },
     SoundId = {
-        type = "ChildInstanceValue",
+        type = "Property",
+        _propertyName = "SoundId",
         dataType = "string",
         displayName = "Sound ID",
         default = "",
@@ -92,7 +94,7 @@ data.metadataTypes = {
         dataType = "number",
         dataName = nil,
         displayName = "Liquid #",
-        default = 1,
+        default = 0,
         textBoxSize = -179
     },
     LiquidType = {
@@ -101,7 +103,7 @@ data.metadataTypes = {
         dataName = "Type",
         dropdownType = "liquids",
         displayName = "Type",
-        default = 1,
+        default = "water",
     },
     Oxygen = {
         type = "Attribute",
@@ -195,6 +197,7 @@ data.metadataTypes = {
 data.dataTypes = {
     buttonTags = {
         _Show = {
+            _nameStub = "_Show",
             DisplayText = "_Show#",
             DisplayIcon = "rbxassetid://6031075931",
             LayoutOrder = 1,
@@ -212,6 +215,7 @@ data.dataTypes = {
             OnlyBaseParts = false,
         },
         _Hide = {
+            _nameStub = "_Hide",
             DisplayText = "_Hide#",
             DisplayIcon = "rbxassetid://6031075929",
             LayoutOrder = 2,
@@ -229,6 +233,7 @@ data.dataTypes = {
             OnlyBaseParts = false,
         },
         _Fall = {
+            _nameStub = "_Fall",
             DisplayText = "_Fall#",
             DisplayIcon = "rbxassetid://6031094674",
             LayoutOrder = 3,
@@ -246,6 +251,7 @@ data.dataTypes = {
             OnlyBaseParts = false,
         },
         _Destroy = {
+            _nameStub = "_Destroy",
             DisplayText = "_Destroy#",
             DisplayIcon = "rbxassetid://6022668962",
             LayoutOrder = 5,
@@ -263,6 +269,7 @@ data.dataTypes = {
             OnlyBaseParts = false,
         },
         _Sound = {
+            _nameStub = "_Sound",
             DisplayText = "_Sound#",
             DisplayIcon = "rbxassetid://6026671215",
             LayoutOrder = 4,
@@ -286,6 +293,7 @@ data.dataTypes = {
             OnlyBaseParts = false,
         },
         _Explode = {
+            _nameStub = "_Explode",
             DisplayText = "_Explode#",
             DisplayIcon = "rbxassetid://6034684949",
             LayoutOrder = 6,
@@ -308,6 +316,7 @@ data.dataTypes = {
     objectTags = {
         _WallRun = {
             DisplayText = "WallRun",
+            ActionText = "WallRun",
             DisplayIcon = "rbxassetid://9468872087",
             LayoutOrder = 2,
             metadata = {
@@ -330,6 +339,7 @@ data.dataTypes = {
         },
         _WallJump = {
             DisplayText = "WallJump",
+            ActionText = "WallJump",
             DisplayIcon = "rbxassetid://9468872087",
             LayoutOrder = 1,
             metadata = {},
@@ -341,7 +351,9 @@ data.dataTypes = {
             OnlyBaseParts = true,
         },
         _Liquid = {
+            _nameStub = "_Liquid",
             DisplayText = "_Liquid",
+            ActionText = nil,
             DisplayIcon = "rbxassetid://6026568295",
             LayoutOrder = 4,
             metadata = {
@@ -359,8 +371,10 @@ data.dataTypes = {
             IsTagApplicable = true,
             OnlyBaseParts = true,
         },
-        _Gas = {
+        _ = {
+            _nameStub = "_Gas",
             DisplayText = "_Gas",
+            ActionText = nil,
             DisplayIcon = "rbxassetid://6026568295",
             LayoutOrder = 5,
             metadata = {
@@ -379,7 +393,9 @@ data.dataTypes = {
             OnlyBaseParts = true,
         },
         _Button = {
+            _nameStub = "_Button",
             DisplayText = "_Button",
+            ActionText = nil,
             DisplayIcon = "rbxassetid://6026647916",
             LayoutOrder = 3,
             metadata = {
@@ -419,6 +435,7 @@ data.dataTypes = {
         },
         Detail = {
             DisplayText = "Low Detail",
+            ActionText = nil,
             DisplayIcon = "rbxassetid://6034925618",
             LayoutOrder = 0,
             metadata = {},
@@ -428,6 +445,7 @@ data.dataTypes = {
         },
         Zipline = {
             DisplayText = "Zipline",
+            ActionText = nil,
             DisplayIcon = "rbxassetid://6035067839",
             LayoutOrder = 7,
             metadata = {
@@ -467,6 +485,7 @@ data.dataTypes = {
         },
         _Kill = {
             DisplayText = "Killbrick",
+            ActionText = "Kill",
             DisplayIcon = "rbxassetid://6022668916",
             LayoutOrder = 6,
             metadata = {},
@@ -476,6 +495,7 @@ data.dataTypes = {
         },
         AirTank = {
             DisplayText = "AirTank",
+            ActionText = nil,
             DisplayIcon = "rbxassetid://6031068426",
             LayoutOrder = 10,
             metadata = {
@@ -491,6 +511,7 @@ data.dataTypes = {
         },
         _SpeedBooster = {
             DisplayText = "SpeedBooster",
+            ActionText = "WalkSpeed",
             DisplayIcon = "rbxassetid://6034754445",
             LayoutOrder = 8,
             metadata = {
@@ -506,6 +527,7 @@ data.dataTypes = {
         },
         _JumpBooster = {
             DisplayText = "JumpBooster",
+            ActionText = "JumpPower",
             DisplayIcon = "rbxassetid://6034754445",
             LayoutOrder = 9,
             metadata = {

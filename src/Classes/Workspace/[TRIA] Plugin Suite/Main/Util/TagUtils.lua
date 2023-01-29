@@ -65,7 +65,21 @@ local tagsWithNumbers = {
     "_Sound",
 }
 
-function tagUtils:SetPartMetaData(part, metadata, newValue)
+function tagUtils:GetPartTags(part: Instance, excludeTag: string?)
+    local partTags = {}
+
+    for Type, tags in pairs(tagTypes) do
+        for i, tag in pairs(tags) do
+            if i ~= "_convert" and tagUtils:PartHasTag(part, tag) and tag ~= excludeTag and not table.find(partTags, tag) then
+                table.insert(partTags, tag)
+            end
+        end
+    end
+
+    return partTags
+end
+
+function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
     local Types = {}
 
     if newValue then --// Assign or Change
@@ -78,11 +92,18 @@ function tagUtils:SetPartMetaData(part, metadata, newValue)
         end
 
         function Types.ChildInstanceValue()
-            
+            --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
+        end
+
+        function Types.Property()
+            --// Just _Sound
+            part[metadata.data._propertyName] = metadata.data.default
         end
 
         function Types.EndOfName()
-            
+            --// Button, Liquid, & Gas
+            local nameStub = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub
+            part.Name = nameStub .. 0
         end
     else --// Clear
         function Types.Attribute()
@@ -94,11 +115,12 @@ function tagUtils:SetPartMetaData(part, metadata, newValue)
         end
 
         function Types.ChildInstanceValue()
-            
+            --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
+            part:FindFirstChild(metadata.data.dataName).Parent = nil
         end
 
         function Types.EndOfName()
-            
+            part.Name = part.ClassName
         end
     end
 
@@ -122,12 +144,14 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
     local Methods = {}
 
     if not newTag then --// Clear tag
+        local OtherTags = tagUtils:GetPartTags(part, oldTag)
+
         function Methods._Action()
             if isOptimized then
                 VerifyFolder()
             end
             part:SetAttribute("_action", nil)
-            part.Parent = if isOptimized then Util.mapModel:get().Geometry else part.Parent
+            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get().Geometry else part.Parent
         end
 
         function Methods.Name()
@@ -135,12 +159,14 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
                 VerifyFolder()
             end
             part.Name = part.ClassName
-            part.Parent = if isOptimized then Util.mapModel:get().Geometry else part.Parent
+            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get().Geometry else part.Parent
         end
+
         function Methods.DetailParent()
             VerifyFolder()
             part.Parent = Util.mapModel:get().Geometry
         end
+
         function Methods.Child()
             if isOptimized then
                 VerifyFolder()
@@ -150,12 +176,12 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
                     Child.Parent = nil
                 end
             end
-            part.Parent = if isOptimized then Util.mapModel:get().Geometry else part.Parent
+            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get().Geometry else part.Parent
         end
 
         local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
         for _, metaData in pairs(tagData.metadata) do
-            tagUtils:SetPartMetaData(part, metaData, nil)
+            tagUtils:SetPartMetaData(part, oldTag, metaData, nil)
         end
 
         local methods = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod or {tagData.ApplyMethod}
@@ -163,33 +189,39 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             Methods[method]()
         end
     else --// Assign new tag
+        local NewParent = if isOptimized and isOptimized:FindFirstChild("Interactable") 
+            then if newTag == "_Liquid" or newTag == "_Gas" then isOptimized.Fluid else isOptimized.Interactable 
+            else part.Parent
+
         function Methods._Action()
             VerifyFolder()
-            part:SetAttribute("_action", string.gsub(newTag, "_", "", 1))
-            part.Parent = if isOptimized and isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable else part.Parent
+            part:SetAttribute("_action", tagData.ActionText or newTag)
+            part.Parent = NewParent
         end
 
         function Methods.Name()
             VerifyFolder()
             part.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
-            part.Parent = if isOptimized and isOptimized:FindFirstChild("Fluid") then isOptimized.Interactable else part.Parent
+            part.Parent = NewParent
         end
+
         function Methods.DetailParent()
             VerifyFolder("Detail")
             part.Parent = Util.mapModel:get().Detail
         end
+
         function Methods.Child()
             VerifyFolder()
 
             local newChild = Instance.new("ObjectValue")
             newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
             newChild.Parent = part
-            part.Parent = if isOptimized and isOptimized:FindFirstChild("Button") then isOptimized.Interactable else part.Parent
+            part.Parent = NewParent
         end
 
         local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag]
         for _, metaData in pairs(tagData.metadata) do
-            tagUtils:SetPartMetaData(part, metaData, metaData.data.default)
+            tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
         end
     end
 
@@ -216,7 +248,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 
     function Types.ActionTags()
         local secondary = tagTypes.ActionTags._convert[tag]
-        if part:GetAttribute("_action") == tag or part:GetAttribute("_action") == secondary then
+        if part:GetAttribute("_action") == tag or part:GetAttribute("_action") == secondary or part:GetAttribute("_action") == TagData.dataTypes.objectTags[tag].ActionText then
             return true
         end
     end
