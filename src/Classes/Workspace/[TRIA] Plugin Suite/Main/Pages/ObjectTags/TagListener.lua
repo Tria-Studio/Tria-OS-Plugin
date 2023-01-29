@@ -89,8 +89,8 @@ return function(name, data)
                             ChangeHistoryService:SetWaypoint(string.format("Set tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
                             
                             if partError and name ~= "Detail" then
-                                Util.debugWarn(string.format("Only BaseParts, Models, Folders, & Attachments can have Object Tags (excluding Low Detail). Selected parts which were not a BasePart were ignored.", name))
-                                Util:ShowMessage("Cannot Set Tag", string.format("Only <b>BaseParts</b>, <b>Models</b>, <b>Folders</b>, & <b>Attachments</b> can have Object Tags (excluding Low Detail).<br /><br />Selected parts which were not a BasePart were ignored.", name))
+                                Util.debugWarn(string.format("Only BaseParts, Models, Folders, & Attachments can have the tag '%s'. Selected parts which were not a BasePart were ignored.", name))
+                                Util:ShowMessage("Cannot Set Tag", string.format("Only <b>BaseParts</b>, <b>Models</b>, <b>Folders</b>, & <b>Attachments</b> can have the tag <b>'%s'</b>.<br /><br />Selected parts which were not a BasePart were ignored.", name))
                             end
                         end
                     end,
