@@ -91,17 +91,31 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
             part:FindFirstChild("Customization"):SetAttribute(metadata.data.dataName, newValue)
         end
 
-        function Types.ChildInstanceValue()
-            --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
+        function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
+            local TagInstance
+            for _, Child in pairs(part:GetChildren()) do
+                if string.find(Child.Name, tag, 1, true) then
+                    TagInstance = Child
+                    break
+                end
+            end
+
+            if newValue ~= 0 then
+                if not TagInstance:FindFirstChild("_Delay") then
+                    Instance.new("NumberValue", TagInstance)
+                end
+
+                TagInstance._Delay.Value = newValue
+            elseif TagInstance then
+                TagInstance.Parent = nil
+            end
         end
 
-        function Types.Property()
-            --// Just _Sound
+        function Types.Property() --// Just _Sound
             part[metadata.data._propertyName] = metadata.data.default
         end
 
-        function Types.EndOfName()
-            --// Button, Liquid, & Gas
+        function Types.EndOfName() --// Button, Liquid, & Gas
             local nameStub = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub
             part.Name = nameStub .. 0
         end
@@ -114,9 +128,10 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
             part:FindFirstChild("Customization"):SetAttribute(metadata.data.dataName, nil)
         end
 
-        function Types.ChildInstanceValue()
-            --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
-            part:FindFirstChild(metadata.data.dataName).Parent = nil
+        function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
+            if part:FindFirstChild(metadata.data.dataName) then
+                part:FindFirstChild(metadata.data.dataName).Parent = nil
+            end
         end
 
         function Types.EndOfName()
