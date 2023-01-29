@@ -145,6 +145,7 @@ for directory, data in pairs(directories) do
     local dataModule = SettingData[directory]
     if dataModule then
         for _, tbl in ipairs(dataModule.Items) do
+            tbl.Directory = directory
             tbl.Errored = Value(false)
             SettingsUtil.modifyStateTable(data.Items, "insert", tbl)
         end
