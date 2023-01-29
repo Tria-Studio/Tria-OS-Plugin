@@ -106,9 +106,11 @@ function frame:GetFrame(data)
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
 
                     ForPairs(directories, function(dirKey, dirData)
+                        local dataModule = SettingData[dirKey]
+                        dirData.HeaderChildren = if dataModule.Dynamic then dataModule:getHeaderChildren() else dirData.HeaderChildren
+
                         local dirDropdown = SettingsUtil.DirectoryDropdown(dirData, function(visible)
                             local dropdown
-                            local dataModule = SettingData[dirKey]
 
                             dirData.Visible = visible
                             if dataModule then

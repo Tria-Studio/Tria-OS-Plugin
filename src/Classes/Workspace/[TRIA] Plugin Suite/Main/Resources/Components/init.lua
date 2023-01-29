@@ -303,7 +303,9 @@ function Components.Dropdown(data, childrenProcessor)
 
                 [OnEvent "Activated"] = function()
                     dropdownVisible:set(not dropdownVisible:get(false))
-                end
+                end,
+
+                [Children] = data.HeaderChildren
             }),
 
             New "ImageButton" {

@@ -74,6 +74,8 @@ function SettingsUtil.modifyStateTable(state, action, ...)
         table.insert(newTbl, args[1])
     elseif action == "set" then
         newTbl[args[1]] = args[2]
+    elseif action == "remove" then
+        table.remove(newTbl, args[1])
     end
     state:set(newTbl, true)
 end
@@ -88,7 +90,8 @@ function SettingsUtil.DirectoryDropdown(data, childProcessor)
         DefaultState = data.Default, 
         Header = data.Display, 
         LayoutOrder = data.LayoutOrder,
-        HeaderColor = data.HeaderColor
+        HeaderColor = data.HeaderColor,
+        HeaderChildren = data.HeaderChildren
     }, childProcessor)
 end
 

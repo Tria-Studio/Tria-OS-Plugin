@@ -1,3 +1,4 @@
+local HttpService = game:GetService("HttpService")
 local Package = script.Parent.Parent.Parent.Parent.Parent
 
 local Fusion = require(Package.Resources.Fusion)
@@ -9,6 +10,7 @@ local SettingsUtil = require(script.Parent.Parent.Parent.SettingsUtil)
 local Value = Fusion.Value
 local ForPairs = Fusion.ForPairs
 local ForValues = Fusion.ForValues
+local OnEvent = Fusion.OnEvent
 
 local Data = {
 	Directory = "Skills",
@@ -17,6 +19,7 @@ local Data = {
 }
 
 local directories = SettingsUtil.Directories
+local idToConfig = {}
 
 function insertLiquids()
 	local liquidFolder = Util.getDirFolder("Liquids")
@@ -67,9 +70,51 @@ function insertLiquids()
             updateConnection()
         end
 
+        local liquidId = HttpService:GenerateGUID(false)
+        idToConfig[liquidId] = liquid
+
         SettingsUtil.SettingMaid:GiveTask(liquid:GetPropertyChangedSignal("Name"):Connect(insertLiquids))
-        SettingsUtil.modifyStateTable(directories.Liquids.Items, "insert", {Name = liquid.Name, Data = liquidData})
+        SettingsUtil.modifyStateTable(directories.Liquids.Items, "insert", {
+            Name = liquid.Name, 
+            Data = liquidData,
+            ID = liquidId
+        })
     end
+end
+
+function addLiquid()
+    local liquidFolder = Util.getDirFolder("Liquids")
+    if not liquidFolder then
+        return
+    end
+
+    local newLiquid = Instance.new("Configuration")
+    newLiquid.Name = "[INSERTED LIQUID]"
+    newLiquid:SetAttribute("Color", Color3.new(1, 1, 1))
+    newLiquid:SetAttribute("OxygenDepletion", 1)
+    newLiquid:SetAttribute("SplashSound", "water")
+    newLiquid.Parent = liquidFolder
+end
+
+function removeLiquid(id: string)
+    if idToConfig[id] then
+        idToConfig[id]:Destroy()
+    end
+end
+
+function Data:getHeaderChildren()
+    return Components.ImageButton {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        Position = UDim2.fromScale(0.9, 0.5),
+        Image = "rbxassetid://5188680291",
+        ImageColor3 = Color3.new(1, 1, 1),
+        Size = UDim2.fromOffset(18, 18),
+        ZIndex = 2,
+
+        [OnEvent "Activated"] = addLiquid
+    }
 end
 
 function Data:getDropdown(visible)
@@ -84,7 +129,21 @@ function Data:getDropdown(visible)
                 local liquidDropdown = SettingsUtil.DirectoryDropdown({
                     Default = true, 
                     Display = itemName, 
-                    LayoutOrder = index
+                    LayoutOrder = index,
+                    HeaderChildren = Components.ImageButton {
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        BackgroundTransparency = 1,
+                        BorderSizePixel = 0,
+                        Position = UDim2.fromScale(0.9, 0.5),
+                        Image = "rbxasset://textures/ui/CloseButton.png",
+                        Size = UDim2.fromOffset(18, 18),
+                        ZIndex = 2,
+                
+                        [OnEvent "Activated"] = function()
+                            removeLiquid(data.ID)
+                        end
+                    }
+
                 }, function(isSectionVisible)
                     return Components.DropdownHolderFrame {
                         DropdownVisible = isSectionVisible,
