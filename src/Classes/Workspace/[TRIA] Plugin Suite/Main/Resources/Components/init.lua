@@ -162,7 +162,6 @@ function Components.MiniTopbar(data)
                 ImageColor3 = Theme.ErrorText.Default,
                 BorderMode = Enum.BorderMode.Outline,
                 
-
                 [OnEvent "Activated"] = data.Callback
             }),
             New "TextLabel" {
@@ -350,9 +349,12 @@ function Components.DropdownHolderFrame(data)
 end
 
 function Components.TooltipImage(data)
+    local isActive = Computed(function()
+        return not Util.isPluginFrozen()
+    end)
     return New "ImageButton" {
-        Active = Util.interfaceActive,
-        AutoButtonColor = Util.interfaceActive,
+        Active = isActive,
+        AutoButtonColor = isActive,
 
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundColor3 = Theme.CurrentMarker.Default,

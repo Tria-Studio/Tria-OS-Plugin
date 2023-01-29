@@ -70,7 +70,7 @@ return New "Frame" { --// Message
 					TextYAlignment = Enum.TextYAlignment.Top,
 					ZIndex = 10,
 
-					[Children] = Components.Constraints.UIPadding(UDim.new(0, 4), UDim.new(0, 4), UDim.new(0, 4), UDim.new(0, 4))
+					[Children] = Components.Constraints.UIPadding(UDim.new(0, 4), UDim.new(0, 4), UDim.new(0, 8), UDim.new(0, 8))
 				},
 
 				Components.TwoOptions({
