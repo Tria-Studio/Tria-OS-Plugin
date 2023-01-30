@@ -56,7 +56,7 @@ function importLighting()
         end)
 
         if not fired then
-            Util.debugWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToChange)))
+            Util.debugWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToRetrieve)))
         else
             item.Value:set(settingValue)
         end

@@ -11,19 +11,6 @@ local Observer = Fusion.Observer
 
 local selectionMaid = Maid.new()
 
-local defaultMessageResponses = {
-    "Ok",
-    "Fine",
-    "Sure",
-    "Whatever",
-    "k",
-    "Got it",
-    "Alright",
-    "Yeah",
-    "Cool",
-    "Ok thanks"
-}
-
 local Util = {
     Signal = Signal,
     Maid = Maid,
@@ -145,8 +132,8 @@ function Util:ShowMessage(header: string, text: string, option1: any?, option2: 
     self:ToggleInterface(false)
     self._Message.Text:set(text)
     self._Message.Header:set(header)
-    self._Message.Option1:set(option1 or {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage})
-    self._Message.Option2:set(option2 or option1 and {Text = defaultMessageResponses[math.random(1, #defaultMessageResponses)], Callback = Util.CloseMessage} or {})
+    self._Message.Option1:set(option1 or {Text = "Ok", Callback = Util.CloseMessage})
+    self._Message.Option2:set(option2 or option1 and {Text = "Ok", Callback = Util.CloseMessage} or {})
 end
 
 function Util.isPluginFrozen()
