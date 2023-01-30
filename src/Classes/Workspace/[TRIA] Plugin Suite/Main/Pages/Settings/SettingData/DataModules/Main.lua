@@ -33,7 +33,7 @@ Data.Items = {
 
 		Value = Value(""),
 		Tooltip = {
-			Text = [[<font color = "rgb(175,175,175)">Map difficulties determine show how hard the map is:</font>
+			Text = [[<font color = "rgb(175,175,175)">Map difficulties determine how hard the map is:</font>
 <font color ="rgb(255,255,255)">  0 - Unrated </font>
 <font color ="rgb(0,255,0)"> 1 - Easy </font>
 <font color ="rgb(255,255,0)"> 2 - Normal </font>
