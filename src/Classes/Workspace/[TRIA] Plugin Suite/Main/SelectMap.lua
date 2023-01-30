@@ -124,6 +124,7 @@ function selectMap:SetMap(Map: Model|Workspace)
         Util.mapModel:set(Map)
         Util.MapChanged:Fire()
         Util.MapMaid:DoCleaning()
+        Util.UpdateSelectedParts()
 
         self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
 
@@ -201,6 +202,7 @@ function selectMap:SetMap(Map: Model|Workspace)
             Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
         end
     else
+        Util._Selection.selectedParts:set({})
         Util.mapModel:set(nil)
         Util.MapChanged:Fire()
         self.hasOptimizedStructure:set(false)

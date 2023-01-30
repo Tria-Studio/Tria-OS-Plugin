@@ -224,7 +224,7 @@ function updateButtonsActive()
     Util.interfaceActive:set(Util.mapModel:get(false) and Util._manualActive:get(false))
 end
 
-Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(function()
+function Util.UpdateSelectedParts()
     local newTable = {}
     for _, Thing: Instance in pairs(Selection:Get()) do
         if Thing:IsDescendantOf(Util.mapModel:get(false)) then
@@ -270,7 +270,9 @@ Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(function()
             end
         end
     end
-end))
+end
+
+Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(Util.UpdateSelectedParts))
 
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)

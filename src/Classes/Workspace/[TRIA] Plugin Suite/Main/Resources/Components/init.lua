@@ -380,8 +380,9 @@ function Components.TooltipImage(data)
         BorderSizePixel = 1,
         Name = "Tooltip",
         Position = data.Position,
-        Size = UDim2.fromOffset(16, 16),
-        Image = "rbxassetid://6034281900",
+        Size = UDim2.fromOffset(18, 18),
+        Image = "rbxassetid://6026568254",
+        HoverImage = "rbxassetid://6026568247",
         ImageColor3 = Theme.SubText.Default,
 
         [OnEvent "Activated"] = function()

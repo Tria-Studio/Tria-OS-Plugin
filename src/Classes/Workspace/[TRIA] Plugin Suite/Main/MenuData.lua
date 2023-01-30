@@ -22,7 +22,7 @@ return {
 		},
 		{
 			Name = "Insert",
-			Icon = "rbxassetid://6035047391",
+			Icon = "rbxassetid://6023565892",
 		}
 	},
 
