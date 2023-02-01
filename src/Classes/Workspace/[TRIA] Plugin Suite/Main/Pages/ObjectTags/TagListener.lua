@@ -1,4 +1,6 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+
 local Package = script.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
@@ -15,6 +17,7 @@ local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Observer = Fusion.Observer
 local Out = Fusion.Out
+local Ref = Fusion.Ref
 local OnEvent = Fusion.OnEvent
 
 
@@ -179,11 +182,30 @@ return function(name, data)
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
                                             Computed(function()
-                                                local TextXSize = textBounds:get() and textBounds:get().X + 12 or 0
+                                                local dataValue = Value(TagUtils:GetSelectedMetadataValue(metadataType.data.dataName))
+                                                local TextXSize = textBounds:get() and textBounds:get().X + 8 or 0
                                                 local Types = {}
 
                                                 function Types.number()
-                                                    
+                                                    local Text = Value()
+
+                                                    return Components.TextBox {
+                                                        Size = UDim2.new(1, -TextXSize - 12, 1, -6),
+                                                        AnchorPoint = Vector2.new(0, .5),
+                                                        Position = UDim2.new(0, TextXSize, .5, 0),
+                                                        TextXAlignment = Enum.TextXAlignment.Left,
+                                                        Text = dataValue,
+
+                                                        [Ref] = Text,
+                                                        [OnEvent "FocusLost"] = function()
+                                                            local newText = if metadataType.data.dataType == "number"
+                                                                then tonumber(Text:get().Text) and tonumber(Text:get().Text) or 0
+                                                                else dataValue:get()
+                                                            Text:get().Text = newText
+                                                        end,
+
+                                                        [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4))
+                                                    }
                                                 end
                                                 Types.string = Types.number
 
@@ -195,7 +217,7 @@ return function(name, data)
                                                     
                                                 end
 
-                                                function Types.dropdown()
+                                                function Types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     
                                                 end
                                                 

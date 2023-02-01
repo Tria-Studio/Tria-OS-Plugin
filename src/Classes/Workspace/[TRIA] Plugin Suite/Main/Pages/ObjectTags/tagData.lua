@@ -79,7 +79,6 @@ data.metadataTypes = {
         displayName = "Delay",
         dataName = "_Delay",
         default = 0,
-        textBoxSize = -44
     },
     SoundId = {
         type = "Property",
@@ -87,7 +86,6 @@ data.metadataTypes = {
         dataType = "string",
         displayName = "Sound ID",
         default = "",
-        textBoxSize = -60
     },
     LiquidNum = {
         type = "EndOfName",
@@ -95,7 +93,6 @@ data.metadataTypes = {
         dataName = nil,
         displayName = "Liquid #",
         default = 0,
-        textBoxSize = -179
     },
     Meshless = {
         type = "Attribute",
@@ -118,7 +115,6 @@ data.metadataTypes = {
         dataName = "Oxygen",
         displayName = "Amount",
         default = 300,
-        textBoxSize = -166
     },
     Speed = {
         type = "Attribute",
@@ -126,7 +122,6 @@ data.metadataTypes = {
         dataName = "Speed",
         displayName = "WalkSpeed",
         default = 40,
-        textBoxSize = -48
     },
     Momentum = {
         type = "Attribute",
@@ -134,7 +129,6 @@ data.metadataTypes = {
         dataName = "Momentum",
         displayName = "Momentum",
         default = 0,
-        textBoxSize = -48   
     },
     WalkSpeed = {
         type = "Attribute",
@@ -142,7 +136,6 @@ data.metadataTypes = {
         dataName = "WalkSpeed",
         displayName = "WalkSpeed",
         default = 100,
-        textBoxSize = -166  
     },
     JumpPower = {
         type = "Attribute",
@@ -150,25 +143,27 @@ data.metadataTypes = {
         dataName = "JumpPower",
         displayName = "JumpPower",
         default = 100,
-        textBoxSize = -166
     },
 
 
     ZiplineColor = {
         type = "ConfigAttribute",
         dataType = "color",
+        dataName = "Color",
         displayName = "Wire Color",
         default = Color3.fromRGB(255, 10 , 10),
     },
     ZiplineJumpable = {
         type = "ConfigAttribute",
         dataType = "boolean",
+        dataName = "Jumpable",
         displayName = "Jumpable Ziplines",
         default = false,
     },
     ZiplineMaterial = {
         type = "ConfigAttribute",
         dataType = "dropdown",
+        dataName = "Material",
         dropdownType = "materials",
         default = "Fabric",
         displayName = "Wire Material",
@@ -176,28 +171,30 @@ data.metadataTypes = {
     ZiplineMomentum = {
         type = "ConfigAttribute",
         dataType = "boolean",
+        dataName = "Momentum",
         displayName = "Momentum",
         default = true,
     },
     ZiplineSparkle = {
         type = "ConfigAttribute",
         dataType = "boolean",
+        dataName = "Sparkle",
         displayName = "Wire Sparkles",
         default = true,
     },
     ZiplineSpeed = {
         type = "ConfigAttribute",
         dataType = "number",
+        dataName = "Speed",
         displayName = "Speed",
         default = 40,
-        textBoxSize = -44
     },
     ZiplineWidth = {
         type = "ConfigAttribute",
         dataType = "number",
+        dataName = "Width",
         displayName = "Wire Thickness",
         default = 0.25,
-        textBoxSize = -48
     },
 }
 

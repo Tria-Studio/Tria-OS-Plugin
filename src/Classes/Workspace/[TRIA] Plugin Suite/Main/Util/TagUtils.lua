@@ -142,6 +142,10 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
     Types[metadata.data.type]()
 end
 
+function tagUtils:GetSelectedMetadataValue(tag)
+    return ""
+end
+
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
     local function VerifyFolder(Name: string?)
         if not Util.mapModel:get():FindFirstChild(Name or "Geometry") then
@@ -250,7 +254,6 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
          end
     end
     function Types.ObjectTags()
-        print(tag)
         local secondary = tagTypes.ObjectTags._convert[tag]
         if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
             return true
