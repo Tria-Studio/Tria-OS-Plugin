@@ -100,23 +100,7 @@ return function(name, data)
 
                     [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil)
                 },
-                New "ImageLabel" { --// Checkbox
-                    BackgroundTransparency = 0.25,
-                    BackgroundColor3 = Theme.CheckedFieldBackground.Default,
-                    BorderColor3 = Theme.CheckedFieldBorder.Default,
-                    BorderSizePixel = 1,
-                    AnchorPoint = Vector2.new(1, 0),
-                    Position = UDim2.fromOffset(-30, 2),
-                    Size = UDim2.fromOffset(20, 20),
-                    Image = Computed(function()
-                        return if checkState:get() == Enum.TriStateBoolean.True
-                            then Util.Images.Checkbox.Checked
-                            elseif checkState:get() == Enum.TriStateBoolean.False
-                            then Util.Images.Checkbox.Unchecked
-                            else Util.Images.Checkbox.Unknown 
-                    end),
-                    ImageColor3 = Theme.CheckedFieldIndicator.Default,
-                },
+                Components.Checkbox(20, UDim2.fromOffset(-30, 2), Vector2.new(1, 0), checkState), --// Checkbox
                 New "ImageLabel" { --// Icon
                     Size = UDim2.fromOffset(20, 20),
                     Position = UDim2.fromOffset(-6, 2),
@@ -210,7 +194,7 @@ return function(name, data)
                                                 Types.string = Types.number
 
                                                 function Types.boolean()
-                                                    
+                                                    return Components
                                                 end
 
                                                 function Types.color()

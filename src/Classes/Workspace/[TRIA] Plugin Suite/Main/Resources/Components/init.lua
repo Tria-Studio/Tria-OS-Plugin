@@ -391,4 +391,24 @@ function Components.TooltipImage(data)
     }
 end
 
+function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2?, checkState)
+     return New "ImageLabel" { --// Checkbox
+        BackgroundTransparency = 0.25,
+        BackgroundColor3 = Theme.CheckedFieldBackground.Default,
+        BorderColor3 = Theme.CheckedFieldBorder.Default,
+        BorderSizePixel = 1,
+        AnchorPoint = anchorPoint,
+        Position = position,
+        Size = UDim2.fromOffset(size, size),
+        Image = Computed(function()
+            return if checkState:get() == Enum.TriStateBoolean.True or checkState:get() == true
+                then Util.Images.Checkbox.Checked
+                elseif checkState:get() == Enum.TriStateBoolean.False  or checkState:get() == false
+                then Util.Images.Checkbox.Unchecked
+                else Util.Images.Checkbox.Unknown 
+        end),
+        ImageColor3 = Theme.CheckedFieldIndicator.Default,
+    }
+end
+
 return Components

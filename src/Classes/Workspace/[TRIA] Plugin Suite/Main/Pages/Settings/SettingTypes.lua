@@ -1,3 +1,4 @@
+local DataStoreService = game:GetService("DataStoreService")
 local SettingTypes = {}
 
 local Package = script.Parent.Parent.Parent
@@ -175,21 +176,7 @@ function SettingTypes.Checkbox(data)
                 end
             end,
 
-            [Children] = New "ImageLabel" {
-                AnchorPoint = Vector2.new(0, 0.5),
-                BackgroundColor3 = Theme.CheckedFieldBackground.Default,
-                BackgroundTransparency = 0,
-                BorderColor3 = Theme.CheckedFieldBorder.Default,
-                BorderMode = Enum.BorderMode.Outline,
-                BorderSizePixel = 1,
-
-                Position = UDim2.new(0, 8, 0.5, 0),
-                Size = UDim2.fromOffset(14, 14),
-                Image = Computed(function() 
-                    return Util.Images.Checkbox[data.Value:get() == true and "Checked" or "Unchecked"]
-                end),
-                ImageColor3 = Theme.CheckedFieldIndicator.Default,
-            }
+            [Children] = Components.Checkbox(14, UDim2.new(0, 8, 0.5, 0), Vector2.new(0, 0.5), data.Value)
         }
     }
 end
