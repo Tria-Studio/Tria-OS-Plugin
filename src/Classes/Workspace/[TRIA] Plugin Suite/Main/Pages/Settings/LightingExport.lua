@@ -59,6 +59,7 @@ function importLighting()
             Util.debugWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToRetrieve)))
         else
             item.Value:set(settingValue)
+			Util.updateMapSetting(item.Directory, item.Attribute, item.Value:get(false))
         end
     end
 end
