@@ -42,9 +42,7 @@ New "Frame" {
 				end, Fusion.cleanup),
 
 				New "TextLabel" {
-					Active = Computed(function()
-						return Util.isPluginFrozen()
-					end),
+					Active = Computed(Util.isPluginFrozen),
 					AnchorPoint = Vector2.new(0.5, 0.5),
 
 					BackgroundTransparency = Spring(Computed(function()
