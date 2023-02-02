@@ -175,7 +175,7 @@ return function(name, data)
                                                 if dataValue:get() == Enum.TriStateBoolean.False then
                                                     dataValue:set(false)
                                                 end
-                                                print(dataValue:get())
+
                                                 local TextXSize = textBounds:get() and textBounds:get().X + 8 or 0
                                                 local Types = {}
 
