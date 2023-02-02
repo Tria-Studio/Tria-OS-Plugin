@@ -10,6 +10,7 @@ local data = {}
 
 data.metadataTypes = {
     Button = {
+        _referenceName = "Button",
         type = "EndOfName",
         dataType = "number",
         dataName = nil,
@@ -17,6 +18,7 @@ data.metadataTypes = {
         default = 1,
     },
     ButtonNum = {
+        _referenceName = "ButtonNum",
         type = "EndOfName",
         dataType = "number",
         dataName = nil,
@@ -24,6 +26,7 @@ data.metadataTypes = {
         default = 1,
     },
     GroupButton = {
+        _referenceName = "GroupButton",
         type = "Attribute",
         dataName = "Group",
         dataType = "boolean",
@@ -31,6 +34,7 @@ data.metadataTypes = {
         default = false,
     },
     ActiveColor = {
+        _referenceName = "ActiveColor",
         type = "Attribute",
         dataType = "color",
         dataName = "ActiveColor",
@@ -38,6 +42,7 @@ data.metadataTypes = {
         default = nil,
     },
     ActivatedColor = {
+        _referenceName = "ActivatedColor",
         type = "Attribute",
         dataType = "color",
         dataName = "ActivatedColor",
@@ -45,6 +50,7 @@ data.metadataTypes = {
         default = nil,
     },
     InactiveColor = {
+        _referenceName = "InactiveColor",
         type = "Attribute",
         dataType = "color",
         dataName = "InactiveColor",
@@ -52,6 +58,7 @@ data.metadataTypes = {
         default = nil,
     },
     DisabledColor = {
+        _referenceName = "DisabledColor",
         type = "Attribute",
         dataType = "color",
         dataName = "DisabledColor",
@@ -59,6 +66,7 @@ data.metadataTypes = {
         default = nil,
     },
     LocatorImage = {
+        _referenceName = "LocatorImage",
         type = "Attribute",
         dataType = "string",
         dataName = "LocatorImage",
@@ -66,6 +74,7 @@ data.metadataTypes = {
         default = nil,
     },
     ActivatedSound = {
+        _referenceName = "ActivatedSound",
         type = "Attribute",
         dataType = "string",
         dataName = "ActivatedSound",
@@ -74,6 +83,7 @@ data.metadataTypes = {
     },
 
     _Delay = {
+        _referenceName = "_Delay",
         type = "ChildInstanceValue",
         dataType = "number",
         displayName = "Delay",
@@ -81,6 +91,7 @@ data.metadataTypes = {
         default = 0,
     },
     SoundId = {
+        _referenceName = "SoundId",
         type = "Property",
         _propertyName = "SoundId",
         dataType = "string",
@@ -88,6 +99,7 @@ data.metadataTypes = {
         default = "",
     },
     LiquidNum = {
+        _referenceName = "LiquidNum",
         type = "EndOfName",
         dataType = "number",
         dataName = nil,
@@ -95,6 +107,7 @@ data.metadataTypes = {
         default = 0,
     },
     Meshless = {
+        _referenceName = "Meshless",
         type = "Attribute",
         dataName = "Meshless",
         dataType = "boolean",
@@ -102,6 +115,7 @@ data.metadataTypes = {
         default = false,
     },
     LiquidType = {
+        _referenceName = "LiquidType",
         type = "Attribute",
         dataType = "dropdown",
         dataName = "Type",
@@ -110,6 +124,7 @@ data.metadataTypes = {
         default = "water",
     },
     Oxygen = {
+        _referenceName = "Oxygen",
         type = "Attribute",
         dataType = "number",
         dataName = "Oxygen",
@@ -117,6 +132,7 @@ data.metadataTypes = {
         default = 300,
     },
     Speed = {
+        _referenceName = "Speed",
         type = "Attribute",
         dataType = "number",
         dataName = "Speed",
@@ -124,6 +140,7 @@ data.metadataTypes = {
         default = 40,
     },
     Momentum = {
+        _referenceName = "Momentum",
         type = "Attribute",
         dataType = "number",
         dataName = "Momentum",
@@ -131,6 +148,7 @@ data.metadataTypes = {
         default = 0,
     },
     WalkSpeed = {
+        _referenceName = "WalkSpeed",
         type = "Attribute",
         dataType = "number",
         dataName = "WalkSpeed",
@@ -138,6 +156,7 @@ data.metadataTypes = {
         default = 100,
     },
     JumpPower = {
+        _referenceName = "JumpPower",
         type = "Attribute",
         dataType = "number",
         dataName = "JumpPower",
@@ -147,6 +166,7 @@ data.metadataTypes = {
 
 
     ZiplineColor = {
+        _referenceName = "ZiplineColor",
         type = "ConfigAttribute",
         dataType = "color",
         dataName = "Color",
@@ -154,6 +174,7 @@ data.metadataTypes = {
         default = Color3.fromRGB(255, 10 , 10),
     },
     ZiplineJumpable = {
+        _referenceName = "ZiplineJumpable",
         type = "ConfigAttribute",
         dataType = "boolean",
         dataName = "Jumpable",
@@ -161,6 +182,7 @@ data.metadataTypes = {
         default = false,
     },
     ZiplineMaterial = {
+        _referenceName = "ZiplineMaterial",
         type = "ConfigAttribute",
         dataType = "dropdown",
         dataName = "Material",
@@ -169,6 +191,7 @@ data.metadataTypes = {
         displayName = "Wire Material",
     },
     ZiplineMomentum = {
+        _referenceName = "ZiplineMomentum",
         type = "ConfigAttribute",
         dataType = "boolean",
         dataName = "Momentum",
@@ -176,6 +199,7 @@ data.metadataTypes = {
         default = true,
     },
     ZiplineSparkle = {
+        _referenceName = "ZiplineSparkle",
         type = "ConfigAttribute",
         dataType = "boolean",
         dataName = "Sparkle",
@@ -183,6 +207,7 @@ data.metadataTypes = {
         default = true,
     },
     ZiplineSpeed = {
+        _referenceName = "ZiplineSpeed",
         type = "ConfigAttribute",
         dataType = "number",
         dataName = "Speed",
@@ -190,6 +215,7 @@ data.metadataTypes = {
         default = 40,
     },
     ZiplineWidth = {
+        _referenceName = "ZiplineWidth",
         type = "ConfigAttribute",
         dataType = "number",
         dataName = "Width",

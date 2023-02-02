@@ -65,6 +65,14 @@ local tagsWithNumbers = {
     "_Sound",
 }
 
+local defaultMetadataTypes = {
+    number = 0,
+    color = Color3.new(),
+    string = "",
+    boolean = Enum.TriStateBoolean.Unknown,
+
+}
+
 function tagUtils:GetPartTags(part: Instance, excludeTag: string?)
     local partTags = {}
 
@@ -142,8 +150,64 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
     Types[metadata.data.type]()
 end
 
-function tagUtils:GetSelectedMetadataValue(tag)
-    return ""
+function tagUtils:GetPartMetaData(part, name, tag)
+    local data = TagData.metadataTypes[tag]
+    local mainData = TagData.dataTypes.buttonTags[name] or TagData.dataTypes.objectTags[name]
+    local Types = {}
+
+    function Types.Attribute()
+        part:GetAttribute(data.dataName)
+    end
+
+    function Types.ConfigAttribute()
+        part:FindFirstChild("Customization"):GetAttribute(data.dataName)
+    end
+
+    function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
+        local TagInstance
+        for _, Child in pairs(part:GetChildren()) do
+            if string.find(Child.Name, tag, 1, true) then
+                return Child.Value
+            end
+        end
+    end
+
+    function Types.Property() --// Just _Sound
+        return part[data._propertyName]
+    end
+
+    function Types.EndOfName() --// Button, Liquid, & Gas
+        return string.gsub(part.Name , mainData._nameStub, "", 1)
+    end
+
+    return Types[data.type]()
+end
+
+function tagUtils:GetSelectedMetadataValue(name, tag)
+    --[[
+        TODO
+         - [ ] Change the tag from the tag thingy to the index of the metadataTypes function
+    ]]
+    local firstValue
+    local numHas = 0
+
+    for _, Part: Instance in pairs(Util._Selection.selectedParts:get()) do
+        local tagData = tagUtils:GetPartMetaData(Part, name, tag)
+        if not firstValue and tagData then
+            firstValue = tagData
+        end
+        if tagData == firstValue then
+            numHas += 1
+        elseif numHas > 0 then
+            return Enum.TriStateBoolean.Unknown, defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
+        end
+    end
+
+    if numHas == #Util._Selection.selectedParts:get() then
+        return Enum.TriStateBoolean.True, firstValue
+    else 
+        return Enum.TriStateBoolean.False, defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
+    end
 end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)

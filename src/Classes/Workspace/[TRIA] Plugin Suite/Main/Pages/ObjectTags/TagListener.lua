@@ -9,6 +9,7 @@ local Util = require(Package.Util)
 local TagUtils = require(Package.Util.TagUtils)
 local TagData = require(script.Parent.tagData)
 local Pages = require(Package.Resources.Components.Pages)
+local Colorwheel = require(Package.Colorwheel)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -166,19 +167,23 @@ return function(name, data)
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
                                             Computed(function()
-                                                local dataValue = Value(TagUtils:GetSelectedMetadataValue(metadataType.data.dataName))
+                                                if not dataVisible:get() then
+                                                    return
+                                                end
+
+                                                local state, dataValue = Value(TagUtils:GetSelectedMetadataValue(name,metadataType.data._referenceName))
                                                 local TextXSize = textBounds:get() and textBounds:get().X + 8 or 0
                                                 local Types = {}
 
-                                                function Types.number()
+                                                function Types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
                                                     local Text = Value()
 
                                                     return Components.TextBox {
-                                                        Size = UDim2.new(1, -TextXSize - 12, 1, -6),
+                                                        Size = UDim2.new(1, -TextXSize - 12 - (sizeSubtract or 0), 1, -6),
                                                         AnchorPoint = Vector2.new(0, .5),
-                                                        Position = UDim2.new(0, TextXSize, .5, 0),
+                                                        Position = UDim2.new(0, TextXSize + (sizeSubtract or 0), .5, 0),
                                                         TextXAlignment = Enum.TextXAlignment.Left,
-                                                        Text = dataValue,
+                                                        Text = textOverride or dataValue,
 
                                                         [Ref] = Text,
                                                         [OnEvent "FocusLost"] = function()
@@ -188,23 +193,51 @@ return function(name, data)
                                                             Text:get().Text = newText
                                                         end,
 
-                                                        [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4))
+                                                        [Children] = extraChild or {},
                                                     }
                                                 end
                                                 Types.string = Types.number
 
                                                 function Types.boolean()
-                                                    return Components
+                                                    -- local CheckState = Value(false)
+
+                                                    -- return New "TextButton" {
+                                                    --     Size = UDim2.new(1, -TextXSize, 1, 0),
+                                                    --     Position = UDim2.fromOffset(TextXSize, 0),
+                                                    --     BackgroundTransparency = 1,
+
+                                                    --     [OnEvent "Activated"] = function()
+                                                    --         CheckState:set(not CheckState:get())
+                                                    --     end,
+
+                                                    --     [Children] = Components.Checkbox(18, UDim2.fromOffset(4, 2), nil, CheckState)
+                                                    -- }
                                                 end
 
                                                 function Types.color()
-                                                    
+                                                    -- local Text = Value()
+
+                                                    -- return Types.number(22, Components.TextButton {
+                                                    --     AnchorPoint = Vector2.new(.5, .5),
+                                                    --     Position = UDim2.fromScale(.5, .5),
+                                                    --     Size = UDim2.fromOffset(16, 16),
+                                                    --     BackgroundColor3 = Computed(function()
+                                                    --         return Util.parseColor3Text(dataValue:get())
+                                                    --     end),
+
+                                                    --     [OnEvent "Activated"] = function()
+                                                    --         local NewColor = Colorwheel:GetColor()
+                                                    --         dataValue:set(NewColor or dataValue:get())
+                                                    --     end
+                                                    -- }, Computed(function()
+                                                    --     return Util.parseTextColor3(dataValue:get())
+                                                    -- end))
                                                 end
 
                                                 function Types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     
                                                 end
-                                                
+
                                                 return Types[metadataType.data.dataType]()
                                             end, Fusion.cleanup)
                                         }

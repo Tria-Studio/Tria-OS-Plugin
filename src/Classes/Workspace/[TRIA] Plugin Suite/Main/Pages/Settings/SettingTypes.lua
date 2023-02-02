@@ -1,4 +1,3 @@
-local DataStoreService = game:GetService("DataStoreService")
 local SettingTypes = {}
 
 local Package = script.Parent.Parent.Parent

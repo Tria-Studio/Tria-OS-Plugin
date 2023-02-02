@@ -188,6 +188,13 @@ function Util.parseColor3Text(str: string): (boolean, nil | Color3)
     return true, newColor
 end
 
+function Util.parseTextColor3(color: Color3): string
+    return string.format("%d, %d, %d",
+        color.R * 255,
+        color.G * 255,
+        color.B * 255)
+end
+
 function Util.parseTimeString(str: string): (boolean, string | nil)
     local split = string.split(str, ":")
 
