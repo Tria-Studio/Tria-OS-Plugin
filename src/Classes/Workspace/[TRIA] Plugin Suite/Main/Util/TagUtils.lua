@@ -151,16 +151,19 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
 end
 
 function tagUtils:GetPartMetaData(part, name, tag)
+    if table.find(tagTypes.ModelTags, name) then
+        part = part:IsA("Model") and part or part.Parent
+    end
     local data = TagData.metadataTypes[tag]
     local mainData = TagData.dataTypes.buttonTags[name] or TagData.dataTypes.objectTags[name]
     local Types = {}
 
     function Types.Attribute()
-        part:GetAttribute(data.dataName)
+        return part:GetAttribute(data.dataName)
     end
 
     function Types.ConfigAttribute()
-        part:FindFirstChild("Customization"):GetAttribute(data.dataName)
+        return part:FindFirstChild("Customization"):GetAttribute(data.dataName)
     end
 
     function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
@@ -173,40 +176,43 @@ function tagUtils:GetPartMetaData(part, name, tag)
     end
 
     function Types.Property() --// Just _Sound
-        return part[data._propertyName]
+        local Sound = part:FindFirstChildOfClass("Sound") or part.Parent:FindFirstChildOfClass("Sound")
+        return Sound and Sound[data._propertyName]
     end
 
     function Types.EndOfName() --// Button, Liquid, & Gas
-        return string.gsub(part.Name , mainData._nameStub, "", 1)
+        for _, Child: Instance in pairs(part:GetChildren()) do
+            if string.find(Child.Name, name, 1, true) then
+                return string.sub(Child.Name, #mainData._nameStub + 1)
+            end
+        end
+        return string.sub(part.Name, #mainData._nameStub + 1)
     end
 
-    return Types[data.type]()
+    local data = Types[data.type]()
+    return data
 end
 
 function tagUtils:GetSelectedMetadataValue(name, tag)
-    --[[
-        TODO
-         - [ ] Change the tag from the tag thingy to the index of the metadataTypes function
-    ]]
     local firstValue
     local numHas = 0
 
     for _, Part: Instance in pairs(Util._Selection.selectedParts:get()) do
         local tagData = tagUtils:GetPartMetaData(Part, name, tag)
-        if not firstValue and tagData then
+        if firstValue == nil and tagData ~= nil then
             firstValue = tagData
         end
-        if tagData == firstValue then
+        if tagData == firstValue and tagData ~= nil then
             numHas += 1
         elseif numHas > 0 then
-            return Enum.TriStateBoolean.Unknown, defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
+            return " --- " --Enum.TriStateBoolean.Unknown, 
         end
     end
 
     if numHas == #Util._Selection.selectedParts:get() then
-        return Enum.TriStateBoolean.True, firstValue
-    else 
-        return Enum.TriStateBoolean.False, defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
+        return firstValue == false and Enum.TriStateBoolean.False or firstValue
+    else
+        return defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
     end
 end
 

@@ -171,7 +171,11 @@ return function(name, data)
                                                     return
                                                 end
 
-                                                local state, dataValue = Value(TagUtils:GetSelectedMetadataValue(name,metadataType.data._referenceName))
+                                                local dataValue = Value(TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName) or (metadataType.data.dataType == "color" and Color3.new() or ""))
+                                                if dataValue:get() == Enum.TriStateBoolean.False then
+                                                    dataValue:set(false)
+                                                end
+                                                print(dataValue:get())
                                                 local TextXSize = textBounds:get() and textBounds:get().X + 8 or 0
                                                 local Types = {}
 
@@ -189,6 +193,7 @@ return function(name, data)
                                                         [OnEvent "FocusLost"] = function()
                                                             local newText = if metadataType.data.dataType == "number"
                                                                 then tonumber(Text:get().Text) and tonumber(Text:get().Text) or 0
+                                                                elseif metadataType.data.dataType == "color" then Util.parseTextColor3(dataValue:get())
                                                                 else dataValue:get()
                                                             Text:get().Text = newText
                                                         end,
@@ -199,39 +204,35 @@ return function(name, data)
                                                 Types.string = Types.number
 
                                                 function Types.boolean()
-                                                    -- local CheckState = Value(false)
+                                                    return New "TextButton" {
+                                                        Size = UDim2.new(1, -TextXSize, 1, 0),
+                                                        Position = UDim2.fromOffset(TextXSize, 0),
+                                                        BackgroundTransparency = 1,
 
-                                                    -- return New "TextButton" {
-                                                    --     Size = UDim2.new(1, -TextXSize, 1, 0),
-                                                    --     Position = UDim2.fromOffset(TextXSize, 0),
-                                                    --     BackgroundTransparency = 1,
+                                                        [OnEvent "Activated"] = function()
+                                                            dataValue:set(not dataValue:get())
+                                                        end,
 
-                                                    --     [OnEvent "Activated"] = function()
-                                                    --         CheckState:set(not CheckState:get())
-                                                    --     end,
-
-                                                    --     [Children] = Components.Checkbox(18, UDim2.fromOffset(4, 2), nil, CheckState)
-                                                    -- }
+                                                        [Children] = Components.Checkbox(18, UDim2.fromOffset(4, 2), nil, dataValue)
+                                                    }
                                                 end
 
                                                 function Types.color()
-                                                    -- local Text = Value()
+                                                    local Text = Value()
 
-                                                    -- return Types.number(22, Components.TextButton {
-                                                    --     AnchorPoint = Vector2.new(.5, .5),
-                                                    --     Position = UDim2.fromScale(.5, .5),
-                                                    --     Size = UDim2.fromOffset(16, 16),
-                                                    --     BackgroundColor3 = Computed(function()
-                                                    --         return Util.parseColor3Text(dataValue:get())
-                                                    --     end),
+                                                    return Types.number(22, Components.TextButton {
+                                                        AnchorPoint = Vector2.new(1, .5),
+                                                        Position = UDim2.new(0, -4, .5, 0),
+                                                        Size = UDim2.fromOffset(16, 16),
+                                                        BackgroundColor3 = dataValue,
 
-                                                    --     [OnEvent "Activated"] = function()
-                                                    --         local NewColor = Colorwheel:GetColor()
-                                                    --         dataValue:set(NewColor or dataValue:get())
-                                                    --     end
-                                                    -- }, Computed(function()
-                                                    --     return Util.parseTextColor3(dataValue:get())
-                                                    -- end))
+                                                        [OnEvent "Activated"] = function()
+                                                            local NewColor = Colorwheel:GetColor()
+                                                            dataValue:set(NewColor or dataValue:get())
+                                                        end
+                                                    }, Computed(function()
+                                                        return Util.parseTextColor3(dataValue:get())
+                                                    end))
                                                 end
 
                                                 function Types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material

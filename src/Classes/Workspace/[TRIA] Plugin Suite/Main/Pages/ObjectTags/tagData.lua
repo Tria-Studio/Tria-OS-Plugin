@@ -136,7 +136,7 @@ data.metadataTypes = {
         type = "Attribute",
         dataType = "number",
         dataName = "Speed",
-        displayName = "WalkSpeed",
+        displayName = "Speed",
         default = 40,
     },
     Momentum = {
@@ -455,12 +455,16 @@ data.dataTypes = {
                     location = 9,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ActivatedSound,
+                    data = data.metadataTypes.ActivatedColor,
                     location = 11,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.LocatorImage,
+                    data = data.metadataTypes.ActivatedSound,
                     location = 13,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.LocatorImage,
+                    location = 15,
                     isFullSize = true,
                 },
             },
