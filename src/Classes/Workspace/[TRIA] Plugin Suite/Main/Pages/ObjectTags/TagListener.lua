@@ -1,5 +1,4 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
-local ReplicatedFirst = game:GetService("ReplicatedFirst")
 
 local Package = script.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
@@ -83,7 +82,6 @@ return function(name, data)
 
                             ChangeHistoryService:SetWaypoint(string.format("Changing tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
                             for _, instance in pairs(Util._Selection.selectedParts:get()) do
-                                print(data.OnlyBaseParts, not instance:IsA("BasePart"))
                                 if data.OnlyBaseParts and not instance:IsA("BasePart") then
                                     partError = true
                                     continue
@@ -179,6 +177,16 @@ return function(name, data)
                                                 local TextXSize = textBounds:get() and textBounds:get().X + 8 or 0
                                                 local Types = {}
 
+                                                local function ChangeData(value)
+                                                    local stringTagValue = metadataType.data.dataType == "color"
+                                                        and Util.parseTextColor3(dataValue:get())
+                                                        or dataValue:get()
+                                                    ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", stringTagValue))
+                                                    dataValue:set(value)
+                                                    TagUtils:SetPartMetaData(Util._Selection.selectedParts:get(), name, metadataType, value)
+                                                    ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", stringTagValue))
+                                                end
+
                                                 function Types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
                                                     local Text = Value()
 
@@ -191,11 +199,18 @@ return function(name, data)
 
                                                         [Ref] = Text,
                                                         [OnEvent "FocusLost"] = function()
+                                                            local isTextColor, color = Util.parseColor3Text(Text:get().Text)
                                                             local newText = if metadataType.data.dataType == "number"
                                                                 then tonumber(Text:get().Text) and tonumber(Text:get().Text) or 0
-                                                                elseif metadataType.data.dataType == "color" then Util.parseTextColor3(dataValue:get())
+                                                                elseif isTextColor then Text:get().Text
                                                                 else dataValue:get()
-                                                            Text:get().Text = newText
+                                                            
+                                                                if color ~= dataVisible:get() then
+                                                                    ChangeHistoryService:SetWaypoint("Changing Color")
+                                                                    dataValue:set(color)
+                                                                    Text:get().Text = newText
+                                                                    ChangeHistoryService:SetWaypoint("Set Color")
+                                                                end
                                                         end,
 
                                                         [Children] = extraChild or {},
