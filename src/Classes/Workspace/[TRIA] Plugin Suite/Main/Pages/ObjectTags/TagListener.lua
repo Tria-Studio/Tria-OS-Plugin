@@ -203,7 +203,7 @@ return function(name, data)
                                                             local newText = if metadataType.data.dataType == "number"
                                                                 then tonumber(Text:get().Text) and tonumber(Text:get().Text) or 0
                                                                 elseif isTextColor then Text:get().Text
-                                                                else dataValue:get()
+                                                                else Text:get().Text
 
                                                             if color ~= dataVisible:get() or metadataType.data.dataType ~= "color" then
                                                                 Text:get().Text = newText

@@ -111,12 +111,13 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
 
             if newValue ~= 0 then
                 if not TagInstance:FindFirstChild("_Delay") then
-                    Instance.new("NumberValue", TagInstance)
+                    local newValue = Instance.new("NumberValue", TagInstance)
+                    newValue.Name = "_Delay"
                 end
 
                 TagInstance._Delay.Value = newValue
             elseif TagInstance then
-                TagInstance.Parent = nil
+                TagInstance:FindFirstChild("_Delay").Parent = nil
             end
         end
 
