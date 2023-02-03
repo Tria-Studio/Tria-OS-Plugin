@@ -181,10 +181,12 @@ return function(name, data)
                                                     local stringTagValue = metadataType.data.dataType == "color"
                                                         and Util.parseTextColor3(dataValue:get())
                                                         or dataValue:get()
-                                                    ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", stringTagValue))
+                                                    ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
                                                     dataValue:set(value)
-                                                    TagUtils:SetPartMetaData(Util._Selection.selectedParts:get(), name, metadataType, value)
-                                                    ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", stringTagValue))
+                                                    for _, Instance: Instance in pairs(Util._Selection.selectedParts:get()) do 
+                                                        TagUtils:SetPartMetaData(Instance, name, metadataType, value)
+                                                    end
+                                                    ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
                                                 end
 
                                                 function Types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
@@ -204,13 +206,12 @@ return function(name, data)
                                                                 then tonumber(Text:get().Text) and tonumber(Text:get().Text) or 0
                                                                 elseif isTextColor then Text:get().Text
                                                                 else dataValue:get()
-                                                            
-                                                                if color ~= dataVisible:get() then
-                                                                    ChangeHistoryService:SetWaypoint("Changing Color")
-                                                                    dataValue:set(color)
-                                                                    Text:get().Text = newText
-                                                                    ChangeHistoryService:SetWaypoint("Set Color")
-                                                                end
+
+                                                            if color ~= dataVisible:get() or metadataType.data.dataType ~= "color" then
+                                                                Text:get().Text = newText
+                                                                print(if metadataType.data.dataType == "color" then color else newText)
+                                                                ChangeData(if metadataType.data.dataType == "color" then color else newText)
+                                                            end
                                                         end,
 
                                                         [Children] = extraChild or {},
@@ -225,7 +226,7 @@ return function(name, data)
                                                         BackgroundTransparency = 1,
 
                                                         [OnEvent "Activated"] = function()
-                                                            dataValue:set(not dataValue:get())
+                                                            ChangeData(not dataValue:get())
                                                         end,
 
                                                         [Children] = Components.Checkbox(18, UDim2.fromOffset(4, 2), nil, dataValue)
@@ -242,8 +243,7 @@ return function(name, data)
                                                         BackgroundColor3 = dataValue,
 
                                                         [OnEvent "Activated"] = function()
-                                                            local NewColor = Colorwheel:GetColor()
-                                                            dataValue:set(NewColor or dataValue:get())
+                                                            ChangeData(Colorwheel:GetColor() or dataValue:get())
                                                         end
                                                     }, Computed(function()
                                                         return Util.parseTextColor3(dataValue:get())

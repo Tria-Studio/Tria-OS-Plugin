@@ -86,6 +86,9 @@ function tagUtils:GetPartTags(part: Instance, excludeTag: string?)
 end
 
 function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
+    if table.find(tagTypes.ModelTags, tag) then
+        part = part:IsA("Model") and part or part.Parent
+    end
     local Types = {}
 
     if newValue then --// Assign or Change
@@ -123,7 +126,7 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
 
         function Types.EndOfName() --// Button, Liquid, & Gas
             local nameStub = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub
-            part.Name = nameStub .. 0
+            part.Name = nameStub .. newValue or 0
         end
     else --// Clear
         function Types.Attribute()
