@@ -1,5 +1,3 @@
-local ChangeHistoryService = game:GetService("ChangeHistoryService")
-
 local Package = script.Parent.Parent
 local TagData = require(Package.Pages.ObjectTags.tagData)
 local Util = require(script.Parent)
