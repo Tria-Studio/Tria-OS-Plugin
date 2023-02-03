@@ -20,8 +20,6 @@ local Out = Fusion.Out
 local Ref = Fusion.Ref
 local OnEvent = Fusion.OnEvent
 
-
-
 return function(name, data)
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
