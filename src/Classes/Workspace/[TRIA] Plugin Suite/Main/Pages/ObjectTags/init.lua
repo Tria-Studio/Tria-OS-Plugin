@@ -15,8 +15,6 @@ local  Value = Fusion.Value
 
 local frame = {}
 
-
-
 function frame:GetFrame(data)
     local objectFrameSize = Value()
     local buttonFrameSize = Value()
