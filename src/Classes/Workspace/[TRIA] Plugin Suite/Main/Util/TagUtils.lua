@@ -1,3 +1,8 @@
+--[[
+    TODO
+     - [ ] bug where liquids get parented to the Interactables folder instead of the liquids folder
+     - [ ] make selecting the data tag object count as selecting the part/model
+]]
 local Package = script.Parent.Parent
 local TagData = require(Package.Pages.ObjectTags.tagData)
 local Util = require(script.Parent)
@@ -122,7 +127,17 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
         end
 
         function Types.Property() --// Just _Sound
-            part[metadata.data._propertyName] = metadata.data.default
+            local TagInstance
+            for _, Child in pairs(part:GetChildren()) do
+                if string.find(Child.Name, tag, 1, true) then
+                    TagInstance = Child
+                    break
+                end
+            end
+
+            if TagInstance then
+                TagInstance[metadata.data._propertyName] = newValue
+            end
         end
 
         function Types.EndOfName() --// Button, Liquid, & Gas
@@ -142,6 +157,10 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
             if part:FindFirstChild(metadata.data.dataName) then
                 part:FindFirstChild(metadata.data.dataName).Parent = nil
             end
+        end
+
+        function Types.Property()
+            
         end
 
         function Types.EndOfName()
@@ -169,10 +188,9 @@ function tagUtils:GetPartMetaData(part, name, tag)
     end
 
     function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
-        local TagInstance
         for _, Child in pairs(part:GetChildren()) do
-            if string.find(Child.Name, tag, 1, true) then
-                return Child.Value
+            if string.find(Child.Name, name, 1, true) then
+                return Child:FindFirstChild("_Delay") and Child._Delay.Value
             end
         end
     end
@@ -299,7 +317,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
         function Methods.Child()
             VerifyFolder()
 
-            local newChild = Instance.new("ObjectValue")
+            local newChild = Instance.new(tagData._instanceType or "ObjectValue")
             newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
             newChild.Parent = part
             part.Parent = NewParent

@@ -207,11 +207,10 @@ return function(name, data)
 
                                                             if color ~= dataVisible:get() or metadataType.data.dataType ~= "color" then
                                                                 Text:get().Text = newText
-                                                                print(if metadataType.data.dataType == "color" then color else newText)
                                                                 ChangeData(if metadataType.data.dataType == "color" then color else newText)
                                                             end
                                                         end,
-
+                                                        
                                                         [Children] = extraChild or {},
                                                     }
                                                 end

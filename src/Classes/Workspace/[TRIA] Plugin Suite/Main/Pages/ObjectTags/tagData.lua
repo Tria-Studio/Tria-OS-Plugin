@@ -318,6 +318,7 @@ data.dataTypes = {
                     isFullSize = true,
                 }
             },
+            _instanceType = "Sound",
             ApplyMethod = "Child",
             IsTagApplicable = true,
             OnlyBaseParts = false,
