@@ -17,6 +17,8 @@ local Util = {
 
     Widget = nil,
     mapModel = Value(nil),
+    hasSpecialFolder = Value(false),
+
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
     MapMaid = Maid.new(),
@@ -83,13 +85,6 @@ local Util = {
             ImageID = "rbxassetid://12132025606"
         }
     },  
-    Images = {
-        Checkbox = {
-            Checked = "rbxassetid://6031068421",
-            Unchecked = "rbxassetid://6031068420",
-            Unknown = "rbxassetid://6031068445"
-        }
-    }
 }
 
 function getSettingsDirFolder(directory: string)
@@ -266,7 +261,6 @@ function Util.UpdateSelectedParts()
     end
 end
 
-Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(Util.UpdateSelectedParts))
 
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
@@ -274,5 +268,6 @@ Observer(Util.mapModel):onChange(updateButtonsActive)
 Observer(Util._manualActive):onChange(updateButtonsActive)
 Util.MainMaid:GiveTask(Util.MapMaid)
 Util.MainMaid:GiveTask(selectionMaid)
+Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(Util.UpdateSelectedParts))
 
 return Util

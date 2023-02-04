@@ -402,10 +402,10 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
         Size = UDim2.fromOffset(size, size),
         Image = Computed(function()
             return if checkState:get() == Enum.TriStateBoolean.True or checkState:get() == true
-                then Util.Images.Checkbox.Checked
+                then "rbxassetid://6031068421" --// Checked
                 elseif checkState:get() == Enum.TriStateBoolean.False  or checkState:get() == false
-                then Util.Images.Checkbox.Unchecked
-                else Util.Images.Checkbox.Unknown 
+                then "rbxassetid://6031068420" --// Unchecked
+                else "rbxassetid://6031068445" --// Unknown
         end),
         ImageColor3 = Theme.CheckedFieldIndicator.Default,
     }

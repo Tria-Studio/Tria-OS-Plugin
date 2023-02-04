@@ -139,12 +139,10 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
 
         function Types.EndOfName() --// Button, Liquid, & Gas
             local TagInstance = getTagInstance(part, tag)
-            local nameStub = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub
 
             if TagInstance then
-                TagInstance.Name = nameStub .. newValue or 0
+                TagInstance.Name = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub .. newValue or 0
             end
-            part.Name = nameStub .. newValue or 0
         end
     else --// Clear
         function Types.Attribute()
@@ -303,7 +301,8 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
         function Methods.Name()
             VerifyFolder()
-            part.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+            local TagInstance = getTagInstance(part, newTag) or part
+            TagInstance.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
             part.Parent = NewParent
         end
 
