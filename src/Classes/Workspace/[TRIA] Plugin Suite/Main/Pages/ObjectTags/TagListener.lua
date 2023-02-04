@@ -189,9 +189,11 @@ return function(name, data)
 
                                                 function Types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
                                                     local Text = Value()
+                                                    local Childs = extraChild or {}
+                                                    table.insert(Childs, Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4)))
 
                                                     return Components.TextBox {
-                                                        Size = UDim2.new(1, -TextXSize - 12 - (sizeSubtract or 0), 1, -6),
+                                                        Size = UDim2.new(1, -TextXSize - 6 - (sizeSubtract or 0), 1, -6),
                                                         AnchorPoint = Vector2.new(0, .5),
                                                         Position = UDim2.new(0, TextXSize + (sizeSubtract or 0), .5, 0),
                                                         TextXAlignment = Enum.TextXAlignment.Left,
@@ -211,7 +213,7 @@ return function(name, data)
                                                             end
                                                         end,
                                                         
-                                                        [Children] = extraChild or {},
+                                                        [Children] = Childs,
                                                     }
                                                 end
                                                 Types.string = Types.number

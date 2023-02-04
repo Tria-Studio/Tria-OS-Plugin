@@ -221,7 +221,7 @@ function tagUtils:GetSelectedMetadataValue(name, tag)
         if tagData == firstValue and tagData ~= nil then
             numHas += 1
         elseif numHas > 0 then
-            return " --- " --Enum.TriStateBoolean.Unknown, 
+            return ""
         end
     end
 
