@@ -76,6 +76,15 @@ local defaultMetadataTypes = {
 
 }
 
+
+local function getTagInstance(part, tag)
+    for _, Child in pairs(part:GetChildren()) do
+        if string.find(Child.Name, tag, 1, true) then
+            return Child
+        end
+    end
+end
+
 function tagUtils:GetPartTags(part: Instance, excludeTag: string?)
     local partTags = {}
 
@@ -106,13 +115,7 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
         end
 
         function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
-            local TagInstance
-            for _, Child in pairs(part:GetChildren()) do
-                if string.find(Child.Name, tag, 1, true) then
-                    TagInstance = Child
-                    break
-                end
-            end
+            local TagInstance = getTagInstance(part, tag)
 
             if newValue ~= 0 then
                 if not TagInstance:FindFirstChild("_Delay") then
@@ -121,19 +124,13 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
                 end
 
                 TagInstance._Delay.Value = newValue
-            elseif TagInstance then
+            elseif TagInstance and TagInstance:FindFirstChild("_Delay") then
                 TagInstance:FindFirstChild("_Delay").Parent = nil
             end
         end
 
         function Types.Property() --// Just _Sound
-            local TagInstance
-            for _, Child in pairs(part:GetChildren()) do
-                if string.find(Child.Name, tag, 1, true) then
-                    TagInstance = Child
-                    break
-                end
-            end
+            local TagInstance = getTagInstance(part, tag)
 
             if TagInstance then
                 TagInstance[metadata.data._propertyName] = newValue
@@ -141,7 +138,12 @@ function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
         end
 
         function Types.EndOfName() --// Button, Liquid, & Gas
+            local TagInstance = getTagInstance(part, tag)
             local nameStub = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub
+
+            if TagInstance then
+                TagInstance.Name = nameStub .. newValue or 0
+            end
             part.Name = nameStub .. newValue or 0
         end
     else --// Clear
@@ -188,10 +190,9 @@ function tagUtils:GetPartMetaData(part, name, tag)
     end
 
     function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
-        for _, Child in pairs(part:GetChildren()) do
-            if string.find(Child.Name, name, 1, true) then
-                return Child:FindFirstChild("_Delay") and Child._Delay.Value
-            end
+        local Child = getTagInstance(part, name)
+        if Child then 
+            return Child:FindFirstChild("_Delay") and Child._Delay.Value
         end
     end
 
@@ -201,16 +202,13 @@ function tagUtils:GetPartMetaData(part, name, tag)
     end
 
     function Types.EndOfName() --// Button, Liquid, & Gas
-        for _, Child: Instance in pairs(part:GetChildren()) do
-            if string.find(Child.Name, name, 1, true) then
-                return string.sub(Child.Name, #mainData._nameStub + 1)
-            end
-        end
-        return string.sub(part.Name, #mainData._nameStub + 1)
+        local TagInstance = getTagInstance(part, name)
+        return TagInstance
+            and string.sub(TagInstance.Name, #mainData._nameStub + 1)
+            or string.sub(part.Name, #mainData._nameStub + 1)
     end
 
-    local data = Types[data.type]()
-    return data
+    return Types[data.type]()
 end
 
 function tagUtils:GetSelectedMetadataValue(name, tag)
@@ -229,11 +227,9 @@ function tagUtils:GetSelectedMetadataValue(name, tag)
         end
     end
 
-    if numHas == #Util._Selection.selectedParts:get() then
-        return firstValue == false and Enum.TriStateBoolean.False or firstValue
-    else
-        return defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
-    end
+    return if numHas == #Util._Selection.selectedParts:get()
+        then firstValue == false and Enum.TriStateBoolean.False or firstValue
+        else defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
 end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
@@ -293,8 +289,10 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             Methods[method]()
         end
     else --// Assign new tag
-        local NewParent = if isOptimized and isOptimized:FindFirstChild("Interactable") 
-            then if newTag == "_Liquid" or newTag == "_Gas" then isOptimized.Fluid else isOptimized.Interactable 
+        local NewParent = if isOptimized and table.find(tagTypes.ButtonTags, newTag) and isOptimized:FindFirstChild("Button")
+            then isOptimized.Button
+            elseif newTag == "_Liquid" or newTag == "_Gas" and isOptimized:FindFirstChild("Fluid") then isOptimized.Fluid
+            elseif isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable
             else part.Parent
 
         function Methods._Action()
@@ -316,8 +314,8 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
         function Methods.Child()
             VerifyFolder()
-
             local newChild = Instance.new(tagData._instanceType or "ObjectValue")
+            
             newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
             newChild.Parent = part
             part.Parent = NewParent
@@ -329,8 +327,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
         end
     end
 
-    local method = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod
-    Methods[method]()
+    Methods[typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod]()
 end
 
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
