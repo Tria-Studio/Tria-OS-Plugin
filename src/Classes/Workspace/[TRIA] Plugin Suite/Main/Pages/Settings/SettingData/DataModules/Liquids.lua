@@ -49,6 +49,8 @@ function addLiquidToItems(liquid: Configuration)
         }
     }
 
+    local liquidId = HttpService:GenerateGUID(false)
+
     for _, tbl in ipairs(liquidData) do
         tbl.Directory = "Liquids." .. liquid.Name
         tbl.Errored = Value(false)
@@ -63,19 +65,18 @@ function addLiquidToItems(liquid: Configuration)
         updateConnection()
     end
 
-    local liquidId = HttpService:GenerateGUID(false)
     idToConfig[liquidId] = liquid
 
-    SettingsUtil.SettingMaid:GiveTask(liquid:GetPropertyChangedSignal("Name"):Connect(function()
-        removeLiquid(liquidId)
-        addLiquid(liquid)
-    end))
+    local function update()
+        SettingsUtil.modifyStateTable(directories.Liquids.Items, "set", liquid, {
+            Name = liquid.Name, 
+            Data = liquidData,
+            ID = liquidId
+        })
+    end
 
-    SettingsUtil.modifyStateTable(directories.Liquids.Items, "set", liquid, {
-        Name = liquid.Name, 
-        Data = liquidData,
-        ID = liquidId
-    })
+    SettingsUtil.SettingMaid:GiveTask(liquid:GetPropertyChangedSignal("Name"):Connect(update))
+    update()
 end
 
 function insertLiquids()
@@ -133,7 +134,7 @@ function Data:getDropdown(visible)
         DropdownVisible = visible,
         Children = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-            ForPairs(directories.Liquids.Items, function(index, data)
+            ForPairs(directories.Liquids.Items, function(liquid, data)
                 local itemName = data.Name
                 local itemData = data.Data
 
@@ -154,7 +155,12 @@ function Data:getDropdown(visible)
                         [OnEvent "Activated"] = function()
                             removeLiquid(data.ID)
                         end
-                    }
+                    },
+
+                    HeaderEditable = true,
+                    OnHeaderChange = function(newHeader)
+                        liquid.Name = newHeader
+                    end
 
                 }, function(isSectionVisible)
                     if liquidVisibleMap[data.ID] then
@@ -172,14 +178,15 @@ function Data:getDropdown(visible)
                         }
                     }
                 end)
-                return index, liquidDropdown
-            end, Fusion.cleanup)
+                return liquid, liquidDropdown
+            end, Fusion.doNothing)
         }
     }
 end
 
 function Data:init()
     insertLiquids()
+    print("Initating")
 
     local liquidFolder = Util.getDirFolder("Liquids")
     if liquidFolder then

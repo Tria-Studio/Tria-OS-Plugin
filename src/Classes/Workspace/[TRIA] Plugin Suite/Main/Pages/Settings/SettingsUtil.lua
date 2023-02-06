@@ -91,7 +91,9 @@ function SettingsUtil.DirectoryDropdown(data, childProcessor)
         Header = data.Display, 
         LayoutOrder = data.LayoutOrder,
         HeaderColor = data.HeaderColor,
-        HeaderChildren = data.HeaderChildren
+        HeaderChildren = data.HeaderChildren,
+        HeaderEditable = data.HeaderEditable,
+        OnHeaderChange = data.OnHeaderChange
     }, childProcessor)
 end
 
