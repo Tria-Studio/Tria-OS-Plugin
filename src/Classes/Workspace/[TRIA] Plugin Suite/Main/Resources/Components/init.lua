@@ -286,26 +286,41 @@ function Components.Dropdown(data, childrenProcessor)
         end,
         
         [Children] = {
-            Components.TextButton({
-                Active = Util.interfaceActive,
-                AutoButtonColor = Util.interfaceActive,
-                BackgroundTransparency = 1,
+            Computed(function()
+                local props = {
+                    Active = Util.interfaceActive,
+                    BackgroundTransparency = 1,
+    
+                    FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),
+                    Size = UDim2.new(1, -20, 0, 24),
+                    Position = UDim2.fromOffset(24, 0),
+    
+                    TextSize = 14,
+                    Text = data.Header,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Visible = true,
+    
+                    [Children] = data.HeaderChildren
+                }
 
-                FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),
-                Size = UDim2.new(1, -20, 0, 24),
-                Position = UDim2.fromOffset(24, 0),
-
-                TextSize = 14,
-                Text = data.Header,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Visible = true,
-
-                [OnEvent "Activated"] = function()
-                    dropdownVisible:set(not dropdownVisible:get(false))
-                end,
-
-                [Children] = data.HeaderChildren
-            }),
+                if data.HeaderEditable then
+                    local textBox = Components.TextBox(props)
+                    return Hydrate(textBox) {
+                        [OnEvent "FocusLost"] = function()
+                            if data.OnHeaderChange then
+                                data.OnHeaderChange(textBox.Text)
+                            end
+                        end
+                    }
+                else
+                    return Hydrate(Components.TextButton(props)) {
+                        AutoButtonColor = Util.interfaceActive,
+                        [OnEvent "Activated"] = function()
+                            dropdownVisible:set(not dropdownVisible:get(false))
+                        end,
+                    }
+                end
+            end, Fusion.cleanup):get(),
 
             New "ImageButton" {
                 AnchorPoint = Vector2.new(1, 0),

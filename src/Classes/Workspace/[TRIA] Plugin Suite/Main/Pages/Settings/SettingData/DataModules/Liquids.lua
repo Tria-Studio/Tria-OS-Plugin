@@ -21,6 +21,64 @@ local Data = {
 local directories = SettingsUtil.Directories
 local idToConfig = {}
 
+function addLiquidToItems(liquid: Configuration)
+    local liquidData = {
+        {
+            Text = "Color", 
+            Type = "Color",  
+            Attribute = "Color", 
+            Fallback = Color3.new(1, 1, 1), 
+            Value = Value(Color3.new(1, 1, 1)),
+            Tooltip = {Text = "The color of this liquid/gas."}
+        },
+        {
+            Text = "Oxygen Depletion", 
+            Type = "Number",  
+            Attribute = "OxygenDepletion", 
+            Fallback = 1, 
+            Value = Value(1),
+            Tooltip = {Text = "How fast the oxygen will deplete when a player is inside this liquid/gas."}
+        },
+        {
+            Text = "Splash Sound", 
+            Type = "Number",  
+            Attribute = "SplashSound", 
+            Fallback = "water", 
+            Value = Value(""),
+            Tooltip = {Text = "The assetID of the sound that will play when entering/exiting this liquid/gas. Defaults to 'water'"}
+        }
+    }
+
+    local liquidId = HttpService:GenerateGUID(false)
+
+    for _, tbl in ipairs(liquidData) do
+        tbl.Directory = "Liquids." .. liquid.Name
+        tbl.Errored = Value(false)
+    end
+
+    for _, liquidSetting in ipairs(liquidData) do
+        local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
+        local function updateConnection()
+            SettingsUtil.updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
+            SettingsUtil.hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
+        end
+        updateConnection()
+    end
+
+    idToConfig[liquidId] = liquid
+
+    local function update()
+        SettingsUtil.modifyStateTable(directories.Liquids.Items, "set", liquid, {
+            Name = liquid.Name, 
+            Data = liquidData,
+            ID = liquidId
+        })
+    end
+
+    SettingsUtil.SettingMaid:GiveTask(liquid:GetPropertyChangedSignal("Name"):Connect(update))
+    update()
+end
+
 function insertLiquids()
 	local liquidFolder = Util.getDirFolder("Liquids")
     if not liquidFolder then
@@ -29,56 +87,7 @@ function insertLiquids()
 
     directories.Liquids.Items:set({})
     for _, liquid in ipairs(liquidFolder:GetChildren()) do
-        local liquidData = {
-            {
-                Text = "Color", 
-                Type = "Color",  
-                Attribute = "Color", 
-                Fallback = Color3.new(1, 1, 1), 
-                Value = Value(Color3.new(1, 1, 1)),
-                Tooltip = {Text = "The color of this liquid/gas."}
-            },
-            {
-                Text = "Oxygen Depletion", 
-                Type = "Number",  
-                Attribute = "OxygenDepletion", 
-                Fallback = 1, 
-                Value = Value(1),
-                Tooltip = {Text = "How fast the oxygen will deplete when a player is inside this liquid/gas."}
-            },
-            {
-                Text = "Splash Sound", 
-                Type = "Number",  
-                Attribute = "SplashSound", 
-                Fallback = "water", 
-                Value = Value(""),
-                Tooltip = {Text = "The assetID of the sound that will play when entering/exiting this liquid/gas. Defaults to 'water'"}
-            }
-        }
-
-        for _, tbl in ipairs(liquidData) do
-            tbl.Directory = "Liquids." .. liquid.Name
-            tbl.Errored = Value(false)
-        end
-
-        for _, liquidSetting in ipairs(liquidData) do
-            local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
-            local function updateConnection()
-                SettingsUtil.updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
-                SettingsUtil.hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
-            end
-            updateConnection()
-        end
-
-        local liquidId = HttpService:GenerateGUID(false)
-        idToConfig[liquidId] = liquid
-
-        SettingsUtil.SettingMaid:GiveTask(liquid:GetPropertyChangedSignal("Name"):Connect(insertLiquids))
-        SettingsUtil.modifyStateTable(directories.Liquids.Items, "insert", {
-            Name = liquid.Name, 
-            Data = liquidData,
-            ID = liquidId
-        })
+        addLiquidToItems(liquid)
     end
 end
 
@@ -118,12 +127,14 @@ function Data:getHeaderChildren()
     }
 end
 
+local liquidVisibleMap = {}
+
 function Data:getDropdown(visible)
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-            ForPairs(directories.Liquids.Items, function(index, data)
+            ForPairs(directories.Liquids.Items, function(liquid, data)
                 local itemName = data.Name
                 local itemData = data.Data
 
@@ -144,9 +155,19 @@ function Data:getDropdown(visible)
                         [OnEvent "Activated"] = function()
                             removeLiquid(data.ID)
                         end
-                    }
+                    },
+
+                    HeaderEditable = true,
+                    OnHeaderChange = function(newHeader)
+                        liquid.Name = newHeader
+                    end
 
                 }, function(isSectionVisible)
+                    if liquidVisibleMap[data.ID] then
+                        isSectionVisible:set(liquidVisibleMap[data.ID])
+                    else
+                        liquidVisibleMap[data.ID] = isSectionVisible:get(false)
+                    end
                     return Components.DropdownHolderFrame {
                         DropdownVisible = isSectionVisible,
                         Children = {
@@ -157,8 +178,8 @@ function Data:getDropdown(visible)
                         }
                     }
                 end)
-                return index, liquidDropdown
-            end, Fusion.cleanup)
+                return liquid, liquidDropdown
+            end, Fusion.doNothing)
         }
     }
 end
@@ -168,8 +189,15 @@ function Data:init()
 
     local liquidFolder = Util.getDirFolder("Liquids")
     if liquidFolder then
-        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildAdded:Connect(insertLiquids))
-        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildRemoved:Connect(insertLiquids))
+        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildAdded:Connect(function(child)
+            addLiquidToItems(child)
+        end))
+        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildRemoved:Connect(function(child)
+            local items = directories.Liquids.Items
+            if items:get(false)[child] then
+                SettingsUtil.modifyStateTable(items, "set", child, nil)
+            end
+        end))
     end
 end
 
