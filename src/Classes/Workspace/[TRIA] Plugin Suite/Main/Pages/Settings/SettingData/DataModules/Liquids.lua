@@ -57,12 +57,7 @@ function addLiquidToItems(liquid: Configuration)
     end
 
     for _, liquidSetting in ipairs(liquidData) do
-        local currentValue = liquid:GetAttribute(liquidSetting.Attribute)
-        local function updateConnection()
-            SettingsUtil.updateStateValue(currentValue, liquid:GetAttribute(liquidSetting.Attribute), liquidSetting)
-            SettingsUtil.hookAttributeChanged(liquid, liquidSetting.Attribute, updateConnection)
-        end
-        updateConnection()
+        SettingsUtil.connectValue(liquid, liquidSetting)
     end
 
     idToConfig[liquidId] = liquid
@@ -130,6 +125,8 @@ end
 local liquidVisibleMap = {}
 
 function Data:getDropdown(visible)
+    local index = 0
+
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
@@ -138,6 +135,7 @@ function Data:getDropdown(visible)
                 local itemName = data.Name
                 local itemData = data.Data
 
+                index += 1
                 local liquidDropdown = SettingsUtil.DirectoryDropdown({
                     Default = true, 
                     Display = itemName, 

@@ -17,9 +17,9 @@ local SettingsUtil = {
             LayoutOrder = 1,
             Items = Value({}),
         },
-        Skills = {
+        Buttons = {
             Default = true,
-            Display = "Skills and Features",
+            Display = "Buttons",
             LayoutOrder = 2,
             Items = Value({})
         },
@@ -29,10 +29,16 @@ local SettingsUtil = {
             LayoutOrder = 3,
             Items = Value({})
         },
+        Skills = {
+            Default = true,
+            Display = "Skills and Features",
+            LayoutOrder = 5,
+            Items = Value({})
+        },
         Liquids = {
             Default = true,
             Display = "Liquids and Gas",
-            LayoutOrder = 5,
+            LayoutOrder = 6,
             Items = Value({})
         }
     }
@@ -78,6 +84,15 @@ function SettingsUtil.modifyStateTable(state, action, ...)
         table.remove(newTbl, args[1])
     end
     state:set(newTbl, true)
+end
+
+function SettingsUtil.connectValue(object, data)
+    local currentValue = object:GetAttribute(data.Attribute)
+    local function updateConnection()
+        SettingsUtil.updateStateValue(currentValue, object:GetAttribute(data.Attribute), data)
+        SettingsUtil.hookAttributeChanged(object, data.Attribute, updateConnection)
+    end
+    updateConnection()
 end
 
 function SettingsUtil.settingOption(optionType, optionData): Instance

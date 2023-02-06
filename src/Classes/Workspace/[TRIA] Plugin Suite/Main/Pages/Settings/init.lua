@@ -45,12 +45,7 @@ function onMapChanged()
             end
     
             -- Initially retrieve setting value
-            local currentValue = dirFolder:GetAttribute(tbl.Attribute)
-            local function updateConnection()
-                SettingsUtil.updateStateValue(currentValue, dirFolder:GetAttribute(tbl.Attribute), tbl)
-                SettingsUtil.hookAttributeChanged(dirFolder, tbl.Attribute, updateConnection)
-            end
-            updateConnection()
+            SettingsUtil.connectValue(dirFolder, tbl)
         end
     end
 
@@ -110,16 +105,12 @@ function frame:GetFrame(data)
                         dirData.HeaderChildren = if dataModule.Dynamic then dataModule:getHeaderChildren() else dirData.HeaderChildren
 
                         local dirDropdown = SettingsUtil.DirectoryDropdown(dirData, function(visible)
-                            local dropdown
-
                             dirData.Visible = visible
                             if dataModule then
                                 if not dataModule.Dynamic then
-                                    dropdown = getStandardDropdown(dirKey, dataModule, visible)
-                                    return dropdown
+                                    return getStandardDropdown(dirKey, dataModule, visible)
                                 else
-                                    dropdown = dataModule:getDropdown(visible)
-                                    return dropdown
+                                    return dataModule:getDropdown(visible)
                                 end
                             end
                         end)
