@@ -18,6 +18,7 @@ local Computed = Fusion.Computed
 local Observer = Fusion.Observer
 local Out = Fusion.Out
 local Ref = Fusion.Ref
+local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
 
 return function(name, data)
@@ -233,9 +234,7 @@ return function(name, data)
                                                 end
 
                                                 function Types.color()
-                                                    local Text = Value()
-
-                                                    return Types.number(22, Components.TextButton {
+                                                    return Types.number(22, {Components.TextButton {
                                                         AnchorPoint = Vector2.new(1, .5),
                                                         Position = UDim2.new(0, -4, .5, 0),
                                                         Size = UDim2.fromOffset(16, 16),
@@ -244,13 +243,32 @@ return function(name, data)
                                                         [OnEvent "Activated"] = function()
                                                             ChangeData(Colorwheel:GetColor() or dataValue:get())
                                                         end
-                                                    }, Computed(function()
+                                                    }}, Computed(function()
                                                         return Util.parseTextColor3(dataValue:get())
                                                     end))
                                                 end
 
                                                 function Types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
-                                                    
+                                                    local dropdownVisible = Value(false)
+
+                                                    return Types.number(22, {New "ImageButton" {
+                                                        AnchorPoint = Vector2.new(1, 0),
+                                                        BackgroundTransparency = 0,
+                                                        Position = UDim2.fromOffset(-4, 0),
+                                                        Size = UDim2.fromOffset(22, 22),
+                                                        Image = "rbxassetid://6031094687",
+                                                        ImageColor3 = Color3.new(),
+                                                        Rotation = Spring(Computed(function()
+                                                            return dropdownVisible:get() and 0 or 180
+                                                        end), 20),
+                                        
+                                                        [Children] = Components.Constraints.UIAspectRatio(1),
+                                                        [OnEvent "Activated"] = function()
+                                                            ChangeData() --// call the dropdown
+                                                        end
+                                                    }}, Computed(function()
+                                                        return dataValue:get()
+                                                    end))
                                                 end
 
                                                 return Types[metadataType.data.dataType]()
