@@ -6,7 +6,6 @@ local Pages = require(script.Parent.Resources.Components.Pages)
 local Maid = require(script.Maid)
 
 local Value = Fusion.Value
-local Computed = Fusion.Computed
 local Observer = Fusion.Observer
 
 local selectionMaid = Maid.new()
@@ -26,6 +25,7 @@ local Util = {
     _currentPageNum = Value(1),
     _manualActive = Value(true),
     interfaceActive = Value(false),
+    dropdownActive = Value(false),
 
     _Selection = {
         selectedParts = Value({}),

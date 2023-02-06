@@ -9,6 +9,7 @@ local TagUtils = require(Package.Util.TagUtils)
 local TagData = require(script.Parent.tagData)
 local Pages = require(Package.Resources.Components.Pages)
 local Colorwheel = require(Package.Colorwheel)
+local Dropdown = require(Package.Util.Dropdown)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -17,6 +18,7 @@ local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Observer = Fusion.Observer
 local Out = Fusion.Out
+local OnChange = Fusion.OnChange
 local Ref = Fusion.Ref
 local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
@@ -58,7 +60,10 @@ return function(name, data)
                     TextColor3 = Theme.MainText.Default,
                     TextXAlignment = Enum.TextXAlignment.Left,
 
-                    AutoButtonColor = Util.interfaceActive,
+                    AutoButtonColor = Computed(function()
+                        local interfaceActive = Util.interfaceActive:get()
+                        return if Util.dropdownActive:get() then false else interfaceActive
+                    end),
                     Active = Util.interfaceActive,
 
                     [OnEvent "Activated"] = function()
@@ -123,6 +128,11 @@ return function(name, data)
                         end),
                         Visible = dataVisible,
 
+                        [OnChange "Visible"] = function(value)
+                            if not value then
+                                Dropdown:Cancel()
+                            end
+                        end,
                         [Children] = {
                             Components.Constraints.UIListLayout(),
                             New "TextLabel" {
@@ -246,26 +256,62 @@ return function(name, data)
                                                             ChangeData(Colorwheel:GetColor() or dataValue:get())
                                                         end
                                                     }}, Computed(function()
-
-                                                        return dataValue:get() == "" and "" or Util.parseTextColor3(dataValue:get())
+                                                            return dataValue:get() == "" and "" or Util.parseTextColor3(dataValue:get())
                                                     end))
                                                 end
 
                                                 function Types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     local dropdownVisible = Value(false)
+                                                    local arrowButton = Value()
 
                                                     return Types.number(22, {Components.ImageButton {
                                                         AnchorPoint = Vector2.new(1, 0),
                                                         Position = UDim2.fromOffset(-8, -1),
                                                         Size = UDim2.fromOffset(18, 18),
-                                                        Image = "rbxassetid://6031094687",
-                                                        Rotation = Spring(Computed(function()
-                                                            return dropdownVisible:get() and 0 or 180
-                                                        end), 20),
                                         
-                                                        [Children] = Components.Constraints.UIAspectRatio(1),
+                                                        [Ref] = arrowButton,
+                                                        [Children] = {
+                                                            Components.Constraints.UIAspectRatio(1),
+                                                            New "ImageLabel" {
+                                                                Size = UDim2.fromScale(1, 1),
+                                                                BackgroundTransparency = 1,
+                                                                Image = "rbxassetid://6031094687",
+                                                                Rotation = Spring(Computed(function()
+                                                                    return dropdownVisible:get() and 0 or 180
+                                                                end), 20),
+                                                            }
+                                                        },
                                                         [OnEvent "Activated"] = function()
-                                                            ChangeData() --// call the dropdown
+                                                            if not dropdownVisible:get() then
+                                                                local testData = {
+                                                                    {
+                                                                        text = "test1",
+                                                                        Value = "lol1"
+                                                                    }, {
+                                                                        text = "test2",
+                                                                        Value = "lol2"
+                                                                    },{
+                                                                        text = "test3",
+                                                                        Value = "lol3"
+                                                                    },{
+                                                                        text = "test4",
+                                                                        Value = "lol4"
+                                                                    },{
+                                                                        text = "test5",
+                                                                        Value = "lol5"
+                                                                    },
+                                                                }
+                                                                dropdownVisible:set(true)
+                                                                local newData = Dropdown:GetValue(testData, arrowButton:get())
+                                                                print(newData)
+                                                                if newData then
+                                                                    ChangeData(newData)
+                                                                end
+                                                                dropdownVisible:set(false)
+                                                            else
+                                                                Dropdown:Cancel()
+                                                            end
+
                                                         end
                                                     }}, Computed(function()
                                                         return dataValue:get()

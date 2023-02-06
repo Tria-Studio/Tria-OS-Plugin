@@ -12,7 +12,6 @@ local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Hydrate = Fusion.Hydrate
 local Spring = Fusion.Spring
-local ForValues = Fusion.ForValues
 
 local Components = {
     Constraints = require(script.Constraints),
