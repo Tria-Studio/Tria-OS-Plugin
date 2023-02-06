@@ -279,31 +279,13 @@ return function(name, data)
                                                                 Rotation = Spring(Computed(function()
                                                                     return dropdownVisible:get() and 0 or 180
                                                                 end), 20),
+                                                                ZIndex = 8,
                                                             }
                                                         },
                                                         [OnEvent "Activated"] = function()
                                                             if not dropdownVisible:get() then
-                                                                local testData = {
-                                                                    {
-                                                                        text = "test1",
-                                                                        Value = "lol1"
-                                                                    }, {
-                                                                        text = "test2",
-                                                                        Value = "lol2"
-                                                                    },{
-                                                                        text = "test3",
-                                                                        Value = "lol3"
-                                                                    },{
-                                                                        text = "test4",
-                                                                        Value = "lol4"
-                                                                    },{
-                                                                        text = "test5",
-                                                                        Value = "lol5"
-                                                                    },
-                                                                }
                                                                 dropdownVisible:set(true)
-                                                                local newData = Dropdown:GetValue(testData, arrowButton:get())
-                                                                print(newData)
+                                                                local newData = Dropdown:GetValue(metadataType.data.dropdownType, arrowButton:get())
                                                                 if newData then
                                                                     ChangeData(newData)
                                                                 end

@@ -22,6 +22,7 @@ local Util = {
     MainMaid = Maid.new(),
     MapMaid = Maid.new(),
 
+    _pageChanged = Signal.new(),
     _currentPageNum = Value(1),
     _manualActive = Value(true),
     interfaceActive = Value(false),
@@ -52,37 +53,37 @@ local Util = {
         [0] = {
             Name = "Unrated",
             Color = Color3.new(1, 1, 1),
-            ImageID = "rbxassetid://12132024589"
+            Image = "rbxassetid://12132024589"
         },
         [1] = {
             Name = "Easy",
             Color = Color3.fromRGB(85, 255, 127),
-            ImageID = "rbxassetid://12132025467"
+            Image = "rbxassetid://12132025467"
         },
         [2] = {
             Name = "Normal",
             Color = Color3.fromRGB(255, 255, 127),
-            ImageID = "rbxassetid://12132024792"
+            Image = "rbxassetid://12132024792"
         },
         [3] = {
             Name = "Hard",
             Color = Color3.fromRGB(255, 0, 25),
-            ImageID = "rbxassetid://12132025088"
+            Image = "rbxassetid://12132025088"
         },
         [4] = {
             Name = "Insane",
             Color = Color3.fromRGB(112, 42, 241),
-            ImageID = "rbxassetid://12132024949"
+            Image = "rbxassetid://12132024949"
         },
         [5] = {
             Name = "Extreme",
             Color = Color3.fromRGB(255, 128, 0),
-            ImageID = "rbxassetid://12132025296"
+            Image = "rbxassetid://12132025296"
         },
         [6] = {
             Name = "Divine",
             Color = Color3.fromRGB(255, 8, 152),
-            ImageID = "rbxassetid://12132025606"
+            Image = "rbxassetid://12132025606"
         }
     },  
 }

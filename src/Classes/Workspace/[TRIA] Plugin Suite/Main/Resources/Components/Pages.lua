@@ -1,10 +1,12 @@
 local Resources = script.Parent.Parent
 local Fusion = require(Resources.Fusion)
 local Pages = Resources.Parent.Pages
+local Signal = require(script.Parent.Parent.Parent.Util.Signal)
 
 local Value = Fusion.Value
 
 local PageHandler = {
+    pageChanged = Signal.new(),
     pageData = {
         pages = {},
         bypassedPages = {"Insert", "PluginSettings"},
@@ -21,6 +23,7 @@ function PageHandler:ChangePage(NewPage: string)
         self.pageData.pages[currentPage].onClose()
     end
 
+    PageHandler.pageChanged:Fire()
     self.pageData.pages[currentPage].Visible:set(false)
     self.pageData.pages[NewPage].Visible:set(true)
     self.pageData.currentPage:set(NewPage)

@@ -203,7 +203,7 @@ function frame:GetFrame(data)
                                             BackgroundTransparency = 1,
                                             Position = UDim2.new(1, -34, 0, 4),
                                             Size = UDim2.fromOffset(26, 26),
-                                            Image = Util.Difficulty[value.Difficulty].ImageID,
+                                            Image = Util.Difficulty[value.Difficulty].Image,
     
                                             ImageColor3 = Spring(Computed(function()
                                                 return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
