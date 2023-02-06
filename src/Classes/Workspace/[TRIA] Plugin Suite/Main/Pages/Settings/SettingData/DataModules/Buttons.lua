@@ -123,6 +123,7 @@ function insertButtonFolders()
 
     directories.Buttons.Items:set({})
     for _, v in ipairs(buttonTypes) do
+		print("Making", v)
         local folder = buttonFolder:FindFirstChild(v)
 		if folder then
 			setupButtonFolder(folder)
@@ -132,8 +133,6 @@ end
 
 local buttonVisibleMap = {}
 function Data:getDropdown(visible)
-    local index = 0
-
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
@@ -142,13 +141,15 @@ function Data:getDropdown(visible)
                 local itemName = data.Name
                 local itemData = data.Data
 
-                index += 1
                 local liquidDropdown = SettingsUtil.DirectoryDropdown({
                     Default = true, 
                     Display = itemName, 
                     LayoutOrder = index,
 					HeaderEditable = true,
                     OnHeaderChange = function(newHeader)
+						if not table.find(buttonTypes, newHeader) then
+							return
+						end
                         folder.Name = newHeader
                     end
 

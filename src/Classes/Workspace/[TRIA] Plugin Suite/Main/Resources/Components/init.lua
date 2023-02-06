@@ -270,6 +270,7 @@ function Components.Dropdown(data, childrenProcessor)
         BackgroundColor3 = Computed(function()
             return headerColor:get():get()
         end),
+        Name = data.Header,
         BackgroundTransparency = 0,
         BorderSizePixel = 1,
         BorderColor3 = Theme.Border.Default,
