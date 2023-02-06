@@ -210,6 +210,7 @@ function tagUtils:GetPartMetaData(part, name, tag)
 end
 
 function tagUtils:GetSelectedMetadataValue(name, tag)
+    local metaDataData = TagData.metadataTypes[tag]
     local firstValue
     local numHas = 0
 
@@ -227,7 +228,7 @@ function tagUtils:GetSelectedMetadataValue(name, tag)
 
     return if numHas == #Util._Selection.selectedParts:get()
         then firstValue == false and Enum.TriStateBoolean.False or firstValue
-        else defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
+        else metaDataData.hideWhenNil and "" or defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
 end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)

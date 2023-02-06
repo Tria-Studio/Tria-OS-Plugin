@@ -184,6 +184,7 @@ function Util.parseColor3Text(str: string): (boolean, nil | Color3)
 end
 
 function Util.parseTextColor3(color: Color3): string
+    color = (color == "" or not color) and Color3.new(0, 0, 0) or color
     return string.format("%d, %d, %d",
         color.R * 255,
         color.G * 255,

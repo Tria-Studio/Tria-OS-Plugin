@@ -168,7 +168,7 @@ return function(name, data)
                                                     return
                                                 end
 
-                                                local dataValue = Value(TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName) or (metadataType.data.dataType == "color" and Color3.new() or ""))
+                                                local dataValue = Value(TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName) or "")
                                                 if dataValue:get() == Enum.TriStateBoolean.False then
                                                     dataValue:set(false)
                                                 end
@@ -238,26 +238,27 @@ return function(name, data)
                                                         AnchorPoint = Vector2.new(1, .5),
                                                         Position = UDim2.new(0, -4, .5, 0),
                                                         Size = UDim2.fromOffset(16, 16),
-                                                        BackgroundColor3 = dataValue,
+                                                        BackgroundColor3 = Computed(function()
+                                                            return (dataValue:get() == "" or not dataValue:get()) and Color3.new() or dataValue:get()
+                                                        end),
 
                                                         [OnEvent "Activated"] = function()
                                                             ChangeData(Colorwheel:GetColor() or dataValue:get())
                                                         end
                                                     }}, Computed(function()
-                                                        return Util.parseTextColor3(dataValue:get())
+
+                                                        return dataValue:get() == "" and "" or Util.parseTextColor3(dataValue:get())
                                                     end))
                                                 end
 
                                                 function Types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     local dropdownVisible = Value(false)
 
-                                                    return Types.number(22, {New "ImageButton" {
+                                                    return Types.number(22, {Components.ImageButton {
                                                         AnchorPoint = Vector2.new(1, 0),
-                                                        BackgroundTransparency = 0,
-                                                        Position = UDim2.fromOffset(-4, 0),
-                                                        Size = UDim2.fromOffset(22, 22),
+                                                        Position = UDim2.fromOffset(-8, -1),
+                                                        Size = UDim2.fromOffset(18, 18),
                                                         Image = "rbxassetid://6031094687",
-                                                        ImageColor3 = Color3.new(),
                                                         Rotation = Spring(Computed(function()
                                                             return dropdownVisible:get() and 0 or 180
                                                         end), 20),

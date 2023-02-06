@@ -39,6 +39,7 @@ data.metadataTypes = {
         dataType = "color",
         dataName = "ActiveColor",
         displayName = "Active Color",
+        hideWhenNil = true,
         default = nil,
     },
     ActivatedColor = {
@@ -47,6 +48,7 @@ data.metadataTypes = {
         dataType = "color",
         dataName = "ActivatedColor",
         displayName = "Activated Color",
+        hideWhenNil = true,
         default = nil,
     },
     InactiveColor = {
@@ -55,6 +57,7 @@ data.metadataTypes = {
         dataType = "color",
         dataName = "InactiveColor",
         displayName = "Inactive Color",
+        hideWhenNil = true,
         default = nil,
     },
     DisabledColor = {
@@ -63,6 +66,7 @@ data.metadataTypes = {
         dataType = "color",
         dataName = "DisabledColor",
         displayName = "Disabled Color",
+        hideWhenNil = true,
         default = nil,
     },
     LocatorImage = {
@@ -71,6 +75,7 @@ data.metadataTypes = {
         dataType = "string",
         dataName = "LocatorImage",
         displayName = "Locator Image",
+        hideWhenNil = true,
         default = nil,
     },
     ActivatedSound = {
