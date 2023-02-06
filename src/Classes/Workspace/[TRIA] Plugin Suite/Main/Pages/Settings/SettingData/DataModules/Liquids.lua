@@ -186,7 +186,6 @@ end
 
 function Data:init()
     insertLiquids()
-    print("Initating")
 
     local liquidFolder = Util.getDirFolder("Liquids")
     if liquidFolder then
