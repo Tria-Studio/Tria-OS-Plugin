@@ -123,7 +123,6 @@ function insertButtonFolders()
 
     directories.Buttons.Items:set({})
     for _, v in ipairs(buttonTypes) do
-		print("Making", v)
         local folder = buttonFolder:FindFirstChild(v)
 		if folder then
 			setupButtonFolder(folder)
