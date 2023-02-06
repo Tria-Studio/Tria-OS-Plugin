@@ -184,7 +184,7 @@ function tagUtils:GetPartMetaData(part, name, tag)
     end
 
     function Types.ConfigAttribute()
-        return part:FindFirstChild("Customization"):GetAttribute(data.dataName)
+        return part:FindFirstChild("Customization") and part:FindFirstChild("Customization"):GetAttribute(data.dataName)
     end
 
     function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
