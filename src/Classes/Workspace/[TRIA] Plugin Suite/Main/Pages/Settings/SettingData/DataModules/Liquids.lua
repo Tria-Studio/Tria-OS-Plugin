@@ -41,7 +41,9 @@ function addLiquidToItems(liquid: Configuration)
         },
         {
             Text = "Splash Sound", 
-            Type = "Number",  
+            Type = "Dropdown",
+            DropdownArray = "Liquids",
+             
             Attribute = "SplashSound", 
             Fallback = "water", 
             Value = Value(""),

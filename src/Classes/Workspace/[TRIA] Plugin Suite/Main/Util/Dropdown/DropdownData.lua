@@ -1,6 +1,22 @@
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
 
+local DEFAULT_LIQUIDS = {
+    {
+        Name = "Water",
+        Value = "water",
+        TextColor = Color3.fromRGB(0, 143, 156)
+    }, {
+        Name = "Acid",
+        Value = "acid",
+        TextColor = Color3.fromRGB(0, 255, 0)
+    }, {
+        Name = "Lava",
+        Value = "lava",
+        TextColor = Color3.fromRGB(255, 0, 0)
+    },
+}
+
 return {
     Difficulty = function()
         local data = {}
@@ -15,21 +31,7 @@ return {
         return data, Enum.SortOrder.LayoutOrder
     end,
     LiquidType = function()
-        local data = {
-            {
-                Name = "Water",
-                Value = "water",
-                TextColor = Color3.fromRGB(0, 143, 156)
-            }, {
-                Name = "Acid",
-                Value = "acid",
-                TextColor = Color3.fromRGB(0, 255, 0)
-            }, {
-                Name = "Lava",
-                Value = "lava",
-                TextColor = Color3.fromRGB(255, 0, 0)
-            },
-        }
+        local data = table.clone(DEFAULT_LIQUIDS)
         for i, child in ipairs(Util.mapModel:get(false).Settings.Liquids:GetChildren()) do
             data[3 + i] = {
                 Name = child.Name,
@@ -38,6 +40,9 @@ return {
             }
         end
         return data, Enum.SortOrder.LayoutOrder
+    end,
+    Liquids = function()
+        return table.clone(DEFAULT_LIQUIDS), Enum.SortOrder.LayoutOrder
     end,
     Materials = function()
         local data = {}
