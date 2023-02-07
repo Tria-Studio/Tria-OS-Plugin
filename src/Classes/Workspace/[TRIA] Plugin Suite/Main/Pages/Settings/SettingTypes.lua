@@ -354,6 +354,7 @@ function SettingTypes.Dropdown(data)
                             local newData = Dropdown:GetValue(data.DropdownArray, arrowButton:get())
                             if newData then
                                 data.Value:set(string.format("%s", newData))
+                                Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                             end
                             dropdownVisible:set(false)
                         else
