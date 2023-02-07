@@ -321,44 +321,68 @@ function SettingTypes.Dropdown(data)
     local dropdownVisible = Value(false)
 
     return Hydrate(BaseSettingButton(data)) {
-        [Children] = New "TextButton" {
-            Active = Util.interfaceActive,
-            Size = UDim2.new(0.55, 0, 1, 0),
-            Position = UDim2.new(0.45, 0, 0, 0),
-            BackgroundTransparency = 1,
-
-            [Children] = Components.ImageButton {
-                AnchorPoint = Vector2.new(1, 0),
-                Position = UDim2.fromOffset(24, 1),
-                Size = UDim2.fromOffset(18, 18),
-
-                [Ref] = arrowButton,
-
-                [Children] = {
-                    Components.Constraints.UIAspectRatio(1),
-                    New "ImageLabel" {
-                        Size = UDim2.fromScale(1, 1),
-                        BackgroundTransparency = 1,
-                        Image = "rbxassetid://6031094687",
-                        Rotation = Spring(Computed(function()
-                            return dropdownVisible:get() and 0 or 180
-                        end), 20),
-                        ZIndex = 8,
-                    }
-                },
-
-                [OnEvent "Activated"] = function()
-                    if not dropdownVisible:get() then
-                        dropdownVisible:set(true)
-                        local newData = Dropdown:GetValue(data.DropdownArray, arrowButton:get())
-                        if newData then
-                            data.Value:set(string.format("%q", newData))
+        [Children] = {
+            Components.TextButton {
+                Active = Util.interfaceActive,
+                Size = UDim2.new(0.55, 0, 1, 0),
+                Position = UDim2.new(0.45, -2, 0, 0),
+                BackgroundTransparency = 1,
+    
+                [Children] = Components.ImageButton {
+                    AnchorPoint = Vector2.new(1, 0),
+                    Position = UDim2.fromOffset(24, 1),
+                    Size = UDim2.fromOffset(16, 16),
+    
+                    [Ref] = arrowButton,
+    
+                    [Children] = {
+                        Components.Constraints.UIAspectRatio(1),
+                        New "ImageLabel" {
+                            Size = UDim2.fromScale(1, 1),
+                            BackgroundTransparency = 1,
+                            Image = "rbxassetid://6031094687",
+                            Rotation = Spring(Computed(function()
+                                return dropdownVisible:get() and 0 or 180
+                            end), 20),
+                            ZIndex = 8,
+                        }
+                    },
+    
+                    [OnEvent "Activated"] = function()
+                        if not dropdownVisible:get() then
+                            dropdownVisible:set(true)
+                            local newData = Dropdown:GetValue(data.DropdownArray, arrowButton:get())
+                            if newData then
+                                data.Value:set(string.format("%s", newData))
+                            end
+                            dropdownVisible:set(false)
+                        else
+                            Dropdown:Cancel()
                         end
-                        dropdownVisible:set(false)
-                    else
-                        Dropdown:Cancel()
                     end
-                end
+                }
+            },
+
+            Components.TextButton {
+                Active = Computed(function()
+                    return isCurrentSettingModifiable(data)
+                end),
+    
+                AnchorPoint = Vector2.new(1, 0),
+                BackgroundTransparency = 1,
+                BorderSizePixel = 1,
+                FontFace = Font.new("SourceSansPro"),
+                Position = UDim2.fromScale(1, 0),
+                Size = UDim2.new(0.575, -28, 1, 0),
+                Text = data.Value,
+                TextColor3 = Computed(function()
+                    return getSettingTextColor(data)
+                end),
+                TextXAlignment = Enum.TextXAlignment.Left,
+        
+                [Children] = {
+                    Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8), nil)
+                },
             }
         }
     }

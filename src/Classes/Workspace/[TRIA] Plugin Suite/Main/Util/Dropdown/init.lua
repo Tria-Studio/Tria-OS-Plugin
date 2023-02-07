@@ -53,7 +53,7 @@ function Dropdown:GetValue(dataArray, uiParent)
         Components.ScrollingFrame {
             Parent = uiParent,
             Size = UDim2.fromOffset(120 + (UiSize > 240 and 12 or 0), math.min(UiSize, 240) + 5),
-            Position = UDim2.fromScale(0, frameOnTop and 0 or 1),
+            Position = UDim2.fromScale(0, frameOnTop and 0 or 1) + UDim2.fromOffset(0, 5),
             AnchorPoint = Vector2.new(0, frameOnTop and 1 or 0),
             BackgroundColor3 = Theme.Border.Default,
             VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
