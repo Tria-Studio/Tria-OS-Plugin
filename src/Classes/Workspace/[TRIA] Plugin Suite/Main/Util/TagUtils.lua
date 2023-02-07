@@ -233,12 +233,12 @@ end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
     local function VerifyFolder(Name: string?)
-        if not Util.mapModel:get():FindFirstChild(Name or "Geometry") then
-            Instance.new("Folder", Util.mapModel:get()).Name = Name or "Geometry"
+        if not Util.mapModel:get(false):FindFirstChild(Name or "Geometry") then
+            Instance.new("Folder", Util.mapModel:get(false)).Name = Name or "Geometry"
         end
     end
 
-    local isOptimized = Util.mapModel:get():FindFirstChild("Special")
+    local isOptimized = Util.mapModel:get(false):FindFirstChild("Special")
     local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag]
     local Methods = {}
 
@@ -250,7 +250,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
                 VerifyFolder()
             end
             part:SetAttribute("_action", nil)
-            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get().Geometry else part.Parent
+            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
         end
 
         function Methods.Name()
@@ -258,12 +258,12 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
                 VerifyFolder()
             end
             part.Name = part.ClassName
-            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get().Geometry else part.Parent
+            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
         end
 
         function Methods.DetailParent()
             VerifyFolder()
-            part.Parent = Util.mapModel:get().Geometry
+            part.Parent = Util.mapModel:get(false).Geometry
         end
 
         function Methods.Child()
@@ -275,7 +275,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
                     Child.Parent = nil
                 end
             end
-            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get().Geometry else part.Parent
+            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
         end
 
         local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
@@ -309,7 +309,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
         function Methods.DetailParent()
             VerifyFolder("Detail")
-            part.Parent = Util.mapModel:get().Detail
+            part.Parent = Util.mapModel:get(false).Detail
         end
 
         function Methods.Child()

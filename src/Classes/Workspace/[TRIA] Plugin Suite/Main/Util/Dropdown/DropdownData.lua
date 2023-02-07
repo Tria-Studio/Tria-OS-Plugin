@@ -4,12 +4,12 @@ local Util = require(Package.Util)
 return {
     Difficulty = function()
         local data = {}
-        for i, data in ipairs(Util.Difficulty) do
+        for i, tbl in ipairs(Util.Difficulty) do
             data[i] = {
-                Name = data.Name,
-                Image = data.Image,
+                Name = tbl.Name,
+                Image = tbl.Image,
                 Value = i,
-                TextColor = data.Color
+                TextColor = tbl.Color
             }
         end
         return data, Enum.SortOrder.LayoutOrder
@@ -30,7 +30,7 @@ return {
                 TextColor = Color3.fromRGB(255, 0, 0)
             },
         }
-        for i, child in pairs(Util.mapModel:get().Settings.Liquids:GetChildren()) do
+        for i, child in ipairs(Util.mapModel:get(false).Settings.Liquids:GetChildren()) do
             data[3 + i] = {
                 Name = child.Name,
                 Value = child.Name,

@@ -6,6 +6,7 @@ local Components = require(Package.Resources.Components)
 local Theme = require(Package.Resources.Themes)
 local Util = require(Package.Util)
 local ColorWheel = require(Package.Colorwheel)
+local Dropdown = require(Package.Util.Dropdown)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -15,6 +16,7 @@ local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Ref = Fusion.Ref
 local Value = Fusion.Value
+local Spring = Fusion.Spring
 
 local currentEditing = Value(nil)
 
@@ -310,6 +312,54 @@ function SettingTypes.Time(data)
                     end
                 end
             end
+        }
+    }
+end
+
+function SettingTypes.Dropdown(data)
+    local arrowButton = Value()
+    local dropdownVisible = Value(false)
+
+    return Hydrate(BaseSettingButton(data)) {
+        [Children] = New "TextButton" {
+            Active = Util.interfaceActive,
+            Size = UDim2.new(0.55, 0, 1, 0),
+            Position = UDim2.new(0.45, 0, 0, 0),
+            BackgroundTransparency = 1,
+
+            [Children] = Components.ImageButton {
+                AnchorPoint = Vector2.new(1, 0),
+                Position = UDim2.fromOffset(24, 1),
+                Size = UDim2.fromOffset(18, 18),
+
+                [Ref] = arrowButton,
+
+                [Children] = {
+                    Components.Constraints.UIAspectRatio(1),
+                    New "ImageLabel" {
+                        Size = UDim2.fromScale(1, 1),
+                        BackgroundTransparency = 1,
+                        Image = "rbxassetid://6031094687",
+                        Rotation = Spring(Computed(function()
+                            return dropdownVisible:get() and 0 or 180
+                        end), 20),
+                        ZIndex = 8,
+                    }
+                },
+
+                [OnEvent "Activated"] = function()
+                    if not dropdownVisible:get() then
+                        dropdownVisible:set(true)
+                        local newData = Dropdown:GetValue(data.DropdownArray, arrowButton:get())
+                        if newData then
+                            data.Value:set(string.format("%q", newData))
+                        end
+                        dropdownVisible:set(false)
+                    else
+                        Dropdown:Cancel()
+                    end
+                end
+            }
         }
     }
 end

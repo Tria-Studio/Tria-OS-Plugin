@@ -26,7 +26,8 @@ Data.Items = {
 
 	{
 		Text = "Difficulty",
-		Type = "Number",
+		Type = "Dropdown",
+		DropdownArray = "Difficulty",
 
 		Attribute = "Difficulty",
 		Fallback = 6,

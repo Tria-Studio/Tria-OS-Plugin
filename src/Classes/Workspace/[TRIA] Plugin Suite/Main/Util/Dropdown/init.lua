@@ -16,9 +16,7 @@ local Maid = Util.Maid.new()
 local DataChosen = Util.Signal.new()
 
 local value
-
 local Dropdown = {}
-
 
 function Dropdown:Cancel()
     value = nil
@@ -31,7 +29,6 @@ function Dropdown:GetValue(dataArray, uiParent)
     local localYPos = uiParent.AbsolutePosition.Y + uiParent.AbsoluteSize.Y / 2
     local frameOnTop = Util.Widget.AbsoluteSize.Y - localYPos < math.min(UiSize, 240)
     local textTruncated = Value(Enum.TextTruncate.None)
-
 
     Maid:GiveTask(Pages.pageChanged:Connect(function()
         if Util.dropdownActive:get() then
@@ -55,7 +52,7 @@ function Dropdown:GetValue(dataArray, uiParent)
     Maid:GiveTask(
         Components.ScrollingFrame {
             Parent = uiParent,
-            Size = UDim2.fromOffset(120 + (UiSize > 240 and 12 or 0), math.min(UiSize, 240)),
+            Size = UDim2.fromOffset(120 + (UiSize > 240 and 12 or 0), math.min(UiSize, 240) + 5),
             Position = UDim2.fromScale(0, frameOnTop and 0 or 1),
             AnchorPoint = Vector2.new(0, frameOnTop and 1 or 0),
             BackgroundColor3 = Theme.Border.Default,
@@ -101,7 +98,7 @@ function Dropdown:GetValue(dataArray, uiParent)
                             }
                         }
                     }     
-                end, Fusion.Cleanup)
+                end, Fusion.cleanup)
             }
         }
     )
