@@ -42,7 +42,9 @@ Data.Items = {
 <font color ="rgb(180,0,180)"> 4 - Insane </font>
 <font color ="rgb(255,155,0)"> 5 - Extreme </font>
 <font color ="rgb(255,0,255)"> 6 - Divine </font>
-            ]],
+
+Unknown difficulties cannot be published and are not officially supported.
+]],
 		},
 	},
 
@@ -55,7 +57,7 @@ Data.Items = {
 
 		Value = Value(""),
 		Tooltip = {
-			Text = "The image that will display in the map list + lobby",
+			Text = "The image of your map that displays in the lift + in the maplist.\nFor minimal compression, thumbnails should be 16:9.",
 		},
 	},
 

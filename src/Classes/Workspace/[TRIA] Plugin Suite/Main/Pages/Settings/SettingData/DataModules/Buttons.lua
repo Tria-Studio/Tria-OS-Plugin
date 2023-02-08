@@ -33,7 +33,7 @@ function setupButtonFolder(folder: Instance)
 	
 			Value = Value(Color3.new()),
 			Tooltip = {
-				Text = "The color of activated/pressed buttons",
+				Text = "The color of buttons that have already been pressed.\nSettings set per individual button overwrites these settings.",
 			},
 		},
 	
@@ -47,7 +47,7 @@ function setupButtonFolder(folder: Instance)
 	
 			Value = Value("default"),
 			Tooltip = {
-				Text = "The sound buttons make when they are activated",
+				Text = "The sound buttons make when they are activated.\nUse 'default' for default sound or your own assetID..\nSettings set per individual button overwrites these settings.",
 			},
 		},
 	
@@ -61,7 +61,7 @@ function setupButtonFolder(folder: Instance)
 	
 			Value = Value(Color3.new()),
 			Tooltip = {
-				Text = "The color of active buttons",
+				Text = "The color of the currently active button.\nSettings set per individual button overwrites these settings.",
 			},
 		},
 	
@@ -75,7 +75,7 @@ function setupButtonFolder(folder: Instance)
 	
 			Value = Value(Color3.new()),
 			Tooltip = {
-				Text = "The color of inactive buttons",
+				Text = "The color of buttons that are yet to be pressed, but not active.\nSettings set per individual button overwrites these settings.",
 			},
 		},
 	
@@ -90,7 +90,7 @@ function setupButtonFolder(folder: Instance)
 	
 			Value = Value("default"),
 			Tooltip = {
-				Text = "The image ID used for the button locators",
+				Text = "The image ID used for the button locators.\n Use one of the 4 presets or your own assetID",
 			},
 		},
 	}

@@ -249,6 +249,11 @@ data.dataTypes = {
             ApplyMethod = "Child",
             IsTagApplicable = true,
             OnlyBaseParts = false,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Hide = {
             _nameStub = "_Hide",
@@ -267,6 +272,11 @@ data.dataTypes = {
             ApplyMethod = "Child",
             IsTagApplicable = true,
             OnlyBaseParts = false,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Fall = {
             _nameStub = "_Fall",
@@ -285,6 +295,11 @@ data.dataTypes = {
             ApplyMethod = "Child",
             IsTagApplicable = true,
             OnlyBaseParts = false,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Destroy = {
             _nameStub = "_Destroy",
@@ -303,6 +318,11 @@ data.dataTypes = {
             ApplyMethod = "Child",
             IsTagApplicable = true,
             OnlyBaseParts = false,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Sound = {
             _nameStub = "_Sound",
@@ -328,6 +348,11 @@ data.dataTypes = {
             ApplyMethod = "Child",
             IsTagApplicable = true,
             OnlyBaseParts = false,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Explode = {
             _nameStub = "_Explode",
@@ -348,6 +373,11 @@ data.dataTypes = {
             ApplyMethod = "Child",
             IsTagApplicable = true,
             OnlyBaseParts = false,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
     },
     objectTags = {
@@ -373,6 +403,11 @@ data.dataTypes = {
             },
             IsTagApplicable = true,
             OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _WallJump = {
             DisplayText = "WallJump",
@@ -386,6 +421,11 @@ data.dataTypes = {
             },
             IsTagApplicable = true,
             OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Liquid = {
             _nameStub = "_Liquid",
@@ -412,6 +452,11 @@ data.dataTypes = {
             ApplyMethod = "Name",
             IsTagApplicable = true,
             OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Gas = {
             _nameStub = "_Gas",
@@ -433,6 +478,11 @@ data.dataTypes = {
             ApplyMethod = "Name",
             IsTagApplicable = true,
             OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Button = {
             _nameStub = "_Button",
@@ -478,6 +528,11 @@ data.dataTypes = {
             ApplyMethod = nil,
             IsTagApplicable = false,
             OnlyBaseParts = nil,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         Detail = {
             DisplayText = "Low Detail",
@@ -488,6 +543,11 @@ data.dataTypes = {
             ApplyMethod = "DetailParent",
             IsTagApplicable = true,
             OnlyBaseParts = false,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         Zipline = {
             DisplayText = "Zipline",
@@ -528,6 +588,11 @@ data.dataTypes = {
             ApplyMethod = nil,
             IsTagApplicable = false,
             OnlyBaseParts = nil,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _Kill = {
             DisplayText = "Killbrick",
@@ -538,6 +603,11 @@ data.dataTypes = {
             ApplyMethod = "_Action",
             IsTagApplicable = true,
             OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         AirTank = {
             DisplayText = "AirTank",
@@ -554,6 +624,11 @@ data.dataTypes = {
             ApplyMethod = nil,
             IsTagApplicable = false,
             OnlyBaseParts = nil,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _SpeedBooster = {
             DisplayText = "SpeedBooster",
@@ -570,6 +645,11 @@ data.dataTypes = {
             ApplyMethod = "_Action",
             IsTagApplicable = true,
             OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
         _JumpBooster = {
             DisplayText = "JumpBooster",
@@ -586,6 +666,11 @@ data.dataTypes = {
             ApplyMethod = "_Action",
             IsTagApplicable = true,
             OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "i want to die writing all of these",
+                Text = "i want to die writing all of these"
+            },
         },
     }
 }

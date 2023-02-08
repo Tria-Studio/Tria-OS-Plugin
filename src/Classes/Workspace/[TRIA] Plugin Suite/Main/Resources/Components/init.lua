@@ -328,6 +328,7 @@ function Components.Dropdown(data, childrenProcessor)
                     }
                 else
                     return Hydrate(Components.TextButton(props)) {
+                        TextColor3 = data.IsSecondary and Theme.SubText.Default,
                         AutoButtonColor = Util.interfaceActive,
                         [OnEvent "Activated"] = function()
                             dropdownVisible:set(not dropdownVisible:get(false))
@@ -398,14 +399,9 @@ function Components.TooltipImage(data)
     end)
     return New "ImageButton" {
         Active = isActive,
-        AutoButtonColor = isActive,
 
         AnchorPoint = Vector2.new(1, 0.5),
-        BackgroundColor3 = Theme.CurrentMarker.Default,
-        BackgroundTransparency = 0,
-        BorderColor3 = Theme.Border.Default,
-        BorderMode = Enum.BorderMode.Inset,
-        BorderSizePixel = 1,
+        BackgroundTransparency = 1,
         Name = "Tooltip",
         Position = data.Position,
         Size = UDim2.fromOffset(18, 18),
