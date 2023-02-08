@@ -81,7 +81,8 @@ function setupButtonFolder(folder: Instance)
 	
 		{
 			Text = "Locator Image",
-			Type = "String",
+			Type = "Dropdown",
+			DropdownArray = "Locators",
 	
 			Directory = "",
 			Attribute = "LocatorImage",

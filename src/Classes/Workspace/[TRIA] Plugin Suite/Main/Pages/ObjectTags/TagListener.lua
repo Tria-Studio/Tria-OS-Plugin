@@ -275,6 +275,7 @@ return function(name, data)
                                                             New "ImageLabel" {
                                                                 Size = UDim2.fromScale(1, 1),
                                                                 BackgroundTransparency = 1,
+                                                                ImageColor3 = Theme.MainText.Default,
                                                                 Image = "rbxassetid://6031094687",
                                                                 Rotation = Spring(Computed(function()
                                                                     return dropdownVisible:get() and 0 or 180

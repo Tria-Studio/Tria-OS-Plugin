@@ -20,7 +20,8 @@ local DEFAULT_LIQUIDS = {
 return {
     Difficulty = function()
         local data = {}
-        for i, tbl in ipairs(Util.Difficulty) do
+        for i = 1, 7 do
+            local tbl = Util.Difficulty[i - 1]
             data[i] = {
                 Name = tbl.Name,
                 Image = tbl.Image,
@@ -56,5 +57,26 @@ return {
             })
         end
         return data, Enum.SortOrder.Name
+    end,
+    Locators = function()
+        return {
+            {
+                Name = "Default",
+                Value = "default",
+                Image = "rbxassetid://6274811030",
+            }, {
+                Name = "Classic",
+                Value = "classic",
+                Image = "rbxassetid://6275599542",
+            }, {
+                Name = "Circle",
+                Value = "circle",
+                Image = "rbxassetid://6275600040",
+            }, {
+                Name = "Square",
+                Value = "square",
+                Image = "rbxassetid://6275600378",
+            },
+        }
     end
 }

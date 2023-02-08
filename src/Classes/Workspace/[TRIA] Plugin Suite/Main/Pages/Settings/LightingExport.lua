@@ -1,3 +1,4 @@
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Lighting = game:GetService("Lighting")
 
 local Package = script.Parent.Parent.Parent
@@ -33,6 +34,7 @@ function ExportButton(props)
 end
 
 function exportLighting()
+	ChangeHistoryService:SetWaypoint("Exporting lighting from map to Lighting")
     for _, item in ipairs(directories.Lighting.Items:get(false)) do
         local settingToChange = if item.ExportAttribute then item.ExportAttribute else item.Attribute
         local settingValue = item.Value:get(false)
@@ -45,9 +47,11 @@ function exportLighting()
             Util.debugWarn(("Failed to set lighting setting '%s'"):format(tostring(settingToChange)))
         end
     end
+	ChangeHistoryService:SetWaypoint("Exported lighting from map to Lighting")
 end
 
 function importLighting()
+	ChangeHistoryService:SetWaypoint("Importing lighting from Lighting to map")
     for _, item in ipairs(directories.Lighting.Items:get(false)) do
         local settingToRetrieve = if item.ExportAttribute then item.ExportAttribute else item.Attribute
 
@@ -62,6 +66,8 @@ function importLighting()
 			Util.updateMapSetting(item.Directory, item.Attribute, item.Value:get(false))
         end
     end
+	
+	ChangeHistoryService:SetWaypoint("Imported lighting from Lighting to map")
 end
 
 local frame = {}

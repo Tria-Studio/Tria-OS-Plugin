@@ -1,3 +1,4 @@
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local HttpService = game:GetService("HttpService")
 local Package = script.Parent.Parent.Parent.Parent.Parent
 
@@ -89,6 +90,7 @@ function insertLiquids()
 end
 
 function addLiquid()
+    ChangeHistoryService:SetWaypoint("Creating custom liqud")
     local liquidFolder = Util.getDirFolder("Liquids")
     if not liquidFolder then
         return
@@ -100,11 +102,12 @@ function addLiquid()
     newLiquid:SetAttribute("OxygenDepletion", 1)
     newLiquid:SetAttribute("SplashSound", "water")
     newLiquid.Parent = liquidFolder
+    ChangeHistoryService:SetWaypoint("Created custom liqud")
 end
 
 function removeLiquid(id: string)
     if idToConfig[id] then
-        idToConfig[id]:Destroy()
+        idToConfig[id].Parent = nil
     end
 end
 

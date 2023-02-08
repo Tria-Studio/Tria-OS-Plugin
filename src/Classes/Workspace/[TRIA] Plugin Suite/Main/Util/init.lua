@@ -1,3 +1,4 @@
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
 local Fusion = require(script.Parent.Resources.Fusion)
@@ -144,7 +145,9 @@ function Util.updateMapSetting(directory: string, attribute: string, value: any)
     if value == nil then
         return
     end
+    ChangeHistoryService:SetWaypoint("Changing setting '%s' to '%s'", attribute, value)
     dirFolder:SetAttribute(attribute, value)
+    ChangeHistoryService:SetWaypoint("Set setting '%s' to '%s'", attribute, value)
 end
 
 function Util.debugWarn(...)

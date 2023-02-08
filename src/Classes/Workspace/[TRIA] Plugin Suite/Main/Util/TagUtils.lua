@@ -357,7 +357,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     function Types.ModelTags()
         local secondary = tagTypes.ModelTags._convert[tag]
         local model = if part:IsA("Model") then part
-            elseif part.Parent:IsA("Model") then part.Parent
+            elseif part.Parent and part.Parent:IsA("Model") then part.Parent
             else nil
 
         if model and (string.find(model.Name, tag, 1) or secondary and string.find(model.Name, secondary, 1)) then

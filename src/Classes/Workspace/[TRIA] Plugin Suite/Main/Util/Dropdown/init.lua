@@ -95,7 +95,7 @@ function Dropdown:GetValue(dataArray, uiParent)
                                 Size = UDim2.fromOffset(20, 20),
                                 BackgroundTransparency = 1,
                                 Image = data.Image or "",
-                                ImageColor3 = Theme.BrightText.Default,
+                                ImageColor3 = Theme.MainText.Default,
                             }
                         }
                     }     
