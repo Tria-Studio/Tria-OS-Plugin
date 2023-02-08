@@ -144,8 +144,8 @@ function Data:getDropdown(visible)
                     Default = true, 
 					IsSecondary = true,
                     Display = itemName, 
-                    LayoutOrder = data.Name == "Button" and 1 or data.Name == "Group" and 2 or 3,
-					HeaderEditable = true,
+                    LayoutOrder = data.Name == "Default" and 1 or data.Name == "Group" and 2 or 3,
+					HeaderEditable = data.Name ~= "Default" and data.Name ~= "Group",
                     OnHeaderChange = function(newHeader)
 						if not table.find(buttonTypes, newHeader) then
 							return
