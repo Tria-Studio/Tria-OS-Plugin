@@ -106,6 +106,7 @@ function frame:GetFrame(data)
 
                         local dirDropdown = SettingsUtil.DirectoryDropdown(dirData, function(visible)
                             dirData.Visible = visible
+
                             if dataModule then
                                 if not dataModule.Dynamic then
                                     return getStandardDropdown(dirKey, dataModule, visible)

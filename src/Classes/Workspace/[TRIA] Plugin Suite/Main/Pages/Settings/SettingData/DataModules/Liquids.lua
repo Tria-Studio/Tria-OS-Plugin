@@ -113,6 +113,7 @@ function Data:getHeaderChildren()
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
+        Name = "_HeaderButton",
         Position = UDim2.fromScale(0.9, 0.5),
         Image = "rbxassetid://6035047391",
         HoverImage = "rbxassetid://6035047380",
@@ -141,6 +142,7 @@ function Data:getDropdown(visible)
                 local liquidDropdown = SettingsUtil.DirectoryDropdown({
                     Default = true, 
                     Display = itemName, 
+                    IsSecondary = true,
                     LayoutOrder = index,
                     HeaderChildren = Components.ImageButton {
                         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -158,6 +160,7 @@ function Data:getDropdown(visible)
                     },
 
                     HeaderEditable = true,
+                    HasButton = true,
                     OnHeaderChange = function(newHeader)
                         liquid.Name = newHeader
                     end

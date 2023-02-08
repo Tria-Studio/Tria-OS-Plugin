@@ -142,8 +142,9 @@ function Data:getDropdown(visible)
 
                 local liquidDropdown = SettingsUtil.DirectoryDropdown({
                     Default = true, 
+					IsSecondary = true,
                     Display = itemName, 
-                    LayoutOrder = index,
+                    LayoutOrder = data.Name == "Button" and 1 or data.Name == "Group" and 2 or 3,
 					HeaderEditable = true,
                     OnHeaderChange = function(newHeader)
 						if not table.find(buttonTypes, newHeader) then

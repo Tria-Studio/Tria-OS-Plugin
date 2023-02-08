@@ -12,6 +12,7 @@ local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Hydrate = Fusion.Hydrate
 local Spring = Fusion.Spring
+local Ref = Fusion.Ref
 
 local Components = {
     Constraints = require(script.Constraints),
@@ -263,7 +264,8 @@ end
 
 function Components.Dropdown(data, childrenProcessor)
     local dropdownVisible = Value(data.DefaultState)
-    local headerColor = Value(Theme.Button.Default)
+    local headerColor = Value(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
+    local frame = Value()
 
     local dropdown = New "Frame" {
         Size = UDim2.fromScale(1, 0),
@@ -277,16 +279,27 @@ function Components.Dropdown(data, childrenProcessor)
         AutomaticSize = Enum.AutomaticSize.Y,
         LayoutOrder = data.LayoutOrder,
 
+        [Ref] = frame,
         [OnEvent "MouseEnter"] = function()
-            if Util.interfaceActive:get(false) then
-                headerColor:set(Theme.Button.Hover)
+            if Util.interfaceActive:get(false) and not Util.dropdownActive:get() then
+                headerColor:set(data.IsHeader and Theme.CurrentMarker.Default or Theme.Button.Hover)
             end
         end,
         [OnEvent "MouseLeave"] = function()
-            headerColor:set(Theme.Button.Default)
+            headerColor:set(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
         end,
         
         [Children] = {
+            New "ImageLabel" {
+                Image = "rbxassetid://6034328955",
+                AnchorPoint = Vector2.new(1, 0),
+                BackgroundTransparency = 1,
+                Visible = data.HeaderEditable or false,
+                Position = UDim2.new(1, data.HasButton and -36 or -16, 0, 2),
+                ImageColor3 = Theme.SubText.Default,
+                Size = UDim2.fromOffset(18, 18),
+                ZIndex = 2,
+            },
             Computed(function()
                 local props = {
                     Active = Util.interfaceActive,

@@ -43,7 +43,10 @@ function BaseSettingButton(data)
     return New "Frame" {
         [Ref] = settingFrame,
 
-        BackgroundColor3 = backgroundColor,
+        BackgroundColor3 = Computed(function()
+            local baseColor = backgroundColor:get()
+            return Util.dropdownActive:get() and settingFrame:get().BackgroundColor3 or baseColor
+        end),
         BackgroundTransparency = 0,
         BorderColor3 = Theme.Border.Default,
         BorderMode = Enum.BorderMode.Outline,

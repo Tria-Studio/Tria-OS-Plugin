@@ -14,28 +14,33 @@ local SettingsUtil = {
         Main = {
             Default = true,
             Display = "Main",
+            IsHeader = true,
             LayoutOrder = 1,
             Items = Value({}),
         },
         Buttons = {
             Default = true,
+            IsHeader = true,
             Display = "Buttons",
             LayoutOrder = 2,
             Items = Value({})
         },
         Lighting = {
             Default = true,
+            IsHeader = true,
             Display = "Lighting",
             LayoutOrder = 3,
             Items = Value({})
         },
         Skills = {
             Default = true,
+            IsHeader = true,
             Display = "Skills and Features",
             LayoutOrder = 5,
             Items = Value({})
         },
         Liquids = {
+            IsHeader = true,
             Default = true,
             Display = "Liquids and Gas",
             LayoutOrder = 6,
@@ -105,6 +110,9 @@ function SettingsUtil.DirectoryDropdown(data, childProcessor)
     return Components.Dropdown({
         DefaultState = data.Default, 
         Header = data.Display, 
+        HasButton = data.HasButton,
+        IsHeader = data.IsHeader,
+        IsSecondary = data.IsSecondary,
         LayoutOrder = data.LayoutOrder,
         HeaderColor = data.HeaderColor,
         HeaderChildren = data.HeaderChildren,

@@ -90,6 +90,7 @@ function Dropdown:GetValue(dataArray, uiParent)
                         [Children] = {
                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 2), UDim.new(0, 22)),
                             New "ImageLabel" {
+                                ZIndex = 8,
                                 Position = UDim2.new(1, 2, 0, 0),
                                 Size = UDim2.fromOffset(20, 20),
                                 BackgroundTransparency = 1,
