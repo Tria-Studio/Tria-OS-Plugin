@@ -123,9 +123,7 @@ The EffectScript can communicate with the server using RemoteEvents and gets clo
 
                     Components.BasicHeaderText({Text = "Script Autocomplete Settings", LayoutOrder = 5, Tooltip = [[Here you can customise how the script autocompleter works.
 
-You can allow certain phrases to be suggested/removed, and can disable/enable the autocompleter fully.
-
-You may also choose whether to only run the autocompleter inside the MapScript.
+You can choose whether to only run the autocompleter inside the MapScript, or to disable/enable the autocompleter fully.
                     ]]}),
 
                     New "Frame" {
