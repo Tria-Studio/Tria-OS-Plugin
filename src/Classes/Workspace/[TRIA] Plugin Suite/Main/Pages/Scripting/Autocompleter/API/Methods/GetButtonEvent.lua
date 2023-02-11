@@ -16,7 +16,6 @@ return {
 		["Connect"] = {
 			autocompleteArgs = {"function()\n\nend"},
 			name = "Connect",
-			branchType = "method",
 			branches = nil,
 			
 			documentation = {
@@ -31,7 +30,6 @@ return {
 		["Wait"] = {
 			autocompleteArgs = {""},
 			name = "Wait",
-			branchType = "method",
 			branches = nil,
 			
 			documentation = {
