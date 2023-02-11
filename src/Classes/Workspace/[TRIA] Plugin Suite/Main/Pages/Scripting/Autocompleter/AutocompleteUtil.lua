@@ -11,27 +11,21 @@ function Util.buildReplacement(position, newText: string, beforeCursor: number, 
 	}
 end
 
-function Util.backTraceComments(document: ScriptDocument, line: number, char: number): boolean
+local function matchPatternOnMultiLine(document: ScriptDocument, line: number, char: number, patterns)
 	local startLine = document:GetLine(line)
 	local lineCount = document:GetLineCount()
 
-	local SINGLE_LINE = "%-%-"
-	local COMMENT_START = "%-%-%[%["
-	local COMMENT_END = "%]%]"
+	if startLine:find(patterns.Start) then
+		local endPos = startLine:find(patterns.End)
 
-	if startLine:find(COMMENT_START) then
-		local commentEnd = startLine:find(COMMENT_END)
-
-		if not commentEnd or commentEnd >= char then
+		if not endPos or endPos >= char then
 			return true
 		end
-	elseif startLine:match(SINGLE_LINE) then
-		return true
 	end
 
-	local exceptionCase = startLine:find(COMMENT_END)
-	if exceptionCase and char >= exceptionCase then
-		return false
+	local exceptionCase = startLine:find(patterns.End)
+	if exceptionCase then
+		return char >= exceptionCase
 	end
 
 	local blockStart = nil
@@ -42,10 +36,10 @@ function Util.backTraceComments(document: ScriptDocument, line: number, char: nu
 
 	for count = line, 1, -1 do
 		local currentLine = document:GetLine(count)
-		blockStart = currentLine:find(COMMENT_START)
+		blockStart = currentLine:find(patterns.Start)
 
 		if blockStart then
-			local sameLineBlockEnd = currentLine:find(COMMENT_END)
+			local sameLineBlockEnd = currentLine:find(patterns.End)
 			if sameLineBlockEnd then
 				return false
 			end
@@ -53,7 +47,7 @@ function Util.backTraceComments(document: ScriptDocument, line: number, char: nu
 
 			for nextLineNum = count + 1, lineCount do
 				local nextLine = document:GetLine(nextLineNum)
-				blockEnd = nextLine:find(COMMENT_END)
+				blockEnd = nextLine:find(patterns.End)
 
 				if blockEnd then
 					blockEndLine = nextLineNum
@@ -76,65 +70,19 @@ function Util.backTraceComments(document: ScriptDocument, line: number, char: nu
 	return false
 end
 
-function Util.backTraceMultiString(document: ScriptDocument, line: number, char: number): boolean
+function Util.backTraceComments(document: ScriptDocument, line: number, char: number): boolean
 	local startLine = document:GetLine(line)
-	local lineCount = document:GetLineCount()
 
-	local STRING_START = "%[%["
-	local STRING_END = "%]%]"
-
-	if startLine:find(STRING_START) then
-		local endPos = startLine:find(STRING_END)
-		if not endPos or endPos > char then
-			return true
-		end
-	end
-
-	local exceptionCase = startLine:find(STRING_END)
-	if exceptionCase then
-		return char >= exceptionCase
-	end
-
-	local blockStart = nil
-	local blockStartLine = nil
-
-	local blockEnd = nil
-	local blockEndLine = nil
-
-	for count = line, 1, -1 do
-		local currentLine = document:GetLine(count)
-		blockStart = currentLine:find(STRING_START)
-
-		if blockStart then
-			local sameLineBlockEnd = currentLine:find(STRING_END)
-			if sameLineBlockEnd then
-				return false
-			end
-			blockStartLine = count
-
-			for nextLineNum = count + 1, lineCount do
-				local nextLine = document:GetLine(nextLineNum)
-				blockEnd = nextLine:find(STRING_END)
-
-				if blockEnd then
-					blockEndLine = nextLineNum
-					break
-				end
-			end
-
-			break
-		end
-	end
-
-	if not blockStart or not blockEnd then
-		return false
-	end
-
-	if line > blockStartLine and line <= blockEndLine then
+	local SINGLE_LINE = "%-%-"
+	if startLine:match(SINGLE_LINE) then
 		return true
 	end
 
-	return false
+	return matchPatternOnMultiLine(document, line, char, {Start = "%-%-%[%[", End = "%]%]"})
+end
+
+function Util.backTraceMultiString(document: ScriptDocument, line: number, char: number): boolean
+	return matchPatternOnMultiLine(document, line, char, {Start = "%[%[", End = "%]%]"})
 end
 
 function Util.getBranchesFromTokenList(tokens: {Lexer.Token}): {string}	
