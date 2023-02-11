@@ -39,7 +39,6 @@ function Suggester:registerCallback()
 		local line = currentDocument:GetLine(request.position.line)
 		local beforeCursor = line:sub(1, request.position.character)
 		local afterCursor = line:sub(request.position.character)
-		--line = line:gsub("%s", "")
 		line = line:sub(1, -#afterCursor - 1)
 		
 		local tokens = AutocompleteUtil.lexerScanToTokens(line)
@@ -95,6 +94,10 @@ function Suggester:registerCallback()
 					end
 				end
 			end
+		end
+
+		if AutocompleteUtil.tokenMatches(tokens[1], "space") then
+			table.remove(tokens, 1)
 		end
 
 		-- CASE 1: Function end

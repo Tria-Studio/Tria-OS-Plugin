@@ -102,6 +102,9 @@ function Util.getBranchesFromTokenList(tokens: {Lexer.Token}): {string}
 end
 
 function Util.tokenMatches(token: Lexer.Token, name: string, value: any)
+	if value == nil then
+		return token.name == name
+	end
 	return token.name == name and token.value == value
 end
 
