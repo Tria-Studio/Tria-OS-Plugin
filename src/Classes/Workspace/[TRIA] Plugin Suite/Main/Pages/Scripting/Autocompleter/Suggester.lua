@@ -130,6 +130,12 @@ function Suggester:registerCallback()
 						tempLineData.line = currentDocument:GetLine(lineNumber)
 						tempLineData.tokens = AutocompleteUtil.lexerScanToTokens(tempLineData.line)
 	
+						if #tempLineData.tokens > 0 then
+							if AutocompleteUtil.tokenMatches(tempLineData.tokens[1], "space") then
+								table.remove(tempLineData.tokens, 1)
+							end
+						end
+
 						local tempStr = ""
 						for count = #tempLineData.tokens, 1, -1 do
 							local currentToken = tempLineData.tokens[count]
@@ -179,8 +185,11 @@ function Suggester:registerCallback()
 				
 				if not tempLineData.failed then
 					AutocompleteUtil.flipArray(allBranches)
-					local _, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(lineTokens)
-					suggestResponses(allBranches, treeEntryIndex, lineTokens)
+
+					if #allBranches > 0 then
+						local _, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(lineTokens)
+						suggestResponses(allBranches, treeEntryIndex, lineTokens)
+					end
 				end
 			end
 		elseif line:match("=%s*(%w+)%.") then 
