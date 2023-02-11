@@ -66,7 +66,11 @@ function Suggester:registerCallback()
 				
 				textEdit = AutocompleteUtil.buildReplacement(
 					request.position, 
-					(responseData.text .. (treeIndex == "Methods" and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" or "")),
+					(
+						responseData.text 
+						.. (treeIndex == "Methods" and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" or "")
+						.. afterCursor
+					),
 					responseData.beforeCursor,
 					responseData.afterCursor,
 					responseData.alreadyTyped

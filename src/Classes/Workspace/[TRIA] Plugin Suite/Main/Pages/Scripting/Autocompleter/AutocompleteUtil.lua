@@ -6,7 +6,7 @@ function Util.buildReplacement(position, newText: string, beforeCursor: number, 
 		newText = newText,
 		replace = {
 			["start"] = {line = position.line, character = position.character - alreadyTyped},
-			["end"] = {line = position.line, character = position.character + #newText + afterCursor},
+			["end"] = {line = position.line, character = position.character + #newText},
 		}
 	}
 end
