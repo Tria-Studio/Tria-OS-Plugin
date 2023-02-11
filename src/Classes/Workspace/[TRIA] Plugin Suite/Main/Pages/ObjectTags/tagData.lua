@@ -251,8 +251,12 @@ data.dataTypes = {
             OnlyBaseParts = false,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Show#",
+                Text = [[Selected Part(s) will appear when the following button is pressed.
+
+Metadata:
+    <b>Button#: </b>Defines what button the tag will activate
+    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Hide = {
@@ -274,8 +278,12 @@ data.dataTypes = {
             OnlyBaseParts = false,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Hide#",
+                Text = [[Selected Part(s) will be hidden, NOT destroyed when the button is activated. Use this if you want a part to hide then reappear.
+
+Metadata:
+    <b>Button#: </b>Defines what button the tag will activate
+    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Fall = {
@@ -297,8 +305,12 @@ data.dataTypes = {
             OnlyBaseParts = false,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Fall#",
+                Text = [[Selected Part(s) will become cancollide false and get deleted after a few seconds when the following button is pressed.
+
+Metadata:
+    <b>Button#: </b>Defines what button the tag will activate
+    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Destroy = {
@@ -320,8 +332,12 @@ data.dataTypes = {
             OnlyBaseParts = false,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Destroy#",
+                Text = [[Selected Part(s) will be <u>destroyed</u> when the following button is pressed.
+
+Metadata:
+    <b>Button#: </b>Defines what button the tag will activate
+    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Sound = {
@@ -350,8 +366,13 @@ data.dataTypes = {
             OnlyBaseParts = false,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Sound#",
+                Text = [[Selected Part(s) will play a sound with the given AssetID when the following button is pressed.
+
+Metadata:
+    <b>Button#: </b>Defines what button the tag will activate
+    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect
+    <b>SoundID#: </b>Asset ID of the desired sound. To edit the sound further, use the Properties widget.]]
             },
         },
         _Explode = {
@@ -375,8 +396,12 @@ data.dataTypes = {
             OnlyBaseParts = false,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Explode#",
+                Text = [[Selected Part(s) will explode when the following button is pressed.
+
+                Metadata:
+                    <b>Button#: </b>Defines what button the tag will activate
+                    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
     },
@@ -405,8 +430,12 @@ data.dataTypes = {
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "Wallrun",
+                Text = [[Wallruns allow players to latch onto the sides of parts and slide along them in the direction of the face and allow the player to jump off at any time.
+
+Metadata:
+    <b>Speed: </b>Speed in studs per second that the player will move on the wallrun. <20 is slower than your walkspeed.
+    <b>Momentum: </b>a scalar value that determines how much speed the player will carry off of the wallrun into the air.]]
             },
         },
         _WallJump = {
@@ -423,8 +452,8 @@ data.dataTypes = {
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "Walljump",
+                Text = "Walljumps allow players to latch onto any side of a part, and jump off of it. After a few seconds, you will fall off of the walljump."
             },
         },
         _Liquid = {
@@ -454,8 +483,18 @@ data.dataTypes = {
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "Liquids",
+                Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the apearance and oxygen depletion rate of the player.strictReadError
+                
+    <font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
+    <font color = "rgb(0, 143, 156)"><b>Acid: </b></font> -30 oxygen/sec
+    <font color = "rgb(0, 143, 156)"><b>Lava: </b></font> Instant death
+
+You can specify the oxygen depletion, default color, and splash sound with custom liquids.
+
+Metadata:
+    <b>Liquid#: </b>.
+    <b>Momentum: </b>]]
             },
         },
         _Gas = {
