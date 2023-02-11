@@ -16,7 +16,7 @@ function frame:GetFrame(data)
         Name = "Compatibility",
 
         [Children] = {
-            Components.PageHeader("Compatibility & MapScript")
+            Components.PageHeader("Scripting")
         }
     }
 end

@@ -309,10 +309,10 @@ function Components.Dropdown(data, childrenProcessor)
 
                         New "ImageLabel" {
                             Image = "rbxassetid://6034328955",
-                            AnchorPoint = Vector2.new(1, 0),
+                            AnchorPoint = Vector2.new(1, 0.5),
                             BackgroundTransparency = 1,
                             Visible = data.HeaderEditable or false,
-                            Position = UDim2.new(1, -48, 0, 2),
+                            Position = UDim2.fromScale(0.85, 0.5),
                             ImageColor3 = Theme.SubText.Default,
                             Size = UDim2.fromOffset(18, 18),
                             ZIndex = 2,
