@@ -2,6 +2,7 @@ local Package = script.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
+local Autocompleter = require(script.Autocompleter)
 
 local New = Fusion.New
 local Children = Fusion.Children
