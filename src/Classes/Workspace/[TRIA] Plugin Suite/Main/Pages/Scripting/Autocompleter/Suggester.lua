@@ -7,6 +7,9 @@ local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
 local Lexer = require(script.Parent.Lexer)
 local GlobalSettings = require(script.Parent.GlobalSettings)
 
+local PROPERTY_INDEX = "=%s*(%w+)%."
+local FUNCTION_CALL = "%(%s*(%w+)%."
+
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback("__MapLibCompletion", 0, function(request, response)
 		local currentScript = request.textDocument.script
@@ -201,10 +204,22 @@ function Suggester:registerCallback()
 					end
 				end
 			end
-		elseif line:match("=%s*(%w+)%.") then 
+		elseif line:match(PROPERTY_INDEX) then 
 			-- Match Case 2: Property index
 			do
-				local variableName = line:match("=%s*(%w+)%.")
+				local variableName = line:match(PROPERTY_INDEX)
+				if table.find(prefixes, variableName) then
+					local allVariables = {}
+					for k in pairs(AutocompleteData.Properties.branches) do
+						table.insert(allVariables, k)
+					end
+					suggestResponses({}, "Properties", tokens)
+				end
+			end
+		elseif line:match(FUNCTION_CALL) then 
+			-- Match Case 3: Function call
+			do
+				local variableName = line:match(FUNCTION_CALL)
 				if table.find(prefixes, variableName) then
 					local allVariables = {}
 					for k in pairs(AutocompleteData.Properties.branches) do
@@ -214,7 +229,7 @@ function Suggester:registerCallback()
 				end
 			end
 		else 
-			-- Match Case 3: Normal line
+			-- Match Case 4: Normal line
 			if table.find(prefixes, tokens[1].value) then
 				local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
 				suggestResponses(branches, treeEntryIndex, tokens)
