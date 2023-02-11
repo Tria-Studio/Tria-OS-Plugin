@@ -29,13 +29,18 @@ function Suggester:registerCallback()
 		if AutocompleteUtil.backTraceComments(currentDocument, request.position.line, request.position.character) then
 			return response
 		end
+
+		-- Return Case 4: Inside a multiline string
+		if AutocompleteUtil.backTraceMultiString(currentDocument, request.position.line, request.position.character) then
+			return response
+		end
 		
 		local prefixes = {}
 		for prefix in currentScript.Source:gmatch("local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)") do
 			table.insert(prefixes, prefix)
 		end
 		
-		-- Return Case 4: No prefix
+		-- Return Case 5: No prefix
 		if #prefixes < 1 then
 			return response
 		end

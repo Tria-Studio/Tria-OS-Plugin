@@ -76,6 +76,67 @@ function Util.backTraceComments(document: ScriptDocument, line: number, char: nu
 	return false
 end
 
+function Util.backTraceMultiString(document: ScriptDocument, line: number, char: number): boolean
+	local startLine = document:GetLine(line)
+	local lineCount = document:GetLineCount()
+
+	local STRING_START = "%[%["
+	local STRING_END = "%]%]"
+
+	if startLine:find(STRING_START) then
+		local endPos = startLine:find(STRING_END)
+		if not endPos or endPos > char then
+			return true
+		end
+	end
+
+	local exceptionCase = startLine:find(STRING_END)
+	if exceptionCase then
+		return char >= exceptionCase
+	end
+
+	local blockStart = nil
+	local blockStartLine = nil
+
+	local blockEnd = nil
+	local blockEndLine = nil
+
+	for count = line, 1, -1 do
+		local currentLine = document:GetLine(count)
+		blockStart = currentLine:find(STRING_START)
+
+		if blockStart then
+			local sameLineBlockEnd = currentLine:find(STRING_END)
+			if sameLineBlockEnd then
+				return false
+			end
+			blockStartLine = count
+
+			for nextLineNum = count + 1, lineCount do
+				local nextLine = document:GetLine(nextLineNum)
+				blockEnd = nextLine:find(STRING_END)
+
+				if blockEnd then
+					blockEndLine = nextLineNum
+					break
+				end
+			end
+
+			break
+		end
+	end
+
+	if not blockStart or not blockEnd then
+		return false
+	end
+
+	if line > blockStartLine and line <= blockEndLine then
+		return true
+	end
+
+	return false
+end
+
 function Util.getBranchesFromTokenList(tokens: {Lexer.Token}): {string}	
 	local branches = {}
 	local treeEntryIndex = nil
