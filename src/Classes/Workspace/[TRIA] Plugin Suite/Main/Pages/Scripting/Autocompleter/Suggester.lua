@@ -36,7 +36,7 @@ function Suggester:registerCallback()
 		
 		local tokens = AutocompleteUtil.lexerScanToTokens(line)
 		
-		local function addResponse(responseData)
+		local function addResponse(responseData, treeIndex)
 			local suggestionData = responseData.data
 			table.insert(response.items, {
 				label = responseData.label,
@@ -47,7 +47,7 @@ function Suggester:registerCallback()
 				
 				textEdit = AutocompleteUtil.buildReplacement(
 					request.position, 
-					(responseData.text .. "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")"),
+					(responseData.text .. (treeIndex == "Methods" and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" or "")),
 					responseData.beforeCursor,
 					responseData.afterCursor,
 					responseData.alreadyTyped
@@ -83,7 +83,7 @@ function Suggester:registerCallback()
 							beforeCursor = #beforeCursor,
 							afterCursor = #afterCursor,
 							alreadyTyped = (lastToken == ":" or lastToken == ".") and 0 or #lastToken
-						})
+						}, index)
 					end
 				end
 			end

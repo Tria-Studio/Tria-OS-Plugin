@@ -7,9 +7,10 @@ function Autocompleter:toggle(newState: boolean)
 	GlobalSettings.enabled = newState
 	Suggester:disableCallback()
 	if GlobalSettings.enabled then
+		print("Starting")
 		Suggester:registerCallback()
 	end
 end
 
-Autocompleter:toggle(Autocompleter.enabled)
+Autocompleter:toggle(GlobalSettings.enabled)
 return Autocompleter
