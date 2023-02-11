@@ -1,15 +1,12 @@
 local Autocompleter = {}
-Autocompleter.enabled = true
-Autocompleter.allowedPhrases = {}
-Autocompleter.removedPhrases = {}
-Autocompleter.runOnlyInMapscript = false
 
 local Suggester = require(script.Suggester)
+local GlobalSettings = require(script.GlobalSettings)
 
 function Autocompleter:toggle(newState: boolean)
-	self.enabled = newState
+	GlobalSettings.enabled = newState
 	Suggester:disableCallback()
-	if self.enabled then
+	if GlobalSettings.enabled then
 		Suggester:registerCallback()
 	end
 end
