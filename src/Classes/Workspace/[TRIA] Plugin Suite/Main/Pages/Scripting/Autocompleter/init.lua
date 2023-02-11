@@ -1,5 +1,8 @@
 local Autocompleter = {}
 Autocompleter.enabled = true
+Autocompleter.allowedPhrases = {}
+Autocompleter.removedPhrases = {}
+Autocompleter.runOnlyInMapscript = false
 
 local Suggester = require(script.Suggester)
 
