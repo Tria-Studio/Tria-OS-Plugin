@@ -13,16 +13,19 @@ function Suggester:registerCallback()
 		local currentScriptContext = ScriptEditorService:FindScriptDocument(currentScript)
 		local currentDocument = request.textDocument.document
 
+		-- Return Case 1: Command Bar
 		if not currentScriptContext or currentScriptContext:IsCommandBar() then 
 			return response
 		end
 
+		-- Return Case 2: Only MapScript
 		if GlobalSettings.runOnlyInMapscript then
 			if currentScript.Name ~= "MapScript" then
 				return response
 			end
 		end
 		
+		-- Return Case 3: Inside a comment
 		if AutocompleteUtil.backTraceComments(currentDocument, request.position.line, request.position.character) then
 			return response
 		end
@@ -32,6 +35,7 @@ function Suggester:registerCallback()
 			table.insert(prefixes, prefix)
 		end
 		
+		-- Return Case 4: No prefix
 		if #prefixes < 1 then
 			return response
 		end
@@ -100,7 +104,7 @@ function Suggester:registerCallback()
 			table.remove(tokens, 1)
 		end
 
-		-- CASE 1: Function end
+		-- Match Case 1: Function end
 		if AutocompleteUtil.tokenMatches(tokens[1], "keyword", "end") then
 			do			
 				local tempLineData = {
@@ -193,7 +197,7 @@ function Suggester:registerCallback()
 				end
 			end
 		elseif line:match("=%s*(%w+)%.") then 
-			-- CASE 2: Property index
+			-- Match Case 2: Property index
 			do
 				local variableName = line:match("=%s*(%w+)%.")
 				if table.find(prefixes, variableName) then
@@ -205,7 +209,7 @@ function Suggester:registerCallback()
 				end
 			end
 		else 
-			-- CASE 3: Normal line
+			-- Match Case 3: Normal line
 			if table.find(prefixes, tokens[1].value) then
 				local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
 				suggestResponses(branches, treeEntryIndex, tokens)
