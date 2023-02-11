@@ -5,14 +5,22 @@ local ScriptEditorService = game:GetService("ScriptEditorService")
 local AutocompleteData = require(script.Parent.AutocompleteData)
 local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
 local Lexer = require(script.Parent.Lexer)
+local GlobalSettings = require(script.Parent.GlobalSettings)
 
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback("__MapLibCompletion", 0, function(request, response)
 		local currentScript = request.textDocument.script
 		local currentScriptContext = ScriptEditorService:FindScriptDocument(currentScript)
 		local currentDocument = request.textDocument.document
+
 		if not currentScriptContext or currentScriptContext:IsCommandBar() then 
 			return response
+		end
+
+		if GlobalSettings.runOnlyInMapscript then
+			if currentScript.Name ~= "MapScript" then
+				return response
+			end
 		end
 		
 		if AutocompleteUtil.backTraceComments(currentDocument, request.position.line, request.position.character) then

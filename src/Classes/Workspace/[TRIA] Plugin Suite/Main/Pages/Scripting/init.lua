@@ -3,6 +3,7 @@ local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
 local Autocompleter = require(script.Autocompleter)
+local GlobalSettings = require(script.Autocompleter.GlobalSettings)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -19,7 +20,8 @@ function OptionFrame(props)
 
     return New "Frame" {
         BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 0.25),
+        Size = UDim2.fromScale(1, 0.2),
+        LayoutOrder = props.LayoutOrder,
 
         [Children] = {
             New "TextButton" {
@@ -134,9 +136,19 @@ You may also choose whether to only run the autocompleter inside the MapScript.
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
                             OptionFrame {
                                 Text = "Enable Autocomplete",
+                                LayoutOrder = 1,
                                 Enabled = true,
                                 OnToggle = function(newState: boolean)
                                     Autocompleter:toggle(newState)
+                                end
+                            },
+                            OptionFrame {
+                                Text = "Run Autocomplete only in MapScript",
+                                LayoutOrder = 2,
+                                Enabled = false,
+                                OnToggle = function(newState: boolean)
+                                    GlobalSettings.runOnlyInMapscript = newState
+                                    Autocompleter:toggle(GlobalSettings.enabled)
                                 end
                             }
                         }
