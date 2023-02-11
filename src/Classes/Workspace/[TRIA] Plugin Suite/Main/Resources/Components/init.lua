@@ -290,16 +290,6 @@ function Components.Dropdown(data, childrenProcessor)
         end,
         
         [Children] = {
-            New "ImageLabel" {
-                Image = "rbxassetid://6034328955",
-                AnchorPoint = Vector2.new(1, 0),
-                BackgroundTransparency = 1,
-                Visible = data.HeaderEditable or false,
-                Position = UDim2.new(1, data.HasButton and -36 or -16, 0, 2),
-                ImageColor3 = Theme.SubText.Default,
-                Size = UDim2.fromOffset(18, 18),
-                ZIndex = 2,
-            },
             Computed(function()
                 local props = {
                     Active = Util.interfaceActive,
@@ -314,7 +304,20 @@ function Components.Dropdown(data, childrenProcessor)
                     TextXAlignment = Enum.TextXAlignment.Left,
                     Visible = true,
     
-                    [Children] = data.HeaderChildren
+                    [Children] = {
+                        data.HeaderChildren,
+
+                        New "ImageLabel" {
+                            Image = "rbxassetid://6034328955",
+                            AnchorPoint = Vector2.new(1, 0),
+                            BackgroundTransparency = 1,
+                            Visible = data.HeaderEditable or false,
+                            Position = UDim2.new(1, -48, 0, 2),
+                            ImageColor3 = Theme.SubText.Default,
+                            Size = UDim2.fromOffset(18, 18),
+                            ZIndex = 2,
+                        }
+                    }
                 }
 
                 if data.HeaderEditable then
