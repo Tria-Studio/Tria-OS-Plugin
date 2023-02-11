@@ -27,10 +27,10 @@ return {
 	},
 
 	Pages = {
-		{Name = "ObjectTags", Default = true},
+		{Name = "ObjectTags", Default = false},
 		{Name = "ViewModes"},
 		{Name = "Settings"},
-		{Name = "Scripting"},
+		{Name = "Scripting", Default = true},
 		{Name = "Publish"},
 		{Name = "Insert"}
 	}

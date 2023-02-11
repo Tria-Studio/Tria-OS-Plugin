@@ -413,6 +413,9 @@ function Components.TooltipImage(data)
         ImageColor3 = Theme.SubText.Default,
 
         [OnEvent "Activated"] = function()
+            if not data.Header or not data.Tooltip then
+                return
+            end
             Util:ShowMessage(tostring(data.Header), tostring(data.Tooltip))
         end,
     }
@@ -435,6 +438,30 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
                 else "rbxassetid://6031068445" --// Unknown
         end),
         ImageColor3 = Theme.CheckedFieldIndicator.Default,
+    }
+end
+
+function Components.BasicHeaderText(data)
+    return New "TextLabel" {
+        AnchorPoint = Vector2.new(0, 0),
+        BackgroundColor3 = Theme.Titlebar.Default,
+        FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+        LayoutOrder = data.LayoutOrder,
+        Size = UDim2.new(1, 0, 0, 32),
+        TextColor3 = Theme.TitlebarText.Default,
+        Text = data.Text,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        TextYAlignment = Enum.TextYAlignment.Center,
+        TextSize = 16,
+
+        [Children] = {
+            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), nil),
+            Components.TooltipImage {
+                Header = data.Text,
+                Tooltip = data.Tooltip,
+                Position = UDim2.new(1, -12, 0.5, 0)
+            }
+        }
     }
 end
 
