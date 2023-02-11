@@ -43,6 +43,8 @@ function PageHandler:NewPage(data)
 
     if newPageData.Visible:get(false) then
         self.pageData.currentPage:set(newPageData.Name)
+        -- Avoid loop
+        require(Resources.Parent.Util)._currentPageNum:set(table.find(require(Resources.Parent.Util)._PageOrder, data.Name))
     end
 
     return newPageData.Frame
