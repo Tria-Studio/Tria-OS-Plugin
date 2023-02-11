@@ -4,6 +4,7 @@ local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
 local Autocompleter = require(script.Autocompleter)
 local GlobalSettings = require(script.Autocompleter.GlobalSettings)
+local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -25,6 +26,7 @@ function OptionFrame(props)
 
         [Children] = {
             New "TextButton" {
+                Active = Util.interfaceActive,
                 Size = UDim2.fromScale(1, 1),
                 Position = UDim2.fromScale(0, 0),
                 BackgroundTransparency = 1,
