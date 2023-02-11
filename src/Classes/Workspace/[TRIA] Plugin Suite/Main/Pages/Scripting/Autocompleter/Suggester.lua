@@ -31,7 +31,7 @@ function Suggester:registerCallback()
 		local line = currentDocument:GetLine(request.position.line)
 		local beforeCursor = line:sub(1, request.position.character)
 		local afterCursor = line:sub(request.position.character)
-		line = line:gsub("%s", "")
+		--line = line:gsub("%s", "")
 		line = line:sub(1, -#afterCursor - 1)
 		
 		local tokens = AutocompleteUtil.lexerScanToTokens(line)
@@ -88,7 +88,8 @@ function Suggester:registerCallback()
 				end
 			end
 		end
-		
+
+		-- CASE 1: Function end
 		if AutocompleteUtil.tokenMatches(tokens[1], "keyword", "end") then
 			do			
 				local tempLineData = {
@@ -171,7 +172,21 @@ function Suggester:registerCallback()
 					suggestResponses(allBranches, treeEntryIndex, lineTokens)
 				end
 			end
-		else
+		elseif line:match("=%s*(%w+)%.") then 
+			-- CASE 2: Property index
+
+			do
+				local variableName = line:match("=%s*(%w+)%.")
+				if table.find(prefixes, variableName) then
+					local allVariables = {}
+					for k in pairs(AutocompleteData.Properties.branches) do
+						table.insert(allVariables, k)
+					end
+					suggestResponses({}, "Properties", tokens)
+				end
+			end
+		else 
+			-- CASE 3: Normal line
 			if table.find(prefixes, tokens[1].value) then
 				local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
 				suggestResponses(branches, treeEntryIndex, tokens)
