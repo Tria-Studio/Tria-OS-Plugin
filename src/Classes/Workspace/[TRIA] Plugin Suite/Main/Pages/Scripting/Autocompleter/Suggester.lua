@@ -174,7 +174,6 @@ function Suggester:registerCallback()
 			end
 		elseif line:match("=%s*(%w+)%.") then 
 			-- CASE 2: Property index
-
 			do
 				local variableName = line:match("=%s*(%w+)%.")
 				if table.find(prefixes, variableName) then
