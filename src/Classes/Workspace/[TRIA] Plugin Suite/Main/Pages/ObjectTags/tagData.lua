@@ -297,7 +297,7 @@ Metadata:
 
             Tooltip = {
                 Header = "_Fall#",
-                Text = [[Selected Part(s) will become cancollide false and get deleted after a few seconds when the following button is pressed.
+                Text = [[Selected Part(s) will become CanCollide false and get deleted after a few seconds when the following button is pressed.
 
 Metadata:
     <b>Button#: </b>Defines what button the tag will activate
@@ -390,9 +390,9 @@ Metadata:
                 Header = "_Explode#",
                 Text = [[Selected Part(s) will explode when the following button is pressed.
 
-                Metadata:
-                    <b>Button#: </b>Defines what button the tag will activate
-                    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect]]
+Metadata:
+    <b>Button#: </b>Defines what button the tag will activate
+    <b>Delay#: </b>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
     },
@@ -444,7 +444,7 @@ Metadata:
 
             Tooltip = {
                 Header = "Walljump",
-                Text = "Walljumps allow players to latch onto any side of a part, and jump off of it. After a few seconds, you will fall off of the walljump."
+                Text = "Walljumps allow players to latch onto any side of a part, and jump off of it. After a certain time, you will fall off of the walljump."
             },
         },
         _Liquid = {
@@ -475,7 +475,7 @@ Metadata:
 
             Tooltip = {
                 Header = "Liquids",
-                Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the apearance and oxygen depletion rate of the player.strictReadError
+                Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the apearance and oxygen depletion rate of the player.
                 
     <font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
     <font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
@@ -512,7 +512,7 @@ Metadata:
 
             Tooltip = {
                 Header = "_Gas#",
-                Text = [[Gas objects are similar to Liquids, except players do not swim in gas. Gas uses the same types as liquids with the same oxygen depletion rates.featureName
+                Text = [[Gas objects are similar to Liquids, except players do not swim in gas. Gas uses the same types as liquids with the same oxygen depletion rates.
 
     <font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
     <font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
@@ -568,7 +568,7 @@ Metadata:
 
             Tooltip = {
                 Header = "_Button#",
-                Text = [[Buttons are an  object which players must press in sequential order in order to progress through and complete a map. Events can be called with object tags and within the MapScript to customize your map further.
+                Text = [[Buttons are an object which players must press in sequential order in order to progress through and complete a map. Events can be called with object tags and within the MapScript to customize your map further.
 
 Metadata:
     <b>Button# & Path#: </b>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
@@ -639,14 +639,14 @@ Metadata:
                 Header = "Ziplines",
                 Text = [[Ziplines are an interactive way to allow for people to travel from point A to point B in a map.
 
-                Metadata:
-                    <b>Button# & Path#: </b>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
-                    <b>Group: </b>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
-                    <b>Inactive Color: </b>Overrides the inactive color specified in map settings for this button. Leave empty for default.
-                    <b>Active Color: </b>Overrides the active color specified in map settings for this button. Leave empty for default.
-                    <b>Activated Color: </b>Overrides the activated color specified in map settings for this button. Leave empty for default.
-                    <b>Activaed Sound: </b>Overrides the activated sound specified in map settings for this button. Leave empty for default.
-                    <b>LocatorImage: </b>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
+ Metadata:
+    <b>Button# & Path#: </b>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
+    <b>Group: </b>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
+    <b>Inactive Color: </b>Overrides the inactive color specified in map settings for this button. Leave empty for default.
+    <b>Active Color: </b>Overrides the active color specified in map settings for this button. Leave empty for default.
+    <b>Activated Color: </b>Overrides the activated color specified in map settings for this button. Leave empty for default.
+    <b>Activaed Sound: </b>Overrides the activated sound specified in map settings for this button. Leave empty for default.
+    <b>LocatorImage: </b>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
             },
         },
         _Kill = {
