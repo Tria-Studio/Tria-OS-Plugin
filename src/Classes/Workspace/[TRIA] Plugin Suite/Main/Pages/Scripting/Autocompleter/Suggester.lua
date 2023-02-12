@@ -16,8 +16,12 @@ local FUNCTION_CALL = {
 	Method = "%(%s*(%w+):"
 }
 
+local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
+local FUNC_MATCH = "function%([%w%,]*%)?%s*$"
+local CALLBACK_NAME = "__MapLibCompletion"
+
 function Suggester:registerCallback()
-	ScriptEditorService:RegisterAutocompleteCallback("__MapLibCompletion", 0, function(request, response)
+	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request, response)
 		local currentScript = request.textDocument.script
 		local currentScriptContext = ScriptEditorService:FindScriptDocument(currentScript)
 		local currentDocument = request.textDocument.document
@@ -45,7 +49,7 @@ function Suggester:registerCallback()
 		end
 		
 		local prefixes = {}
-		for prefix in currentScript.Source:gmatch("local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)") do
+		for prefix in currentScript.Source:gmatch(MAPLIB_IDEN) do
 			table.insert(prefixes, prefix)
 		end
 		
@@ -146,8 +150,6 @@ function Suggester:registerCallback()
 					but it was annoying working with a while loop
 				]]
 	
-				local FUNC_MATCH = "function%([%w%,]*%)?%s*$"
-	
 				local function backtrackToFindFunction(startLine)
 					if startLine < 2 then
 						tempLineData.failed = true
@@ -193,13 +195,12 @@ function Suggester:registerCallback()
 				while true do
 					if tempLineData.failed then
 						break
-					end
-					
+					end		
 					if tempLineData.hasFunction then	
 						if AutocompleteUtil.tokenMatches(tempLineData.tokens[1], "keyword", "end") or table.find(prefixes, tempLineData.tokens[1].value) then
 							local backtrackedBranches = AutocompleteUtil.getBranchesFromTokenList(AutocompleteUtil.lexerScanToTokens(tempLineData.line))
 							AutocompleteUtil.flipArray(backtrackedBranches)
-							
+
 							for _, branch in ipairs(backtrackedBranches) do
 								table.insert(allBranches, branch)
 							end
@@ -209,13 +210,11 @@ function Suggester:registerCallback()
 					else
 						break
 					end
-					
 					backtrackToFindFunction(tempLineData.lineNumber)
 				end
 				
 				if not tempLineData.failed then
 					AutocompleteUtil.flipArray(allBranches)
-
 					if #allBranches > 0 then
 						local _, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(lineTokens)
 						suggestResponses(allBranches, treeEntryIndex, lineTokens)
@@ -227,7 +226,6 @@ function Suggester:registerCallback()
 			do
 				local isProperty = table.find(prefixes, line:match(PROPERTY_INDEX.Property))
 				local isMethod = table.find(prefixes, line:match(PROPERTY_INDEX.Method))
-
 				if isProperty or isMethod then
 					insertAll(isMethod and "Methods" or "Properties", tokens)
 				end
@@ -237,7 +235,6 @@ function Suggester:registerCallback()
 			do
 				local isProperty = table.find(prefixes, line:match(FUNCTION_CALL.Property))
 				local isMethod = table.find(prefixes, line:match(FUNCTION_CALL.Method))
-
 				if isProperty or isMethod then
 					insertAll(isMethod and "Methods" or "Properties", tokens)
 				end
@@ -255,7 +252,7 @@ function Suggester:registerCallback()
 end
 
 function Suggester:disableCallback()
-	pcall(ScriptEditorService.DeregisterAutocompleteCallback, ScriptEditorService, "__MapLibCompletion")
+	pcall(ScriptEditorService.DeregisterAutocompleteCallback, ScriptEditorService, CALLBACK_NAME)
 end
 
 return Suggester
