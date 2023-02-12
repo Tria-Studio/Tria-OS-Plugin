@@ -7,8 +7,14 @@ local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
 local Lexer = require(script.Parent.Lexer)
 local GlobalSettings = require(script.Parent.GlobalSettings)
 
-local PROPERTY_INDEX = "=%s*(%w+)%."
-local FUNCTION_CALL = "%(%s*(%w+)%."
+local PROPERTY_INDEX = {
+	Property = "=%s*(%w+)%.",
+	Method = "=%s*(%w+):"
+}
+local FUNCTION_CALL = {
+	Property = "%(%s*(%w+)%.",
+	Method = "%(%s*(%w+):"
+}
 
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback("__MapLibCompletion", 0, function(request, response)
@@ -112,6 +118,14 @@ function Suggester:registerCallback()
 			end
 		end
 
+		local function insertAll(index, tokens)
+			local allVariables = {}
+			for k in pairs(AutocompleteData[index].branches) do
+				table.insert(allVariables, k)
+			end
+			suggestResponses({}, index, tokens)
+		end
+
 		if AutocompleteUtil.tokenMatches(tokens[1], "space") then
 			table.remove(tokens, 1)
 		end
@@ -208,28 +222,24 @@ function Suggester:registerCallback()
 					end
 				end
 			end
-		elseif line:match(PROPERTY_INDEX) then 
+		elseif line:match(PROPERTY_INDEX.Property) or line:match(PROPERTY_INDEX.Method) then 
 			-- Match Case 2: Property index
 			do
-				local variableName = line:match(PROPERTY_INDEX)
-				if table.find(prefixes, variableName) then
-					local allVariables = {}
-					for k in pairs(AutocompleteData.Properties.branches) do
-						table.insert(allVariables, k)
-					end
-					suggestResponses({}, "Properties", tokens)
+				local isProperty = table.find(prefixes, line:match(PROPERTY_INDEX.Property))
+				local isMethod = table.find(prefixes, line:match(PROPERTY_INDEX.Method))
+
+				if isProperty or isMethod then
+					insertAll(isMethod and "Methods" or "Properties", tokens)
 				end
 			end
-		elseif line:match(FUNCTION_CALL) then 
+		elseif line:match(FUNCTION_CALL.Property) or line:match(FUNCTION_CALL.Method) then 
 			-- Match Case 3: Function call
 			do
-				local variableName = line:match(FUNCTION_CALL)
-				if table.find(prefixes, variableName) then
-					local allVariables = {}
-					for k in pairs(AutocompleteData.Properties.branches) do
-						table.insert(allVariables, k)
-					end
-					suggestResponses({}, "Properties", tokens)
+				local isProperty = table.find(prefixes, line:match(FUNCTION_CALL.Property))
+				local isMethod = table.find(prefixes, line:match(FUNCTION_CALL.Method))
+
+				if isProperty or isMethod then
+					insertAll(isMethod and "Methods" or "Properties", tokens)
 				end
 			end
 		else 
