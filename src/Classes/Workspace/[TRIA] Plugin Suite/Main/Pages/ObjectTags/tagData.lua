@@ -60,15 +60,6 @@ data.metadataTypes = {
         hideWhenNil = true,
         default = nil,
     },
-    DisabledColor = {
-        _referenceName = "DisabledColor",
-        type = "Attribute",
-        dataType = "color",
-        dataName = "DisabledColor",
-        displayName = "Disabled Color",
-        hideWhenNil = true,
-        default = nil,
-    },
     LocatorImage = {
         _referenceName = "LocatorImage",
         type = "Attribute",
@@ -487,14 +478,15 @@ Metadata:
                 Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the apearance and oxygen depletion rate of the player.strictReadError
                 
     <font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
-    <font color = "rgb(0, 143, 156)"><b>Acid: </b></font> -30 oxygen/sec
-    <font color = "rgb(0, 143, 156)"><b>Lava: </b></font> Instant death
+    <font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
+    <font color = "rgb(255, 0, 0)"><b>Lava: </b></font> Instant death
 
 You can specify the oxygen depletion, default color, and splash sound with custom liquids.
 
 Metadata:
-    <b>Liquid#: </b>.
-    <b>Momentum: </b>]]
+    <b>Liquid#: </b> Used to identify this liquid for others. Useful for coding your map.
+    <b>Type: </b> Determines if the liquid is water, lava, etc.
+    <b>Meshless: </b>Determines whether or not the liquid is visibe on all 6 faces, instead of just one face.]]
             },
         },
         _Gas = {
@@ -519,8 +511,18 @@ Metadata:
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Gas#",
+                Text = [[Gas objects are similar to Liquids, except players do not swim in gas. Gas uses the same types as liquids with the same oxygen depletion rates.featureName
+
+    <font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
+    <font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
+    <font color = "rgb(255, 0, 0)"><b>Lava: </b></font> Instant death
+
+Custom oxygen depletion rates can be specified with custom liquids.
+
+Metadata:
+    <b>Liquid#: </b> Used to identify this liquid for others. Useful for coding your map.
+    <b>Type: </b> Determines if the liquid is water, lava, etc.]]
             },
         },
         _Button = {
@@ -543,24 +545,20 @@ Metadata:
                     location = 5,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.DisabledColor,
+                    data = data.metadataTypes.ActiveColor,
                     location = 7,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ActiveColor,
+                    data = data.metadataTypes.ActivatedColor,
                     location = 9,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ActivatedColor,
+                    data = data.metadataTypes.ActivatedSound,
                     location = 11,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ActivatedSound,
-                    location = 13,
-                    isFullSize = true,
-                }, {
                     data = data.metadataTypes.LocatorImage,
-                    location = 15,
+                    location = 13,
                     isFullSize = true,
                 },
             },
@@ -569,8 +567,17 @@ Metadata:
             OnlyBaseParts = nil,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_Button#",
+                Text = [[Buttons are an  object which players must press in sequential order in order to progress through and complete a map. Events can be called with object tags and within the MapScript to customize your map further.
+
+Metadata:
+    <b>Button# & Path#: </b>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
+    <b>Group: </b>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
+    <b>Inactive Color: </b>Overrides the inactive color specified in map settings for this button. Leave empty for default.
+    <b>Active Color: </b>Overrides the active color specified in map settings for this button. Leave empty for default.
+    <b>Activated Color: </b>Overrides the activated color specified in map settings for this button. Leave empty for default.
+    <b>Activaed Sound: </b>Overrides the activated sound specified in map settings for this button. Leave empty for default.
+    <b>LocatorImage: </b>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
             },
         },
         Detail = {
@@ -584,8 +591,8 @@ Metadata:
             OnlyBaseParts = false,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "Low Detail",
+                Text = "On medium and low detail, the detail folder will get deleted allowing for more people to experience your map. It is highly reccomended you use this feature, especially with large maps."
             },
         },
         Zipline = {
@@ -629,8 +636,17 @@ Metadata:
             OnlyBaseParts = nil,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "Ziplines",
+                Text = [[Ziplines are an interactive way to allow for people to travel from point A to point B in a map.
+
+                Metadata:
+                    <b>Button# & Path#: </b>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
+                    <b>Group: </b>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
+                    <b>Inactive Color: </b>Overrides the inactive color specified in map settings for this button. Leave empty for default.
+                    <b>Active Color: </b>Overrides the active color specified in map settings for this button. Leave empty for default.
+                    <b>Activated Color: </b>Overrides the activated color specified in map settings for this button. Leave empty for default.
+                    <b>Activaed Sound: </b>Overrides the activated sound specified in map settings for this button. Leave empty for default.
+                    <b>LocatorImage: </b>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
             },
         },
         _Kill = {
