@@ -62,7 +62,7 @@ function SettingsUtil.updateStateValue(currentValue, newValue, tbl)
         ["Checkbox"] = {"boolean"},
         ["Color"] = {"Color3"},
         ["Time"] = {"string"},
-        ["Dropdown"] = {"string"}
+        ["Dropdown"] = {"string", "number"}
     }
 
     if currentValue ~= nil then

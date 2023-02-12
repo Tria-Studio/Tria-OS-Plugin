@@ -58,30 +58,6 @@ function attemptToInsertModel(assetID: number)
     Selection:Set({result})
 end
 
-function HeaderText(data)
-    return New "TextLabel" {
-        AnchorPoint = Vector2.new(0, 0),
-        BackgroundColor3 = Theme.Titlebar.Default,
-        FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-        LayoutOrder = data.LayoutOrder,
-        Size = UDim2.new(1, 0, 0, 32),
-        TextColor3 = Theme.TitlebarText.Default,
-        Text = data.Text,
-        TextXAlignment = Enum.TextXAlignment.Left,
-        TextYAlignment = Enum.TextYAlignment.Center,
-        TextSize = 16,
-
-        [Children] = {
-            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), nil),
-            Components.TooltipImage {
-                Header = data.Text,
-                Tooltip = data.Tooltip,
-                Position = UDim2.new(1, -12, 0.5, 0)
-            }
-        }
-    }
-end
-
 function KitInsertButton(data)
     return Components.ImageButton {
         BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
@@ -177,7 +153,7 @@ function frame:GetFrame(data)
 
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 6), Enum.VerticalAlignment.Top),
-                    HeaderText({Text = "Map Kits", LayoutOrder = 1, Tooltip = "Tooltip here"}),
+                    Components.BasicHeaderText({Text = "Map Kits", LayoutOrder = 1, Tooltip = "Tooltip here"}),
 
                     KitInsertButton({
                         BoxSize = UDim2.new(1, -24, 0, 64),
@@ -213,7 +189,7 @@ function frame:GetFrame(data)
                     --     },
                     -- }),
 
-                    HeaderText({Text = "Map Modifications", LayoutOrder = 4, Tooltip = "Tooltip here"}),
+                    Components.BasicHeaderText({Text = "Map Modifications", LayoutOrder = 4, Tooltip = "Tooltip here"}),
                     SubFrame({
                         LayoutOrder = 5,
                         Children = {
@@ -239,7 +215,7 @@ function frame:GetFrame(data)
                         },
                     }),
 
-                    HeaderText({Text = "Map Components", LayoutOrder = 6, Tooltip = "Tooltip here"}),
+                    Components.BasicHeaderText({Text = "Map Components", LayoutOrder = 6, Tooltip = "Tooltip here"}),
                 }
             }
         }

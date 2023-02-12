@@ -46,7 +46,7 @@ local Util = {
         "ObjectTags",
         "ViewModes",
         "Settings",
-        "Compatibility",
+        "Scripting",
         "Publish",
         "Insert"
     },

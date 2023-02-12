@@ -13,7 +13,7 @@ return {
 			Icon = "rbxassetid://6031280882",
 		},
 		{
-			Name = "Compatibility",
+			Name = "Scripting",
 			Icon = "rbxassetid://6022668955",
 		},
 		{
@@ -30,7 +30,7 @@ return {
 		{Name = "ObjectTags", Default = true},
 		{Name = "ViewModes"},
 		{Name = "Settings"},
-		{Name = "Compatibility"},
+		{Name = "Scripting"},
 		{Name = "Publish"},
 		{Name = "Insert"}
 	}
