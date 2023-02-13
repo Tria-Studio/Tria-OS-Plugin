@@ -9,7 +9,7 @@ local PageHandler = {
     pageChanged = Signal.new(),
     pageData = {
         pages = {},
-        bypassedPages = {"Insert", "PluginSettings"},
+        bypassedPages = {"Insert"},
         currentPage = Value(nil),
     }
 }
@@ -27,6 +27,10 @@ function PageHandler:ChangePage(NewPage: string)
     self.pageData.pages[currentPage].Visible:set(false)
     self.pageData.pages[NewPage].Visible:set(true)
     self.pageData.currentPage:set(NewPage)
+
+    if self.pageData.pages[NewPage].onOpen then
+        self.pageData.pages[NewPage].onOpen()
+    end
 end
 
 function PageHandler:NewPage(data)
