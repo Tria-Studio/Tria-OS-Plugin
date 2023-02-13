@@ -110,11 +110,18 @@ function Util.getBranchesFromTokenList(tokens: {Lexer.Token}): {string}
 	return branches, treeEntryIndex
 end
 
-function Util.tokenMatches(token: Lexer.Token, name: string, value: any)
-	if value == nil then
-		return token.name == name
+function Util.tokenMatches(token: Lexer.Token, name: string | {string}, value: any | {any})
+	local function nameMatch()
+		return if typeof(name) == "table" then table.find(name, token.name) else token.name == name
 	end
-	return token.name == name and token.value == value
+	local function valueMatch()
+		return if typeof(value) == "table" then table.find(value, token.value) else token.value == value
+	end
+
+	if value == nil then
+		return nameMatch()
+	end
+	return nameMatch() and valueMatch()
 end
 
 function Util.lexerScanToTokens(line: string): {Lexer.Token}
@@ -130,6 +137,17 @@ function Util.flipArray(t: {any})
 		local j = #t - i + 1
 		t[i], t[j] = t[j], t[i]
 	end
+end
+
+function Util.isTokenSeriesBroken(tokens: {Lexer.Token}): boolean
+	local broken = false
+	for count = 1, #tokens - 1 do
+		if Util.tokenMatches(tokens[count], {":", "."}) and Util.tokenMatches(tokens[count + 1], {":", "."}) then
+			broken = true
+			break
+		end
+	end
+	return broken
 end
 
 return Util

@@ -1,6 +1,7 @@
 local Suggester = {}
 
 local ScriptEditorService = game:GetService("ScriptEditorService")
+local TextService = game:GetService("TextService")
 
 local AutocompleteData = require(script.Parent.AutocompleteData)
 local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
@@ -64,6 +65,13 @@ function Suggester:registerCallback()
 		line = line:sub(1, -#afterCursor - 1)
 		
 		local tokens = AutocompleteUtil.lexerScanToTokens(line)
+
+		-- Return Case 6: Multiple : or .
+		if #tokens > 1 then
+			if AutocompleteUtil.isTokenSeriesBroken(tokens) then
+				return response
+			end
+		end
 		
 		local function addResponse(responseData, treeIndex)
 			local suggestionData = responseData.data
@@ -106,7 +114,9 @@ function Suggester:registerCallback()
 			if current and current.branches and not reachedEnd then
 				for name, data in pairs(current.branches) do
 					local lastToken = lineTokens[#lineTokens].value
-					if (lastToken == ":" or lastToken == ".") or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
+					local isIndexer = lastToken == ":" or lastToken == "."
+
+					if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 						addResponse({
 							label = name,
 							kind = index == "Methods" and Enum.CompletionItemKind.Function or Enum.CompletionItemKind.Property,
@@ -115,7 +125,7 @@ function Suggester:registerCallback()
 							
 							beforeCursor = #beforeCursor,
 							afterCursor = #afterCursor,
-							alreadyTyped = (lastToken == ":" or lastToken == ".") and 0 or #lastToken
+							alreadyTyped = isIndexer and 0 or #lastToken
 						}, index)
 					end
 				end
@@ -166,6 +176,11 @@ function Suggester:registerCallback()
 							if AutocompleteUtil.tokenMatches(tempLineData.tokens[1], "space") then
 								table.remove(tempLineData.tokens, 1)
 							end
+						end
+
+						if AutocompleteUtil.isTokenSeriesBroken(tempLineData.tokens) then
+							tempLineData.failed = true
+							break
 						end
 
 						local tempStr = ""
