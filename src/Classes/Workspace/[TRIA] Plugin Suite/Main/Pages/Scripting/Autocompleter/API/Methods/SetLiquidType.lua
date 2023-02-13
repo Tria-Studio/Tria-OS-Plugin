@@ -5,7 +5,5 @@ return {
 	documentation = {
 		value = "Modifies a liquids type"
 	},
-	codeSample = [[
-	MapLib:SetLiquidType(MapLib.Map._Liquid1, "lava")
-	]],
+	codeSample = "MapLib:SetLiquidType(MapLib.Map._Liquid1, \"lava\")",
 }
