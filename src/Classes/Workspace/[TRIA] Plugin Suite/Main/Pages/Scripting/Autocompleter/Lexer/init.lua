@@ -93,7 +93,7 @@ local MATCHES = {
 	{"^.",      basicToken}
 }
 
-function Lexer.scan(line: string): () -> (string, string)
+function Lexer.scan(line: string): () -> Token
 	local function analyze(str: string)
 		local currentLine = 0
 		local currentIndex = 1
