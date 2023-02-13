@@ -244,8 +244,9 @@ function Util.UpdateSelectedParts()
                 if newThing:IsA("ValueBase") then
                     update()
                 end
-                selectionMaid:GiveTask(newThing.Changed:Connect(update)
+                selectionMaid:GiveTask(newThing.Changed:Connect(update))
             end))
+
             for _, Child in ipairs(Thing:GetChildren()) do
                 if Child:IsA("ValueBase") then
                     selectionMaid:GiveTask(Thing.ChildRemoved:Connect(update))
