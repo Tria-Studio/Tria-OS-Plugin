@@ -78,7 +78,7 @@ local defaultMetadataTypes = {
 
 
 local function getTagInstance(part, tag)
-    for _, Child in pairs(part:GetChildren()) do
+    for _, Child in ipairs(part:GetChildren()) do
         if string.find(Child.Name, tag, 1, true) then
             return Child
         end
@@ -89,7 +89,7 @@ function tagUtils:GetPartTags(part: Instance, excludeTag: string?)
     local partTags = {}
 
     for Type, tags in pairs(tagTypes) do
-        for i, tag in pairs(tags) do
+        for i, tag in ipairs(tags) do
             if i ~= "_convert" and tagUtils:PartHasTag(part, tag) and tag ~= excludeTag and not table.find(partTags, tag) then
                 table.insert(partTags, tag)
             end
@@ -214,7 +214,7 @@ function tagUtils:GetSelectedMetadataValue(name, tag)
     local firstValue
     local numHas = 0
 
-    for _, Part: Instance in pairs(Util._Selection.selectedParts:get()) do
+    for _, Part: Instance in ipairs(Util._Selection.selectedParts:get()) do
         local tagData = tagUtils:GetPartMetaData(Part, name, tag)
         if firstValue == nil and tagData ~= nil then
             firstValue = tagData
@@ -270,7 +270,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             if isOptimized then
                 VerifyFolder()
             end
-            for _, Child in pairs(part:GetChildren()) do
+            for _, Child in ipairs(part:GetChildren()) do
                 if string.find(Child.Name, oldTag, 1, true) then
                     Child.Parent = nil
                 end
@@ -279,7 +279,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
         end
 
         local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
-        for _, metaData in pairs(tagData.metadata) do
+        for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, oldTag, metaData, nil)
         end
 
@@ -322,7 +322,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
         end
 
         local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag]
-        for _, metaData in pairs(tagData.metadata) do
+        for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
         end
     end
@@ -334,7 +334,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local Types = {}
 
     function Types.ButtonTags()
-        for _, Child in pairs(part:GetChildren()) do
+        for _, Child in ipairs(part:GetChildren()) do
             if string.find(Child.Name, tag.."%d") then
                 return true
             end
@@ -379,7 +379,7 @@ end
 
 function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
     local numYes = 0
-    for _, part in pairs(parts) do
+    for _, part in ipairs(parts) do
         local value = tagUtils:PartHasTag(part, tag)
         numYes += if value then 1 else 0
 

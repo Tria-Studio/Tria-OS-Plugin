@@ -85,7 +85,7 @@ return function(name, data)
                             local newState = not dataVisible:get()
 
                             ChangeHistoryService:SetWaypoint(string.format("Changing tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
-                            for _, instance in pairs(Util._Selection.selectedParts:get()) do
+                            for _, instance in ipairs(Util._Selection.selectedParts:get()) do
                                 if data.OnlyBaseParts and not instance:IsA("BasePart") then
                                     partError = true
                                     continue
@@ -197,7 +197,7 @@ return function(name, data)
                                                         or dataValue:get()
                                                     ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
                                                     dataValue:set(value)
-                                                    for _, Instance: Instance in pairs(Util._Selection.selectedParts:get()) do 
+                                                    for _, Instance: Instance in ipairs(Util._Selection.selectedParts:get()) do 
                                                         TagUtils:SetPartMetaData(Instance, name, metadataType, value)
                                                     end
                                                     ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))

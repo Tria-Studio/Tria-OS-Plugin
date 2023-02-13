@@ -183,23 +183,12 @@ function selectMap:SetMap(Map: Model|Workspace)
 
         ObjectType[Map.ClassName]()
 
-        local Option1 = {
-            Text = "Read more",
-            Callback = function()
-                Pages:ChangePage("Compatibility")
-            end
-        }
-
-        local Option2 = {
-            Text = "Got it",
-        }
-
         local optimizedStructure = Map:FindFirstChild("Special")
         self.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
+        task.wait()
         if not self.hasOptimizedStructure:get(false) then
-            task.wait()
-            Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
+            Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
         end
     else
         Util._Selection.selectedParts:set({})
@@ -235,18 +224,14 @@ function selectMap:StartMapSelection()
 
     self._Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
         local target = mouse.Target
-
         if target ~= lastTarget then
             lastTarget = target
-
             repeat
                 target = target and target:FindFirstAncestorOfClass("Model")
             until not target or target.Parent == workspace
-
             if currentTarget == target then
                 return
             end
-
             if target and self:IsTriaMap(target) then
                 mapHighlight.Adornee = target
                 currentTarget = target
@@ -285,9 +270,7 @@ function selectMap:AutoSelect()
         return true
     end
 
-    -- FIXME: We might need to make a better way to check this because some studio
-    -- projects have hundreds of models under workspace.
-    for _, v: Instance in pairs(workspace:GetChildren()) do
+    for _, v: Instance in ipairs(workspace:GetChildren()) do
         if v:IsA("Model") then
             local isMap, value = self:IsTriaMap(v)
             if isMap then
