@@ -1,7 +1,6 @@
 local Suggester = {}
 
 local ScriptEditorService = game:GetService("ScriptEditorService")
-local TextService = game:GetService("TextService")
 
 local AutocompleteData = require(script.Parent.AutocompleteData)
 local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
