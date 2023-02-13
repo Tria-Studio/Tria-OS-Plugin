@@ -11,7 +11,7 @@ function Util.buildReplacement(position, newText: string, beforeCursor: number, 
 	}
 end
 
-local function matchPatternOnMultiLine(document: ScriptDocument, line: number, char: number, patterns)
+local function matchPatternOnMultiLine(document: ScriptDocument, line: number, char: number, patterns: {Start: string, End: string})
 	local startLine = document:GetLine(line)
 	local lineCount = document:GetLineCount()
 
