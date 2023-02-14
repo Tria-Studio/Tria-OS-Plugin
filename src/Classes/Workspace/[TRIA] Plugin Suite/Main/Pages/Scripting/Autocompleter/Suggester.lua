@@ -37,7 +37,7 @@ function Suggester:registerCallback()
 
 		-- Return Case 2: Only MapScript
 		if GlobalSettings.runOnlyInMapscript then
-			if not table.find("MapScript", "LocalMapScript", "EffectScript") then
+			if not table.find({"MapScript", "LocalMapScript", "EffectScript"}, currentScript.Name) then
 				return response
 			end
 		end
