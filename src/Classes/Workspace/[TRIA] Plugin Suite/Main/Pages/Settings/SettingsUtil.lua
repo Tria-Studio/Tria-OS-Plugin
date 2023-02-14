@@ -49,7 +49,7 @@ local SettingsUtil = {
     }
 }
 
-function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, callback: ())
+function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, callback)
     SettingsUtil.SettingMaid:GiveTask(parent:GetAttributeChangedSignal(attribute):Once(function()
         task.defer(callback)
     end))
