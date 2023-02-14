@@ -17,7 +17,7 @@ local FUNCTION_CALL = {
 }
 
 local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
-local FUNC_MATCH = "function%([%w%,]*%)?%s*$"
+local FUNC_MATCH = "function%(.+%)?%s*$"
 local CALLBACK_NAME = "__MapLibCompletion"
 
 function Suggester:registerCallback()
