@@ -410,7 +410,7 @@ function SettingTypes.Dropdown(data)
                         data.Value:set(currentText)
                         Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                     end
-                end
+                end,
 
                 [Children] = {
                     Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8), nil)
