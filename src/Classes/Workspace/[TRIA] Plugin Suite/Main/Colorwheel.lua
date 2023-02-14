@@ -321,7 +321,7 @@ function ColorWheel:GetUI()
                                         return math.floor(chosenColor:get()[value] * 255 + 0.5)
                                     end
                                 })
-                            end),
+                            end, Fusion.cleanup),
                             ForPairs({"H", "S", "V"}, function(index, value)
                                 return index, getColorDisplay({
                                     LayoutOrder = index,
@@ -333,7 +333,7 @@ function ColorWheel:GetUI()
                                         return math.floor(({chosenColor:get():ToHSV()})[index] * 255 + 0.5)
                                     end
                                 })
-                            end)
+                            end, Fusion.cleanup)
                         }
                     },
 
