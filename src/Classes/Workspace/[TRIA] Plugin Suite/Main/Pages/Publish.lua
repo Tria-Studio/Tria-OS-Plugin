@@ -24,10 +24,10 @@ local Spring = Fusion.Spring
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
-local NoMapsFoundText = Value("No whitelisted maps found.")
+local noMapsFoundText = Value("No whitelisted maps found.")
+local publishButtonText = Value("Publish Map")
 local whitelistMapId = Value("")
 
-local publishButtonText = Value("Publish Map")
 local selectedPublishMap = Value(nil)
 
 local apiData = {
@@ -78,9 +78,12 @@ local springs = {
         return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
     end), 20)
 }
+
+type propertiesTable = {[any]: any}
+
 local frame = {}
 
-local function getInfoFrame(name, frames)
+local function getInfoFrame(name: string, frames: {Instance}): Instance
     return New "Frame" {
         BackgroundColor3 = Theme.TableItem.Default,
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -103,14 +106,14 @@ function frame.OnClose()
     selectedPublishMap:set(nil)
 end
 
-function frame:GetFrame(data)
+function frame:GetFrame(data: propertiesTable): Instance
     local publishedMaps = {}
     local whitelistedMaps = {}
 
-    local function createMapList(list, LayoutOrder)
+    local function createMapList(list: {}, layoutOrder): (boolean) -> Instance
         return function(visible)
             return New "Frame" {
-                LayoutOrder = LayoutOrder,
+                LayoutOrder = layoutOrder,
                 AutomaticSize = Enum.AutomaticSize.Y,
                 Size = UDim2.fromScale(1, 0),
                 BackgroundTransparency = 1,
@@ -122,10 +125,10 @@ function frame:GetFrame(data)
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
                     
                     ForValues(list, function(value)
-                        if value == NoMapsFoundText:get() then
+                        if value == noMapsFoundText:get() then
                             return New "TextLabel" {
                                 Size = UDim2.new(1, 0, 0, 20),
-                                Text = NoMapsFoundText,
+                                Text = noMapsFoundText,
                                 BackgroundTransparency = 0,
                                 BackgroundColor3 = Theme.InputFieldBackground.Default,
                                 TextColor3 = Theme.ErrorText.Default,
@@ -141,7 +144,7 @@ function frame:GetFrame(data)
                                 Image = value.Image,
                                 ScaleType = Enum.ScaleType.Crop,
                                 Size = Computed(function()
-                                    return UDim2.new(1, 0, 0, publishedMaps[1] == NoMapsFoundText:get() and 40 or 75)
+                                    return UDim2.new(1, 0, 0, publishedMaps[1] == noMapsFoundText:get() and 40 or 75)
                                 end),
                                 ImageColor3 = Spring(Computed(function()
                                     return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
@@ -179,7 +182,6 @@ function frame:GetFrame(data)
                                             Size = UDim2.new(0, 110, 0.55, 0),
                                             FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
                                             TextSize = 18,
-    
                                             TextColor3 = Spring(Computed(function()
                                                 return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
                                             end), 20)
@@ -193,7 +195,6 @@ function frame:GetFrame(data)
                                             FontFace = Font.new("SourceSansPro", Enum.FontWeight.SemiBold),
                                             TextStrokeColor3 = Theme.Border.Default,
                                             TextStrokeTransparency = 0,
-    
                                             TextColor3 = Spring(Computed(function()
                                                 local Color = Util.Difficulty[value.Difficulty].Color
                                                 return Color3.new(Color.R * colorMultiplier:get(), Color.G * colorMultiplier:get(), Color.B * colorMultiplier:get())
@@ -204,7 +205,6 @@ function frame:GetFrame(data)
                                             Position = UDim2.new(1, -34, 0, 4),
                                             Size = UDim2.fromOffset(26, 26),
                                             Image = Util.Difficulty[value.Difficulty].Image,
-    
                                             ImageColor3 = Spring(Computed(function()
                                                 return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
                                             end), 20)
@@ -220,10 +220,10 @@ function frame:GetFrame(data)
     end
 
     if #whitelistedMaps == 0 then
-        table.insert(whitelistedMaps, NoMapsFoundText:get())
+        table.insert(whitelistedMaps, noMapsFoundText:get())
     end
     if #publishedMaps == 0 then
-        table.insert(publishedMaps, NoMapsFoundText:get())
+        table.insert(publishedMaps, noMapsFoundText:get())
     end
 
     local newFrame = New "Frame" {
@@ -329,11 +329,9 @@ Your creator token is a long phrase of characters which authenticates and allows
                             Font = Enum.Font.SourceSansBold,
                             TextSize = 16,
                             Size = UDim2.new(1, 0, 0, 32),
-                            
                             Text = Computed(function()
                                 return if selectedPublishMap:get() then selectedPublishMap:get().Name else "No map selected"
                             end),
-
                             TextColor3 = springs.whitelistedTextSpring,
 
                             [Children] = Components.ImageButton({

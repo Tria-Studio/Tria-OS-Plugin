@@ -18,7 +18,9 @@ local Components = {
     Constraints = require(script.Constraints),
 }
 
-function Components.TextButton(data)
+type propertiesTable = {[any]: any}
+
+function Components.TextButton(data: propertiesTable): Instance
     return Hydrate(New "TextButton" {
         AutoButtonColor = true,
         BackgroundColor3 = Theme.Button.Default,
@@ -29,7 +31,7 @@ function Components.TextButton(data)
     })(data)
 end
 
-function Components.ImageButton(data)
+function Components.ImageButton(data: propertiesTable): Instance
     return Hydrate(New "ImageButton" {
         BackgroundColor3 = Theme.Button.Default,
         BorderSizePixel = 1,
@@ -39,7 +41,7 @@ function Components.ImageButton(data)
     })(data)
 end
 
-function Components.TextBox(data)
+function Components.TextBox(data: propertiesTable): Instance
     return Hydrate(New "TextBox" {
         PlaceholderColor3 = Theme.DimmedText.Default,
         BackgroundColor3 = Theme.InputFieldBackground.Default,
@@ -49,7 +51,7 @@ function Components.TextBox(data)
     })(data)
 end
 
-function Components.TopbarButton(data)
+function Components.TopbarButton(data: propertiesTable): Instance
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     local transparencySpring = Spring(Computed(function()
@@ -137,13 +139,13 @@ function Components.TopbarButton(data)
     }
 end
 
-function Components.PageHeader(Name: string)
+function Components.PageHeader(pageName: string): Instance
     return New "TextLabel" {
         ZIndex = 2,
         Size = UDim2.new(1, 0, 0, 16),
         BackgroundColor3 = Theme.Titlebar.Default,
         TextColor3 = Theme.TitlebarText.Default,
-        Text = Name,
+        Text = pageName,
         AnchorPoint = Vector2.new(0, 1),
 
         [Children] = {
@@ -158,7 +160,7 @@ function Components.PageHeader(Name: string)
     }
 end
 
-function Components.MiniTopbar(data)
+function Components.MiniTopbar(data: propertiesTable): Instance
   return New "Frame" { --// Topbar
         BackgroundColor3 = Theme.CategoryItem.Default,
         BorderColor3 = Theme.Border.Default,
@@ -194,10 +196,10 @@ function Components.MiniTopbar(data)
     }
 end
 
-function optionButtonComponent(data, ZIndex)
+function optionButtonComponent(data: propertiesTable, zIndex: number): Instance
     return Components.TextButton({
         LayoutOrder = 1,
-        ZIndex = ZIndex,
+        ZIndex = zIndex,
         BackgroundColor3 = data.BackgroundColor3:get(),
         Size = UDim2.fromOffset(56, 18),
         Text = data.Text, 
@@ -215,24 +217,24 @@ function optionButtonComponent(data, ZIndex)
     })
 end
 
-function Components.TwoOptions(option1Data, option2Data, ZIndex)
+function Components.TwoOptions(option1Data: propertiesTable, option2Data: propertiesTable, zIndex: number): Instance
     return New "Frame" { --// Buttons
         BackgroundTransparency = 1,
         AnchorPoint = Vector2.new(0, 0),
         Position = UDim2.fromScale(0, 1),
         Size = UDim2.new(1, 0, 0, 24),
-        ZIndex = ZIndex,
+        ZIndex = zIndex,
 
         [Children] = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Right, UDim.new(0, 6), Enum.VerticalAlignment.Center),
             Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 3)),
-            optionButtonComponent(option1Data, ZIndex),
-            optionButtonComponent(option2Data, ZIndex),
+            optionButtonComponent(option1Data, zIndex),
+            optionButtonComponent(option2Data, zIndex),
         },
     }
 end
 
-function Components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?, size: number?)
+function Components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?, size: number?): Instance
     return New "TextLabel" {
         BackgroundColor3 = color or Theme.HeaderSection.Default,
         BorderColor3 = Theme.Border.Default,
@@ -247,7 +249,7 @@ function Components.ScrollingFrameHeader(text: string, layoutOrder: number, colo
     }
 end
 
-function Components.ScrollingFrame(data)
+function Components.ScrollingFrame(data: propertiesTable): Instance
     return Hydrate(New "ScrollingFrame" {
         ScrollingEnabled = Util.interfaceActive,
         BorderColor3 = Theme.Border.Default,
@@ -262,7 +264,7 @@ function Components.ScrollingFrame(data)
     })(data)
 end
 
-function Components.Dropdown(data, childrenProcessor)
+function Components.Dropdown(data: propertiesTable, childrenProcessor: (boolean) -> Instance | {Instance}): Instance
     local dropdownVisible = Value(data.DefaultState)
     local headerColor = Value(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
     local frame = Value()
@@ -363,7 +365,7 @@ function Components.Dropdown(data, childrenProcessor)
     return dropdown
 end
 
-function Components.DropdownTextlabel(data)
+function Components.DropdownTextlabel(data: propertiesTable): Instance
     return New "TextLabel" {
         TextXAlignment = data.TextXAlignment,
         BackgroundColor3 = Theme.Notification.Default,
@@ -382,7 +384,7 @@ function Components.DropdownTextlabel(data)
    }
 end
 
-function Components.DropdownHolderFrame(data)
+function Components.DropdownHolderFrame(data: propertiesTable): Instance
     return New "Frame" {
         AutomaticSize = Computed(function()
             return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None
@@ -396,7 +398,7 @@ function Components.DropdownHolderFrame(data)
     }
 end
 
-function Components.TooltipImage(data)
+function Components.TooltipImage(data: propertiesTable): Instance
     local isActive = Computed(function()
         return not Util.isPluginFrozen()
     end)
@@ -421,7 +423,7 @@ function Components.TooltipImage(data)
     }
 end
 
-function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2?, checkState)
+function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2?, checkState): Instance
      return New "ImageLabel" { --// Checkbox
         BackgroundTransparency = 0.25,
         BackgroundColor3 = Theme.CheckedFieldBackground.Default,
@@ -441,7 +443,7 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
     }
 end
 
-function Components.BasicHeaderText(data)
+function Components.BasicHeaderText(data: propertiesTable): Instance
     return New "TextLabel" {
         AnchorPoint = Vector2.new(0, 0),
         BackgroundColor3 = Theme.Titlebar.Default,

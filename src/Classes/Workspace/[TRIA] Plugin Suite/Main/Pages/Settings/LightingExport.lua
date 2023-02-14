@@ -15,7 +15,9 @@ local Hydrate = Fusion.Hydrate
 
 local directories = SettingsUtil.Directories
 
-function ExportButton(props)
+type propertiesTable = {[any]: any}
+
+function ExportButton(props: propertiesTable): Instance
     return Hydrate(Components.TextButton {
         Active = Util.interfaceActive,
         AutoButtonColor = Util.interfaceActive,
@@ -72,7 +74,7 @@ end
 
 local frame = {}
 
-function frame:GetUI()
+function frame:GetUI(): Instance
 	return New "Frame" {
 		BackgroundTransparency = 1,
 		BorderSizePixel = 1,

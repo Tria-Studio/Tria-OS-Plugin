@@ -15,7 +15,9 @@ local  Value = Fusion.Value
 
 local frame = {}
 
-function frame:GetFrame(data)
+type propertiesTable = {[any]: any}
+
+function frame:GetFrame(data: propertiesTable): Instance
     local objectFrameSize = Value()
     local buttonFrameSize = Value()
 

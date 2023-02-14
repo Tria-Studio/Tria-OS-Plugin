@@ -86,7 +86,7 @@ local Util = {
             Color = Color3.fromRGB(255, 8, 152),
             Image = "rbxassetid://12132025606"
         }
-    },  
+    }, 
 }
 
 function getSettingsDirFolder(directory: string)
@@ -218,7 +218,7 @@ function updateButtonsActive()
     Util.interfaceActive:set(Util.mapModel:get(false) and Util._manualActive:get(false))
 end
 
-function Util.UpdateSelectedParts()
+function Util.updateSelectedParts()
     local newTable = {}
     for _, Thing: Instance in ipairs(Selection:Get()) do
         if Thing:IsDescendantOf(Util.mapModel:get(false)) then
@@ -263,6 +263,6 @@ Observer(Util.mapModel):onChange(updateButtonsActive)
 Observer(Util._manualActive):onChange(updateButtonsActive)
 Util.MainMaid:GiveTask(Util.MapMaid)
 Util.MainMaid:GiveTask(selectionMaid)
-Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(Util.UpdateSelectedParts))
+Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(Util.updateSelectedParts))
 
 return Util

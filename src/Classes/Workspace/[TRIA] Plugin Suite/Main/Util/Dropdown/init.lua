@@ -15,19 +15,20 @@ local Value = Fusion.Value
 local Maid = Util.Maid.new()
 local DataChosen = Util.Signal.new()
 
-local value
+local current
 local Dropdown = {}
 
 function Dropdown:Cancel()
-    value = nil
+    currentValue = nil
     DataChosen:Fire()
 end
 
 function Dropdown:GetValue(dataArray, uiParent)
     local dropdownData, sortOrder = DropdownData[dataArray]()
-    local UiSize = #dropdownData * 20
+    local dropdownSize = #dropdownData * 20
+
     local localYPos = uiParent.AbsolutePosition.Y + uiParent.AbsoluteSize.Y / 2
-    local frameOnTop = Util.Widget.AbsoluteSize.Y - localYPos < math.min(UiSize, 240)
+    local isOnTop = Util.Widget.AbsoluteSize.Y - localYPos < math.min(dropdownSize, 240)
     local textTruncated = Value(Enum.TextTruncate.None)
 
     Maid:GiveTask(Pages.pageChanged:Connect(function()
@@ -49,16 +50,17 @@ function Dropdown:GetValue(dataArray, uiParent)
             end
         }
     )
+
     Maid:GiveTask(
         Components.ScrollingFrame {
             Parent = uiParent,
-            Size = UDim2.fromOffset(120 + (UiSize > 240 and 12 or 0), math.min(UiSize, 240) + 5),
-            Position = UDim2.fromScale(0, frameOnTop and 0 or 1) + UDim2.fromOffset(0, frameOnTop and -5 or 5),
-            AnchorPoint = Vector2.new(0, frameOnTop and 1 or 0),
+            Size = UDim2.fromOffset(120 + (uiSize > 240 and 12 or 0), math.min(uiSize, 240) + 5),
+            Position = UDim2.fromScale(0, isOnTop and 0 or 1) + UDim2.fromOffset(0, isOnTop and -5 or 5),
+            AnchorPoint = Vector2.new(0, isOnTop and 1 or 0),
             BackgroundColor3 = Theme.Border.Default,
             VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
             CanvasSize = UDim2.new(0, 0, 0, 0),
-            AutomaticCanvasSize = UiSize > 240 and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
+            AutomaticCanvasSize = uiSize > 240 and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
             BorderColor3 = Theme.Border.Default,
             BorderSizePixel = 2,
             ZIndex = 8,
@@ -83,7 +85,7 @@ function Dropdown:GetValue(dataArray, uiParent)
                         ZIndex = 8,
 
                         [OnEvent "Activated"] = function()
-                            value = data.Value
+                            currentValue = data.Value
                             DataChosen:Fire()
                         end,
                         
@@ -106,13 +108,14 @@ function Dropdown:GetValue(dataArray, uiParent)
 
     local ZIndex = uiParent.ZIndex
     uiParent.ZIndex = 8
+    
     Util.dropdownActive:set(true)
     DataChosen:Wait()
     Maid:DoCleaning()
     Util.dropdownActive:set(false)
     uiParent.ZIndex = ZIndex
 
-    return value
+    return currentValue
 end
 
 Util.MainMaid:GiveTask(Maid)

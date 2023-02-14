@@ -18,7 +18,6 @@ local Data = {
 }
 
 local directories = SettingsUtil.Directories
-
 local buttonTypes = {"Default", "Group"}
 
 function setupButtonFolder(folder: Instance)
@@ -132,7 +131,7 @@ function insertButtonFolders()
 end
 
 local buttonVisibleMap = {}
-function Data:getDropdown(visible)
+function Data:getDropdown(visible): Instance
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
@@ -176,7 +175,7 @@ function Data:getDropdown(visible)
     }
 end
 
-function Data:getHeaderChildren()
+function Data:getHeaderChildren(): {}
 	return {}
 end
 

@@ -4,6 +4,8 @@ local ScriptEditorService = game:GetService("ScriptEditorService")
 
 local AutocompleteData = require(script.Parent.AutocompleteData)
 local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
+local AutocompleteTypes = require(script.Parent.AutocompleteTypes)
+
 local Lexer = require(script.Parent.Lexer)
 local GlobalSettings = require(script.Parent.GlobalSettings)
 
@@ -20,8 +22,10 @@ local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
 local FUNC_MATCH = "function%(.+%)?%s*$"
 local CALLBACK_NAME = "__MapLibCompletion"
 
+type propertiesTable = {[any]: any}
+
 function Suggester:registerCallback()
-	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request, response)
+	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
 		local currentScript = request.textDocument.script
 		local currentScriptContext = ScriptEditorService:FindScriptDocument(currentScript)
 		local currentDocument = request.textDocument.document
@@ -72,7 +76,7 @@ function Suggester:registerCallback()
 			end
 		end
 		
-		local function addResponse(responseData, treeIndex)
+		local function addResponse(responseData: propertiesTable, treeIndex: string)
 			local suggestionData = responseData.data
 			table.insert(response.items, {
 				label = responseData.label,
@@ -95,7 +99,7 @@ function Suggester:registerCallback()
 			})
 		end
 		
-		local function suggestResponses(branchList: {string}, index: string, lineTokens: {Lexer.Token})
+		local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
 			local current = AutocompleteData[index]
 			local reachedEnd = false
 			
@@ -131,7 +135,7 @@ function Suggester:registerCallback()
 			end
 		end
 
-		local function insertAll(index, tokens)
+		local function insertAll(index: string, tokens: {AutocompleteTypes.Token})
 			local allVariables = {}
 			for k in pairs(AutocompleteData[index].branches) do
 				table.insert(allVariables, k)
@@ -159,7 +163,7 @@ function Suggester:registerCallback()
 					but it was annoying working with a while loop
 				]]
 	
-				local function backtrackToFindFunction(startLine)
+				local function backtrackToFindFunction(startLine: number)
 					if startLine < 2 then
 						tempLineData.failed = true
 						return

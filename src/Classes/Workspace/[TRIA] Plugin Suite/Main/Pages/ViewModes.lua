@@ -8,7 +8,9 @@ local Children = Fusion.Children
 
 local frame = {}
 
-function frame:GetFrame(data)
+type propertiesTable = {[any]: any}
+
+function frame:GetFrame(data: propertiesTable): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

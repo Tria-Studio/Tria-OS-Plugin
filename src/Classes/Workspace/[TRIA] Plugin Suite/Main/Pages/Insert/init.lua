@@ -15,7 +15,9 @@ local Computed = Fusion.Computed
 
 local frame = {}
 
-local function attemptTask(service, functionName: string, ...): (boolean, any)
+type propertiesTable = {[any]: any}
+
+local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
     local MAX_ATTEMPTS = 5
 
     local attemptCount = 0
@@ -58,7 +60,7 @@ function attemptToInsertModel(assetID: number)
     Selection:Set({result})
 end
 
-function KitInsertButton(data)
+function KitInsertButton(data: propertiesTable): Instance
     return Components.ImageButton {
         BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
         BackgroundTransparency = 0,
@@ -123,7 +125,7 @@ function KitInsertButton(data)
     }
 end
 
-function SubFrame(data)
+function SubFrame(data: propertiesTable): Instance
     return New "Frame" {
         BackgroundTransparency = 1,
         LayoutOrder = data.LayoutOrder,
@@ -136,7 +138,7 @@ function SubFrame(data)
     }
 end
 
-function frame:GetFrame(data)
+function frame:GetFrame(data: propertiesTable): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

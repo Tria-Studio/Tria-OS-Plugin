@@ -13,7 +13,9 @@ local OnEvent = Fusion.OnEvent
 
 local frame = {}
 
-function OptionFrame(props)
+type propertiesTable = {[any]: any}
+
+function OptionFrame(props: propertiesTable): Instance
     local enabled = Value(props.Enabled)
     if props.OnToggle then
         props.OnToggle(props.Enabled)
@@ -63,7 +65,7 @@ function OptionFrame(props)
     }
 end
 
-function frame:GetFrame(data)
+function frame:GetFrame(data: propertiesTable): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

@@ -5,7 +5,7 @@ local Fusion = require(Package.Resources.Fusion)
 local Components = require(Package.Resources.Components)
 local Theme = require(Package.Resources.Themes)
 local Util = require(Package.Util)
-local ColorWheel = require(Package.Colorwheel)
+local ColorWheel = require(Package.ColorWheel)
 local Dropdown = require(Package.Util.Dropdown)
 
 local New = Fusion.New

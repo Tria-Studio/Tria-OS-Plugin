@@ -1,15 +1,21 @@
-local PluginBar = plugin:CreateToolbar("[TRIA] Plugin Suite")
-local OpenButton = PluginBar:CreateButton("TRIA.os Companion Plugin", "Tools to help map making easier!", "rbxassetid://12032105372", "Mapmaking Companion")
-local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 300)
-local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
+local toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
+local openButton = toolbar:CreateButton(
+	"TRIA.os Companion Plugin", 
+	"Tools to help map making easier!", 
+	"rbxassetid://12032105372", 
+	"Mapmaking Companion"
+)
+
+local widgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 300)
+local widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", widgetInfo)
 
 local Fusion = require(script.Resources.Fusion)
 local Components = require(script.Resources.Components)
 local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
-local SelectMap = require(script.SelectMap)
+local MapSelect = require(script.MapSelect)
 local Util = require(script.Util)
-local ColorWheel = require(script.Colorwheel)
+local ColorWheel = require(script.ColorWheel)
 local Message = require(script.Message)
 local MenuData = require(script.MenuData)
 
@@ -20,12 +26,12 @@ local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
 
-Widget.Title = "[TRIA] Plugin Suite"
-Util.Widget = Widget
+widget.Title = "[TRIA] Plugin Suite"
+Util.Widget = widget
 
 New "Frame" {
 	Name = "TRIA.os Plugin",
-	Parent = Widget,
+	Parent = widget,
 	Size = UDim2.fromScale(1, 1),
 	BackgroundColor3 = Theme.MainBackground.Default,
 
@@ -44,7 +50,6 @@ New "Frame" {
 				New "TextLabel" {
 					Active = Computed(Util.isPluginFrozen),
 					AnchorPoint = Vector2.new(0.5, 0.5),
-
 					BackgroundTransparency = Spring(Computed(function()
 						return Util.isPluginFrozen() and 0.5 or 1
 					end), 18),
@@ -113,28 +118,28 @@ New "Frame" {
 				Components.TextButton({
 					Size = UDim2.new(1, -100, 1, -6),
 					Position = UDim2.fromOffset(76, 3),
-					Text = SelectMap.selectTextState,
-					TextColor3 = SelectMap.selectTextColor,
+					Text = MapSelect.selectTextState,
+					TextColor3 = MapSelect.selectTextColor,
 					BackgroundColor3 = Theme.InputFieldBackground.Default,
 
 					[OnEvent "Activated"] = function()
-						SelectMap:StartMapSelection()
+						MapSelect:StartMapSelection()
 					end
 				}),
 				Components.ImageButton({
 					AnchorPoint = Vector2.new(1, 0.5),
 					Size = UDim2.fromOffset(20, 20),
 					Position = UDim2.new(1, -2, 0.5, 0),
-					Image = SelectMap.selectCancelImage,
-					ImageColor3 = SelectMap.selectCancelColor,
+					Image = MapSelect.selectCancelImage,
+					ImageColor3 = MapSelect.selectCancelColor,
 					BorderSizePixel = 1,
 					BorderColor3 = Theme.Border.Default,
 
 					[OnEvent "Activated"] = function()
-						if SelectMap.selectingMap:get(false) then
-							SelectMap:StopManualSelection()
+						if MapSelect.selectingMap:get(false) then
+							MapSelect:StopManualSelection()
 						else
-							SelectMap:SetMap(nil)
+							MapSelect:SetMap(nil)
 						end
 					end
 				})
@@ -157,19 +162,10 @@ New "Frame" {
 	}
 }
 
-
-local function onOpen()
-	SelectMap:AutoSelect()
-end
-
-OpenButton.Click:Connect(function()
-	Widget.Enabled = not Widget.Enabled
-
-	if Widget.Enabled then
-		onOpen()
-	end
+openButton.Click:Connect(function()
+	widget.Enabled = not widget.Enabled
 end)
 
-if Widget.Enabled then
-	onOpen()
+if widget.Enabled then
+	MapSelect:AutoSelect()
 end
