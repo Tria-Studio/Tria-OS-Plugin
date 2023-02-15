@@ -59,7 +59,7 @@ end)
 
 local springs = {
     ["selectedMapSpring"] = Spring(Computed(function()
-        return if selectedPublishMap:get() then Theme.MainButton.Default:get() else Theme.CurrentMarker.Selected:get()
+        return selectedPublishMap:get() and Theme.MainButton.Default:get() or Theme.CurrentMarker.Selected:get()
     end), 20),
 
     ["publishButtonSpring"] = Spring(Computed(function()
