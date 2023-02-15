@@ -1,5 +1,6 @@
 
 local InsertService = game:GetService("InsertService")
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
 local Package = script.Parent.Parent
@@ -58,6 +59,7 @@ function attemptToInsertModel(assetID: number)
     result:PivotTo(CFrame.new())
     result.Parent = workspace
     Selection:Set({result})
+    ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
 function KitInsertButton(data: propertiesTable): Instance
