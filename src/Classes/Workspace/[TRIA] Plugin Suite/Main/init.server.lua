@@ -25,6 +25,7 @@ local Computed = Fusion.Computed
 local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
+local ForPairs = Fusion.ForPairs
 
 widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = widget
@@ -93,8 +94,8 @@ New "Frame" {
 			end,
 			[Children] = {
 				Components.Constraints.UIGridLayout(UDim2.fromScale(1 / #MenuData.Buttons, 1), UDim2.new(), Enum.FillDirection.Horizontal),
-				ForValues(MenuData.Buttons, function(data)
-					return Components.TopbarButton(data)
+				ForPairs(MenuData.Buttons, function(index, data)
+					return index, Components.TopbarButton(index, data)
 				end, Fusion.cleanup)
 			},
 		},

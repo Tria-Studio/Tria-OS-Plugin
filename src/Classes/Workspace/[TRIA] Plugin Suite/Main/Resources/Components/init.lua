@@ -50,18 +50,22 @@ function Components.TextBox(data: PublicTypes.propertiesTable): Instance
     })(data)
 end
 
-function Components.TopbarButton(data: PublicTypes.propertiesTable): Instance
+function Components.TopbarButton(index, data: PublicTypes.propertiesTable): Instance
     data.Visible = Pages.pageData.pages[data.Name].Visible
+
+    local startColor = Color3.fromRGB(245, 158, 29)
+    local endColor = Color3.fromRGB(247, 0, 255)
 
     local transparencySpring = Spring(Computed(function()
         return data.Visible:get() and 0 or 1
     end), 20)
 
-    local colorSpring = Spring(Computed(function()
-        local startColor = Color3.fromRGB(245, 158, 29)
-        local endColor = Color3.fromRGB(247, 0, 255)
+    local pageRatio = Computed(function()
+        return Util._currentPageNum:get() / #Util._PageOrder
+    end)
 
-        return lerpType(startColor, endColor, Util._currentPageNum:get() / #Util._PageOrder)
+    local colorSpring = Spring(Computed(function()
+        return lerpType(startColor, endColor, pageRatio:get())
     end), 20)
 
     return New "TextButton" {
@@ -132,7 +136,17 @@ function Components.TopbarButton(data: PublicTypes.propertiesTable): Instance
                 Size = UDim2.new(1, 0, 0.7, 0),
                 Image = data.Icon,
 
-                [Children] = Components.Constraints.UIAspectRatio(1),
+                [Children] = {
+                    Components.Constraints.UIAspectRatio(1),
+                    Components.Constraints.UIGradient(Computed(function()
+                        local ratio = (index - 1) / #Util._PageOrder
+
+                        local start = lerpType(startColor, endColor, ratio)
+                        local finish = lerpType(startColor, endColor, ratio + (1 / #Util._PageOrder))
+
+                        return ColorSequence.new(start, finish)
+                    end):get(), NumberSequence.new(0), 0)
+                },
             }
         }
     }
