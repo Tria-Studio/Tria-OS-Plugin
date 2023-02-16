@@ -54,13 +54,13 @@ function Dropdown:GetValue(dataArray, uiParent)
     Maid:GiveTask(
         Components.ScrollingFrame {
             Parent = uiParent,
-            Size = UDim2.fromOffset(120 + (uiSize > 240 and 12 or 0), math.min(uiSize, 240) + 5),
+            Size = UDim2.fromOffset(120 + (dropdownSize > 240 and 12 or 0), math.min(dropdownSize, 240) + 5),
             Position = UDim2.fromScale(0, isOnTop and 0 or 1) + UDim2.fromOffset(0, isOnTop and -5 or 5),
             AnchorPoint = Vector2.new(0, isOnTop and 1 or 0),
             BackgroundColor3 = Theme.Border.Default,
             VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
             CanvasSize = UDim2.new(0, 0, 0, 0),
-            AutomaticCanvasSize = uiSize > 240 and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
+            AutomaticCanvasSize = dropdownSize > 240 and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
             BorderColor3 = Theme.Border.Default,
             BorderSizePixel = 2,
             ZIndex = 8,
