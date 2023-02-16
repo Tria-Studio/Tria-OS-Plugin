@@ -286,7 +286,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             [Out "Text"] = whitelistMapId
                         },
 
-                        Components.TextButton({
+                        Components.TextButton {
                             AnchorPoint = Vector2.new(0.5, 0.5),
                             BorderSizePixel = 2,
                             LayoutOrder = 3,
@@ -305,7 +305,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             end,
 
                             [Children] = Components.Constraints.UICorner(0, 6),
-                        })
+                        }
                     }),
 
                     getInfoFrame("Map Publishing", { --// Publishing
@@ -350,7 +350,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             })
                         },
 
-                        Components.TextButton({
+                        Components.TextButton {
                             AnchorPoint = Vector2.new(0.5, 0.5),
                             BorderSizePixel = 2,
                             LayoutOrder = 5,
@@ -369,7 +369,7 @@ Your creator token is a long phrase of characters which authenticates and allows
                             end,
 
                             [Children] = Components.Constraints.UICorner(0, 6)
-                        }),
+                        },
 
                         New "Frame" {
                             BackgroundColor3 = Theme.Item.Default,
@@ -509,7 +509,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                             [Children] = {
                                 Components.Constraints.UIPadding(UDim.new(0, 4), nil, nil, nil),
 
-                                Components.TextButton({
+                                Components.TextButton {
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BorderSizePixel = 2,
                                     Position = UDim2.fromScale(0.26, 0.45),
@@ -535,9 +535,9 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     end,
 
                                     [Children] = Components.Constraints.UICorner(0, 6)
-                                }),
+                                },
 
-                                Components.TextButton({
+                                Components.TextButton {
                                     AnchorPoint = Vector2.new(0.5, 0.5),
                                     BorderSizePixel = 2,
                                     Position = UDim2.fromScale(0.73, 0.45),
@@ -565,7 +565,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                     end,
 
                                     [Children] = Components.Constraints.UICorner(0, 8)
-                                }),
+                                },
                             }
                         },
                     }),
