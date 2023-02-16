@@ -50,7 +50,7 @@ function Components.TextBox(data: PublicTypes.propertiesTable): Instance
     })(data)
 end
 
-function Components.TopbarButton(index, data: PublicTypes.propertiesTable): Instance
+function Components.TopbarButton(index: number, data: PublicTypes.propertiesTable): Instance
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     local startColor = Color3.fromRGB(245, 158, 29)
