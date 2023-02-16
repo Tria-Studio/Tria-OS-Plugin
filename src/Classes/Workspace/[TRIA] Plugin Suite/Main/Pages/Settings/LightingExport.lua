@@ -7,6 +7,7 @@ local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
 local Util = require(Package.Util)
 local SettingsUtil = require(script.Parent.SettingsUtil)
+local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -14,10 +15,8 @@ local OnEvent = Fusion.OnEvent
 local Hydrate = Fusion.Hydrate
 
 local directories = SettingsUtil.Directories
-
-type propertiesTable = {[any]: any}
-
-function ExportButton(props: propertiesTable): Instance
+ 
+function ExportButton(props: PublicTypes.propertiesTable): Instance
     return Hydrate(Components.TextButton {
         Active = Util.interfaceActive,
         AutoButtonColor = Util.interfaceActive,

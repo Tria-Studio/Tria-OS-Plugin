@@ -3,6 +3,7 @@ local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
 local Fusion = require(Package.Resources.Fusion)
 local Components = require(Package.Resources.Components)
+local PublicTypes = require(Package.PublicTypes)
 
 local SettingTypes = require(script.Parent:WaitForChild("SettingTypes"))
 
@@ -92,7 +93,7 @@ function SettingsUtil.modifyStateTable(state, action: string, ...)
     state:set(newTbl, true)
 end
 
-function SettingsUtil.connectValue(object: Instance, data: propertiesTable)
+function SettingsUtil.connectValue(object: Instance, data: PublicTypes.propertiesTable)
     local currentValue = object:GetAttribute(data.Attribute)
     local function updateConnection()
         SettingsUtil.updateStateValue(currentValue, object:GetAttribute(data.Attribute), data)
@@ -101,12 +102,12 @@ function SettingsUtil.connectValue(object: Instance, data: propertiesTable)
     updateConnection()
 end
 
-function SettingsUtil.settingOption(optionType: string, optionData: propertiesTable): Instance
+function SettingsUtil.settingOption(optionType: string, optionData: PublicTypes.propertiesTable): Instance
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
 end
 
-function SettingsUtil.DirectoryDropdown(data: propertiesTable, childProcessor: (boolean) -> Instance): Instance
+function SettingsUtil.DirectoryDropdown(data: PublicTypes.propertiesTable, childProcessor: (boolean) -> Instance): Instance
     return Components.Dropdown({
         DefaultState = data.Default, 
         Header = data.Display, 

@@ -10,6 +10,7 @@ local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
 local Util = require(Package.Util)
+local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -78,9 +79,7 @@ local springs = {
         return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
     end), 20)
 }
-
-type propertiesTable = {[any]: any}
-
+ 
 local frame = {}
 
 local function getInfoFrame(name: string, frames: {Instance}): Instance
@@ -106,7 +105,7 @@ function frame.OnClose()
     selectedPublishMap:set(nil)
 end
 
-function frame:GetFrame(data: propertiesTable): Instance
+function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
     local publishedMaps = {}
     local whitelistedMaps = {}
 

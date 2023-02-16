@@ -10,6 +10,7 @@ local TagData = require(script.Parent.tagData)
 local Pages = require(Package.Resources.Components.Pages)
 local Colorwheel = require(Package.ColorWheel)
 local Dropdown = require(Package.Util.Dropdown)
+local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -22,10 +23,8 @@ local OnChange = Fusion.OnChange
 local Ref = Fusion.Ref
 local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
-
-type propertiesTable = {[any]: any}
-
-return function(name: string, data: propertiesTable): Instance
+ 
+return function(name: string, data: PublicTypes.propertiesTable): Instance
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
 

@@ -2,12 +2,14 @@ local Suggester = {}
 
 local ScriptEditorService = game:GetService("ScriptEditorService")
 
-local AutocompleteData = require(script.Parent.AutocompleteData)
-local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
-local AutocompleteTypes = require(script.Parent.AutocompleteTypes)
+local Package = script.Parent
+local AutocompleteData = require(Package.AutocompleteData)
+local AutocompleteUtil = require(Package.AutocompleteUtil)
+local AutocompleteTypes = require(Package.AutocompleteTypes)
+local PublicTypes = require(Package.Parent.Parent.Parent.PublicTypes)
 
-local Lexer = require(script.Parent.Lexer)
-local GlobalSettings = require(script.Parent.GlobalSettings)
+local Lexer = require(Package.Lexer)
+local GlobalSettings = require(Package.GlobalSettings)
 
 local PROPERTY_INDEX = {
 	Property = "=%s*(%w+)%.",
@@ -21,9 +23,7 @@ local FUNCTION_CALL = {
 local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
 local FUNC_MATCH = "function%(.+%)?%s*$"
 local CALLBACK_NAME = "__MapLibCompletion"
-
-type propertiesTable = {[any]: any}
-
+ 
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
 		local currentScript = request.textDocument.script
@@ -76,7 +76,7 @@ function Suggester:registerCallback()
 			end
 		end
 		
-		local function addResponse(responseData: propertiesTable, treeIndex: string)
+		local function addResponse(responseData: PublicTypes.propertiesTable, treeIndex: string)
 			local suggestionData = responseData.data
 			table.insert(response.items, {
 				label = responseData.label,

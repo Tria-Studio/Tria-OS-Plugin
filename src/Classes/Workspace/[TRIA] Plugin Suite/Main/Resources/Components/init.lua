@@ -4,6 +4,7 @@ local Theme = require(Resources.Themes)
 local Util = require(Resources.Parent.Util)
 local Pages = require(script.Pages)
 local lerpType = require(Resources.Fusion.Animation.lerpType)
+local PublicTypes = require(Resources.Parent.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -17,10 +18,8 @@ local Ref = Fusion.Ref
 local Components = {
     Constraints = require(script.Constraints),
 }
-
-type propertiesTable = {[any]: any}
-
-function Components.TextButton(data: propertiesTable): Instance
+ 
+function Components.TextButton(data: PublicTypes.propertiesTable): Instance
     return Hydrate(New "TextButton" {
         AutoButtonColor = true,
         BackgroundColor3 = Theme.Button.Default,
@@ -31,7 +30,7 @@ function Components.TextButton(data: propertiesTable): Instance
     })(data)
 end
 
-function Components.ImageButton(data: propertiesTable): Instance
+function Components.ImageButton(data: PublicTypes.propertiesTable): Instance
     return Hydrate(New "ImageButton" {
         BackgroundColor3 = Theme.Button.Default,
         BorderSizePixel = 1,
@@ -41,7 +40,7 @@ function Components.ImageButton(data: propertiesTable): Instance
     })(data)
 end
 
-function Components.TextBox(data: propertiesTable): Instance
+function Components.TextBox(data: PublicTypes.propertiesTable): Instance
     return Hydrate(New "TextBox" {
         PlaceholderColor3 = Theme.DimmedText.Default,
         BackgroundColor3 = Theme.InputFieldBackground.Default,
@@ -51,7 +50,7 @@ function Components.TextBox(data: propertiesTable): Instance
     })(data)
 end
 
-function Components.TopbarButton(data: propertiesTable): Instance
+function Components.TopbarButton(data: PublicTypes.propertiesTable): Instance
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     local transparencySpring = Spring(Computed(function()
@@ -160,7 +159,7 @@ function Components.PageHeader(pageName: string): Instance
     }
 end
 
-function Components.MiniTopbar(data: propertiesTable): Instance
+function Components.MiniTopbar(data: PublicTypes.propertiesTable): Instance
   return New "Frame" { --// Topbar
         BackgroundColor3 = Theme.CategoryItem.Default,
         BorderColor3 = Theme.Border.Default,
@@ -196,7 +195,7 @@ function Components.MiniTopbar(data: propertiesTable): Instance
     }
 end
 
-function optionButtonComponent(data: propertiesTable, zIndex: number): Instance
+function optionButtonComponent(data: PublicTypes.propertiesTable, zIndex: number): Instance
     return Components.TextButton({
         LayoutOrder = 1,
         ZIndex = zIndex,
@@ -217,7 +216,7 @@ function optionButtonComponent(data: propertiesTable, zIndex: number): Instance
     })
 end
 
-function Components.TwoOptions(option1Data: propertiesTable, option2Data: propertiesTable, zIndex: number): Instance
+function Components.TwoOptions(option1Data: PublicTypes.propertiesTable, option2Data: PublicTypes.propertiesTable, zIndex: number): Instance
     return New "Frame" { --// Buttons
         BackgroundTransparency = 1,
         AnchorPoint = Vector2.new(0, 0),
@@ -249,7 +248,7 @@ function Components.ScrollingFrameHeader(text: string, layoutOrder: number, colo
     }
 end
 
-function Components.ScrollingFrame(data: propertiesTable): Instance
+function Components.ScrollingFrame(data: PublicTypes.propertiesTable): Instance
     return Hydrate(New "ScrollingFrame" {
         ScrollingEnabled = Util.interfaceActive,
         BorderColor3 = Theme.Border.Default,
@@ -264,7 +263,7 @@ function Components.ScrollingFrame(data: propertiesTable): Instance
     })(data)
 end
 
-function Components.Dropdown(data: propertiesTable, childrenProcessor: (boolean) -> Instance | {Instance}): Instance
+function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcessor: (boolean) -> Instance | {Instance}): Instance
     local dropdownVisible = Value(data.DefaultState)
     local headerColor = Value(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
     local frame = Value()
@@ -365,7 +364,7 @@ function Components.Dropdown(data: propertiesTable, childrenProcessor: (boolean)
     return dropdown
 end
 
-function Components.DropdownTextlabel(data: propertiesTable): Instance
+function Components.DropdownTextlabel(data: PublicTypes.propertiesTable): Instance
     return New "TextLabel" {
         TextXAlignment = data.TextXAlignment,
         BackgroundColor3 = Theme.Notification.Default,
@@ -384,7 +383,7 @@ function Components.DropdownTextlabel(data: propertiesTable): Instance
    }
 end
 
-function Components.DropdownHolderFrame(data: propertiesTable): Instance
+function Components.DropdownHolderFrame(data: PublicTypes.propertiesTable): Instance
     return New "Frame" {
         AutomaticSize = Computed(function()
             return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None
@@ -398,7 +397,7 @@ function Components.DropdownHolderFrame(data: propertiesTable): Instance
     }
 end
 
-function Components.TooltipImage(data: propertiesTable): Instance
+function Components.TooltipImage(data: PublicTypes.propertiesTable): Instance
     local isActive = Computed(function()
         return not Util.isPluginFrozen()
     end)
@@ -443,7 +442,7 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
     }
 end
 
-function Components.BasicHeaderText(data: propertiesTable): Instance
+function Components.BasicHeaderText(data: PublicTypes.propertiesTable): Instance
     return New "TextLabel" {
         AnchorPoint = Vector2.new(0, 0),
         BackgroundColor3 = Theme.Titlebar.Default,

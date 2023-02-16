@@ -5,6 +5,7 @@ local Components = require(Package.Resources.Components)
 local Autocompleter = require(script.Autocompleter)
 local GlobalSettings = require(script.Autocompleter.GlobalSettings)
 local Util = require(Package.Util)
+local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -12,10 +13,8 @@ local Value = Fusion.Value
 local OnEvent = Fusion.OnEvent
 
 local frame = {}
-
-type propertiesTable = {[any]: any}
-
-function OptionFrame(props: propertiesTable): Instance
+ 
+function OptionFrame(props: PublicTypes.propertiesTable): Instance
     local enabled = Value(props.Enabled)
     if props.OnToggle then
         props.OnToggle(props.Enabled)
@@ -65,7 +64,7 @@ function OptionFrame(props: propertiesTable): Instance
     }
 end
 
-function frame:GetFrame(data: propertiesTable): Instance
+function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
