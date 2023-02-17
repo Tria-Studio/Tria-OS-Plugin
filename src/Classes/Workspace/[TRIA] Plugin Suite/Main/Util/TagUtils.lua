@@ -3,6 +3,7 @@
      - [ ] bug where liquids get parented to the Interactables folder instead of the liquids folder
      - [ ] make selecting the data tag object count as selecting the part/model
 ]]
+
 local Package = script.Parent.Parent
 local TagData = require(Package.Pages.ObjectTags.tagData)
 local Util = require(script.Parent)
@@ -56,6 +57,7 @@ local tagTypes = {
         "Detail"
     }
 }
+
 local tagsWithNumbers = {
     "_Button",
     "_Gas",
@@ -73,149 +75,150 @@ local defaultMetadataTypes = {
     color = Color3.new(),
     string = "",
     boolean = Enum.TriStateBoolean.Unknown,
-
 }
 
-
-local function getTagInstance(part, tag)
-    for _, Child in pairs(part:GetChildren()) do
-        if string.find(Child.Name, tag, 1, true) then
-            return Child
+local function getTagInstance(part, tag): Instance | nil
+    for _, child in ipairs(part:GetChildren()) do
+        if string.find(child.Name, tag, 1, true) then
+            return child
         end
     end
+    return nil
 end
 
-function tagUtils:GetPartTags(part: Instance, excludeTag: string?)
+function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
     local partTags = {}
-
-    for Type, tags in pairs(tagTypes) do
-        for i, tag in pairs(tags) do
-            if i ~= "_convert" and tagUtils:PartHasTag(part, tag) and tag ~= excludeTag and not table.find(partTags, tag) then
+    for tagType, tags in pairs(tagTypes) do
+        for key, tag in ipairs(tags) do
+            if key ~= "_convert" and tagUtils:PartHasTag(part, tag) and tag ~= excludeTag and not table.find(partTags, tag) then
                 table.insert(partTags, tag)
             end
         end
     end
-
     return partTags
 end
 
-function tagUtils:SetPartMetaData(part, tag, metadata, newValue)
+function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: {}, newValue: any)
     if table.find(tagTypes.ModelTags, tag) then
         part = part:IsA("Model") and part or part.Parent
     end
-    local Types = {}
+
+    local types = {}
 
     if newValue then --// Assign or Change
-        function Types.Attribute()
+        function types.Attribute()
             part:SetAttribute(metadata.data.dataName, newValue)
         end
 
-        function Types.ConfigAttribute()
-            part:FindFirstChild("Customization"):SetAttribute(metadata.data.dataName, newValue)
+        function types.ConfigAttribute()
+            local customization = part:FindFirstChild("Customization")
+            customization:SetAttribute(metadata.data.dataName, newValue)
         end
 
-        function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
-            local TagInstance = getTagInstance(part, tag)
+        function types.ChildInstanceValue() 
+            local tagInstance = getTagInstance(part, tag)
 
             if newValue ~= 0 then
-                if not TagInstance:FindFirstChild("_Delay") then
-                    local newValue = Instance.new("NumberValue", TagInstance)
+                if not tagInstance:FindFirstChild("_Delay") then
+                    local newValue = Instance.new("NumberValue", tagInstance)
                     newValue.Name = "_Delay"
                 end
-
-                TagInstance._Delay.Value = newValue
-            elseif TagInstance and TagInstance:FindFirstChild("_Delay") then
-                TagInstance:FindFirstChild("_Delay").Parent = nil
+                tagInstance._Delay.Value = newValue
+            elseif tagInstance and tagInstance:FindFirstChild("_Delay") then
+                tagInstance:FindFirstChild("_Delay").Parent = nil
             end
         end
 
-        function Types.Property() --// Just _Sound
-            local TagInstance = getTagInstance(part, tag)
+        function types.Property()
+            local tagInstance = getTagInstance(part, tag)
 
-            if TagInstance then
-                TagInstance[metadata.data._propertyName] = newValue
+            if tagInstance then
+                tagInstance[metadata.data._propertyName] = newValue
             end
         end
 
-        function Types.EndOfName() --// Button, Liquid, & Gas
-            local TagInstance = getTagInstance(part, tag)
+        function types.EndOfName()
+            local tagInstance = getTagInstance(part, tag)
 
-            if TagInstance then
-                TagInstance.Name = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub .. newValue or 0
+            if tagInstance then
+                tagInstance.Name = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub .. newValue or 0
             end
         end
     else --// Clear
-        function Types.Attribute()
+        function types.Attribute()
             part:SetAttribute(metadata.data.dataName, nil)
         end
 
-        function Types.ConfigAttribute()
-            part:FindFirstChild("Customization"):SetAttribute(metadata.data.dataName, nil)
+        function types.ConfigAttribute()
+            local customization = part:FindFirstChild("Customization")
+            customization:SetAttribute(metadata.data.dataName, nil)
         end
 
-        function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
+        function types.ChildInstanceValue()
             if part:FindFirstChild(metadata.data.dataName) then
                 part:FindFirstChild(metadata.data.dataName).Parent = nil
             end
         end
 
-        function Types.Property()
+        function types.Property()
             
         end
 
-        function Types.EndOfName()
+        function types.EndOfName()
             part.Name = part.ClassName
         end
     end
 
-    Types[metadata.data.type]()
+    types[metadata.data.type]()
 end
 
-function tagUtils:GetPartMetaData(part, name, tag)
+function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
     if table.find(tagTypes.ModelTags, name) then
         part = part:IsA("Model") and part or part.Parent
     end
+
     local data = TagData.metadataTypes[tag]
     local mainData = TagData.dataTypes.buttonTags[name] or TagData.dataTypes.objectTags[name]
-    local Types = {}
+    local types = {}
 
-    function Types.Attribute()
+    function types.Attribute()
         return part:GetAttribute(data.dataName)
     end
 
-    function Types.ConfigAttribute()
-        return part:FindFirstChild("Customization") and part:FindFirstChild("Customization"):GetAttribute(data.dataName)
+    function types.ConfigAttribute()
+        local customization = part:FindFirstChild("Customization")
+        return customization and customization:GetAttribute(data.dataName)
     end
 
-    function Types.ChildInstanceValue() --// Just _Delay (i hate _delay its so hard to SUPPORT BSDKHFKDSHFKHSDHHFSDHKFGSHKFDSHKFGKHSHKSDKFkl)
-        local Child = getTagInstance(part, name)
-        if Child then 
-            return Child:FindFirstChild("_Delay") and Child._Delay.Value
+    function types.ChildInstanceValue()
+        local child = getTagInstance(part, name)
+        if child then 
+            return child:FindFirstChild("_Delay") and child._Delay.Value
         end
     end
 
-    function Types.Property() --// Just _Sound
-        local Sound = part:FindFirstChildOfClass("Sound") or part.Parent:FindFirstChildOfClass("Sound")
-        return Sound and Sound[data._propertyName]
+    function types.Property()
+        local sound = part:FindFirstChildOfClass("Sound") or part.Parent:FindFirstChildOfClass("Sound")
+        return sound and sound[data._propertyName]
     end
 
-    function Types.EndOfName() --// Button, Liquid, & Gas
-        local TagInstance = getTagInstance(part, name)
-        return TagInstance
-            and string.sub(TagInstance.Name, #mainData._nameStub + 1)
+    function types.EndOfName() 
+        local tagInstance = getTagInstance(part, name)
+        return tagInstance
+            and string.sub(tagInstance.Name, #mainData._nameStub + 1)
             or string.sub(part.Name, #mainData._nameStub + 1)
     end
 
-    return Types[data.type]()
+    return types[data.type]()
 end
 
-function tagUtils:GetSelectedMetadataValue(name, tag)
+function tagUtils:GetSelectedMetadataValue(name: string, tag: string): any
     local metaDataData = TagData.metadataTypes[tag]
     local firstValue
     local numHas = 0
 
-    for _, Part: Instance in pairs(Util._Selection.selectedParts:get()) do
-        local tagData = tagUtils:GetPartMetaData(Part, name, tag)
+    for _, part: Instance in ipairs(Util._Selection.selectedParts:get()) do
+        local tagData = tagUtils:GetPartMetaData(part, name, tag)
         if firstValue == nil and tagData ~= nil then
             firstValue = tagData
         end
@@ -232,129 +235,130 @@ function tagUtils:GetSelectedMetadataValue(name, tag)
 end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
-    local function VerifyFolder(Name: string?)
-        if not Util.mapModel:get(false):FindFirstChild(Name or "Geometry") then
-            Instance.new("Folder", Util.mapModel:get(false)).Name = Name or "Geometry"
+    local function verifyFolder(folderName: string?)
+        if not Util.mapModel:get(false):FindFirstChild(folderName or "Geometry") then
+            Instance.new("Folder", Util.mapModel:get(false)).Name = folderName or "Geometry"
         end
     end
 
     local isOptimized = Util.mapModel:get(false):FindFirstChild("Special")
     local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag]
-    local Methods = {}
+    local methods = {}
 
     if not newTag then --// Clear tag
-        local OtherTags = tagUtils:GetPartTags(part, oldTag)
+        local otherTags = tagUtils:GetPartTags(part, oldTag)
 
-        function Methods._Action()
+        function methods._Action()
             if isOptimized then
-                VerifyFolder()
+                verifyFolder()
             end
             part:SetAttribute("_action", nil)
-            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
+            part.Parent = if isOptimized and #otherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
         end
 
-        function Methods.Name()
+        function methods.Name()
             if isOptimized then
-                VerifyFolder()
+                verifyFolder()
             end
             part.Name = part.ClassName
-            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
+            part.Parent = if isOptimized and #otherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
         end
 
-        function Methods.DetailParent()
-            VerifyFolder()
+        function methods.DetailParent()
+            verifyFolder()
             part.Parent = Util.mapModel:get(false).Geometry
         end
 
-        function Methods.Child()
+        function methods.Child()
             if isOptimized then
-                VerifyFolder()
+                verifyFolder()
             end
-            for _, Child in pairs(part:GetChildren()) do
-                if string.find(Child.Name, oldTag, 1, true) then
-                    Child.Parent = nil
+            for _, child in ipairs(part:GetChildren()) do
+                if string.find(child.Name, oldTag, 1, true) then
+                    child.Parent = nil
                 end
             end
-            part.Parent = if isOptimized and #OtherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
+            part.Parent = if isOptimized and #otherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
         end
 
         local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
-        for _, metaData in pairs(tagData.metadata) do
+        for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, oldTag, metaData, nil)
         end
 
-        local methods = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod or {tagData.ApplyMethod}
-        for _, method in  pairs(methods) do
-            Methods[method]()
+        local applyMethods = typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod or {tagData.ApplyMethod}
+        for _, method in pairs(applyMethods) do
+            methods[method]()
         end
     else --// Assign new tag
-        local NewParent = if isOptimized and table.find(tagTypes.ButtonTags, newTag) and isOptimized:FindFirstChild("Button")
-            then isOptimized.Button
+        local newParent = 
+            if isOptimized and table.find(tagTypes.ButtonTags, newTag) and isOptimized:FindFirstChild("Button") then isOptimized.Button
             elseif newTag == "_Liquid" or newTag == "_Gas" and isOptimized:FindFirstChild("Fluid") then isOptimized.Fluid
             elseif isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable
             else part.Parent
 
-        function Methods._Action()
-            VerifyFolder()
+        function methods._Action()
+            verifyFolder()
             part:SetAttribute("_action", tagData.ActionText or newTag)
-            part.Parent = NewParent
+            part.Parent = newParent
         end
 
-        function Methods.Name()
-            VerifyFolder()
-            local TagInstance = getTagInstance(part, newTag) or part
-            TagInstance.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
-            part.Parent = NewParent
+        function methods.Name()
+            verifyFolder()
+            local tagInstance = getTagInstance(part, newTag) or part
+            tagInstance.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+            part.Parent = newParent
         end
 
-        function Methods.DetailParent()
-            VerifyFolder("Detail")
+        function methods.DetailParent()
+            verifyFolder("Detail")
             part.Parent = Util.mapModel:get(false).Detail
         end
 
-        function Methods.Child()
-            VerifyFolder()
+        function methods.Child()
+            verifyFolder()
             local newChild = Instance.new(tagData._instanceType or "ObjectValue")
             
             newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
             newChild.Parent = part
-            part.Parent = NewParent
+            part.Parent = newParent
         end
 
         local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag]
-        for _, metaData in pairs(tagData.metadata) do
+        for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
         end
     end
 
-    Methods[typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod]()
+    methods[typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod]()
 end
 
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
-    local Types = {}
+    local types = {}
 
-    function Types.ButtonTags()
-        for _, Child in pairs(part:GetChildren()) do
-            if string.find(Child.Name, tag.."%d") then
+    function types.ButtonTags()
+        for _, child in ipairs(part:GetChildren()) do
+            if string.find(child.Name, tag.."%d") then
                 return true
             end
          end
     end
-    function Types.ObjectTags()
+
+    function types.ObjectTags()
         local secondary = tagTypes.ObjectTags._convert[tag]
         if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
             return true
         end
     end
 
-    function Types.ActionTags()
+    function types.ActionTags()
         local secondary = tagTypes.ActionTags._convert[tag]
         if part:GetAttribute("_action") == tag or part:GetAttribute("_action") == secondary or part:GetAttribute("_action") == TagData.dataTypes.objectTags[tag].ActionText then
             return true
         end
     end
 
-    function Types.ModelTags()
+    function types.ModelTags()
         local secondary = tagTypes.ModelTags._convert[tag]
         local model = if part:IsA("Model") then part
             elseif part.Parent and part.Parent:IsA("Model") then part.Parent
@@ -365,13 +369,13 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         end
     end
 
-    function Types.DetailTag()
+    function types.DetailTag()
         local DetailFolder = Util.mapModel:get(false) and Util.mapModel:get(false):FindFirstChild("Detail")
         return DetailFolder and part:IsDescendantOf(DetailFolder)
     end
 
     for type, tags in pairs(tagTypes) do
-        if table.find(tags, tag) and Types[type]() then
+        if table.find(tags, tag) and types[type]() then
             return true
         end
     end 
@@ -379,7 +383,7 @@ end
 
 function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
     local numYes = 0
-    for _, part in pairs(parts) do
+    for _, part in ipairs(parts) do
         local value = tagUtils:PartHasTag(part, tag)
         numYes += if value then 1 else 0
 

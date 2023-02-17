@@ -86,7 +86,7 @@ local Util = {
             Color = Color3.fromRGB(255, 8, 152),
             Image = "rbxassetid://12132025606"
         }
-    },  
+    }, 
 }
 
 function getSettingsDirFolder(directory: string)
@@ -103,7 +103,7 @@ function getSettingsDirFolder(directory: string)
     local dirFolder = mapSettings
     local split = directory:split(".")
 
-    for index, child in pairs(split) do
+    for index, child in ipairs(split) do
         dirFolder = dirFolder:FindFirstChild(child)
         if not dirFolder then
             return nil
@@ -168,7 +168,7 @@ end
 
 function Util.parseColor3Text(str: string): (boolean, nil | Color3)
     local split = string.split(str, ",")
-    for _, v in pairs(split) do
+    for _, v in ipairs(split) do
         if not tonumber(v) then
             return false, nil
         end
@@ -202,7 +202,7 @@ function Util.parseTimeString(str: string): (boolean, string | nil)
         return false, nil
     end
 
-    for i, v in pairs(split) do
+    for i, v in ipairs(split) do
         if not tonumber(v) then
             return false, nil
         end
@@ -218,9 +218,9 @@ function updateButtonsActive()
     Util.interfaceActive:set(Util.mapModel:get(false) and Util._manualActive:get(false))
 end
 
-function Util.UpdateSelectedParts()
+function Util.updateSelectedParts()
     local newTable = {}
-    for _, Thing: Instance in pairs(Selection:Get()) do
+    for _, Thing: Instance in ipairs(Selection:Get()) do
         if Thing:IsDescendantOf(Util.mapModel:get(false)) then
             table.insert(newTable, Thing)
         end
@@ -230,36 +230,26 @@ function Util.UpdateSelectedParts()
         selectionMaid:DoCleaning()
         Util._Selection.selectedParts:set(newTable)
         
-        for _, Thing: Instance in pairs(Selection:Get()) do
-            selectionMaid:GiveTask(Thing:GetPropertyChangedSignal("Name"):Connect(function()
-                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
-            end))
-            selectionMaid:GiveTask(Thing:GetAttributeChangedSignal("_action"):Connect(function()
-                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
-            end))
-            selectionMaid:GiveTask(Thing.Destroying:Connect(function()
-                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
-            end))
-            selectionMaid:GiveTask(Thing.ChildRemoved:Connect(function()
-                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
-            end))
-            selectionMaid:GiveTask(Thing.AncestryChanged:Connect(function()
-                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
-            end))
+        for _, Thing: Instance in ipairs(Selection:Get()) do
+            local function update()
+                Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get(false) + 1)
+            end
+            selectionMaid:GiveTask(Thing:GetPropertyChangedSignal("Name"):Connect(update))
+            selectionMaid:GiveTask(Thing:GetAttributeChangedSignal("_action"):Connect(update))
+            selectionMaid:GiveTask(Thing.Destroying:Connect(update))
+            selectionMaid:GiveTask(Thing.ChildRemoved:Connect(update))
+            selectionMaid:GiveTask(Thing.AncestryChanged:Connect(update))
 
             selectionMaid:GiveTask(Thing.ChildAdded:Connect(function(newThing)
                 if newThing:IsA("ValueBase") then
-                    Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
+                    update()
                 end
-                selectionMaid:GiveTask(newThing.Changed:Connect(function()
-                    Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
-                end))
+                selectionMaid:GiveTask(newThing.Changed:Connect(update))
             end))
-            for _, Child in pairs(Thing:GetChildren()) do
+
+            for _, Child in ipairs(Thing:GetChildren()) do
                 if Child:IsA("ValueBase") then
-                    selectionMaid:GiveTask(Thing.ChildRemoved :Connect(function()
-                        Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get() + 1)
-                    end))
+                    selectionMaid:GiveTask(Thing.ChildRemoved:Connect(update))
                 end
             end
         end
@@ -273,6 +263,6 @@ Observer(Util.mapModel):onChange(updateButtonsActive)
 Observer(Util._manualActive):onChange(updateButtonsActive)
 Util.MainMaid:GiveTask(Util.MapMaid)
 Util.MainMaid:GiveTask(selectionMaid)
-Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(Util.UpdateSelectedParts))
+Util.MainMaid:GiveTask(Selection.SelectionChanged:Connect(Util.updateSelectedParts))
 
 return Util

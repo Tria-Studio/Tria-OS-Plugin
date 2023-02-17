@@ -1,7 +1,8 @@
-local Fusion = require(script.Parent.Resources.Fusion)
-local Components = require(script.Parent.Resources.Components)
-local Theme = require(script.Parent.Resources.Themes)
-local Util = require(script.Parent.Util)
+local Package = script.Parent
+local Fusion = require(Package.Resources.Fusion)
+local Components = require(Package.Resources.Components)
+local Theme = require(Package.Resources.Themes)
+local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children

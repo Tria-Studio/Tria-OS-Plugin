@@ -111,7 +111,7 @@ function removeLiquid(id: string)
     end
 end
 
-function Data:getHeaderChildren()
+function Data:getHeaderChildren(): Instance
     return Components.ImageButton {
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundTransparency = 1,
@@ -130,7 +130,7 @@ end
 
 local liquidVisibleMap = {}
 
-function Data:getDropdown(visible)
+function Data:getDropdown(visible): Instance
     local index = 0
 
 	return Components.DropdownHolderFrame {

@@ -11,9 +11,8 @@ local Value = Fusion.Value
 local Computed = Fusion.Computed
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
-local selectMap = {
+local MapSelect = {
     _Maid = Util.Maid.new(),
-
     hasOptimizedStructure = Value(false),
     selectingMap = Value(false),
     selectTextState = Value("No map selected"),
@@ -22,7 +21,7 @@ local selectMap = {
     selectCancelImage = Value("rbxassetid://6022668885")
 }
 
-function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
+function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?)
     local score_1 = 0 -- D2
     local score_2 = 0 -- FE2/FP275
     local score_3 = 0 -- TRIA.os
@@ -46,8 +45,6 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
         score_3 += 0.5
         hasMapScript = true
     end
-
-    --// settings check
 
     local settings2 = Map:FindFirstChild("Settings")
 
@@ -111,7 +108,7 @@ function selectMap:IsTriaMap(Map: Model, ignoreChecks: boolean?)
     return false, "Invalid map model format. Must be a 'Model', 'Folder', or unparented in the workspace."
 end
 
-function selectMap:SetMap(Map: Model|Workspace)
+function MapSelect:SetMap(Map: Model|Workspace)
     if Map then -- add or change selection
         local success, message = self:IsTriaMap(Map)
 
@@ -124,7 +121,7 @@ function selectMap:SetMap(Map: Model|Workspace)
         Util.mapModel:set(Map)
         Util.MapChanged:Fire()
         Util.MapMaid:DoCleaning()
-        Util.UpdateSelectedParts()
+        Util.updateSelectedParts()
 
         self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
 
@@ -183,23 +180,12 @@ function selectMap:SetMap(Map: Model|Workspace)
 
         ObjectType[Map.ClassName]()
 
-        local Option1 = {
-            Text = "Read more",
-            Callback = function()
-                Pages:ChangePage("Compatibility")
-            end
-        }
-
-        local Option2 = {
-            Text = "Got it",
-        }
-
         local optimizedStructure = Map:FindFirstChild("Special")
         self.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
+        task.wait()
         if not self.hasOptimizedStructure:get(false) then
-            task.wait()
-            Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure.", Option1, Option2)
+            Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
         end
     else
         Util._Selection.selectedParts:set({})
@@ -214,7 +200,7 @@ function selectMap:SetMap(Map: Model|Workspace)
     return true
 end
 
-function selectMap:StartMapSelection()
+function MapSelect:StartMapSelection()
     if self:IsTriaMap(workspace) then
         self:SetMap(workspace)
         return
@@ -235,18 +221,14 @@ function selectMap:StartMapSelection()
 
     self._Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
         local target = mouse.Target
-
         if target ~= lastTarget then
             lastTarget = target
-
             repeat
                 target = target and target:FindFirstAncestorOfClass("Model")
             until not target or target.Parent == workspace
-
             if currentTarget == target then
                 return
             end
-
             if target and self:IsTriaMap(target) then
                 mapHighlight.Adornee = target
                 currentTarget = target
@@ -266,7 +248,7 @@ function selectMap:StartMapSelection()
     end))
 end
 
-function selectMap:StopManualSelection()
+function MapSelect:StopManualSelection()
     self.selectingMap:set(false)
     self._Maid:DoCleaning()
     plugin:Deactivate()
@@ -277,7 +259,7 @@ function selectMap:StopManualSelection()
     self.selectTextColor:set(if Util.mapModel:get(false) then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
 end
 
-function selectMap:AutoSelect()
+function MapSelect:AutoSelect()
     local isMap, value = self:IsTriaMap(workspace)
 
     if isMap then
@@ -285,9 +267,7 @@ function selectMap:AutoSelect()
         return true
     end
 
-    -- FIXME: We might need to make a better way to check this because some studio
-    -- projects have hundreds of models under workspace.
-    for _, v: Instance in pairs(workspace:GetChildren()) do
+    for _, v: Instance in ipairs(workspace:GetChildren()) do
         if v:IsA("Model") then
             local isMap, value = self:IsTriaMap(v)
             if isMap then
@@ -298,4 +278,4 @@ function selectMap:AutoSelect()
     end
 end
 
-return selectMap
+return MapSelect

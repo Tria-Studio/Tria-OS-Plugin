@@ -9,14 +9,14 @@ local PageHandler = {
     pageChanged = Signal.new(),
     pageData = {
         pages = {},
-        bypassedPages = {"Insert", "PluginSettings"},
+        bypassedPages = {"Insert"},
         currentPage = Value(nil),
     }
 }
 
-function PageHandler:ChangePage(NewPage: string)
+function PageHandler:ChangePage(newPage: string)
     local currentPage = self.pageData.currentPage:get()
-    if currentPage == NewPage then
+    if currentPage == newPage then
         return
     end
     if self.pageData.pages[currentPage].onClose then
@@ -25,11 +25,15 @@ function PageHandler:ChangePage(NewPage: string)
 
     PageHandler.pageChanged:Fire()
     self.pageData.pages[currentPage].Visible:set(false)
-    self.pageData.pages[NewPage].Visible:set(true)
-    self.pageData.currentPage:set(NewPage)
+    self.pageData.pages[newPage].Visible:set(true)
+    self.pageData.currentPage:set(newPage)
+
+    if self.pageData.pages[newPage].onOpen then
+        self.pageData.pages[newPage].onOpen()
+    end
 end
 
-function PageHandler:NewPage(data)
+function PageHandler:NewPage(data: {[string]: any}): Instance
     local newPageData = {
         Name = data.Name,
         Frame = nil,

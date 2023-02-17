@@ -8,8 +8,9 @@ local Util = require(Package.Util)
 local TagUtils = require(Package.Util.TagUtils)
 local TagData = require(script.Parent.tagData)
 local Pages = require(Package.Resources.Components.Pages)
-local Colorwheel = require(Package.Colorwheel)
+local Colorwheel = require(Package.ColorWheel)
 local Dropdown = require(Package.Util.Dropdown)
+local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -22,8 +23,8 @@ local OnChange = Fusion.OnChange
 local Ref = Fusion.Ref
 local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
-
-return function(name, data)
+ 
+return function(name: string, data: PublicTypes.propertiesTable): Instance
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
 
@@ -52,6 +53,11 @@ return function(name, data)
             [Children] = {
                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil),
                 New "TextButton" { --// Button
+                    AutoButtonColor = Computed(function()
+                        local interfaceActive = Util.interfaceActive:get()
+                        return if Util.dropdownActive:get() then false else interfaceActive
+                    end),
+                    Active = Util.interfaceActive,
                     BackgroundColor3 = Theme.Button.Default,
                     Position = UDim2.fromOffset(-56, 0),
                     Size = UDim2.new(1, 56, 0, 25),
@@ -59,12 +65,6 @@ return function(name, data)
                     Text = data.DisplayText,
                     TextColor3 = Theme.MainText.Default,
                     TextXAlignment = Enum.TextXAlignment.Left,
-
-                    AutoButtonColor = Computed(function()
-                        local interfaceActive = Util.interfaceActive:get()
-                        return if Util.dropdownActive:get() then false else interfaceActive
-                    end),
-                    Active = Util.interfaceActive,
 
                     [OnEvent "Activated"] = function()
                         local partError = false
@@ -81,18 +81,18 @@ return function(name, data)
                                 return
                             end
 
-                            local Selected = Util._Selection.selectedParts:get()
+                            local currentlySelected = Util._Selection.selectedParts:get()
                             local newState = not dataVisible:get()
 
-                            ChangeHistoryService:SetWaypoint(string.format("Changing tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
-                            for _, instance in pairs(Util._Selection.selectedParts:get()) do
+                            ChangeHistoryService:SetWaypoint(string.format("Changing tag %s on %d part%s to %s", name, #currentlySelected, #currentlySelected == 1 and "" or "s", tostring(newState)))
+                            for _, instance in ipairs(Util._Selection.selectedParts:get()) do
                                 if data.OnlyBaseParts and not instance:IsA("BasePart") then
                                     partError = true
                                     continue
                                 end
                                 TagUtils:SetPartTag(instance, newState and name, not newState and name)
                             end
-                            ChangeHistoryService:SetWaypoint(string.format("Set tag %s on %d part%s to %s", name, #Selected, #Selected == 1 and "" or "s", tostring(newState)))
+                            ChangeHistoryService:SetWaypoint(string.format("Set tag %s on %d part%s to %s", name, #currentlySelected, #currentlySelected == 1 and "" or "s", tostring(newState)))
                             
                             if partError and name ~= "Detail" then
                                 Util.debugWarn(string.format("Only BaseParts, Models, Folders, & Attachments can have the tag '%s'. Selected parts which were not a BasePart were ignored.", name))
@@ -169,7 +169,6 @@ return function(name, data)
                                         BorderSizePixel = 1,
                                         Size = UDim2.new(metadataType.isFullSize and 1 or 0.5, 0, 0, 22),
                                         Position = UDim2.new(metadataType.location % 2 == 1 and 0 or 0.5, 0, 0, (math.ceil(metadataType.location / 2) - 1) * 22),
-                                        
                                         Text = metadataType.data.displayName .. ":",
                                         TextColor3 = Theme.MainText.Default,
                                         Font = Enum.Font.SourceSansSemibold,
@@ -188,30 +187,31 @@ return function(name, data)
                                                     dataValue:set(false)
                                                 end
 
-                                                local TextXSize = textBounds:get() and textBounds:get().X + 8 or 0
-                                                local Types = {}
+                                                local textXBounds = textBounds:get() and textBounds:get().X + 8 or 0
+                                                local types = {}
 
-                                                local function ChangeData(value)
+                                                local function updateData(value)
                                                     local stringTagValue = metadataType.data.dataType == "color"
                                                         and Util.parseTextColor3(dataValue:get())
                                                         or dataValue:get()
+
                                                     ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
                                                     dataValue:set(value)
-                                                    for _, Instance: Instance in pairs(Util._Selection.selectedParts:get()) do 
-                                                        TagUtils:SetPartMetaData(Instance, name, metadataType, value)
+                                                    for _, selected: Instance in ipairs(Util._Selection.selectedParts:get()) do 
+                                                        TagUtils:SetPartMetaData(selected, name, metadataType, value)
                                                     end
                                                     ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
                                                 end
 
-                                                function Types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
+                                                function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
                                                     local Text = Value()
                                                     local Childs = extraChild or {}
                                                     table.insert(Childs, Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4)))
 
                                                     return Components.TextBox {
-                                                        Size = UDim2.new(1, -TextXSize - 6 - (sizeSubtract or 0), 1, -6),
+                                                        Size = UDim2.new(1, -textXBounds - 6 - (sizeSubtract or 0), 1, -6),
                                                         AnchorPoint = Vector2.new(0, .5),
-                                                        Position = UDim2.new(0, TextXSize + (sizeSubtract or 0), .5, 0),
+                                                        Position = UDim2.new(0, textXBounds + (sizeSubtract or 0), .5, 0),
                                                         TextXAlignment = Enum.TextXAlignment.Left,
                                                         Text = textOverride or dataValue,
 
@@ -225,31 +225,31 @@ return function(name, data)
 
                                                             if color ~= dataVisible:get() or metadataType.data.dataType ~= "color" then
                                                                 Text:get().Text = newText
-                                                                ChangeData(if metadataType.data.dataType == "color" then color else newText)
+                                                                updateData(if metadataType.data.dataType == "color" then color else newText)
                                                             end
                                                         end,
                                                         
                                                         [Children] = Childs,
                                                     }
                                                 end
-                                                Types.string = Types.number
+                                                types.string = types.number
 
-                                                function Types.boolean()
+                                                function types.boolean()
                                                     return New "TextButton" {
-                                                        Size = UDim2.new(1, -TextXSize, 1, 0),
-                                                        Position = UDim2.fromOffset(TextXSize, 0),
+                                                        Size = UDim2.new(1, -textXBounds, 1, 0),
+                                                        Position = UDim2.fromOffset(textXBounds, 0),
                                                         BackgroundTransparency = 1,
 
                                                         [OnEvent "Activated"] = function()
-                                                            ChangeData(not dataValue:get())
+                                                            updateData(not dataValue:get())
                                                         end,
 
                                                         [Children] = Components.Checkbox(18, UDim2.fromOffset(4, 2), nil, dataValue)
                                                     }
                                                 end
 
-                                                function Types.color()
-                                                    return Types.number(22, {Components.TextButton {
+                                                function types.color()
+                                                    return types.number(22, {Components.TextButton {
                                                         AnchorPoint = Vector2.new(1, .5),
                                                         Position = UDim2.new(0, -4, .5, 0),
                                                         Size = UDim2.fromOffset(16, 16),
@@ -258,18 +258,18 @@ return function(name, data)
                                                         end),
 
                                                         [OnEvent "Activated"] = function()
-                                                            ChangeData(Colorwheel:GetColor() or dataValue:get())
+                                                            updateData(Colorwheel:GetColor() or dataValue:get())
                                                         end
                                                     }}, Computed(function()
                                                             return dataValue:get() == "" and "" or Util.parseTextColor3(dataValue:get())
                                                     end))
                                                 end
 
-                                                function Types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
+                                                function types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     local dropdownVisible = Value(false)
                                                     local arrowButton = Value()
 
-                                                    return Types.number(22, {Components.ImageButton {
+                                                    return types.number(22, {Components.ImageButton {
                                                         AnchorPoint = Vector2.new(1, 0),
                                                         Position = UDim2.fromOffset(-8, -1),
                                                         Size = UDim2.fromOffset(18, 18),
@@ -293,7 +293,7 @@ return function(name, data)
                                                                 dropdownVisible:set(true)
                                                                 local newData = Dropdown:GetValue(metadataType.data.dropdownType, arrowButton:get())
                                                                 if newData then
-                                                                    ChangeData(newData)
+                                                                    updateData(newData)
                                                                 end
                                                                 dropdownVisible:set(false)
                                                             else
@@ -306,7 +306,7 @@ return function(name, data)
                                                     end))
                                                 end
 
-                                                return Types[metadataType.data.dataType]()
+                                                return types[metadataType.data.dataType]()
                                             end, Fusion.cleanup)
                                         }
                                     }

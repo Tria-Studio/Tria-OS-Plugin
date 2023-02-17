@@ -2,10 +2,14 @@ local Suggester = {}
 
 local ScriptEditorService = game:GetService("ScriptEditorService")
 
-local AutocompleteData = require(script.Parent.AutocompleteData)
-local AutocompleteUtil = require(script.Parent.AutocompleteUtil)
-local Lexer = require(script.Parent.Lexer)
-local GlobalSettings = require(script.Parent.GlobalSettings)
+local Package = script.Parent
+local AutocompleteData = require(Package.AutocompleteData)
+local AutocompleteUtil = require(Package.AutocompleteUtil)
+local AutocompleteTypes = require(Package.AutocompleteTypes)
+local PublicTypes = require(Package.Parent.Parent.Parent.PublicTypes)
+
+local Lexer = require(Package.Lexer)
+local GlobalSettings = require(Package.GlobalSettings)
 
 local PROPERTY_INDEX = {
 	Property = "=%s*(%w+)%.",
@@ -16,8 +20,12 @@ local FUNCTION_CALL = {
 	Method = "%(%s*(%w+):"
 }
 
+local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
+local FUNC_MATCH = "function%(.+%)?%s*$"
+local CALLBACK_NAME = "__MapLibCompletion"
+ 
 function Suggester:registerCallback()
-	ScriptEditorService:RegisterAutocompleteCallback("__MapLibCompletion", 0, function(request, response)
+	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
 		local currentScript = request.textDocument.script
 		local currentScriptContext = ScriptEditorService:FindScriptDocument(currentScript)
 		local currentDocument = request.textDocument.document
@@ -29,7 +37,7 @@ function Suggester:registerCallback()
 
 		-- Return Case 2: Only MapScript
 		if GlobalSettings.runOnlyInMapscript then
-			if currentScript.Name ~= "MapScript" then
+			if not table.find({"MapScript", "LocalMapScript", "EffectScript"}, currentScript.Name) then
 				return response
 			end
 		end
@@ -45,7 +53,7 @@ function Suggester:registerCallback()
 		end
 		
 		local prefixes = {}
-		for prefix in currentScript.Source:gmatch("local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)") do
+		for prefix in currentScript.Source:gmatch(MAPLIB_IDEN) do
 			table.insert(prefixes, prefix)
 		end
 		
@@ -60,8 +68,15 @@ function Suggester:registerCallback()
 		line = line:sub(1, -#afterCursor - 1)
 		
 		local tokens = AutocompleteUtil.lexerScanToTokens(line)
+
+		-- Return Case 6: Multiple : or .
+		if #tokens > 1 then
+			if AutocompleteUtil.isTokenSeriesBroken(tokens) then
+				return response
+			end
+		end
 		
-		local function addResponse(responseData, treeIndex)
+		local function addResponse(responseData: PublicTypes.propertiesTable, treeIndex: string)
 			local suggestionData = responseData.data
 			table.insert(response.items, {
 				label = responseData.label,
@@ -84,7 +99,7 @@ function Suggester:registerCallback()
 			})
 		end
 		
-		local function suggestResponses(branchList: {string}, index: string, lineTokens: {Lexer.Token})
+		local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
 			local current = AutocompleteData[index]
 			local reachedEnd = false
 			
@@ -102,7 +117,9 @@ function Suggester:registerCallback()
 			if current and current.branches and not reachedEnd then
 				for name, data in pairs(current.branches) do
 					local lastToken = lineTokens[#lineTokens].value
-					if (lastToken == ":" or lastToken == ".") or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
+					local isIndexer = lastToken == ":" or lastToken == "."
+
+					if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 						addResponse({
 							label = name,
 							kind = index == "Methods" and Enum.CompletionItemKind.Function or Enum.CompletionItemKind.Property,
@@ -111,14 +128,14 @@ function Suggester:registerCallback()
 							
 							beforeCursor = #beforeCursor,
 							afterCursor = #afterCursor,
-							alreadyTyped = (lastToken == ":" or lastToken == ".") and 0 or #lastToken
+							alreadyTyped = isIndexer and 0 or #lastToken
 						}, index)
 					end
 				end
 			end
 		end
 
-		local function insertAll(index, tokens)
+		local function insertAll(index: string, tokens: {AutocompleteTypes.Token})
 			local allVariables = {}
 			for k in pairs(AutocompleteData[index].branches) do
 				table.insert(allVariables, k)
@@ -146,9 +163,7 @@ function Suggester:registerCallback()
 					but it was annoying working with a while loop
 				]]
 	
-				local FUNC_MATCH = "function%([%w%,]*%)?%s*$"
-	
-				local function backtrackToFindFunction(startLine)
+				local function backtrackToFindFunction(startLine: number)
 					if startLine < 2 then
 						tempLineData.failed = true
 						return
@@ -164,6 +179,11 @@ function Suggester:registerCallback()
 							if AutocompleteUtil.tokenMatches(tempLineData.tokens[1], "space") then
 								table.remove(tempLineData.tokens, 1)
 							end
+						end
+
+						if AutocompleteUtil.isTokenSeriesBroken(tempLineData.tokens) then
+							tempLineData.failed = true
+							break
 						end
 
 						local tempStr = ""
@@ -193,13 +213,12 @@ function Suggester:registerCallback()
 				while true do
 					if tempLineData.failed then
 						break
-					end
-					
+					end		
 					if tempLineData.hasFunction then	
 						if AutocompleteUtil.tokenMatches(tempLineData.tokens[1], "keyword", "end") or table.find(prefixes, tempLineData.tokens[1].value) then
 							local backtrackedBranches = AutocompleteUtil.getBranchesFromTokenList(AutocompleteUtil.lexerScanToTokens(tempLineData.line))
 							AutocompleteUtil.flipArray(backtrackedBranches)
-							
+
 							for _, branch in ipairs(backtrackedBranches) do
 								table.insert(allBranches, branch)
 							end
@@ -209,13 +228,11 @@ function Suggester:registerCallback()
 					else
 						break
 					end
-					
 					backtrackToFindFunction(tempLineData.lineNumber)
 				end
 				
 				if not tempLineData.failed then
 					AutocompleteUtil.flipArray(allBranches)
-
 					if #allBranches > 0 then
 						local _, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(lineTokens)
 						suggestResponses(allBranches, treeEntryIndex, lineTokens)
@@ -227,7 +244,6 @@ function Suggester:registerCallback()
 			do
 				local isProperty = table.find(prefixes, line:match(PROPERTY_INDEX.Property))
 				local isMethod = table.find(prefixes, line:match(PROPERTY_INDEX.Method))
-
 				if isProperty or isMethod then
 					insertAll(isMethod and "Methods" or "Properties", tokens)
 				end
@@ -237,7 +253,6 @@ function Suggester:registerCallback()
 			do
 				local isProperty = table.find(prefixes, line:match(FUNCTION_CALL.Property))
 				local isMethod = table.find(prefixes, line:match(FUNCTION_CALL.Method))
-
 				if isProperty or isMethod then
 					insertAll(isMethod and "Methods" or "Properties", tokens)
 				end
@@ -255,7 +270,7 @@ function Suggester:registerCallback()
 end
 
 function Suggester:disableCallback()
-	pcall(ScriptEditorService.DeregisterAutocompleteCallback, ScriptEditorService, "__MapLibCompletion")
+	pcall(ScriptEditorService.DeregisterAutocompleteCallback, ScriptEditorService, CALLBACK_NAME)
 end
 
 return Suggester

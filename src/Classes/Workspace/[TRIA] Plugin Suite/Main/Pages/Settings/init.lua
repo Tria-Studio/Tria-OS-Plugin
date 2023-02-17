@@ -1,7 +1,7 @@
 local Lighting = game:GetService("Lighting")
 
 local Package = script.Parent.Parent
-local SelectMap = require(Package.SelectMap)
+local MapSelect = require(Package.MapSelect)
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
@@ -159,7 +159,7 @@ Util.MapChanged:Connect(function()
 end)
 
 plugin.Unloading:Connect(function()
-    SelectMap._Maid:DoCleaning()
+    MapSelect._Maid:DoCleaning()
     Util.MainMaid:DoCleaning()
     SettingsUtil.SettingMaid:DoCleaning()
 end)

@@ -6,6 +6,7 @@ Modified and adapted for TRIA.os Plugin :D
 ]]
 
 local Lexer = {}
+local AutocompleteTypes = require(script.Parent.AutocompleteTypes)
 
 local NUMBER3	= "^0x[%da-fA-F]+"
 local NUMBER4	= "^%d+%.?%d*[eE][%+%-]?%d+"
@@ -30,33 +31,31 @@ local SCOMMENT2	= "^%-%-.-.*"							--Incompleted Singleline-Comment
 local KEYWORDS = require(script.Keywords) 
 local BUILTIN = require(script.Builtins)
 
-export type Token = {name: string, value: any}
-
-local function createToken(name: string, value: any): Token
+local function createToken(name: string, value: string): AutocompleteTypes.Token
 	return {name = name, value = value}
 end
 
-local function basicToken(result)
+local function basicToken(result: string): AutocompleteTypes.Token
 	return coroutine.yield(createToken(result, result))
 end
 
-local function numberToken(result)
+local function numberToken(result: string): AutocompleteTypes.Token
 	return coroutine.yield(createToken("number", result))
 end
 
-local function stringToken(result)
+local function stringToken(result: string): AutocompleteTypes.Token
 	return coroutine.yield(createToken("string", result))
 end
 
-local function commentToken(result)
+local function commentToken(result: string): AutocompleteTypes.Token
 	return coroutine.yield(createToken("comment", result))
 end
 
-local function whitespaceToken(result)
+local function whitespaceToken(result: string): AutocompleteTypes.Token
 	return coroutine.yield(createToken("space", result))
 end
 
-local function identifierToken(result)
+local function identifierToken(result: string): AutocompleteTypes.Token
 	if (KEYWORDS[result]) then
 		return coroutine.yield(createToken("keyword", result))
 	elseif (BUILTIN[result]) then
@@ -93,13 +92,13 @@ local MATCHES = {
 	{"^.",      basicToken}
 }
 
-function Lexer.scan(line: string): () -> (string, string)
-	local function analyze(str: string)
+function Lexer.scan(line: string): () -> () -> AutocompleteTypes.Token
+	local function analyze(str: string): () -> AutocompleteTypes.Token
 		local currentLine = 0
 		local currentIndex = 1
 		local stringSize = #line
 		
-		local function handleRequest(result)
+		local function handleRequest(result: string)
 			while result do
 				local resultType = type(result)
 				if (resultType == "table") then

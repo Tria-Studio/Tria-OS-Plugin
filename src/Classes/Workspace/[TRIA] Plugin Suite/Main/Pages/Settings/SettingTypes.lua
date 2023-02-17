@@ -5,7 +5,7 @@ local Fusion = require(Package.Resources.Fusion)
 local Components = require(Package.Resources.Components)
 local Theme = require(Package.Resources.Themes)
 local Util = require(Package.Util)
-local ColorWheel = require(Package.Colorwheel)
+local ColorWheel = require(Package.ColorWheel)
 local Dropdown = require(Package.Util.Dropdown)
 
 local New = Fusion.New
@@ -323,7 +323,10 @@ function SettingTypes.Dropdown(data)
     local arrowButton = Value()
     local dropdownVisible = Value(false)
 
-    return Hydrate(BaseSettingButton(data)) {
+    local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
+    local inputBox = Value()
+
+    return Hydrate(baseButton) {
         [Children] = {
             Components.TextButton {
                 Active = Util.interfaceActive,
@@ -367,7 +370,7 @@ function SettingTypes.Dropdown(data)
                 }
             },
 
-            Components.TextButton {
+            Components.TextBox {
                 Active = Computed(function()
                     return isCurrentSettingModifiable(data)
                 end),
@@ -382,8 +385,33 @@ function SettingTypes.Dropdown(data)
                 TextColor3 = Computed(function()
                     return getSettingTextColor(data)
                 end),
+                TextEditable = Computed(function()
+                    return canEditSetting(data)
+                end),
                 TextXAlignment = Enum.TextXAlignment.Left,
         
+                [Ref] = inputBox,
+
+                [OnEvent "Focused"] = function()
+                    currentEditing:set(baseButton)
+                    backgroundColor:set(Theme.CurrentMarker.Default:get(false))
+                end,
+
+                [OnEvent "FocusLost"] = function()
+                    if not buttonInside:get(false) then
+                        backgroundColor:set(Theme.MainBackground.Default:get(false))
+                    end
+                    currentEditing:set(nil)
+    
+                    if canEditSetting(data) then
+                        local inputBoxObject = inputBox:get(false)
+                        local currentText = inputBoxObject.Text
+
+                        data.Value:set(currentText)
+                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    end
+                end,
+
                 [Children] = {
                     Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8), nil)
                 },

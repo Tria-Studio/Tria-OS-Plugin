@@ -3,6 +3,7 @@ local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
 local Fusion = require(Package.Resources.Fusion)
 local Components = require(Package.Resources.Components)
+local PublicTypes = require(Package.PublicTypes)
 
 local SettingTypes = require(script.Parent:WaitForChild("SettingTypes"))
 
@@ -49,13 +50,13 @@ local SettingsUtil = {
     }
 }
 
-function SettingsUtil.hookAttributeChanged(parent, attribute, callback)
+function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, callback)
     SettingsUtil.SettingMaid:GiveTask(parent:GetAttributeChangedSignal(attribute):Once(function()
         task.defer(callback)
     end))
 end
 
-function SettingsUtil.updateStateValue(currentValue, newValue, tbl)
+function SettingsUtil.updateStateValue(currentValue, newValue: any, tbl: {})
     local acceptedValues = {
         ["String"] = {"string", "number"},
         ["Number"] = {"string", "number"},
@@ -78,7 +79,7 @@ function SettingsUtil.updateStateValue(currentValue, newValue, tbl)
     end
 end
 
-function SettingsUtil.modifyStateTable(state, action, ...)
+function SettingsUtil.modifyStateTable(state, action: string, ...)
     local newTbl = state:get(false)
     local args = {...}
 
@@ -92,7 +93,7 @@ function SettingsUtil.modifyStateTable(state, action, ...)
     state:set(newTbl, true)
 end
 
-function SettingsUtil.connectValue(object, data)
+function SettingsUtil.connectValue(object: Instance, data: PublicTypes.propertiesTable)
     local currentValue = object:GetAttribute(data.Attribute)
     local function updateConnection()
         SettingsUtil.updateStateValue(currentValue, object:GetAttribute(data.Attribute), data)
@@ -101,12 +102,12 @@ function SettingsUtil.connectValue(object, data)
     updateConnection()
 end
 
-function SettingsUtil.settingOption(optionType, optionData): Instance
+function SettingsUtil.settingOption(optionType: string, optionData: PublicTypes.propertiesTable): Instance
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
 end
 
-function SettingsUtil.DirectoryDropdown(data, childProcessor)
+function SettingsUtil.DirectoryDropdown(data: PublicTypes.propertiesTable, childProcessor: (boolean) -> Instance): Instance
     return Components.Dropdown({
         DefaultState = data.Default, 
         Header = data.Display, 

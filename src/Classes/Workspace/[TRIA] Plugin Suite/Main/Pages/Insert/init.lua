@@ -1,5 +1,6 @@
 
 local InsertService = game:GetService("InsertService")
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
 local Package = script.Parent.Parent
@@ -7,6 +8,7 @@ local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
 local Util = require(Package.Util)
+local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -14,8 +16,8 @@ local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
 
 local frame = {}
-
-local function attemptTask(service, functionName: string, ...): (boolean, any)
+ 
+local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
     local MAX_ATTEMPTS = 5
 
     local attemptCount = 0
@@ -56,9 +58,10 @@ function attemptToInsertModel(assetID: number)
     result:PivotTo(CFrame.new())
     result.Parent = workspace
     Selection:Set({result})
+    ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
-function KitInsertButton(data)
+function KitInsertButton(data: PublicTypes.propertiesTable): Instance
     return Components.ImageButton {
         BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
         BackgroundTransparency = 0,
@@ -123,7 +126,7 @@ function KitInsertButton(data)
     }
 end
 
-function SubFrame(data)
+function SubFrame(data: PublicTypes.propertiesTable): Instance
     return New "Frame" {
         BackgroundTransparency = 1,
         LayoutOrder = data.LayoutOrder,
@@ -136,7 +139,7 @@ function SubFrame(data)
     }
 end
 
-function frame:GetFrame(data)
+function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

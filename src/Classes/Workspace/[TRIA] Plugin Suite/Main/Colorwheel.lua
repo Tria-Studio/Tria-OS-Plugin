@@ -11,14 +11,22 @@ local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
 local Hydrate = Fusion.Hydrate
 local Out = Fusion.Out
+local ForPairs = Fusion.ForPairs
 
-local SliderAbsPos = Value(UDim2.new())
-local SliderAbsSize = Value(UDim2.new())
-local WheelAbsPos = Value(UDim2.new())
-local WheelAbsSize = Value(UDim2.new())
+local sliderData = {
+    Position = Value(UDim2.new()),
+    Size = Value(UDim2.new())
+}
 
-local circlePointerPos = Value(UDim2.fromScale(0.5, 0.5))
-local sliderPointerPos = Value(UDim2.fromScale(0.5, 0))
+local wheelData = {
+    Position = Value(UDim2.new()),
+    Size = Value(UDim2.new())
+}
+
+local positions = {
+    circle = Value(UDim2.fromScale(0.5, 0.5)),
+    slider = Value(UDim2.fromScale(0.5, 0)) 
+}
 
 local hexText = Value("")
 
@@ -33,14 +41,17 @@ local ColorWheel = {}
 
 local function updateColor()
     local H, S, V = chosenColor:get(false):ToHSV()
-    local Angle = -(H * 360) - 90
+    local angle = -(H * 360) - 90
 
-    sliderPointerPos:set(UDim2.fromScale(0.5, 1 - V))
-    circlePointerPos:set(UDim2.fromScale(0.5 + math.sin(math.rad(Angle)) * (S / 2), 0.5 + math.cos(math.rad(Angle)) * (S / 2)))
+    positions.slider:set(UDim2.fromScale(0.5, 1 - V))
+    positions.circle:set(UDim2.fromScale(
+        0.5 + math.sin(math.rad(angle)) * (S / 2), 
+        0.5 + math.cos(math.rad(angle)) * (S / 2))
+    )
 end
 
-local function getColorDisplay(data)
-    local Text = Value("")
+local function getColorDisplay(data: {Display: string, LayoutOrder: number}): Instance
+    local textValue = Value("")
 
     return New "Frame" {
         BackgroundTransparency = 1,
@@ -60,14 +71,14 @@ local function getColorDisplay(data)
                 Size = UDim2.fromScale(0.5, 1),
                 Text = Computed(data.Computed),
 
-                [Out "Text"] = Text,
+                [Out "Text"] = textValue,
 
                 [OnEvent "FocusLost"] = function()
-                    local NewColor
+                    local newColor
                     local success = pcall(function()
                         if data.Display == "R" or data.Display == "G" or data.Display == "B" then
                             local textNumber = math.clamp(tonumber(Text:get(false)) or 0, 0, 255)
-                            NewColor = Color3.fromRGB(
+                            newColor = Color3.fromRGB(
                                 data.Display == "R" and textNumber or chosenColor:get(false).R * 255,
                                 data.Display == "G" and textNumber or chosenColor:get(false).G * 255,
                                 data.Display == "B" and textNumber or chosenColor:get(false).B * 255
@@ -75,7 +86,7 @@ local function getColorDisplay(data)
                         else
                             local textNumber = math.clamp(tonumber(Text:get(false)) or 0, 0, 255) / 255
                             local H, S, V = chosenColor:get(false):ToHSV()
-                            NewColor = Color3.fromHSV(
+                            newColor = Color3.fromHSV(
                                 data.Display == "H" and textNumber or H,
                                 data.Display == "S" and textNumber or S,
                                 data.Display == "V" and textNumber or V
@@ -83,7 +94,7 @@ local function getColorDisplay(data)
                         end
                     end)
 
-                    NewColor = if success then NewColor else Color3.fromRGB(0, 0, 0)
+                    newColor = if success then newColor else Color3.fromRGB(0, 0, 0)
                     chosenColor:set(NewColor)
                     updateColor()
                 end
@@ -92,27 +103,29 @@ local function getColorDisplay(data)
     }
 end
 
-local function updatePos(type)
+local function updatePos(type: string)
     local H, S, V = chosenColor:get(false):ToHSV()
     local types = {}
 
+    local relativeMousePos = Util.Widget:GetRelativeMousePosition()
     function types.Slider()
-        local MousePos = SliderAbsPos:get(false) - Util.Widget:GetRelativeMousePosition()
-        local SliderPos = math.clamp(-1 + ((MousePos.Y + SliderAbsSize:get(false).Y) / 2 / SliderAbsSize:get(false).Y + 0.5) * 2, 0, 1)
+        local mousePos = sliderData.Position:get(false) - relativeMousePos
+        local sliderPos = math.clamp(-1 + ((mousePos.Y + sliderData.Size:get(false).Y) / 2 / sliderData.Size:get(false).Y + 0.5) * 2, 0, 1)
 
-        V = if SliderPos > 0.985 then 1 elseif SliderPos < 0.015 then 0 else SliderPos
+        V = if sliderPos > 0.985 then 1 elseif sliderPos < 0.015 then 0 else sliderPos
     end
 
     function types.Wheel()
-        local MousePos = WheelAbsPos:get(false) + WheelAbsSize:get(false) / 2 - Util.Widget:GetRelativeMousePosition()
-		local Angle = math.deg(math.atan2(MousePos.X, MousePos.Y))
-		local Diameter = math.max(-MousePos.Magnitude / WheelAbsSize:get(false).Y, -0.5)
+        local mousePos = wheelData.Position:get(false) + wheelData.Size:get(false) / 2 - relativeMousePos
+		local angle = math.deg(math.atan2(mousePos.X, mousePos.Y))
+		local diameter = math.max(-mousePos.Magnitude / wheelData.Size:get(false).Y, -0.5)
 
-        H = -((Angle + 90) / 360) + if -((Angle + 90) / 360) + 0.5 < 0 then 1.5 else 0.5
-		S = -Diameter * 2
-        circlePointerPos:set(UDim2.fromScale(
-            0.5 + math.sin(math.rad(Angle)) * Diameter, 
-            0.5 + math.cos(math.rad(Angle)) * Diameter
+        H = -((angle + 90) / 360) + if -((angle + 90) / 360) + 0.5 < 0 then 1.5 else 0.5
+		S = -diameter * 2
+
+        positions.circle:set(UDim2.fromScale(
+            0.5 + math.sin(math.rad(angle)) * diameter, 
+            0.5 + math.cos(math.rad(angle)) * diameter
         ))
     end
 
@@ -168,13 +181,12 @@ function ColorWheel:GetUI()
                             if not chosenColor:get() then
                                 return Color3.new(1, 1, 1)
                             end
-
                             local _, _, V = chosenColor:get():ToHSV()
                             return Color3.new(V, V, V)
                         end),
 
-                        [Out "AbsolutePosition"] = WheelAbsPos,
-                        [Out "AbsoluteSize"] = WheelAbsSize,
+                        [Out "AbsolutePosition"] = wheelData.Position,
+                        [Out "AbsoluteSize"] = wheelData.Size,
 
                         [Children] = {
                             Components.Constraints.UIAspectRatio(1),
@@ -184,7 +196,7 @@ function ColorWheel:GetUI()
                                 BackgroundColor3 = Color3.fromRGB(255, 230, 40),
                                 BorderColor3 = Color3.fromRGB(179, 162, 28),
                                 BorderSizePixel = 2,
-                                Position = circlePointerPos,
+                                Position = positions.circle,
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Size = UDim2.fromScale(0.03, 0.03)
                             },
@@ -206,10 +218,11 @@ function ColorWheel:GetUI()
                                 end,
 
                                 [OnEvent "MouseButton1Down"] = function()
-                                    local MousePos = Util.Widget:GetRelativeMousePosition() - WheelAbsPos:get(false)
-                                    local CenterPos = WheelAbsSize:get(false) / 2
+                                    local relativeMousePos = Util.Widget:GetRelativeMousePosition()
+                                    local mousePos = relativeMousePos - wheelData.Position:get(false)
+                                    local centerPos = wheelData.Size:get(false) / 2
 
-                                    if (MousePos - CenterPos).Magnitude < WheelAbsSize:get(false).X / 2 then
+                                    if (mousePos - centerPos).Magnitude < wheelData.Size:get(false).X / 2 then
                                         mouseDownWheel:set(true)
                                         updatePos("Wheel")
                                     end
@@ -235,8 +248,8 @@ function ColorWheel:GetUI()
                         Position = UDim2.fromScale(0.84, 0.398),
                         Size = UDim2.fromScale(0.063, 0.531),
 
-                        [Out "AbsolutePosition"] = SliderAbsPos,
-                        [Out "AbsoluteSize"] = SliderAbsSize,
+                        [Out "AbsolutePosition"] = sliderData.Position,
+                        [Out "AbsoluteSize"] = sliderData.Size,
 
                         [Children] = {
                             Components.Constraints.UIGradient(ColorSequence.new(Color3.new(0, 0, 0), Color3.new(1, 1, 1)), nil, 270),
@@ -247,7 +260,7 @@ function ColorWheel:GetUI()
                                 BorderMode = Enum.BorderMode.Inset,
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Size = UDim2.fromScale(1, 0.03),
-                                Position = sliderPointerPos,
+                                Position = positions.slider,
                             },
                             
                             New "TextButton" {
@@ -268,8 +281,9 @@ function ColorWheel:GetUI()
                                 end,
 
                                 [OnEvent "MouseButton1Down"] = function()
-                                    local MousePos = SliderAbsPos:get(false) - Util.Widget:GetRelativeMousePosition()
-                                    if MousePos.X * -1 > 0 and MousePos.X * -1 < SliderAbsSize:get(false).Y and MousePos.Y * -1 > 0 and MousePos.Y * -1 < SliderAbsSize:get(false).Y then
+                                    local relativeMousePos = Util.Widget:GetRelativeMousePosition()
+                                    local mousePos = sliderData.Position:get(false) - relativeMousePos
+                                    if mousePos.X * -1 > 0 and mousePos.X * -1 < sliderData.Size:get(false).Y and mousePos.Y * -1 > 0 and mousePos.Y * -1 < sliderData.Size:get(false).Y then
                                         mouseDownSlider:set(true)
                                         updatePos("Slider")
                                     end
@@ -296,77 +310,33 @@ function ColorWheel:GetUI()
 
                         [Children] = {
                             Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
-                            getColorDisplay({
-                                LayoutOrder = 1,
-                                Display = "R",
-                                Computed = function()
-                                    if not chosenColor:get() then
-                                        return ""
+                            ForPairs({"R", "G", "B"}, function(index, value)
+                                return index, getColorDisplay({
+                                    LayoutOrder = index,
+                                    Display = value,
+                                    Computed = function()
+                                        if not chosenColor:get() then
+                                            return ""
+                                        end
+                                        return math.floor(chosenColor:get()[value] * 255 + 0.5)
                                     end
-
-                                    return math.floor(chosenColor:get().R * 255 + 0.5)
-                                end
-                            }),
-                            getColorDisplay({
-                                LayoutOrder = 2,
-                                Display = "G",
-                                Computed = function()
-                                    if not chosenColor:get() then
-                                        return ""
+                                })
+                            end, Fusion.cleanup),
+                            ForPairs({"H", "S", "V"}, function(index, value)
+                                return index, getColorDisplay({
+                                    LayoutOrder = index,
+                                    Display = value,
+                                    Computed = function()
+                                        if not chosenColor:get() then
+                                            return ""
+                                        end
+                                        return math.floor(({chosenColor:get():ToHSV()})[index] * 255 + 0.5)
                                     end
-
-                                    return math.floor(chosenColor:get().G * 255 + 0.5)
-                                end
-                            }),
-                            getColorDisplay({
-                                LayoutOrder = 3,
-                                Display = "B",
-                                Computed = function()
-                                    if not chosenColor:get() then
-                                        return ""
-                                    end
-
-                                    return math.floor(chosenColor:get().B * 255 + 0.5)
-                                end
-                            }),
-                            getColorDisplay({
-                                LayoutOrder = 4,
-                                Display = "H",
-                                Computed = function()
-                                    if not chosenColor:get() then
-                                        return ""
-                                    end
-
-                                    local H, _, _ = chosenColor:get():ToHSV()
-                                    return math.floor(H * 255 + 0.5)
-                                end
-                            }),
-                            getColorDisplay({
-                                LayoutOrder = 5,
-                                Display = "S",
-                                Computed = function()
-                                    if not chosenColor:get() then
-                                        return ""
-                                    end
-
-                                    local _, S, _ = chosenColor:get():ToHSV()
-                                    return math.floor(S * 255 + 0.5)
-                                end
-                            }),
-                            getColorDisplay({
-                                LayoutOrder = 6,
-                                Display = "V",
-                                Computed = function()
-                                    if not chosenColor:get() then
-                                        return ""
-                                    end
-
-                                    local _, _, V = chosenColor:get():ToHSV()
-                                    return math.floor(V * 255 + 0.5)
-                                end
-                            }),
+                                })
+                            end, Fusion.cleanup)
                         }
                     },
+
                    Hydrate(Components.TwoOptions({ --// Two buttons
                         Text = "Confirm",
                         Callback = function()
@@ -383,6 +353,7 @@ function ColorWheel:GetUI()
                     })) {
                         AnchorPoint = Vector2.new(0, 1)
                     },
+
                     Components.TextBox { --// Hex input
                         Position = UDim2.fromScale(0.05, 0.92),
                         Size = UDim2.fromScale(0.26, 0.06),
@@ -393,20 +364,18 @@ function ColorWheel:GetUI()
                             if not chosenColor:get() then
                                 return ""
                             end
-
-                            local Color = chosenColor:get()
-                            return string.format("#%s", Color:ToHex())
+                            return string.format("#%s", chosenColor:get():ToHex())
                         end),
 
                         [Out "Text"] = hexText,
                         [OnEvent "FocusLost"] = function()
-                            local NewColor
+                            local newColor
                             local success = pcall(function()
-                                NewColor = Color3.fromHex(hexText:get(false))
+                                newColor = Color3.fromHex(hexText:get(false))
                             end)
 
-                            NewColor = if success then NewColor else Color3.fromRGB(0, 0, 0)
-                            chosenColor:set(NewColor)
+                            newColor = if success then newColor else Color3.fromRGB(0, 0, 0)
+                            chosenColor:set(newColor)
                             updateColor()
                         end
                     },
@@ -422,19 +391,19 @@ function ColorWheel:GetColor()
     Util:ToggleInterface(false)
     Util._manualActive:set(false)
     visible:set(true)
-
     colorChosen:Wait()
-    local Color = chosenColor:get(false)
-   
+
+    local newColor = chosenColor:get(false)
+    
     Util:ToggleInterface(true)
     Util._Topbar.FreezeFrame:set(false)
     visible:set(false)
     chosenColor:set(Color3.new(1, 1, 1))
-    circlePointerPos:set(UDim2.fromScale(0.5, 0.5))
-    sliderPointerPos:set(UDim2.fromScale(0.5, 0))
+    positions.circle:set(UDim2.fromScale(0.5, 0.5))
+    positions.slider:set(UDim2.fromScale(0.5, 0))
     Maid:DoCleaning()
 
-    return Color
+    return newColor
 end
 
 return ColorWheel

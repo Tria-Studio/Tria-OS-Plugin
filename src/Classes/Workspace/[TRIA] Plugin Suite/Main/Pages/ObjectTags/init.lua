@@ -2,6 +2,7 @@ local Package = script.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
+local PublicTypes = require(Package.PublicTypes)
 
 local TagListener = require(script.TagListener)
 local TagData = require(script.tagData)
@@ -14,8 +15,8 @@ local Out = Fusion.Out
 local  Value = Fusion.Value
 
 local frame = {}
-
-function frame:GetFrame(data)
+ 
+function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
     local objectFrameSize = Value()
     local buttonFrameSize = Value()
 

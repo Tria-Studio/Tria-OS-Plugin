@@ -25,7 +25,7 @@ return {
             data[i] = {
                 Name = tbl.Name,
                 Image = tbl.Image,
-                Value = i,
+                Value = i - 1,
                 TextColor = tbl.Color
             }
         end

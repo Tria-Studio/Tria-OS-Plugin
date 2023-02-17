@@ -5,7 +5,5 @@ return {
 	documentation = {
 		value = "Automatically makes a player survive"
 	},
-	codeSample = [[
-	MapLib:Survive(MapLib:GetPlayers()[1])
-	]],
+	codeSample = "MapLib:Survive(MapLib:GetPlayers()[1])",
 }
