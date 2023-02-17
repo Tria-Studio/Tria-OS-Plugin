@@ -76,7 +76,6 @@ function Dropdown:GetValue(dataArray, uiParent)
                         Name = data.Name,
                         TextColor3 = data.TextColor or Theme.MainText.Default,
                         BackgroundColor3 = Theme.Dropdown.Default,
-                        BorderSizePixel = 0,
                         Font = Enum.Font.SourceSansSemibold,
                         TextTruncate = textTruncated,
                         TextXAlignment = Enum.TextXAlignment.Left,

@@ -16,7 +16,7 @@ local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
 
 local frame = {}
- 
+
 local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
     local MAX_ATTEMPTS = 5
 
@@ -61,71 +61,6 @@ function attemptToInsertModel(assetID: number)
     ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
-function KitInsertButton(data: PublicTypes.propertiesTable): Instance
-    return Components.ImageButton {
-        BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
-        BackgroundTransparency = 0,
-        LayoutOrder = data.LayoutOrder,
-        Size = data.BoxSize,
-
-        [OnEvent "Activated"] = function()
-            attemptToInsertModel(data.AssetID)
-        end,
-
-        [Children] = {
-            Components.Constraints.UICorner(0, 6),
-            Components.Constraints.UIGradient(
-                data.GradientColor,
-                NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0.25),
-                    NumberSequenceKeypoint.new(0.75, 0),
-                    NumberSequenceKeypoint.new(1, 0.75)
-                }),
-                90
-            ),
-
-            New "ImageLabel" {
-                AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundTransparency = 1,
-                BorderSizePixel = 1,
-                Position = UDim2.fromScale(0.5, 0.5),
-                Size = UDim2.fromScale(0.8, 1),
-                Image = data.Image,
-                ImageTransparency = 0.5,
-                ScaleType = Enum.ScaleType.Crop
-            },
-
-            New "TextLabel" {
-                AnchorPoint = Vector2.new(0, 1),
-                BackgroundTransparency = 1,
-                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                Position = UDim2.fromScale(0, 1),
-                Size = UDim2.new(1, 0, 0, 24),
-                Text = data.Text,
-                TextColor3 = Color3.new(1, 1, 1),
-                TextSize = 16,
-                TextTruncate = Enum.TextTruncate.AtEnd,
-            },
-
-            New "TextLabel" {
-                AnchorPoint = Vector2.new(0, 1),
-                BackgroundTransparency = 1,
-                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                Position = UDim2.fromScale(0, 0.65),
-                Size = UDim2.new(1, 0, -0.325, 24),
-                Text = "by @" .. tostring(data.Creator),
-                TextColor3 = Color3.new(1, 1, 1),
-                TextSize = 12,
-                TextTruncate = Enum.TextTruncate.AtEnd,
-
-                Visible = Computed(function()
-                    return data.Creator ~= nil
-                end):get()
-            }
-        }
-    }
-end
-
 function SubFrame(data: PublicTypes.propertiesTable): Instance
     return New "Frame" {
         BackgroundTransparency = 1,
@@ -156,18 +91,63 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
 
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 6), Enum.VerticalAlignment.Top),
-                    Components.BasicHeaderText({Text = "Map Kits", LayoutOrder = 1, Tooltip = "Tooltip here"}),
+                    Components.FrameHeader("Map Kits", 1, nil, nil, "Toolttip  Here"),
 
-                    KitInsertButton({
-                        BoxSize = UDim2.new(1, -24, 0, 64),
+                    Components.ImageButton {
+                        BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
+                        BackgroundTransparency = 0,
                         LayoutOrder = 2,
-                        GradientColor = ColorSequence.new(Color3.fromRGB(255, 93, 0), Color3.fromRGB(255, 0, 230)),
-                        Image = "rbxassetid://9441561539",
-                        Text = "Official TRIA.OS Map Kit",
-                        AssetID = 6404661021
-                    }),
+                        Size = UDim2.new(1, -24, 0, 84),
+                
+                        [OnEvent "Activated"] = function()
+                            attemptToInsertModel(6404661021)
+                        end,
+                
+                        [Children] = {
+                            Components.Constraints.UICorner(0, 6),
+                            Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)), nil, nil),
+                
+                            New "ImageLabel" {
+                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                BackgroundTransparency = 1,
+                                Position = UDim2.fromScale(0.5, 0.5),
+                                Size = UDim2.fromScale(0.8, 1),
+                                Image = "rbxassetid://9441561539",
+                                ImageTransparency = 0.5,
+                                ScaleType = Enum.ScaleType.Crop
+                            },
+                
+                            New "TextLabel" {
+                                AnchorPoint = Vector2.new(0, 1),
+                                BackgroundTransparency = 1,
+                                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                                Position = UDim2.fromScale(0, 1),
+                                Size = UDim2.new(1, 0, 0, 24),
+                                Text = "Official TRIA.OS Map Kit",
+                                TextColor3 = Theme.BrightText.Default,
+                                TextSize = 16,
+                                TextTruncate = Enum.TextTruncate.AtEnd,
+                            },
+                
+                            New "TextLabel" {
+                                AnchorPoint = Vector2.new(0, 1),
+                                BackgroundTransparency = 1,
+                                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                                Position = UDim2.fromScale(0, 0.65),
+                                Size = UDim2.new(1, 0, -0.325, 24),
+                                Text = "by @" .. tostring(data.Creator),
+                                TextColor3 = Theme.BrightText.Default,
+                                TextSize = 12,
+                                TextTruncate = Enum.TextTruncate.AtEnd,
+                
+                                Visible = Computed(function()
+                                    return data.Creator ~= nil
+                                end):get()
+                            }
+                        }
+                    },
 
-                    Components.BasicHeaderText({Text = "Map Components", LayoutOrder = 6, Tooltip = "Tooltip here"}),
+                    Components.FrameHeader("Map Components", 6, nil, nil, "Toolttip  Here")
                 }
             }
         }

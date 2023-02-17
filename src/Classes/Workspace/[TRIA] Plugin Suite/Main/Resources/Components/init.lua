@@ -160,7 +160,8 @@ function Components.PageHeader(pageName: string): Instance
         TextColor3 = Theme.TitlebarText.Default,
         Text = pageName,
         AnchorPoint = Vector2.new(0, 1),
-
+        TextYAlignment = Enum.TextYAlignment.Top,
+            
         [Children] = {
             New "Frame" {
                 BackgroundColor3 = Theme.Border.Default,
@@ -247,18 +248,24 @@ function Components.TwoOptions(option1Data: PublicTypes.propertiesTable, option2
     }
 end
 
-function Components.ScrollingFrameHeader(text: string, layoutOrder: number, color: any?, size: number?): Instance
+function Components.FrameHeader(text: string, layoutOrder: number, color: any?, size: number?, tooltip: any?): Instance
     return New "TextLabel" {
         BackgroundColor3 = color or Theme.HeaderSection.Default,
         BorderColor3 = Theme.Border.Default,
         BorderSizePixel = 1,
         LayoutOrder = layoutOrder,
         BorderMode = Enum.BorderMode.Middle,
-        Size = UDim2.new(1, 0, 0, size or 28),
+        Size = UDim2.new(1, 0, 0, size or 30),
         Font = Enum.Font.SourceSansBold,
         Text = text,
         TextColor3 = Theme.MainText.Default,
         TextSize = 14,
+
+        [Children] = tooltip and Components.TooltipImage ({
+            Header = text,
+            Tooltip = tooltip,
+            Position = UDim2.new(1, -12, 0.5, 0)
+        }) or nil
     }
 end
 
@@ -417,11 +424,10 @@ function Components.TooltipImage(data: PublicTypes.propertiesTable): Instance
     end)
     return New "ImageButton" {
         Active = isActive,
-
-        AnchorPoint = Vector2.new(1, 0.5),
+        Position = data.Position,
+        AnchorPoint = Vector2.new(1, 0),
         BackgroundTransparency = 1,
         Name = "Tooltip",
-        Position = data.Position,
         Size = UDim2.fromOffset(18, 18),
         Image = "rbxassetid://6026568254",
         HoverImage = "rbxassetid://6026568247",
@@ -453,30 +459,6 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
                 else "rbxassetid://6031068445" --// Unknown
         end),
         ImageColor3 = Theme.CheckedFieldIndicator.Default,
-    }
-end
-
-function Components.BasicHeaderText(data: PublicTypes.propertiesTable): Instance
-    return New "TextLabel" {
-        AnchorPoint = Vector2.new(0, 0),
-        BackgroundColor3 = Theme.Titlebar.Default,
-        FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-        LayoutOrder = data.LayoutOrder,
-        Size = UDim2.new(1, 0, 0, 32),
-        TextColor3 = Theme.TitlebarText.Default,
-        Text = data.Text,
-        TextXAlignment = Enum.TextXAlignment.Left,
-        TextYAlignment = Enum.TextYAlignment.Center,
-        TextSize = 16,
-
-        [Children] = {
-            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 12), nil),
-            Components.TooltipImage {
-                Header = data.Text,
-                Tooltip = data.Tooltip,
-                Position = UDim2.new(1, -12, 0.5, 0)
-            }
-        }
     }
 end
 

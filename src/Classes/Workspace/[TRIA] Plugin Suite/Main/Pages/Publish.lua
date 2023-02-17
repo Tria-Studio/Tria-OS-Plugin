@@ -92,7 +92,7 @@ local function getInfoFrame(name: string, frames: {Instance}): Instance
         
         [Children] = {
             Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 4)),
-            Components.ScrollingFrameHeader(name, 1),
+            Components.FrameHeader(name, 1),
             ForValues(frames, function(frame)
                 return frame
             end, Fusion.cleanup)
@@ -229,7 +229,6 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
-        Name = "Publish",
 
         [Children] = {
             Components.PageHeader("Map Whitelisting & Publishing"),
@@ -444,7 +443,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
 
                                     TextSize = 16,
                                     TextTransparency = 0,
-                                    TextColor3 = Color3.new(1, 1, 1),
+                                    TextColor3 = Theme.BrightText.Default,
                                     Text = Computed(function()
                                         return apiData.apiKey[apiData.isShowingApiKey:get() and "unfiltered" or "filtered"]:get()
                                     end),
@@ -571,7 +570,6 @@ You cannot whitelist or publish maps without doing this You only need to do this
                     }),
                     
                     New "Frame" {
-                        Name = "Spacer",
                         BackgroundTransparency = 1,
                         LayoutOrder = 6,
                         Size = UDim2.new(1, 0, 0, 25)
