@@ -92,7 +92,7 @@ function BaseSettingButton(data)
                 Components.TooltipImage {
                     Header = data.Text or data.Name,
                     Tooltip = if data.Tooltip then data.Tooltip.Text else "",
-                    Position = UDim2.new(0, -2, 0.5, 0)
+                    Position = UDim2.new(0, -2, 0, 0)
                 }
             }
         }
