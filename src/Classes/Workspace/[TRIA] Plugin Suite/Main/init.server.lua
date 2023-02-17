@@ -167,6 +167,4 @@ openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
 end)
 
-if widget.Enabled then
-	MapSelect:AutoSelect()
-end
+MapSelect:AutoSelect()
