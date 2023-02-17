@@ -21,7 +21,7 @@ local FUNCTION_CALL = {
 }
 
 local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
-local FUNC_MATCH = "function%(.+%)?%s*$"
+local INLINE_FUNCTION = "function%(.+%)?%s*$"
 local CALLBACK_NAME = "__MapLibCompletion"
  
 function Suggester:registerCallback()
@@ -103,6 +103,10 @@ function Suggester:registerCallback()
 		local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
 			local current = AutocompleteData[index]
 			local reachedEnd = false
+			
+			if not current then
+				return
+			end
 			
 			for _, branch in ipairs(branchList) do
 				if current.branches ~= nil then
@@ -193,7 +197,7 @@ function Suggester:registerCallback()
 							tempStr ..= currentToken.value:reverse()
 							
 							if AutocompleteUtil.tokenMatches(currentToken, "keyword", "function") then
-								if tempStr:reverse():match(FUNC_MATCH) then
+								if tempStr:reverse():match(INLINE_FUNCTION) then
 									tempLineData.hasFunction = true
 									break
 								end
