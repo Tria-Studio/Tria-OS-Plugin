@@ -11,25 +11,11 @@ local PublicTypes = require(Package.Parent.Parent.Parent.PublicTypes)
 local Lexer = require(Package.Lexer)
 local GlobalSettings = require(Package.GlobalSettings)
 
-local PROPERTY_INDEX = {
-	Property = "=%s*(%w+)%.",
-	Method = "=%s*(%w+):"
-}
-
-local FUNCTION_CALL = {
-	Property = "%(%s*(%w+)%.",
-	Method = "%(%s*(%w+):"
-}
-
-local FUNCTION_CREATE = {
-	Property = "function (%w+)%.(%w+)(%b())",
-	Method = "function (%w+):(%w+)(%b())"
-}
-
-local END_FUNC_MATCH = {
-	Property = "end%s(%w+)%.",
-	Method = "end%s(%w+):"
-}
+local AUTOCOMPLETE_IDEN = "([%.:])"
+local PROPERTY_INDEX = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
+local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
+local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
+local END_FUNC_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
 
 local INLINE_FUNCTION = "function%(.+%)?%s*$"
 local ARGS_MATCH = "(%w+)[:%s%w+]*"
@@ -40,6 +26,10 @@ local CALLBACK_NAME = "__MapLibCompletion"
 local defaultMethods = AutocompleteUtil.deepCopy(AutocompleteData.Methods)
 local defaultProperties = AutocompleteUtil.deepCopy(AutocompleteData.Properties)
  
+local function stringToTreeIndex(input: string): string
+	return input == ":" and "Methods" or "Properties"
+end
+
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
 		local currentScript = request.textDocument.script
@@ -98,25 +88,16 @@ function Suggester:registerCallback()
 		AutocompleteData.Methods = defaultMethods
 		AutocompleteData.Properties = defaultProperties
 
-		for _, tbl in ipairs(
-			{
-				{"Method", "Methods"},
-				{"Property", "Properties"}
-			}
-		) do
-			for prefix, funcName, funcArgs in currentScript.Source:gmatch(FUNCTION_CREATE[tbl[1]]) do
-				local newArgs = {}
-				for arg in funcArgs:gmatch(ARGS_MATCH) do
-					table.insert(newArgs, arg)
-				end
-	
-				print("inseritng", funcName)
-				AutocompleteData[tbl[2]].branches[funcName] = {
-					autocompleteArgs = newArgs,
-					name = funcName,
-					branches = nil
-				}
+		for prefix, index, funcName, funcArgs in currentScript.Source:gmatch(FUNCTION_CREATE) do
+			local newArgs = {}
+			for arg in funcArgs:gmatch(ARGS_MATCH) do
+				table.insert(newArgs, arg)
 			end
+			AutocompleteData[stringToTreeIndex(index)].branches[funcName] = {
+				autocompleteArgs = newArgs,
+				name = funcName,
+				branches = nil
+			}
 		end
 
 		local function addResponse(responseData: PublicTypes.propertiesTable, treeIndex: string)
@@ -205,7 +186,6 @@ function Suggester:registerCallback()
 			and not AutocompleteUtil.tokenMatches(tokens[2], ")") 
 			and AutocompleteUtil.tokenMatches(tokens[3], {":", "."}) 
 		then
-
 			do			
 				local tempLineData = {
 					line = "",
@@ -296,34 +276,26 @@ function Suggester:registerCallback()
 					end
 				end
 			end
-		elseif line:match(PROPERTY_INDEX.Property) or line:match(PROPERTY_INDEX.Method) then 
+		elseif 
+			line:match(PROPERTY_INDEX) 
+			or line:match(FUNCTION_CALL)
+			or line:match(END_FUNC_MATCH)
+		then 
 			-- Match Case 2: Property index
-			do
-				local isProperty = table.find(prefixes, line:match(PROPERTY_INDEX.Property))
-				local isMethod = table.find(prefixes, line:match(PROPERTY_INDEX.Method))
-				if isProperty or isMethod then
-					suggestAll(isMethod and "Methods" or "Properties", tokens)
-				end
-			end
-		elseif line:match(FUNCTION_CALL.Property) or line:match(FUNCTION_CALL.Method) then 
 			-- Match Case 3: Function call
+			-- Match Case 4: End with inline
+
 			do
-				local isProperty = table.find(prefixes, line:match(FUNCTION_CALL.Property))
-				local isMethod = table.find(prefixes, line:match(FUNCTION_CALL.Method))
-				if isProperty or isMethod then
-					suggestAll(isMethod and "Methods" or "Properties", tokens)
-				end
-			end
-		elseif line:match(END_FUNC_MATCH.Property) or line:match(END_FUNC_MATCH.Method)  then
-			do
-				local isProperty = table.find(prefixes, line:match(END_FUNC_MATCH.Property))
-				local isMethod = table.find(prefixes, line:match(END_FUNC_MATCH.Method))
-				if isProperty or isMethod then
-					suggestAll(isMethod and "Methods" or "Properties", tokens)
+				for _, pattern in ipairs({PROPERTY_INDEX, FUNCTION_CALL, END_FUNC_MATCH}) do
+					local prefix, index = line:match(pattern)
+					if table.find(prefixes, prefix) then
+						suggestAll(stringToTreeIndex(index), tokens)
+						break
+					end
 				end
 			end
 		else 
-			-- Match Case 4: Normal line
+			-- Match Case 5: Normal line
 			if table.find(prefixes, tokens[1].value) then
 				local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
 				suggestResponses(branches, treeEntryIndex, tokens)
