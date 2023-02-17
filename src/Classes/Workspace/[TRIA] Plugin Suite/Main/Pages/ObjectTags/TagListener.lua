@@ -114,7 +114,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                 Components.TooltipImage {
                     Header = data.Tooltip.Header,
                     Tooltip = data.Tooltip.Text,
-                    Position = UDim2.new(1, -4, 0, 2)
+                    Position = UDim2.new(1, -4, 0.5, 0)
                 },
                 Computed(function()
                     if #data.metadata == 0 then
