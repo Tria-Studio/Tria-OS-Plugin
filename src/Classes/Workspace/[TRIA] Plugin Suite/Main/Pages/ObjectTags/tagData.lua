@@ -576,7 +576,7 @@ Metadata:
     <b>Inactive Color: </b>Overrides the inactive color specified in map settings for this button. Leave empty for default.
     <b>Active Color: </b>Overrides the active color specified in map settings for this button. Leave empty for default.
     <b>Activated Color: </b>Overrides the activated color specified in map settings for this button. Leave empty for default.
-    <b>Activaed Sound: </b>Overrides the activated sound specified in map settings for this button. Leave empty for default.
+    <b>Activated Sound: </b>Overrides the activated sound specified in map settings for this button. Leave empty for default.
     <b>LocatorImage: </b>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
             },
         },
@@ -640,13 +640,12 @@ Metadata:
                 Text = [[Ziplines are an interactive way to allow for people to travel from point A to point B in a map.
 
  Metadata:
-    <b>Button# & Path#: </b>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
-    <b>Group: </b>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
-    <b>Inactive Color: </b>Overrides the inactive color specified in map settings for this button. Leave empty for default.
-    <b>Active Color: </b>Overrides the active color specified in map settings for this button. Leave empty for default.
-    <b>Activated Color: </b>Overrides the activated color specified in map settings for this button. Leave empty for default.
-    <b>Activaed Sound: </b>Overrides the activated sound specified in map settings for this button. Leave empty for default.
-    <b>LocatorImage: </b>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
+    <b>Momentum: </b>Determines whether or not you continue moving in the direction that you exited the zipline.
+    <b>Jumpable: </b>Allows players to jump off ziplines mid zipline.
+    <b>Color: </b>The color of the zipline.
+    <b>Material: </b>The material of the zipline.
+    <b>Zipline Width: </b>The width & height of the zipline cable.
+    <b>Sparkle: </b>Determines if a sparkle particle will play where the player 'grabs' onto the zipline.]]
             },
         },
         _Kill = {
@@ -660,8 +659,8 @@ Metadata:
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "Killbrick",
+                Text = "Kills the player upon touch."
             },
         },
         AirTank = {
@@ -681,8 +680,11 @@ Metadata:
             OnlyBaseParts = nil,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "Airtank",
+                Text = [[Airtanks allow for extended underwater gameplay by allowing players to get extra oxygen. Airtanks cannot prevent you from dying to lava.
+                    
+Metadata:
+    <b>Oxygen: </b>The amount of oxygen the player will obtain on collection of the tank.]]
             },
         },
         _SpeedBooster = {
@@ -702,8 +704,11 @@ Metadata:
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_SpeedBooster",
+                Text = [[Speed boosters allow for easy changing of the players walkspeed. Default player walkspeed is 20.
+                    
+                Metadata:
+                    <b>WalkSpeed: </b>The speed the players WalkSpeed will be set to.]]
             },
         },
         _JumpBooster = {
@@ -723,8 +728,11 @@ Metadata:
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "i want to die writing all of these",
-                Text = "i want to die writing all of these"
+                Header = "_JumpBooster",
+                Text = [[Jump boosters allow for easy changing of the players <u>JumpPower</u>. Default JumpPower is 50.
+                    
+                Metadata:
+                    <b>JumpPower: </b>The power the players JumpPower will be set to.]]
             },
         },
     }

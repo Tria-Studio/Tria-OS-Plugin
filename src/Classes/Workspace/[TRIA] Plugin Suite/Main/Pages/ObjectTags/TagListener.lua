@@ -114,7 +114,7 @@ return function(name, data)
                 Components.TooltipImage {
                     Header = data.Tooltip.Header,
                     Tooltip = data.Tooltip.Text,
-                    Position = UDim2.new(1, -4, 0.5, 0)
+                    Position = UDim2.new(1, -4, 0, 2)
                 },
                 Computed(function()
                     if #data.metadata == 0 then

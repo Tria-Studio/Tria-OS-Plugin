@@ -164,57 +164,6 @@ function frame:GetFrame(data)
                         AssetID = 6404661021
                     }),
 
-                    -- SubFrame({
-                    --     LayoutOrder = 3,
-                    --     Children = {
-                    --         KitInsertButton({
-                    --             BackgroundColor = Color3.fromRGB(43, 124, 255),
-                    --             BoxSize = UDim2.new(0.5, -16, 0, 64),
-                    --             GradientColor = ColorSequence.new(Color3.new(1, 1, 1)),
-                    --             Image = "rbxassetid://9441689114",
-                    --             Text = "Map Textures Kit",
-                    --             Creator = "Phexonia",
-                    --             AssetID = 0
-                    --         }),
-                
-                    --         KitInsertButton({
-                    --             BackgroundColor = Color3.fromRGB(58, 220, 0),
-                    --             BoxSize = UDim2.new(0.5, -16, 0, 64),
-                    --             GradientColor = ColorSequence.new(Color3.new(1, 1, 1)),
-                    --             Image = "rbxassetid://9441751309",
-                    --             Text = "TRIA.OS Jump Kit",
-                    --             Creator = "epicflamingo100",
-                    --             AssetID = 0
-                    --         })
-                    --     },
-                    -- }),
-
-                    Components.BasicHeaderText({Text = "Map Modifications", LayoutOrder = 4, Tooltip = "Tooltip here"}),
-                    SubFrame({
-                        LayoutOrder = 5,
-                        Children = {
-                            KitInsertButton({
-                                BackgroundColor = Color3.fromRGB(229, 0, 3),
-                                BoxSize = UDim2.new(0.5, -16, 0, 64),
-                                GradientColor = ColorSequence.new(Color3.new(1, 1, 1)),
-                                Image = "rbxassetid://0",
-                                Text = "EasyTP",
-                                Creator = "grif_0",
-                                AssetID = 0
-                            }),
-
-                            KitInsertButton({
-                                BackgroundColor = Color3.fromRGB(24, 214, 167),
-                                BoxSize = UDim2.new(0.5, -16, 0, 64),
-                                GradientColor = ColorSequence.new(Color3.new(1, 1, 1)),
-                                Image = "rbxassetid://0",
-                                Text = "Liquid Jetstreams",
-                                Creator = "grif_0",
-                                AssetID = 0
-                            })
-                        },
-                    }),
-
                     Components.BasicHeaderText({Text = "Map Components", LayoutOrder = 6, Tooltip = "Tooltip here"}),
                 }
             }
