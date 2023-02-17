@@ -15,14 +15,30 @@ local PROPERTY_INDEX = {
 	Property = "=%s*(%w+)%.",
 	Method = "=%s*(%w+):"
 }
+
 local FUNCTION_CALL = {
 	Property = "%(%s*(%w+)%.",
 	Method = "%(%s*(%w+):"
 }
 
-local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
+local FUNCTION_CREATE = {
+	Property = "function (%w+)%.(%w+)(%b())",
+	Method = "function (%w+):(%w+)(%b())"
+}
+
+local END_FUNC_MATCH = {
+	Property = "end%s(%w+)%.",
+	Method = "end%s(%w+):"
+}
+
 local INLINE_FUNCTION = "function%(.+%)?%s*$"
+local ARGS_MATCH = "(%w+)[:%s%w+]*"
+
+local MAPLIB_IDEN = `local {ARGS_MATCH} = game.GetMapLib:Invoke%(%)%(%)`
 local CALLBACK_NAME = "__MapLibCompletion"
+
+local defaultMethods = AutocompleteUtil.deepCopy(AutocompleteData.Methods)
+local defaultProperties = AutocompleteUtil.deepCopy(AutocompleteData.Properties)
  
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
@@ -57,7 +73,7 @@ function Suggester:registerCallback()
 		for prefix in currentScript.Source:gmatch(MAPLIB_IDEN) do
 			table.insert(prefixes, prefix)
 		end
-		
+
 		-- Return Case 5: No prefix
 		if #prefixes < 1 then
 			return response
@@ -77,6 +93,32 @@ function Suggester:registerCallback()
 			end
 		end
 		
+		-- Special Case 1: Creating a custom function
+
+		AutocompleteData.Methods = defaultMethods
+		AutocompleteData.Properties = defaultProperties
+
+		for _, tbl in ipairs(
+			{
+				{"Method", "Methods"},
+				{"Property", "Properties"}
+			}
+		) do
+			for prefix, funcName, funcArgs in currentScript.Source:gmatch(FUNCTION_CREATE[tbl[1]]) do
+				local newArgs = {}
+				for arg in funcArgs:gmatch(ARGS_MATCH) do
+					table.insert(newArgs, arg)
+				end
+	
+				print("inseritng", funcName)
+				AutocompleteData[tbl[2]].branches[funcName] = {
+					autocompleteArgs = newArgs,
+					name = funcName,
+					branches = nil
+				}
+			end
+		end
+
 		local function addResponse(responseData: PublicTypes.propertiesTable, treeIndex: string)
 			local suggestionData = responseData.data
 			table.insert(response.items, {
@@ -90,7 +132,11 @@ function Suggester:registerCallback()
 					request.position, 
 					(
 						responseData.text 
-						.. (treeIndex == "Methods" and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" or "")
+						.. (
+							(treeIndex == "Methods" or suggestionData.isFunction) 
+							and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" 
+							or ""
+						)
 						.. afterCursor
 					),
 					responseData.beforeCursor,
@@ -140,7 +186,7 @@ function Suggester:registerCallback()
 			end
 		end
 
-		local function insertAll(index: string, tokens: {AutocompleteTypes.Token})
+		local function suggestAll(index: string, tokens: {AutocompleteTypes.Token})
 			local allVariables = {}
 			for k in pairs(AutocompleteData[index].branches) do
 				table.insert(allVariables, k)
@@ -153,7 +199,13 @@ function Suggester:registerCallback()
 		end
 
 		-- Match Case 1: Function end
-		if AutocompleteUtil.tokenMatches(tokens[1], "keyword", "end") then
+		if
+			#tokens > 2 
+			and AutocompleteUtil.tokenMatches(tokens[1], "keyword", "end") 
+			and not AutocompleteUtil.tokenMatches(tokens[2], ")") 
+			and AutocompleteUtil.tokenMatches(tokens[3], {":", "."}) 
+		then
+
 			do			
 				local tempLineData = {
 					line = "",
@@ -250,7 +302,7 @@ function Suggester:registerCallback()
 				local isProperty = table.find(prefixes, line:match(PROPERTY_INDEX.Property))
 				local isMethod = table.find(prefixes, line:match(PROPERTY_INDEX.Method))
 				if isProperty or isMethod then
-					insertAll(isMethod and "Methods" or "Properties", tokens)
+					suggestAll(isMethod and "Methods" or "Properties", tokens)
 				end
 			end
 		elseif line:match(FUNCTION_CALL.Property) or line:match(FUNCTION_CALL.Method) then 
@@ -259,7 +311,15 @@ function Suggester:registerCallback()
 				local isProperty = table.find(prefixes, line:match(FUNCTION_CALL.Property))
 				local isMethod = table.find(prefixes, line:match(FUNCTION_CALL.Method))
 				if isProperty or isMethod then
-					insertAll(isMethod and "Methods" or "Properties", tokens)
+					suggestAll(isMethod and "Methods" or "Properties", tokens)
+				end
+			end
+		elseif line:match(END_FUNC_MATCH.Property) or line:match(END_FUNC_MATCH.Method)  then
+			do
+				local isProperty = table.find(prefixes, line:match(END_FUNC_MATCH.Property))
+				local isMethod = table.find(prefixes, line:match(END_FUNC_MATCH.Method))
+				if isProperty or isMethod then
+					suggestAll(isMethod and "Methods" or "Properties", tokens)
 				end
 			end
 		else 
