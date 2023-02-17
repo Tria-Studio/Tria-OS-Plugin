@@ -264,7 +264,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         [Children] = tooltip and Components.TooltipImage ({
             Header = text,
             Tooltip = tooltip,
-            Position = UDim2.new(1, -12, 0.5, 0)
+            Position = UDim2.new(1, -12, 0.25, 0)
         }) or nil
     }
 end
