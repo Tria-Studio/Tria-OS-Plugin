@@ -77,14 +77,14 @@ local function getColorDisplay(data: {Display: string, LayoutOrder: number}): In
                     local newColor
                     local success = pcall(function()
                         if data.Display == "R" or data.Display == "G" or data.Display == "B" then
-                            local textNumber = math.clamp(tonumber(Text:get(false)) or 0, 0, 255)
+                            local textNumber = math.clamp(tonumber(textValue:get(false)) or 0, 0, 255)
                             newColor = Color3.fromRGB(
                                 data.Display == "R" and textNumber or chosenColor:get(false).R * 255,
                                 data.Display == "G" and textNumber or chosenColor:get(false).G * 255,
                                 data.Display == "B" and textNumber or chosenColor:get(false).B * 255
                             )
                         else
-                            local textNumber = math.clamp(tonumber(Text:get(false)) or 0, 0, 255) / 255
+                            local textNumber = math.clamp(tonumber(textValue:get(false)) or 0, 0, 255) / 255
                             local H, S, V = chosenColor:get(false):ToHSV()
                             newColor = Color3.fromHSV(
                                 data.Display == "H" and textNumber or H,
@@ -95,7 +95,7 @@ local function getColorDisplay(data: {Display: string, LayoutOrder: number}): In
                     end)
 
                     newColor = if success then newColor else Color3.fromRGB(0, 0, 0)
-                    chosenColor:set(NewColor)
+                    chosenColor:set(newColor)
                     updateColor()
                 end
             }

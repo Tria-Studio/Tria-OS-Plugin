@@ -8,7 +8,7 @@ local Util = require(Package.Util)
 local TagUtils = require(Package.Util.TagUtils)
 local TagData = require(script.Parent.tagData)
 local Pages = require(Package.Resources.Components.Pages)
-local Colorwheel = require(Package.ColorWheel)
+local Colorwheel = require(Package.Colorwheel)
 local Dropdown = require(Package.Util.Dropdown)
 local PublicTypes = require(Package.PublicTypes)
 
@@ -114,7 +114,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                 Components.TooltipImage {
                     Header = data.Tooltip.Header,
                     Tooltip = data.Tooltip.Text,
-                    Position = UDim2.new(1, -4, 0, 2)
+                    Position = UDim2.new(1, -4, 0.5, 2)
                 },
                 Computed(function()
                     if #data.metadata == 0 then

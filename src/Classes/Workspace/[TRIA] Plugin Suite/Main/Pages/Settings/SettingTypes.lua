@@ -5,7 +5,7 @@ local Fusion = require(Package.Resources.Fusion)
 local Components = require(Package.Resources.Components)
 local Theme = require(Package.Resources.Themes)
 local Util = require(Package.Util)
-local ColorWheel = require(Package.ColorWheel)
+local ColorWheel = require(Package.Colorwheel)
 local Dropdown = require(Package.Util.Dropdown)
 
 local New = Fusion.New
@@ -86,7 +86,6 @@ function BaseSettingButton(data)
                     AnchorPoint = Vector2.new(0.5, 0),
                     BackgroundColor3 = Theme.Border.Default,
                     BackgroundTransparency = 0,
-                    BorderSizePixel = 0,
                     Position = UDim2.fromScale(0.45, 0),
                     Size = UDim2.new(0, 1, 1, 0)
                 },
@@ -201,7 +200,6 @@ function SettingTypes.Color(data)
                 BorderColor3 = Theme.Border.Default,
                 BorderMode = Enum.BorderMode.Outline,
                 BorderSizePixel = 1,
-                Name = "Color",
                 Position = UDim2.new(0.45, 8, 0.5, 0),
                 Size = UDim2.fromOffset(12, 12),
 
@@ -231,7 +229,6 @@ function SettingTypes.Color(data)
                 AnchorPoint = Vector2.new(0.5, 0),
                 BackgroundColor3 = Theme.Border.Default,
                 BackgroundTransparency = 0,
-                BorderSizePixel = 0,
                 Position = UDim2.new(0.45, 28, 0, 0),
                 Size = UDim2.new(0, 1, 1, 0)
             },

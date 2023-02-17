@@ -15,7 +15,7 @@ local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
 local MapSelect = require(script.MapSelect)
 local Util = require(script.Util)
-local ColorWheel = require(script.ColorWheel)
+local ColorWheel = require(script.Colorwheel)
 local Message = require(script.Message)
 local MenuData = require(script.MenuData)
 
@@ -61,7 +61,7 @@ New "Frame" {
 					Size = UDim2.fromScale(1, 1),
 
 					Text = "Select a map to continue.",
-					TextColor3 = Color3.new(1, 1, 1),
+					TextColor3 = Theme.BrightText.Default,
 					TextSize = Spring(Computed(function()
 						return 28 * (Util.isPluginFrozen() and 1 or 2)
 					end), 18),

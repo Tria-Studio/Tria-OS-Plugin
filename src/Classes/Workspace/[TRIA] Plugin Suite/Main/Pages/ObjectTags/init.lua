@@ -34,7 +34,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
 
                 [Children] = {
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
-                    Components.ScrollingFrameHeader("Button Event Tags", 1),
+                    Components.FrameHeader("Button Event Tags", 1),
                     New "Frame" {
                         [Out "AbsoluteSize"] = buttonFrameSize,
 
@@ -50,7 +50,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                             end, Fusion.cleanup)
                         },
                     },
-                    Components.ScrollingFrameHeader("Object Tags", 3),
+                    Components.FrameHeader("Object Tags", 3),
                     New "Frame" {
                         [Out "AbsoluteSize"] = objectFrameSize,
 
