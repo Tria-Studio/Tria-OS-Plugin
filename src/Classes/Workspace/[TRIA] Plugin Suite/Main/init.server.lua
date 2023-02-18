@@ -13,6 +13,8 @@ local Fusion = require(script.Resources.Fusion)
 local Components = require(script.Resources.Components)
 local Theme = require(script.Resources.Themes)
 local Pages = require(script.Resources.Components.Pages)
+local SettingsUtil = require(script.Pages.Settings.SettingsUtil)
+
 local MapSelect = require(script.MapSelect)
 local Util = require(script.Util)
 local ColorWheel = require(script.Colorwheel)
@@ -168,3 +170,9 @@ openButton.Click:Connect(function()
 end)
 
 MapSelect:AutoSelect()
+
+plugin.Unloading:Connect(function()
+    MapSelect._Maid:DoCleaning()
+    Util.MainMaid:DoCleaning()
+    SettingsUtil.SettingMaid:DoCleaning()
+end)

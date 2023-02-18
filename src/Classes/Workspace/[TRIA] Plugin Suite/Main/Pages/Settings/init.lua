@@ -157,10 +157,4 @@ Util.MapChanged:Connect(function()
     handleFolderRemoval()
 end)
 
-plugin.Unloading:Connect(function()
-    MapSelect._Maid:DoCleaning()
-    Util.MainMaid:DoCleaning()
-    SettingsUtil.SettingMaid:DoCleaning()
-end)
-
 return frame

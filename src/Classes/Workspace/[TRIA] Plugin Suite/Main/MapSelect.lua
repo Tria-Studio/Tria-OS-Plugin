@@ -21,7 +21,7 @@ local MapSelect = {
     selectCancelImage = Value("rbxassetid://6022668885")
 }
 
-function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?)
+function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?): (boolean, string?)
     local score_1 = 0 -- D2
     local score_2 = 0 -- FE2/FP275
     local score_3 = 0 -- TRIA.os
@@ -41,7 +41,7 @@ function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?)
     end
 
     local script2: Script? = Map:FindFirstChild("MapScript")
-    if script2 and (string.find(script2.Source, "game.GetMapLib:Invoke()()", 1, true) or string.find(script2.Source, "ServerStorage.Bindables.GetMapLib:Invoke()()", 1, true)) then
+    if script2 then
         score_3 += 0.5
         hasMapScript = true
     end
@@ -61,8 +61,13 @@ function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?)
         end
     end
 
-     if settings2 and settings2:FindFirstChild("Main") and settings2:FindFirstChild("Lighting")
-     and settings2:FindFirstChild("Liquids") and (settings2:FindFirstChild("Button") or settings2:FindFirstChild("Buttons")) then
+     if 
+        settings2 
+        and settings2:FindFirstChild("Main") 
+        and settings2:FindFirstChild("Lighting")
+        and settings2:FindFirstChild("Liquids") 
+        and (settings2:FindFirstChild("Button") or settings2:FindFirstChild("Buttons")) 
+    then
         score_3 += 0.5
         hasSettings = true
      end
@@ -102,18 +107,28 @@ function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?)
             return false, "No ExitRegion found. Add a part named 'ExitBlock', and add it into the Special folder. "
         end
 
-        return score_3 >= 1 and hasMapScript and hasSettings
+        if not hasMapScript then
+            return false, "No MapScript found. Add a script named 'MapScript' into the map. "
+        end
+
+        if not hasSettings then
+            return false, "No Settings found. Add a folder named 'Settings' into the map with the relevant subfolders (it's recommended to copy straight from the MapKit). "
+        end
+
+        return true, nil
     end
 
     return false, "Invalid map model format. Must be a 'Model', 'Folder', or unparented in the workspace."
 end
 
-function MapSelect:SetMap(Map: Model|Workspace)
+function MapSelect:SetMap(Map: Model | Workspace): boolean
     if Map then -- add or change selection
         local success, message = self:IsTriaMap(Map)
 
         if not success then
-            return false, message
+            Util:ShowMessage("Error", tostring(message))
+            self:ResetSelection()
+            return false
         end
 
         self.selectCancelColor:set(Theme.ErrorText.Default:get(false))
@@ -161,6 +176,7 @@ function MapSelect:SetMap(Map: Model|Workspace)
 	                end
 				end
             end))
+
             Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(function(child)
                 task.wait()
                 if parentChanged then 
@@ -188,13 +204,7 @@ function MapSelect:SetMap(Map: Model|Workspace)
             Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
         end
     else
-        Util._Selection.selectedParts:set({})
-        Util.mapModel:set(nil)
-        Util.MapChanged:Fire()
-        self.hasOptimizedStructure:set(false)
-        self.selectCancelColor:set(Theme.SubText.Default:get(false))
-        self.selectTextState:set("No map selected")
-        self.selectTextColor:set(Theme.ErrorText.Default:get(false))
+        self:ResetSelection()
     end
 
     return true
@@ -206,7 +216,7 @@ function MapSelect:StartMapSelection()
         return
     end
 
-    local currentTarget, lastTarget, debounce
+    local currentTarget, lastTarget
 
     local mapHighlight = Instance.new("Highlight", workspace.CurrentCamera)
     local mouse = plugin:GetMouse()
@@ -223,13 +233,18 @@ function MapSelect:StartMapSelection()
         local target = mouse.Target
         if target ~= lastTarget then
             lastTarget = target
+
             repeat
                 target = target and target:FindFirstAncestorOfClass("Model")
             until not target or target.Parent == workspace
+
             if currentTarget == target then
                 return
             end
-            if target and self:IsTriaMap(target) then
+
+            if target then
+                local isMap, text = self:IsTriaMap(target)
+                mapHighlight.FillColor = isMap and Color3.fromRGB(168, 229, 153) or Color3.fromRGB(245, 130, 130)
                 mapHighlight.Adornee = target
                 currentTarget = target
             else
@@ -244,6 +259,7 @@ function MapSelect:StartMapSelection()
         self.selectingMap:set(false)
         self.selectCancelImage:set("rbxassetid://6022668885")
         self._Maid:DoCleaning()
+        mapHighlight.Adornee = nil
         plugin:Deactivate()
     end))
 end
@@ -259,7 +275,7 @@ function MapSelect:StopManualSelection()
     self.selectTextColor:set(if Util.mapModel:get(false) then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
 end
 
-function MapSelect:AutoSelect()
+function MapSelect:AutoSelect(): boolean
     local isMap, value = self:IsTriaMap(workspace)
 
     if isMap then
@@ -276,6 +292,16 @@ function MapSelect:AutoSelect()
             end
         end
     end
+end
+
+function MapSelect:ResetSelection()
+    Util._Selection.selectedParts:set({})
+    Util.mapModel:set(nil)
+    Util.MapChanged:Fire()
+    self.hasOptimizedStructure:set(false)
+    self.selectCancelColor:set(Theme.SubText.Default:get(false))
+    self.selectTextState:set("No map selected")
+    self.selectTextColor:set(Theme.ErrorText.Default:get(false))
 end
 
 return MapSelect
