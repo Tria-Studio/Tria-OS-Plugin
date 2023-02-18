@@ -4,9 +4,12 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
 local Package = script.Parent.Parent
-local Fusion = require(Package.Resources.Fusion)
-local Theme = require(Package.Resources.Themes)
-local Components = require(Package.Resources.Components)
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Theme = require(Resources.Themes)
+local Components = require(Resources.Components)
+
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
 

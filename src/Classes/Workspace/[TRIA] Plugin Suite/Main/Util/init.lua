@@ -1,10 +1,14 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
-local Fusion = require(script.Parent.Resources.Fusion)
-local Signal = require(script.Signal)
-local Pages = require(script.Parent.Resources.Components.Pages)
+local Package = script.Parent
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Pages = require(Resources.Components.Pages)
+
 local Maid = require(script.Maid)
+local Signal = require(script.Signal)
 
 local Value = Fusion.Value
 local Observer = Fusion.Observer

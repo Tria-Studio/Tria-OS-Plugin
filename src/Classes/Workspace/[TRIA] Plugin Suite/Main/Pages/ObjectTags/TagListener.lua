@@ -1,16 +1,22 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 
 local Package = script.Parent.Parent.Parent
-local Fusion = require(Package.Resources.Fusion)
-local Theme = require(Package.Resources.Themes)
-local Components = require(Package.Resources.Components )
-local Util = require(Package.Util)
-local TagUtils = require(Package.Util.TagUtils)
-local TagData = require(script.Parent.tagData)
-local Pages = require(Package.Resources.Components.Pages)
+local Resources = Package.Resources
+local UtilModule = Package.Util
+
+local Fusion = require(Resources.Fusion)
+local Theme = require(Resources.Themes)
+local Components = require(Resources.Components)
+local Pages = require(Resources.Components.Pages)
+
+local Util = require(UtilModule)
+local TagUtils = require(UtilModule.TagUtils)
+local Dropdown = require(UtilModule.Dropdown)
+
 local Colorwheel = require(Package.Colorwheel)
-local Dropdown = require(Package.Util.Dropdown)
 local PublicTypes = require(Package.PublicTypes)
+
+local TagData = require(script.Parent.tagData)
 
 local New = Fusion.New
 local Children = Fusion.Children

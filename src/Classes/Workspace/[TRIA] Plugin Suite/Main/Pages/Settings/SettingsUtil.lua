@@ -1,8 +1,10 @@
 local Package = script.Parent.Parent.Parent
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Components = require(Resources.Components)
 
 local Util = require(Package.Util)
-local Fusion = require(Package.Resources.Fusion)
-local Components = require(Package.Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
 
 local SettingTypes = require(script.Parent:WaitForChild("SettingTypes"))

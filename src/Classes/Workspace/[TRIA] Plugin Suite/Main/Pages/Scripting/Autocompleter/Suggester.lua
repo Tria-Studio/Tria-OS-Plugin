@@ -11,19 +11,25 @@ local PublicTypes = require(Package.Parent.Parent.Parent.PublicTypes)
 local Lexer = require(Package.Lexer)
 local GlobalSettings = require(Package.GlobalSettings)
 
-local PROPERTY_INDEX = {
-	Property = "=%s*(%w+)%.",
-	Method = "=%s*(%w+):"
-}
-local FUNCTION_CALL = {
-	Property = "%(%s*(%w+)%.",
-	Method = "%(%s*(%w+):"
-}
+local AUTOCOMPLETE_IDEN = "([%.:])"
+local PROPERTY_INDEX = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
+local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
+local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
+local END_FUNC_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
 
-local MAPLIB_IDEN = "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)"
-local FUNC_MATCH = "function%(.+%)?%s*$"
+local INLINE_FUNCTION = "function%(.+%)?%s*$"
+local ARGS_MATCH = "(%w+)[:%s%w+]*"
+
+local MAPLIB_IDEN = `local {ARGS_MATCH} = game.GetMapLib:Invoke%(%)%(%)`
 local CALLBACK_NAME = "__MapLibCompletion"
+
+local defaultMethods = AutocompleteUtil.deepCopy(AutocompleteData.Methods)
+local defaultProperties = AutocompleteUtil.deepCopy(AutocompleteData.Properties)
  
+local function stringToTreeIndex(input: string): string
+	return input == ":" and "Methods" or "Properties"
+end
+
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
 		local currentScript = request.textDocument.script
@@ -35,9 +41,10 @@ function Suggester:registerCallback()
 			return response
 		end
 
-		-- Return Case 2: Only MapScript
-		if GlobalSettings.runOnlyInMapscript then
-			if not table.find({"MapScript", "LocalMapScript", "EffectScript"}, currentScript.Name) then
+		-- Return Case 2: Only specific scripts
+
+		if not GlobalSettings.runsInAnyScript:get(false) then
+			if not GlobalSettings.runsIn[currentScript.Name] then
 				return response
 			end
 		end
@@ -56,7 +63,7 @@ function Suggester:registerCallback()
 		for prefix in currentScript.Source:gmatch(MAPLIB_IDEN) do
 			table.insert(prefixes, prefix)
 		end
-		
+
 		-- Return Case 5: No prefix
 		if #prefixes < 1 then
 			return response
@@ -76,6 +83,23 @@ function Suggester:registerCallback()
 			end
 		end
 		
+		-- Special Case 1: Creating a custom function
+
+		AutocompleteData.Methods = defaultMethods
+		AutocompleteData.Properties = defaultProperties
+
+		for prefix, index, funcName, funcArgs in currentScript.Source:gmatch(FUNCTION_CREATE) do
+			local newArgs = {}
+			for arg in funcArgs:gmatch(ARGS_MATCH) do
+				table.insert(newArgs, arg)
+			end
+			AutocompleteData[stringToTreeIndex(index)].branches[funcName] = {
+				autocompleteArgs = newArgs,
+				name = funcName,
+				branches = nil
+			}
+		end
+
 		local function addResponse(responseData: PublicTypes.propertiesTable, treeIndex: string)
 			local suggestionData = responseData.data
 			table.insert(response.items, {
@@ -89,7 +113,11 @@ function Suggester:registerCallback()
 					request.position, 
 					(
 						responseData.text 
-						.. (treeIndex == "Methods" and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" or "")
+						.. (
+							(treeIndex == "Methods" or suggestionData.isFunction) 
+							and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" 
+							or ""
+						)
 						.. afterCursor
 					),
 					responseData.beforeCursor,
@@ -102,6 +130,10 @@ function Suggester:registerCallback()
 		local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
 			local current = AutocompleteData[index]
 			local reachedEnd = false
+			
+			if not current then
+				return
+			end
 			
 			for _, branch in ipairs(branchList) do
 				if current.branches ~= nil then
@@ -135,7 +167,7 @@ function Suggester:registerCallback()
 			end
 		end
 
-		local function insertAll(index: string, tokens: {AutocompleteTypes.Token})
+		local function suggestAll(index: string, tokens: {AutocompleteTypes.Token})
 			local allVariables = {}
 			for k in pairs(AutocompleteData[index].branches) do
 				table.insert(allVariables, k)
@@ -148,7 +180,12 @@ function Suggester:registerCallback()
 		end
 
 		-- Match Case 1: Function end
-		if AutocompleteUtil.tokenMatches(tokens[1], "keyword", "end") then
+		if
+			#tokens > 2 
+			and AutocompleteUtil.tokenMatches(tokens[1], "keyword", "end") 
+			and not AutocompleteUtil.tokenMatches(tokens[2], ")") 
+			and AutocompleteUtil.tokenMatches(tokens[3], {":", "."}) 
+		then
 			do			
 				local tempLineData = {
 					line = "",
@@ -192,7 +229,7 @@ function Suggester:registerCallback()
 							tempStr ..= currentToken.value:reverse()
 							
 							if AutocompleteUtil.tokenMatches(currentToken, "keyword", "function") then
-								if tempStr:reverse():match(FUNC_MATCH) then
+								if tempStr:reverse():match(INLINE_FUNCTION) then
 									tempLineData.hasFunction = true
 									break
 								end
@@ -239,26 +276,26 @@ function Suggester:registerCallback()
 					end
 				end
 			end
-		elseif line:match(PROPERTY_INDEX.Property) or line:match(PROPERTY_INDEX.Method) then 
+		elseif 
+			line:match(PROPERTY_INDEX) 
+			or line:match(FUNCTION_CALL)
+			or line:match(END_FUNC_MATCH)
+		then 
 			-- Match Case 2: Property index
-			do
-				local isProperty = table.find(prefixes, line:match(PROPERTY_INDEX.Property))
-				local isMethod = table.find(prefixes, line:match(PROPERTY_INDEX.Method))
-				if isProperty or isMethod then
-					insertAll(isMethod and "Methods" or "Properties", tokens)
-				end
-			end
-		elseif line:match(FUNCTION_CALL.Property) or line:match(FUNCTION_CALL.Method) then 
 			-- Match Case 3: Function call
+			-- Match Case 4: End with inline
+
 			do
-				local isProperty = table.find(prefixes, line:match(FUNCTION_CALL.Property))
-				local isMethod = table.find(prefixes, line:match(FUNCTION_CALL.Method))
-				if isProperty or isMethod then
-					insertAll(isMethod and "Methods" or "Properties", tokens)
+				for _, pattern in ipairs({PROPERTY_INDEX, FUNCTION_CALL, END_FUNC_MATCH}) do
+					local prefix, index = line:match(pattern)
+					if table.find(prefixes, prefix) then
+						suggestAll(stringToTreeIndex(index), tokens)
+						break
+					end
 				end
 			end
 		else 
-			-- Match Case 4: Normal line
+			-- Match Case 5: Normal line
 			if table.find(prefixes, tokens[1].value) then
 				local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
 				suggestResponses(branches, treeEntryIndex, tokens)

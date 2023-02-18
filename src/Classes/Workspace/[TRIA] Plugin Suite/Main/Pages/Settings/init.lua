@@ -1,10 +1,13 @@
 local Lighting = game:GetService("Lighting")
 
 local Package = script.Parent.Parent
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Theme = require(Resources.Themes)
+local Components = require(Resources.Components)
+
 local MapSelect = require(Package.MapSelect)
-local Fusion = require(Package.Resources.Fusion)
-local Theme = require(Package.Resources.Themes)
-local Components = require(Package.Resources.Components)
 local Util = require(Package.Util)
 
 local New = Fusion.New
@@ -155,12 +158,6 @@ handleFolderRemoval()
 Util.MapChanged:Connect(function()
     onMapChanged()
     handleFolderRemoval()
-end)
-
-plugin.Unloading:Connect(function()
-    MapSelect._Maid:DoCleaning()
-    Util.MainMaid:DoCleaning()
-    SettingsUtil.SettingMaid:DoCleaning()
 end)
 
 return frame

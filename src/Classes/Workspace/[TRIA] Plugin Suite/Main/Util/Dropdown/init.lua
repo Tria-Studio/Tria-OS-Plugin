@@ -1,10 +1,14 @@
 local Package = script.Parent.Parent
-local Fusion = require(Package.Resources.Fusion)
-local Components = require(Package.Resources.Components)
-local Theme = require(Package.Resources.Themes)
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Components = require(Resources.Components)
+local Theme = require(Resources.Themes)
+local Pages = require(Resources.Components.Pages)
+
 local Util = require(Package.Util)
+
 local DropdownData = require(script.DropdownData)
-local Pages = require(Package.Resources.Components.Pages)
 
 local New = Fusion.New
 local Children = Fusion.Children

@@ -9,10 +9,16 @@ local openButton = toolbar:CreateButton(
 local widgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 300)
 local widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", widgetInfo)
 
-local Fusion = require(script.Resources.Fusion)
-local Components = require(script.Resources.Components)
-local Theme = require(script.Resources.Themes)
-local Pages = require(script.Resources.Components.Pages)
+local Resources = script.Resources
+local Pages = script.Pages
+
+local Fusion = require(Resources.Fusion)
+local Components = require(Resources.Components)
+local Theme = require(Resources.Themes)
+local PageHandler = require(Resources.Components.Pages)
+
+local SettingsUtil = require(Pages.Settings.SettingsUtil)
+
 local MapSelect = require(script.MapSelect)
 local Util = require(script.Util)
 local ColorWheel = require(script.Colorwheel)
@@ -45,7 +51,7 @@ New "Frame" {
 
 			[Children] = {
 				ForValues(MenuData.Pages, function(data)
-					return Pages:NewPage(data)
+					return PageHandler:NewPage(data)
 				end, Fusion.cleanup),
 
 				New "TextLabel" {
@@ -89,7 +95,7 @@ New "Frame" {
 					newPage = if newPage < 1 then #Util._PageOrder elseif newPage > #Util._PageOrder then 1 else newPage
 
 					Util._currentPageNum:set(newPage)
-					Pages:ChangePage(Util._PageOrder[Util._currentPageNum:get(false)])
+					PageHandler:ChangePage(Util._PageOrder[Util._currentPageNum:get(false)])
 				end
 			end,
 			[Children] = {
@@ -168,3 +174,9 @@ openButton.Click:Connect(function()
 end)
 
 MapSelect:AutoSelect()
+
+plugin.Unloading:Connect(function()
+    MapSelect._Maid:DoCleaning()
+    Util.MainMaid:DoCleaning()
+    SettingsUtil.SettingMaid:DoCleaning()
+end)

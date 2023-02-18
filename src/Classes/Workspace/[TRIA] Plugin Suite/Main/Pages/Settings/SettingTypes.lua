@@ -1,9 +1,12 @@
 local SettingTypes = {}
 
 local Package = script.Parent.Parent.Parent
-local Fusion = require(Package.Resources.Fusion)
-local Components = require(Package.Resources.Components)
-local Theme = require(Package.Resources.Themes)
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Components = require(Resources.Components)
+local Theme = require(Resources.Themes)
+
 local Util = require(Package.Util)
 local ColorWheel = require(Package.Colorwheel)
 local Dropdown = require(Package.Util.Dropdown)
@@ -92,7 +95,7 @@ function BaseSettingButton(data)
                 Components.TooltipImage {
                     Header = data.Text or data.Name,
                     Tooltip = if data.Tooltip then data.Tooltip.Text else "",
-                    Position = UDim2.new(0, -2, 0.5, 0)
+                    Position = UDim2.new(0, -2, 0, 0)
                 }
             }
         }

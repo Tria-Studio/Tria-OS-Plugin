@@ -2,12 +2,16 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Lighting = game:GetService("Lighting")
 
 local Package = script.Parent.Parent.Parent
-local Fusion = require(Package.Resources.Fusion)
-local Theme = require(Package.Resources.Themes)
-local Components = require(Package.Resources.Components)
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Theme = require(Resources.Themes)
+local Components = require(Resources.Components)
+
 local Util = require(Package.Util)
-local SettingsUtil = require(script.Parent.SettingsUtil)
 local PublicTypes = require(Package.PublicTypes)
+
+local SettingsUtil = require(script.Parent.SettingsUtil)
 
 local New = Fusion.New
 local Children = Fusion.Children
