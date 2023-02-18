@@ -28,8 +28,6 @@ local effectScript = Value(false)
 local maid = Util.Maid.new()
 local mapScripts = Value({})
 local frame = {}
-
---Autocompleter:toggle(newState)
  
 function OptionFrame(props: PublicTypes.propertiesTable): Instance
     local enabled = Value(props.Enabled)
@@ -237,7 +235,12 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                         end
                                     end
                                     return true
+                                end,
+
+                                OnToggle = function(newState: boolean)
+                                    Autocompleter:toggle(newState)
                                 end
+
                             },
                             OptionFrame {
                                 Text = "Run autocomplete globally",
