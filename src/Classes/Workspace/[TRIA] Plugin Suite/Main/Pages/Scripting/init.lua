@@ -22,6 +22,9 @@ local OnEvent = Fusion.OnEvent
 local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
 
+local ENABLE_VAR = "TRIA_AutocompleteEnabled"
+local GLOBAL_ENABLE_VAR = "TRIA_GlobalAutocompleteEnabled"
+
 local localMapScript = Value(false)
 local effectScript = Value(false)
 
@@ -225,7 +228,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                             OptionFrame {
                                 Text = "Enable Autocomplete",
                                 LayoutOrder = 1,
-                                Enabled = false,
+                                Enabled = if plugin:GetSetting(ENABLE_VAR) then plugin:GetSetting(ENABLE_VAR) else false,
                                 Validate = function(newState)
                                     if newState:get(false) == true then
                                         Util.attemptScriptInjection()
@@ -239,15 +242,17 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
 
                                 OnToggle = function(newState: boolean)
                                     Autocompleter:toggle(newState)
+                                    plugin:SetSetting(ENABLE_VAR, newState)
                                 end
 
                             },
                             OptionFrame {
                                 Text = "Run autocomplete globally",
                                 LayoutOrder = 1,
-                                Enabled = GlobalSettings.runsInTriaScripts,
+                                Enabled = if plugin:GetSetting(GLOBAL_ENABLE_VAR) then plugin:GetSetting(GLOBAL_ENABLE_VAR) else false,
                                 OnToggle = function(newState: boolean)
                                     GlobalSettings.runsInTriaScripts = not newState
+                                    plugin:SetSetting(GLOBAL_ENABLE_VAR, newState)
                                 end
                             }
                         }
