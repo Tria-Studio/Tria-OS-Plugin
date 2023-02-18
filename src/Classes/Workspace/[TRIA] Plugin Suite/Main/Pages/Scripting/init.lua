@@ -28,6 +28,8 @@ local effectScript = Value(false)
 local maid = Util.Maid.new()
 local mapScripts = Value({})
 local frame = {}
+
+--Autocompleter:toggle(newState)
  
 function OptionFrame(props: PublicTypes.propertiesTable): Instance
     local enabled = Value(props.Enabled)
@@ -48,13 +50,15 @@ function OptionFrame(props: PublicTypes.propertiesTable): Instance
                 BackgroundTransparency = 1,
     
                 [OnEvent "Activated"] = function()
-                    if props.CanCheck then
-                        if not props.CanCheck:get(false) then
+                    enabled:set(not enabled:get(false))
+
+                    if props.Validate then
+                        if not props.Validate(enabled) then
+                            enabled:set(not enabled:get(false))
                             return
                         end
                     end
 
-                    enabled:set(not enabled:get(false))
                     if props.OnToggle then
                         props.OnToggle(enabled:get(false))
                     end
@@ -113,13 +117,14 @@ local function GetScriptButton(state, scriptName, layoutOrder)
 
         [OnEvent "Activated"] = function()
             ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
-            local newScript = Instance.new(scriptName == "EffectScript" and "Script" or "LocalScript")
-            newScript.Name = scriptName
-            newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
-            newScript.Parent = Util.mapModel:get()
-            newScript.Enabled = false
-            plugin:OpenScript(newScript)
-            ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
+
+            Util.attemptScriptInjection()
+            if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
+                Util:ShowMessage("Error", "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
+            else
+                plugin:OpenScript(result)
+                ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
+            end
         end,
         [Children] = {
             Components.Constraints.UICorner(0, 6),
@@ -222,9 +227,16 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                             OptionFrame {
                                 Text = "Enable Autocomplete",
                                 LayoutOrder = 1,
-                                Enabled = true,
-                                OnToggle = function(newState: boolean)
-                                    Autocompleter:toggle(newState)
+                                Enabled = false,
+                                Validate = function(newState)
+                                    if newState:get(false) == true then
+                                        Util.attemptScriptInjection()
+                                        if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
+                                            Util:ShowMessage("Error", "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
+                                            return false
+                                        end
+                                    end
+                                    return true
                                 end
                             },
                             OptionFrame {
@@ -290,7 +302,7 @@ Util.MapChanged:Connect(function()
 
     task.wait()
 
-    local function UpdateChildren()
+    local function updateChildren()
         local newTable = {}
         for _, child in pairs(Map:GetChildren()) do
             if child:IsA("Script") then
@@ -302,8 +314,8 @@ Util.MapChanged:Connect(function()
         mapScripts:set(newTable)
     end
 
-    UpdateChildren()
-    Util.MapMaid:GiveTask(Map.ChildAdded:Connect(UpdateChildren))
-    Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(UpdateChildren))
+    updateChildren()
+    Util.MapMaid:GiveTask(Map.ChildAdded:Connect(updateChildren))
+    Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(updateChildren))
 end)
 return frame

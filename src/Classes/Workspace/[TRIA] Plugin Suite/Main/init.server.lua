@@ -35,6 +35,7 @@ local ForPairs = Fusion.ForPairs
 
 widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = widget
+Util.attemptScriptInjection()
 
 New "Frame" {
 	Name = "TRIA.os Plugin",

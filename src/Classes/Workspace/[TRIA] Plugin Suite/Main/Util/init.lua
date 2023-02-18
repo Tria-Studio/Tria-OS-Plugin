@@ -14,6 +14,7 @@ local Value = Fusion.Value
 local Observer = Fusion.Observer
 
 local selectionMaid = Maid.new()
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local Util = {
     Signal = Signal,
@@ -260,6 +261,18 @@ function Util.updateSelectedParts()
     end
 end
 
+function Util.attemptScriptInjection()
+    local hasScriptInjection = pcall(function()
+        local newScript = Instance.new("Script", game.CoreGui)
+        newScript.Name = ""
+        newScript.Parent = game.CoreGui
+    
+        task.delay(1, newScript.Destroy, newScript)
+        newScript.Source = "Test"
+    end)
+    
+    plugin:SetSetting("TRIA_ScriptInjectionEnabled", hasScriptInjection)
+end
 
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
