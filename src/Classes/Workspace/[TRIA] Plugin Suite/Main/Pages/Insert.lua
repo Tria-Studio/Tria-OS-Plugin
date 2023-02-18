@@ -83,7 +83,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
 
         [Children] = {
             Components.PageHeader("Map Addons, Kits, & Components"),
-            Components.ScrollingFrame {
+            Components.ScrollingFrame ({
                 BackgroundColor3 = Theme.MainBackground.Default,
                 BackgroundTransparency = 0,
                 ClipsDescendants = true,
@@ -149,7 +149,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
 
                     Components.FrameHeader("Map Components", 6, nil, nil, "Toolttip  Here")
                 }
-            }
+            }, true)
         }
     }
 end

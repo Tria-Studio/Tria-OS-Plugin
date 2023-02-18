@@ -145,7 +145,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.propertiesTabl
                         local finish = lerpType(startColor, endColor, ratio + (1 / #Util._PageOrder))
 
                         return ColorSequence.new(start, finish)
-                    end):get(), NumberSequence.new(0), 0)
+                    end):get(), NumberSequence.new(0), 0)        
                 },
             }
         }
@@ -264,14 +264,14 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         [Children] = tooltip and Components.TooltipImage ({
             Header = text,
             Tooltip = tooltip,
-            Position = UDim2.new(1, -12, 0, 6)
+            Position = UDim2.new(1, -12, 0, 5)
         }) or nil
     }
 end
 
-function Components.ScrollingFrame(data: PublicTypes.propertiesTable): Instance
+function Components.ScrollingFrame(data: PublicTypes.propertiesTable, bypassRestriction: boolean?): Instance
     return Hydrate(New "ScrollingFrame" {
-        ScrollingEnabled = Util.interfaceActive,
+        ScrollingEnabled = bypassRestriction or Util.interfaceActive,
         BorderColor3 = Theme.Border.Default,
         CanvasSize = UDim2.fromScale(0, 0),
         BorderSizePixel = 1,
@@ -284,7 +284,7 @@ function Components.ScrollingFrame(data: PublicTypes.propertiesTable): Instance
     })(data)
 end
 
-function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcessor: (boolean) -> Instance | {Instance}): Instance
+function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcessor: (boolean) -> Instance | {Instance}, bypassRestriction: boolean?): Instance
     local dropdownVisible = Value(data.DefaultState)
     local headerColor = Value(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
     local frame = Value()
@@ -303,7 +303,7 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
 
         [Ref] = frame,
         [OnEvent "MouseEnter"] = function()
-            if Util.interfaceActive:get(false) and not Util.dropdownActive:get() then
+            if (Util.interfaceActive:get(false) or bypassRestriction) and not Util.dropdownActive:get() then
                 headerColor:set(data.IsHeader and Theme.CurrentMarker.Default or Theme.Button.Hover)
             end
         end,
@@ -314,7 +314,7 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
         [Children] = {
             Computed(function()
                 local props = {
-                    Active = Util.interfaceActive,
+                    Active = bypassRestriction or Util.interfaceActive,
                     BackgroundTransparency = 1,
     
                     FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),
@@ -354,7 +354,7 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
                 else
                     return Hydrate(Components.TextButton(props)) {
                         TextColor3 = data.IsSecondary and Theme.SubText.Default,
-                        AutoButtonColor = Util.interfaceActive,
+                        AutoButtonColor = bypassRestriction or Util.interfaceActive,
                         [OnEvent "Activated"] = function()
                             dropdownVisible:set(not dropdownVisible:get(false))
                         end,

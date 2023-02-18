@@ -232,7 +232,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
 
         [Children] = {
             Components.PageHeader("Map Whitelisting & Publishing"),
-            Components.ScrollingFrame{
+            Components.ScrollingFrame({
                 Size = UDim2.fromScale(1, 1),
                 BackgroundColor3 = Theme.MainBackground.Default,
 
@@ -259,7 +259,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
     <b>4)</b> You're all set!
                         ]]
                         })
-                    end),
+                    end, true),
 
                     Components.Dropdown({
                         Header = "IMPORTANT NOTICE",
@@ -273,7 +273,7 @@ Your creator token is a long phrase of characters which authenticates and allows
 <u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
                         ]]
                         })
-                    end),
+                    end, true),
 
                     getInfoFrame("Map Whitelisting", { --// Whitelisting
                         Components.TextBox { --// Insert Whitelist ID
@@ -384,13 +384,13 @@ Your creator token is a long phrase of characters which authenticates and allows
                                     DefaultState = true,
                                     Header = "Your Whitelisted Maps:",
                                     LayoutOrder = 2
-                                }, createMapList(whitelistedMaps, 2)),
+                                }, createMapList(whitelistedMaps, 2), true),
 
                                 Components.Dropdown({
                                     DefaultState = true,
                                     Header = "Your Published Maps:",
                                     LayoutOrder = 4
-                                }, createMapList(publishedMaps, 4)),
+                                }, createMapList(publishedMaps, 4), true),
                             }
                         },
                     }),
@@ -411,7 +411,7 @@ If you generate a new key, your old key will become invalid and you will need to
 You cannot whitelist or publish maps without doing this You only need to do this once.
                             ]],
                             })
-                        end),
+                        end, true),
 
                         New "TextLabel" { --// Status
                             RichText = true,
@@ -575,7 +575,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                         Size = UDim2.new(1, 0, 0, 25)
                     }
                 }
-            }
+            }, true)
         }
     }
 

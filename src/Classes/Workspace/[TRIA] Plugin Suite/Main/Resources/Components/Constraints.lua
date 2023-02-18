@@ -52,9 +52,10 @@ function Constraints.UICorner(Scale: number, Offset: number)
 	}
 end
 
-function Constraints.UIGradient(Color: ColorSequence?, Transparency: NumberSequence?, Rotation: number?)
+function Constraints.UIGradient(Color: ColorSequence?, Transparency: NumberSequence?, Rotation: number?, Enabled: any?)
 	return New "UIGradient" {
 		Color = Color,
+        Enabled = Enabled,
 		Rotation = Rotation,
 		Transparency = Transparency
 	}

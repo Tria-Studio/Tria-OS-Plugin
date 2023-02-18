@@ -1,9 +1,9 @@
 local toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local openButton = toolbar:CreateButton(
 	"TRIA.os Companion Plugin", 
-	"Tools to help map making easier!", 
+	"A suite of tools designed to ", 
 	"rbxassetid://12032105372", 
-	"Mapmaking Companion"
+	"TRIA.os Mapmaker"
 )
 
 local widgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 300)
