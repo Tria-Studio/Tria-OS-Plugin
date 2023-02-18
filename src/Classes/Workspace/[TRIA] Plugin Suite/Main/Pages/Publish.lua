@@ -241,42 +241,51 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
 
                 [Children] = {
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 12)),
-                    Components.Dropdown({
-                        Header = "Setup Instructions",
-                        DefaultState = false
-                    }, function(visible)
-                        return Components.DropdownTextlabel({
-                            TextXAlignment = Enum.TextXAlignment.Left,
-                            DropdownVisible = visible,
-                            Text = [[
-    <b>1)</b> Join the TRIA.os Map Manager
-        - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
-             
-    <b>2)</b> In the TRIA.os Map Manager, click on the [ ] tab and generate a TRIA API key for your account
-        - NOTE: Do <u>NOT</u> share this with anyone.
-        - This API key will enable you to remotely whitelist & publish maps. you cannot do this without generating this key.
-                        
-    <b>3)</b> Below, enter the TRIA Map Key you generated in the Map Manager into the textbox below and click 'Set'
-       - NOTE: This key will not be visible to other users in a team create place.
-                        
-    <b>4)</b> You're all set!
-                        ]]
-                        })
-                    end, true),
+                    New "Frame" {
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        Size = UDim2.new(1, 0, 0, 0),
+                        BackgroundTransparency = 1,
 
-                    Components.Dropdown({
-                        Header = "IMPORTANT NOTICE",
-                        DefaultState = true
-                    }, function(visible)
-                        return Components.DropdownTextlabel({
-                            DropdownVisible = visible,
-                            Text = [[
-Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
-                            
-<u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
-                        ]]
-                        })
-                    end, true),
+                        [Children] = {
+                            Components.Constraints.UIListLayout(),
+                            Components.Dropdown({
+                                Header = "Setup Instructions",
+                                DefaultState = false
+                            }, function(visible)
+                                return Components.DropdownTextlabel({
+                                    TextXAlignment = Enum.TextXAlignment.Left,
+                                    DropdownVisible = visible,
+                                    Text = [[
+            <b>1)</b> Join the TRIA.os Map Manager
+                - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
+                     
+            <b>2)</b> In the TRIA.os Map Manager, click on the [ ] tab and generate a TRIA API key for your account
+                - NOTE: Do <u>NOT</u> share this with anyone.
+                - This API key will enable you to remotely whitelist & publish maps. you cannot do this without generating this key.
+                                
+            <b>3)</b> Below, enter the TRIA Map Key you generated in the Map Manager into the textbox below and click 'Set'
+               - NOTE: This key will not be visible to other users in a team create place.
+                                
+            <b>4)</b> You're all set!
+                                ]]
+                                })
+                            end, true),
+        
+                            Components.Dropdown({
+                                Header = "IMPORTANT NOTICE",
+                                DefaultState = true
+                            }, function(visible)
+                                return Components.DropdownTextlabel({
+                                    DropdownVisible = visible,
+                                    Text = [[
+        Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
+                                    
+        <u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
+                                ]]
+                                })
+                            end, true),
+                        }
+                    },
 
                     getInfoFrame("Map Whitelisting", { --// Whitelisting
                         Components.TextBox { --// Insert Whitelist ID
