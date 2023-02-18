@@ -12,9 +12,11 @@ local Lexer = require(Package.Lexer)
 local GlobalSettings = require(Package.GlobalSettings)
 
 local AUTOCOMPLETE_IDEN = "([%.:])"
-local PROPERTY_INDEX = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
-local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
+
+local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
+local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
+
 local END_FUNC_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
 
 local INLINE_FUNCTION = "function%(.+%)?%s*$"
@@ -277,7 +279,7 @@ function Suggester:registerCallback()
 				end
 			end
 		elseif 
-			line:match(PROPERTY_INDEX) 
+			line:match(VARIABLE_CREATE) 
 			or line:match(FUNCTION_CALL)
 			or line:match(END_FUNC_MATCH)
 		then 
@@ -286,7 +288,7 @@ function Suggester:registerCallback()
 			-- Match Case 4: End with inline
 
 			do
-				for _, pattern in ipairs({PROPERTY_INDEX, FUNCTION_CALL, END_FUNC_MATCH}) do
+				for _, pattern in ipairs({VARIABLE_CREATE, FUNCTION_CALL, END_FUNC_MATCH}) do
 					local prefix, index = line:match(pattern)
 					if table.find(prefixes, prefix) then
 						suggestAll(stringToTreeIndex(index), tokens)
