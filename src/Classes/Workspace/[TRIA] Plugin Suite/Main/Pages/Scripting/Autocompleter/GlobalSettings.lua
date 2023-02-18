@@ -4,13 +4,6 @@ local Value = Fusion.Value
 
 local Settings = {}
 Settings.enabled = true
-
-Settings.runsIn = {
-	MapScript = true,
-	LocalMapScript = true,
-	EffectScript = true
-}
-
-Settings.runsInAnyScript = Value(true)
+Settings.runsInTriaScripts = false
 
 return Settings

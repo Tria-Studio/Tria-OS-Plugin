@@ -37,7 +37,7 @@ function OptionFrame(props: PublicTypes.propertiesTable): Instance
 
     return New "Frame" {
         BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 0.0875),
+        Size = UDim2.fromScale(1, 0.125),
         LayoutOrder = props.LayoutOrder,
 
         [Children] = {
@@ -230,28 +230,11 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                             OptionFrame {
                                 Text = "Run autocomplete globally",
                                 LayoutOrder = 1,
-                                Enabled = GlobalSettings.runsInAnyScript:get(false),
+                                Enabled = GlobalSettings.runsInTriaScripts,
                                 OnToggle = function(newState: boolean)
-                                    GlobalSettings.runsInAnyScript:set(newState)
+                                    GlobalSettings.runsInTriaScripts = not newState
                                 end
-                            },
-                            ForPairs({"MapScript", "LocalMapScript", "EffectScript"}, function(index, value)
-                                return index, OptionFrame {
-                                    Text = `Run Autocomplete in {value}`,
-                                    TextColor3 = Computed(function()
-                                        return if GlobalSettings.runsInAnyScript:get() then Theme.ErrorText.Default:get() else Theme.SubText.Default:get()
-                                    end),
-                                    LayoutOrder = 1 + index,
-                                    Enabled = false,
-                                    CanCheck = Computed(function()
-                                        return not GlobalSettings.runsInAnyScript:get()
-                                    end),
-                                    OnToggle = function(newState: boolean)
-                                        GlobalSettings.runsIn[value] = newState
-                                        Autocompleter:toggle(GlobalSettings.enabled)
-                                    end
-                                }
-                            end, Fusion.cleanup)
+                            }
                         }
                     }
                 }
