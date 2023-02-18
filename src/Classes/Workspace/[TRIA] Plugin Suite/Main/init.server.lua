@@ -15,7 +15,7 @@ local Pages = script.Pages
 local Fusion = require(Resources.Fusion)
 local Components = require(Resources.Components)
 local Theme = require(Resources.Themes)
-local Pages = require(Resources.Components.Pages)
+local PageHandler = require(Resources.Components.Pages)
 
 local SettingsUtil = require(Pages.Settings.SettingsUtil)
 
@@ -51,7 +51,7 @@ New "Frame" {
 
 			[Children] = {
 				ForValues(MenuData.Pages, function(data)
-					return Pages:NewPage(data)
+					return PageHandler:NewPage(data)
 				end, Fusion.cleanup),
 
 				New "TextLabel" {
@@ -95,7 +95,7 @@ New "Frame" {
 					newPage = if newPage < 1 then #Util._PageOrder elseif newPage > #Util._PageOrder then 1 else newPage
 
 					Util._currentPageNum:set(newPage)
-					Pages:ChangePage(Util._PageOrder[Util._currentPageNum:get(false)])
+					PageHandler:ChangePage(Util._PageOrder[Util._currentPageNum:get(false)])
 				end
 			end,
 			[Children] = {
