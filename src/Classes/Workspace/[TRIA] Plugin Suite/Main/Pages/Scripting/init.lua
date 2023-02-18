@@ -89,7 +89,7 @@ function OptionFrame(props: PublicTypes.propertiesTable): Instance
     }
 end
 
-local function GetScriptButton(state, scriptName, layoutOrder)
+local function GetScriptButton(state, scriptName: string, layoutOrder: number): Instance
    return Components.TextButton {
         Active = Computed(function()
             return not state:get()
