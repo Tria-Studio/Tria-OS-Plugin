@@ -228,7 +228,11 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                             OptionFrame {
                                 Text = "Enable Autocomplete",
                                 LayoutOrder = 1,
-                                Enabled = if plugin:GetSetting(ENABLE_VAR) then plugin:GetSetting(ENABLE_VAR) else false,
+                                Enabled = 
+                                    if plugin:GetSetting(ENABLE_VAR) and plugin:GetSetting("TRIA_ScriptInjectionEnabled") 
+                                    then plugin:GetSetting(ENABLE_VAR) 
+                                    else false,
+                                
                                 Validate = function(newState)
                                     if newState:get(false) == true then
                                         Util.attemptScriptInjection()
@@ -241,8 +245,10 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 end,
 
                                 OnToggle = function(newState: boolean)
-                                    Autocompleter:toggle(newState)
-                                    plugin:SetSetting(ENABLE_VAR, newState)
+                                    if plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
+                                        Autocompleter:toggle(newState)
+                                        plugin:SetSetting(ENABLE_VAR, newState)
+                                    end
                                 end
 
                             },
