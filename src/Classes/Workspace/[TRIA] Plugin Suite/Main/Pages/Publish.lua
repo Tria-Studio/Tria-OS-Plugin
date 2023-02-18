@@ -256,17 +256,17 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                     TextXAlignment = Enum.TextXAlignment.Left,
                                     DropdownVisible = visible,
                                     Text = [[
-            <b>1)</b> Join the TRIA.os Map Manager
-                - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
+<b>1)</b> Join the TRIA.os Map Manager
+    - This can be accessed by joining TRIA.os, and opening the map list and clicking 'Whitelist'
                      
-            <b>2)</b> In the TRIA.os Map Manager, click on the [ ] tab and generate a TRIA API key for your account
-                - NOTE: Do <u>NOT</u> share this with anyone.
-                - This API key will enable you to remotely whitelist & publish maps. you cannot do this without generating this key.
+<b>2)</b> In the TRIA.os Map Manager, click on the [ ] tab and generate a TRIA API key for your account
+    - NOTE: Do <u>NOT</u> share this with anyone.
+    - This API key will enable you to remotely whitelist & publish maps. you cannot do this without generating this key.
                                 
-            <b>3)</b> Below, enter the TRIA Map Key you generated in the Map Manager into the textbox below and click 'Set'
-               - NOTE: This key will not be visible to other users in a team create place.
+<b>3)</b> Below, enter the TRIA Map Key you generated in the Map Manager into the textbox below and click 'Set'
+    - NOTE: This key will not be visible to other users in a team create place.
                                 
-            <b>4)</b> You're all set!
+<b>4)</b> You're all set!
                                 ]]
                                 })
                             end, true),
@@ -277,10 +277,9 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                             }, function(visible)
                                 return Components.DropdownTextlabel({
                                     DropdownVisible = visible,
-                                    Text = [[
-        Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
-                                    
-        <u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
+                                    Text = [[Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
+
+<u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
                                 ]]
                                 })
                             end, true),

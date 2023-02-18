@@ -94,7 +94,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
 
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 6), Enum.VerticalAlignment.Top),
-                    Components.FrameHeader("Map Kits", 1, nil, nil, "Toolttip  Here"),
+                    Components.FrameHeader("Map Kits", 1, nil, nil, "Here you can insert Map kits which can help you get started on making a map!"),
 
                     Components.ImageButton {
                         BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
@@ -150,7 +150,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                         }
                     },
 
-                    Components.FrameHeader("Map Components", 6, nil, nil, "Toolttip  Here")
+                    Components.FrameHeader("Map Components", 6, nil, nil, "These are common map components which can be found in most maps.")
                 }
             }, true)
         }

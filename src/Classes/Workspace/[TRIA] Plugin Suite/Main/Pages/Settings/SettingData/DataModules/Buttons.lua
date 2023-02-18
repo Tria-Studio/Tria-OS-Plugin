@@ -46,7 +46,7 @@ function setupButtonFolder(folder: Instance)
 	
 			Value = Value("default"),
 			Tooltip = {
-				Text = "The sound buttons make when they are activated.\nUse 'default' for default sound or your own assetID..\nSettings set per individual button overwrites these settings.",
+				Text = "The sound buttons make when they are activated.\nUse \"default\" for default sound or your own assetID.\nSettings set per individual button overwrites these settings.",
 			},
 		},
 	

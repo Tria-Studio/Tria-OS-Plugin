@@ -477,9 +477,9 @@ Metadata:
                 Header = "Liquids",
                 Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the apearance and oxygen depletion rate of the player.
                 
-    <font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
-    <font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
-    <font color = "rgb(255, 0, 0)"><b>Lava: </b></font> Instant death
+<font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
+<font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
+<font color = "rgb(255, 0, 0)"><b>Lava: </b></font> Instant death
 
 You can specify the oxygen depletion, default color, and splash sound with custom liquids.
 
@@ -514,9 +514,9 @@ Metadata:
                 Header = "_Gas#",
                 Text = [[Gas objects are similar to Liquids, except players do not swim in gas. Gas uses the same types as liquids with the same oxygen depletion rates.
 
-    <font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
-    <font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
-    <font color = "rgb(255, 0, 0)"><b>Lava: </b></font> Instant death
+<font color = "rgb(0, 143, 156)"><b>Water: </b></font> -8 oxygen/sec
+<font color = "rgb(0, 255, 0)"><b>Acid: </b></font> -30 oxygen/sec
+<font color = "rgb(255, 0, 0)"><b>Lava: </b></font> Instant death
 
 Custom oxygen depletion rates can be specified with custom liquids.
 
@@ -639,7 +639,7 @@ Metadata:
                 Header = "Ziplines",
                 Text = [[Ziplines are an interactive way to allow for people to travel from point A to point B in a map.
 
- Metadata:
+Metadata:
     <b>Momentum: </b>Determines whether or not you continue moving in the direction that you exited the zipline.
     <b>Jumpable: </b>Allows players to jump off ziplines mid zipline.
     <b>Color: </b>The color of the zipline.
@@ -707,8 +707,8 @@ Metadata:
                 Header = "_SpeedBooster",
                 Text = [[Speed boosters allow for easy changing of the players walkspeed. Default player walkspeed is 20.
                     
-                Metadata:
-                    <b>WalkSpeed: </b>The speed the players WalkSpeed will be set to.]]
+Metadata:
+    <b>WalkSpeed: </b>The speed the players WalkSpeed will be set to.]]
             },
         },
         _JumpBooster = {
@@ -731,8 +731,8 @@ Metadata:
                 Header = "_JumpBooster",
                 Text = [[Jump boosters allow for easy changing of the players <u>JumpPower</u>. Default JumpPower is 50.
                     
-                Metadata:
-                    <b>JumpPower: </b>The power the players JumpPower will be set to.]]
+Metadata:
+    <b>JumpPower: </b>The power the players JumpPower will be set to.]]
             },
         },
     }
