@@ -123,7 +123,12 @@ local function GetScriptButton(state, scriptName, layoutOrder)
             if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
                 Util:ShowMessage("Error", "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
             else
-                plugin:OpenScript(result)
+                local newScript = Instance.new("LocalScript")
+                newScript.Name = scriptName
+                newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
+                newScript.Enabled = false
+                newScript.Parent = Util.mapModel:get()
+                plugin:OpenScript(newScript)
                 ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
             end
         end,
