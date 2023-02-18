@@ -15,6 +15,7 @@ local AUTOCOMPLETE_IDEN = "([%.:])"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
+local PROPERTY_FUNCTION_CREATE = "(%w+)%.(%w+)%s*=%s*function(%b())%s*"
 local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
 
 local END_FUNC_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
@@ -84,22 +85,37 @@ function Suggester:registerCallback()
 				return response
 			end
 		end
-		
-		-- Special Case 1: Creating a custom function
 
 		AutocompleteData.Methods = defaultMethods
 		AutocompleteData.Properties = defaultProperties
-
-		for prefix, index, funcName, funcArgs in currentScript.Source:gmatch(FUNCTION_CREATE) do
+		
+		local function insertCustomFunction(funcName: string, funcArgs: string, index: string)
 			local newArgs = {}
 			for arg in funcArgs:gmatch(ARGS_MATCH) do
 				table.insert(newArgs, arg)
 			end
-			AutocompleteData[stringToTreeIndex(index)].branches[funcName] = {
+			AutocompleteData[index].branches[funcName] = {
 				autocompleteArgs = newArgs,
 				name = funcName,
+				isFunction = true,
 				branches = nil
 			}
+		end
+
+		-- Special Case 1: Creating a custom function
+
+		for prefix, index, funcName, funcArgs in currentScript.Source:gmatch(FUNCTION_CREATE) do
+			if table.find(prefixes, prefix) then
+				insertCustomFunction(funcName, funcArgs, index)
+			end
+		end
+
+		-- Special Case 2: Creating a custom function with a dot index
+
+		for prefix, funcName, funcArgs in currentScript.Source:gmatch(PROPERTY_FUNCTION_CREATE) do
+			if table.find(prefixes, prefix) then
+				insertCustomFunction(funcName, funcArgs, "Properties")
+			end
 		end
 
 		local function addResponse(responseData: PublicTypes.propertiesTable, treeIndex: string)
