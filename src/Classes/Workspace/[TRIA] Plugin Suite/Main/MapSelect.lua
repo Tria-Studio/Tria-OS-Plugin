@@ -2,10 +2,13 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local Package = script.Parent
-local Fusion = require(Package.Resources.Fusion)
-local Theme = require(Package.Resources.Themes)
+local Resources = Package.Resources
+
+local Fusion = require(Resources.Fusion)
+local Theme = require(Resources.Themes)
+local Pages = require(Resources.Components.Pages)
+
 local Util = require(Package.Util)
-local Pages = require(Package.Resources.Components.Pages)
 
 local Value = Fusion.Value
 local Computed = Fusion.Computed

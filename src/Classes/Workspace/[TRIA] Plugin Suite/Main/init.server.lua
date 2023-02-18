@@ -9,11 +9,15 @@ local openButton = toolbar:CreateButton(
 local widgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 300)
 local widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", widgetInfo)
 
-local Fusion = require(script.Resources.Fusion)
-local Components = require(script.Resources.Components)
-local Theme = require(script.Resources.Themes)
-local Pages = require(script.Resources.Components.Pages)
-local SettingsUtil = require(script.Pages.Settings.SettingsUtil)
+local Resources = script.Resources
+local Pages = script.Pages
+
+local Fusion = require(Resources.Fusion)
+local Components = require(Resources.Components)
+local Theme = require(Resources.Themes)
+local Pages = require(Resources.Components.Pages)
+
+local SettingsUtil = require(Pages.Settings.SettingsUtil)
 
 local MapSelect = require(script.MapSelect)
 local Util = require(script.Util)
