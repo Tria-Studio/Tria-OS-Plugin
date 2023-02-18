@@ -1,3 +1,6 @@
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
@@ -11,6 +14,7 @@ local PublicTypes = require(Package.PublicTypes)
 local Autocompleter = require(script.Autocompleter)
 local GlobalSettings = require(script.Autocompleter.GlobalSettings)
 
+local Observer = Fusion.Observer
 local New = Fusion.New
 local Children = Fusion.Children
 local Value = Fusion.Value
@@ -18,6 +22,11 @@ local OnEvent = Fusion.OnEvent
 local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
 
+local localMapScript = Value(false)
+local effectScript = Value(false)
+
+local maid = Util.Maid.new()
+local mapScripts = Value({})
 local frame = {}
  
 function OptionFrame(props: PublicTypes.propertiesTable): Instance
@@ -28,7 +37,7 @@ function OptionFrame(props: PublicTypes.propertiesTable): Instance
 
     return New "Frame" {
         BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 0.125),
+        Size = UDim2.fromScale(1, 0.0875),
         LayoutOrder = props.LayoutOrder,
 
         [Children] = {
@@ -75,6 +84,50 @@ function OptionFrame(props: PublicTypes.propertiesTable): Instance
     }
 end
 
+local function GetScriptButton(state, scriptName, layoutOrder)
+   return Components.TextButton {
+        Active = Computed(function()
+            return not state:get()
+        end),
+        AutoButtonColor = Computed(function()
+            return not state:get()
+        end),
+        Text = Computed(function()
+            return state:get() and string.format("%s already inserted!", scriptName)
+                or string.format("Insert %s", scriptName)
+        end),
+        BackgroundColor3 = Computed(function()
+            local ActiveColor = Theme.MainButton.Default:get()
+            local DisabledColor = Theme.CurrentMarker.Selected:get()
+            return state:get() and DisabledColor
+                or ActiveColor
+        end),
+        TextColor3 = Computed(function()
+            return state:get() and Theme.MainText.Default:get()
+                or Theme.BrightText.Default:get()
+        end),
+        Font = Enum.Font.SourceSansSemibold,
+        Size = UDim2.new(0, 0, 0, 24),
+        AutomaticSize = Enum.AutomaticSize.X,
+        LayoutOrder = layoutOrder,
+
+        [OnEvent "Activated"] = function()
+            ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
+            local newScript = Instance.new(scriptName == "EffectScript" and "Script" or "LocalScript")
+            newScript.Name = scriptName
+            newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
+            newScript.Parent = Util.mapModel:get()
+            newScript.Enabled = false
+            plugin:OpenScript(newScript)
+            ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
+        end,
+        [Children] = {
+            Components.Constraints.UICorner(0, 6),
+            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), UDim.new(0, 6))
+        },
+    }
+end
+
 function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -90,8 +143,8 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                 Size=  UDim2.fromScale(1, 1),
 
                 [Children] = {
-                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
-                    Components.FrameHeader("About MapScript", 1, nil, nil, "Basic information about how MapScript works."),
+                    Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 6)),
+                    Components.FrameHeader("About MapScript", 1, nil, nil, nil),
                     New "TextLabel" {
                         AutomaticSize = Enum.AutomaticSize.Y,
                         BackgroundTransparency = 1,
@@ -111,11 +164,11 @@ All maps must have a MapScript in order to be loaded and ran, however not all of
                         }
                     },
 
-                    Components.FrameHeader("About LocalMapScript", 3, nil, nil, "Basic information about how LocalMapScript works."),
+                    Components.FrameHeader("About LocalMapScript", 4, nil, nil, nil),
                     New "TextLabel" {
                         AutomaticSize = Enum.AutomaticSize.Y,
                         BackgroundTransparency = 1,
-                        LayoutOrder = 4,
+                        LayoutOrder = 5,
                         Size = UDim2.fromScale(1, 0),
                         RichText = true,
                         Text = [[The LocalMapScript is a client-sided script which runs when players load into the game.
@@ -130,13 +183,14 @@ You do not need to use LocalMapScript, however it is useful for creating client-
                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
                         }
                     },
+                    GetScriptButton(localMapScript, "LocalMapScript", 6),
 
-                    Components.FrameHeader("About EffectScript", 5, nil, nil, "Basic information about how EffectScript works."),
+                    Components.FrameHeader("About EffectScript", 7, nil, nil, nil),
                     New "TextLabel" {
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         AutomaticSize = Enum.AutomaticSize.Y,
                         BackgroundTransparency = 1,
-                        LayoutOrder = 6,
+                        LayoutOrder = 8,
                         Size = UDim2.fromScale(1, 0),
                         RichText = true,
                         Text = [[The EffectScript is a localscript which allows your code to be replicated to other spectators.
@@ -151,16 +205,17 @@ The EffectScript can communicate with the server using RemoteEvents and gets clo
                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
                         }
                     },
+                    GetScriptButton(effectScript, "EffectScript", 9),
 
-                    Components.FrameHeader("Script Autocomplete Settings", 7, nil, nil, [[Here you can customise how the script autocompleter works.
+                    Components.FrameHeader("Script Autocomplete Settings", 10, nil, nil, [[Here you can customise how the script autocompleter works.
 
-You can choose whether to only run the autocompleter inside certain scripts, or to disable/enable the autocompleter fully.]]),
+TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scripting autocomplete menu. Complete with descriptions, code samples, and function arguments.]]),
                     
                     New "Frame" {
                         AutomaticSize = Enum.AutomaticSize.Y,
                         BackgroundTransparency = 1,
                         Size = UDim2.fromScale(1, 0),
-                        LayoutOrder = 8,
+                        LayoutOrder = 11,
 
                         [Children] = {
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
@@ -205,4 +260,67 @@ You can choose whether to only run the autocompleter inside certain scripts, or 
     }
 end
 
+
+Observer(mapScripts):onChange(function()
+    local children = mapScripts:get()
+    local hasEffectScript = false
+    local hasLocalMapScript = false
+
+    local function checkScript(Script)
+        if not hasLocalMapScript then
+            hasLocalMapScript = Script.Name == "LocalMapScript"
+        end
+        if not hasEffectScript then
+            hasEffectScript = Script.Name == "EffectScript"
+        end
+    end
+
+    for _, child in pairs(children) do
+        maid:GiveTask(child:GetPropertyChangedSignal("Name"):Connect(function()
+            hasEffectScript = false
+            hasLocalMapScript = false
+
+            for _, child in pairs(mapScripts:get()) do
+                checkScript(child)
+            end
+
+            localMapScript:set(hasLocalMapScript)
+            effectScript:set(hasEffectScript)
+        end))
+        checkScript(child)
+    end
+
+    localMapScript:set(hasLocalMapScript)
+    effectScript:set(hasEffectScript)
+end)
+
+Util.MapChanged:Connect(function()
+    localMapScript:set(false)
+    effectScript:set(false)
+
+    local Map = Util.mapModel:get()
+    if not Map then
+        mapScripts:set({})
+        maid:DoCleaning()
+        return
+    end
+
+    task.wait()
+
+    local function UpdateChildren()
+        local newTable = {}
+        for _, child in pairs(Map:GetChildren()) do
+            if child:IsA("Script") then
+                table.insert(newTable, child)
+            end
+        end
+
+        maid:DoCleaning()
+        mapScripts:set(newTable)
+    end
+
+    UpdateChildren()
+    Util.MapMaid:GiveTask(Map.ChildAdded:Connect(UpdateChildren))
+    Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(UpdateChildren))
+end)
 return frame

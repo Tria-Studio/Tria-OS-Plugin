@@ -1,7 +1,7 @@
 local toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local openButton = toolbar:CreateButton(
 	"TRIA.os Companion Plugin", 
-	"A suite of tools designed to ", 
+	"Make mapmaking easy!", 
 	"rbxassetid://12032105372", 
 	"TRIA.os Mapmaker"
 )
