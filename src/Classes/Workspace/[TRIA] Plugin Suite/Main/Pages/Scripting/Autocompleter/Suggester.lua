@@ -15,7 +15,10 @@ local AUTOCOMPLETE_IDEN = "([%.:])"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
+
 local PROPERTY_FUNCTION_CREATE = "(%w+)%.(%w+)%s*=%s*function(%b())%s*"
+local PROPERTY_VARIABLE_CREATE = "(%w+)%.(%w+)%s*=%s*.+%s*"
+
 local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
 
 local END_FUNC_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
@@ -89,7 +92,7 @@ function Suggester:registerCallback()
 		AutocompleteData.Methods = defaultMethods
 		AutocompleteData.Properties = defaultProperties
 		
-		local function insertCustomFunction(funcName: string, funcArgs: string, index: string)
+		local function insertCustomFunction(funcName: string, funcArgs: string, index: string, isFunction: boolean?)
 			local newArgs = {}
 			for arg in funcArgs:gmatch(ARGS_MATCH) do
 				table.insert(newArgs, arg)
@@ -97,7 +100,7 @@ function Suggester:registerCallback()
 			AutocompleteData[index].branches[funcName] = {
 				autocompleteArgs = newArgs,
 				name = funcName,
-				isFunction = true,
+				isFunction = isFunction,
 				branches = nil
 			}
 		end
@@ -106,7 +109,7 @@ function Suggester:registerCallback()
 
 		for prefix, index, funcName, funcArgs in currentScript.Source:gmatch(FUNCTION_CREATE) do
 			if table.find(prefixes, prefix) then
-				insertCustomFunction(funcName, funcArgs, index)
+				insertCustomFunction(funcName, funcArgs, stringToTreeIndex(index))
 			end
 		end
 
@@ -114,7 +117,15 @@ function Suggester:registerCallback()
 
 		for prefix, funcName, funcArgs in currentScript.Source:gmatch(PROPERTY_FUNCTION_CREATE) do
 			if table.find(prefixes, prefix) then
-				insertCustomFunction(funcName, funcArgs, "Properties")
+				insertCustomFunction(funcName, funcArgs, "Properties", true)
+			end
+		end
+
+		-- Special Case 3: Creating a custom property with a dot index
+
+		for prefix, funcName in currentScript.Source:gmatch(PROPERTY_VARIABLE_CREATE) do
+			if table.find(prefixes, prefix) then
+				insertCustomFunction(funcName, "", "Properties", false)
 			end
 		end
 
