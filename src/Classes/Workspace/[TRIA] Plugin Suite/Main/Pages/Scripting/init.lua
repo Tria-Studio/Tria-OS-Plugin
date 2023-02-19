@@ -95,25 +95,25 @@ function OptionFrame(props: PublicTypes.propertiesTable): Instance
 end
 
 local function GetScriptButton(state, scriptName: string, layoutOrder: number): Instance
-   return Components.TextButton {
-        Active = Computed(function()
-            return not state:get() and Util.interfaceActive:get()
-        end),
-        AutoButtonColor = Computed(function()
-            return not state:get() and Util.interfaceActive:get()
-        end),
+    local activeState = Computed(function()
+        return not state:get() and Util.interfaceActive:get()
+    end)
+    return Components.TextButton {
+        Active = activeState,
+        AutoButtonColor = activeState,
         Text = Computed(function()
-            return state:get() and string.format("%s already inserted!", scriptName)
+            return state:get() 
+                and string.format("%s already inserted!", scriptName)
                 or string.format("Insert %s", scriptName)
         end),
         BackgroundColor3 = Computed(function()
-            local ActiveColor = Theme.MainButton.Default:get()
-            local DisabledColor = Theme.CurrentMarker.Selected:get()
-            return state:get() and DisabledColor
-                or ActiveColor
+            return state:get() 
+                and Theme.CurrentMarker.Selected:get()
+                or Theme.MainButton.Default:get()
         end),
         TextColor3 = Computed(function()
-            return state:get() and Theme.MainText.Default:get()
+            return state:get() 
+                and Theme.MainText.Default:get()
                 or Theme.BrightText.Default:get()
         end),
         Font = Enum.Font.SourceSansSemibold,

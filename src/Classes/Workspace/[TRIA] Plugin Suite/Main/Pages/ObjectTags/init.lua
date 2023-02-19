@@ -14,7 +14,7 @@ local ForPairs = Fusion.ForPairs
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local Out = Fusion.Out
-local  Value = Fusion.Value
+local Value = Fusion.Value
 
 local frame = {}
  
