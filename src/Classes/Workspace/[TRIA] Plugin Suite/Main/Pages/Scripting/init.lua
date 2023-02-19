@@ -271,7 +271,11 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                             OptionFrame {
                                 Text = "Run autocomplete globally",
                                 LayoutOrder = 1,
-                                Enabled = if plugin:GetSetting(GLOBAL_ENABLE_VAR) then plugin:GetSetting(GLOBAL_ENABLE_VAR) else false,
+                                Enabled = 
+                                    if plugin:GetSetting(GLOBAL_ENABLE_VAR) 
+                                    then plugin:GetSetting(GLOBAL_ENABLE_VAR) 
+                                    else false,
+                                    
                                 OnToggle = function(newState: boolean)
                                     GlobalSettings.runsInTriaScripts = not newState
                                     plugin:SetSetting(GLOBAL_ENABLE_VAR, newState)
