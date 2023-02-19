@@ -278,7 +278,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
 
                                 Tooltip = {
                                     Header = "Global Autocomplelte",
-                                    Tooltip = "Determines whether or not Autocomplete will happen in TRIA scripts (MapScript, LocalMapScript, EffectScript) or any script in your map.."
+                                    Tooltip = "Determines whether or not Autocomplete will happen in TRIA scripts (MapScript, LocalMapScript, EffectScript) or any script in your map."
                                 }
                             }
                         }
