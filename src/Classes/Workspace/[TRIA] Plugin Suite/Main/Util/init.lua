@@ -29,7 +29,7 @@ local Util = {
     MapMaid = Maid.new(),
 
     ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>",
-    WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>"
+    WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>",
 
     _pageChanged = Signal.new(),
     _currentPageNum = Value(1),
