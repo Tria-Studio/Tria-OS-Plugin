@@ -97,10 +97,10 @@ end
 local function GetScriptButton(state, scriptName: string, layoutOrder: number): Instance
    return Components.TextButton {
         Active = Computed(function()
-            return not state:get()
+            return not state:get() and Util.interfaceActive:get()
         end),
         AutoButtonColor = Computed(function()
-            return not state:get()
+            return not state:get() and Util.interfaceActive:get()
         end),
         Text = Computed(function()
             return state:get() and string.format("%s already inserted!", scriptName)
