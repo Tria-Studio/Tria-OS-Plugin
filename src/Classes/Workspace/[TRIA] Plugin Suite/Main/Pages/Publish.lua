@@ -28,7 +28,7 @@ local Spring = Fusion.Spring
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
-local noMapsFoundText = Value("No whitelisted maps found.")
+local noMapsFoundText = Value("No maps found.")
 local publishButtonText = Value("Publish Map")
 local whitelistMapId = Value("")
 
@@ -138,7 +138,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                             BackgroundTransparency = 0,
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                             TextColor3 = Theme.ErrorText.Default,
-                            TextYAlignment = Enum.TextYAlignment.Top,
+                            TextYAlignment = Enum.TextYAlignment.Center,
                             Font = Enum.Font.SourceSansSemibold,
                             TextSize = 15,
                             Visible = visible
@@ -390,7 +390,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                             BackgroundColor3 = Theme.Item.Default,
                             BorderColor3 = Theme.Border.Default,
                             BorderSizePixel = 1,
-                            LayoutOrder = 3,
+                            LayoutOrder = 6,
                             AutomaticSize = Enum.AutomaticSize.Y,
                             Size = UDim2.fromScale(1, 0),
 

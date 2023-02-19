@@ -24,6 +24,7 @@ local Computed = Fusion.Computed
 
 local ENABLE_VAR = "TRIA_AutocompleteEnabled"
 local GLOBAL_ENABLE_VAR = "TRIA_GlobalAutocompleteEnabled"
+local ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>"
 
 local localMapScript = Value(false)
 local effectScript = Value(false)
@@ -126,7 +127,7 @@ local function GetScriptButton(state, scriptName: string, layoutOrder: number): 
 
             Util.attemptScriptInjection()
             if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
-                Util:ShowMessage("Error", "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
+                Util:ShowMessage(ERROR_HEADER, "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
             else
                 local newScript = Instance.new("LocalScript")
                 newScript.Name = scriptName
@@ -247,7 +248,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     if newState:get(false) == true then
                                         Util.attemptScriptInjection()
                                         if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
-                                            Util:ShowMessage("Error", "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
+                                            Util:ShowMessage(ERROR_HEADER, "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
                                             return false
                                         end
                                     end
