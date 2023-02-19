@@ -204,7 +204,7 @@ function MapSelect:SetMap(Map: Model | Workspace): boolean
 
         task.wait()
         if not self.hasOptimizedStructure:get(false) then
-            Util:ShowMessage("Warning", "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
+            Util:ShowMessage(Util.WARNING_HEADER, "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
         end
     else
         self:ResetSelection()
