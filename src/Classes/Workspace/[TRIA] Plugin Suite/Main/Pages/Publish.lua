@@ -103,6 +103,19 @@ local function getInfoFrame(name: string, frames: {Instance}): Instance
     }
 end
 
+local function InfoTextLabel(Text, LayoutOrder)
+    return New "TextLabel" {
+        RichText = true,
+        LayoutOrder = LayoutOrder,
+        Size = UDim2.new(1, 0, 0, 20),
+        AutomaticSize = Enum.AutomaticSize.Y,
+        TextColor3 = Theme.MainText.Default,
+        TextWrapped = true,
+        BackgroundTransparency = 1,
+        Text = Text
+    }
+end
+
 function frame.OnClose()
     publishButtonText:set("Publish Map")
     selectedPublishMap:set(nil)
@@ -129,11 +142,12 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                     ForValues(list, function(value)
                         if value == noMapsFoundText:get() then
                             return New "TextLabel" {
-                                Size = UDim2.new(1, 0, 0, 20),
+                                Size = UDim2.new(1, 0, 0, 32),
                                 Text = noMapsFoundText,
                                 BackgroundTransparency = 0,
                                 BackgroundColor3 = Theme.InputFieldBackground.Default,
                                 TextColor3 = Theme.ErrorText.Default,
+                                TextYAlignment = Enum.TextYAlignment.Top,
                                 Font = Enum.Font.SourceSansSemibold,
                                 TextSize = 15,
                                 Visible = visible
@@ -319,17 +333,8 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                     }),
 
                     getInfoFrame("Map Publishing", { --// Publishing
-                        New "TextLabel" {
-                            RichText = true,
-                            LayoutOrder = 2,
-                            Size = UDim2.new(1, 0, 0, 20),
-                            AutomaticSize = Enum.AutomaticSize.Y,
-                            TextColor3 = Theme.MainText.Default,
-                            TextWrapped = true,
-                            BackgroundTransparency = 1,
-                            Text = "Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame. <br />"
-                        },
-
+                        InfoTextLabel("Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame. <br />", 2),
+                        
                         New "TextLabel" {
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                             BorderColor3 = Theme.InputFieldBorder.Default,
@@ -407,6 +412,8 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                     }),
 
                     getInfoFrame("TRIA Map Creator Key", { --// API Key
+                        InfoTextLabel("Your TRIA Map Creator Key is required to publish maps. This allows the game to authenticate you.", 1),
+                        
                         Components.Dropdown({
                             LayoutOrder = 2,
                             Header = "How This Works",
@@ -415,12 +422,9 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                             return Components.DropdownTextlabel({
                                 DropdownVisible = visible,
                                 Text = [[
-To get your TRIA Map Creator Key, follow the steps at the top of this page. This is where you will enter your TRIA Map Creator Key.
+To get your TRIA Map Creator Key, follow the steps at the top of this page. This is where you will enter your Map Creator Key.
 
-If you generate a new key, your old key will become invalid and you will need to replace it with the new one here.
-
-You cannot whitelist or publish maps without doing this You only need to do this once.
-                            ]],
+If you generate a new key, your old key will become invalid and you will need to replace it with the new one.]],
                             })
                         end, true),
 
@@ -578,7 +582,7 @@ You cannot whitelist or publish maps without doing this You only need to do this
                                 },
                             }
                         },
-                    }),
+                    }, 0),
                     
                     New "Frame" {
                         BackgroundTransparency = 1,

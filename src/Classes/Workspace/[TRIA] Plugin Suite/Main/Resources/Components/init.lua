@@ -289,6 +289,7 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
     local dropdownVisible = Value(data.DefaultState)
     local headerColor = Value(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
     local frame = Value()
+    local headerPos = true
 
     local dropdown = New "Frame" {
         Size = UDim2.fromScale(1, 0),
@@ -303,15 +304,21 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
         LayoutOrder = data.LayoutOrder,
 
         [Ref] = frame,
-        [OnEvent "MouseEnter"] = function()
-            if (Util.interfaceActive:get(false) or bypassRestriction) and not Util.dropdownActive:get() then
-                headerColor:set(data.IsHeader and Theme.CurrentMarker.Default or Theme.Button.Hover)
-            end
-        end,
         [OnEvent "MouseLeave"] = function()
             headerColor:set(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
+            headerPos = true
         end,
-        
+        [OnEvent "MouseMoved"] = function(_, Ypos)
+            Ypos -= frame:get().AbsolutePosition.Y
+            if Ypos <= 24 and headerPos then
+                headerPos = false
+                headerColor:set(data.IsHeader and Theme.CurrentMarker.Default or Theme.Button.Hover)
+            elseif Ypos > 24 and not headerPos then
+                headerPos = true
+                headerColor:set(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
+            end
+        end,
+
         [Children] = {
             Computed(function()
                 local props = {

@@ -83,6 +83,11 @@ function OptionFrame(props: PublicTypes.propertiesTable): Instance
                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
                         }
                     },
+                    Components.TooltipImage({
+                        Position = UDim2.new(1, -4, 0, 2),
+                        Header = props.Tooltip.Header,
+                        Tooltip = props.Tooltip.Tooltip
+                    })
                 }
             }
         }
@@ -254,7 +259,12 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                         Autocompleter:toggle(newState)
                                         plugin:SetSetting(ENABLE_VAR, newState)
                                     end
-                                end
+                                end,
+
+                                Tooltip = {
+                                    Header = "Autocomplete",
+                                    Tooltip = "Determines whether or not Autocomplete for the TRIA.os MapLib will suggest functions and properties when scripting your map."
+                                }
 
                             },
                             OptionFrame {
@@ -264,7 +274,12 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 OnToggle = function(newState: boolean)
                                     GlobalSettings.runsInTriaScripts = not newState
                                     plugin:SetSetting(GLOBAL_ENABLE_VAR, newState)
-                                end
+                                end,
+
+                                Tooltip = {
+                                    Header = "Global Autocomplelte",
+                                    Tooltip = "Determines whether or not Autocomplete will happen in TRIA scripts (MapScript, LocalMapScript, EffectScript) or any script in your map.."
+                                }
                             }
                         }
                     }
