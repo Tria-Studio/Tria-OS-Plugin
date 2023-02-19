@@ -249,7 +249,7 @@ function Components.TwoOptions(option1Data: PublicTypes.propertiesTable, option2
     }
 end
 
-function Components.FrameHeader(text: string, layoutOrder: number, color: any?, size: number?, tooltip: any?): Instance
+function Components.FrameHeader(text: string, layoutOrder: number, color: any?, size: number?, tooltip: any?, ZIndex: number?): Instance
     return New "TextLabel" {
         BackgroundColor3 = color or Theme.HeaderSection.Default,
         BorderColor3 = Theme.Border.Default,
@@ -261,6 +261,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         Text = text,
         TextColor3 = Theme.MainText.Default,
         TextSize = 14,
+        ZIndex = ZIndex,
 
         [Children] = tooltip and Components.TooltipImage ({
             Header = text,

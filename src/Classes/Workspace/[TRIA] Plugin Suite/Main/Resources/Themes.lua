@@ -111,6 +111,9 @@ local themes = {
         Default = Value(StudioTheme:GetColor(GuideColor.CurrentMarker)),
         Selected = Value(StudioTheme:GetColor(GuideColor.CurrentMarker, GuideModifier.Selected)),
     },
+    Mid = {
+        Default = Value(StudioTheme:GetColor(GuideColor.Mid)),
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function()

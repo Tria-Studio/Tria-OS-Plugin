@@ -9,6 +9,7 @@ local Resources = Package.Resources
 local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
+local MapComponents = require(script.MapComponents)
 
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
@@ -17,6 +18,7 @@ local New = Fusion.New
 local Children = Fusion.Children
 local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
+local ForValues = Fusion.ForValues
 
 local frame = {}
 
@@ -115,9 +117,10 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                 BackgroundTransparency = 1,
                                 Position = UDim2.fromScale(0.5, 0.5),
                                 Size = UDim2.fromScale(0.8, 1),
-                                Image = "rbxassetid://9441561539",
+                                Image = "rbxassetid://12537133710",
                                 ImageTransparency = 0.5,
                                 ScaleType = Enum.ScaleType.Crop
+
                             },
                 
                             New "TextLabel" {
@@ -150,7 +153,45 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                         }
                     },
 
-                    Components.FrameHeader("Map Components", 6, nil, nil, "These are common map components which can be found in most maps.")
+                    New "Frame" {
+                        LayoutOrder = 7,
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        Size = UDim2.new(1, 0, 0, 0),
+                        BackgroundTransparency = 1,
+
+                        [Children] = {
+                            Components.Constraints.UIListLayout(),
+                            Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
+                            ForValues(MapComponents, function(data)
+                                return Components.TextButton {
+                                    Size = UDim2.new(1, 0, 0, 32),
+                                    LayoutOrder = data.LayoutOrder,
+                                    Text = " " .. data.Name,
+                                    TextSize = 18,
+                                    BorderSizePixel = 0,
+                                    TextColor3 = Theme.MainText.Default,
+                                    Font = Enum.Font.SourceSansSemibold,
+                                    TextXAlignment = Enum.TextXAlignment.Left,
+        
+                                    [Children] = {
+                                        Components.Constraints.UIPadding(nil, nil, UDim.new(0, 32)),
+                                        New "ImageLabel" {
+                                            Image = data.Icon,
+                                            Size = UDim2.new(0, 28, 0, 28),
+                                            AnchorPoint = Vector2.new(1, .5),
+                                            Position = UDim2.new(0, -4, .5, 0),
+                                            BackgroundColor3 = Theme.InputFieldBackground.Default,
+                                        },
+                                        Components.TooltipImage({
+                                            Position = UDim2.new(1, -2, 0, 9),
+                                            Header = data.Tooltip.Header,
+                                            Tooltip = data.Tooltip.Tooltip,
+                                        })
+                                    }
+                                }
+                            end, Fusion.Cleanup)
+                        }
+                    }
                 }
             }, true)
         }
