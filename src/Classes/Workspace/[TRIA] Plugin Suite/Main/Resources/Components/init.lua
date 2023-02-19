@@ -279,7 +279,7 @@ function Components.ScrollingFrame(data: PublicTypes.propertiesTable, bypassRest
         VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
         BackgroundColor3 = Theme.ScrollBarBackground.Default,
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
-        ScrollBarImageColor3 = Theme.ScrollBar.Default,
+        ScrollBarImageColor3 = Theme.CurrentMarker.Default,
         BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
         TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
     })(data)

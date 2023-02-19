@@ -170,7 +170,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                         Text = [[The MapScript is the main script in which most of a maps scripting takes place. 
                         
 All maps must have a MapScript in order to be loaded and ran, however not all of a maps scripting needs to be done in the MapScript.]],
-                        TextColor3 = Theme.MainText.Default,
+                        TextColor3 = Theme.SubText.Default,
                         TextXAlignment = Enum.TextXAlignment.Left,
                         TextWrapped = true,
                         TextSize = 16,
@@ -190,7 +190,7 @@ All maps must have a MapScript in order to be loaded and ran, however not all of
                         Text = [[The LocalMapScript is a client-sided script which runs when players load into the game.
                         
 You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]],
-                        TextColor3 = Theme.MainText.Default,
+                        TextColor3 = Theme.SubText.Default,
                         TextXAlignment = Enum.TextXAlignment.Left,
                         TextWrapped = true,
                         TextSize = 16,
@@ -212,7 +212,7 @@ You do not need to use LocalMapScript, however it is useful for creating client-
                         Text = [[The EffectScript is a localscript which allows your code to be replicated to other spectators.
 
 The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]],
-                        TextColor3 = Theme.MainText.Default,
+                        TextColor3 = Theme.SubText.Default,
                         TextXAlignment = Enum.TextXAlignment.Left,
                         TextWrapped = true,
                         TextSize = 16,

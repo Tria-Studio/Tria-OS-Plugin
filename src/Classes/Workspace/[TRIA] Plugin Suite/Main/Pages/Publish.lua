@@ -333,7 +333,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                     }),
 
                     getInfoFrame("Map Publishing", { --// Publishing
-                        InfoTextLabel("Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame. <br />", 2),
+                        InfoTextLabel("Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame.\n ", 2),
                         
                         New "TextLabel" {
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
@@ -412,7 +412,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                     }),
 
                     getInfoFrame("TRIA Map Creator Key", { --// API Key
-                        InfoTextLabel("Your TRIA Map Creator Key is required to publish maps. This allows the game to authenticate you.", 1),
+                        InfoTextLabel("Your TRIA Map Creator Key is required to publish maps. This allows the game to authenticate you.\n", 1),
                         
                         Components.Dropdown({
                             LayoutOrder = 2,
