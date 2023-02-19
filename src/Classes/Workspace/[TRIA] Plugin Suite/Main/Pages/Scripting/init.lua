@@ -299,12 +299,12 @@ Observer(mapScripts):onChange(function()
     local hasEffectScript = false
     local hasLocalMapScript = false
 
-    local function checkScript(Script)
+    local function checkScript(newScript: Instance)
         if not hasLocalMapScript then
-            hasLocalMapScript = Script.Name == "LocalMapScript"
+            hasLocalMapScript = newScript.Name == "LocalMapScript"
         end
         if not hasEffectScript then
-            hasEffectScript = Script.Name == "EffectScript"
+            hasEffectScript = newScript.Name == "EffectScript"
         end
     end
 
@@ -331,8 +331,8 @@ Util.MapChanged:Connect(function()
     localMapScript:set(false)
     effectScript:set(false)
 
-    local Map = Util.mapModel:get()
-    if not Map then
+    local newMap = Util.mapModel:get()
+    if not newMap then
         mapScripts:set({})
         maid:DoCleaning()
         return
@@ -342,7 +342,7 @@ Util.MapChanged:Connect(function()
 
     local function updateChildren()
         local newTable = {}
-        for _, child in pairs(Map:GetChildren()) do
+        for _, child in pairs(newMap:GetChildren()) do
             if child:IsA("Script") then
                 table.insert(newTable, child)
             end
@@ -353,7 +353,7 @@ Util.MapChanged:Connect(function()
     end
 
     updateChildren()
-    Util.MapMaid:GiveTask(Map.ChildAdded:Connect(updateChildren))
-    Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(updateChildren))
+    Util.MapMaid:GiveTask(newMap.ChildAdded:Connect(updateChildren))
+    Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(updateChildren))
 end)
 return frame

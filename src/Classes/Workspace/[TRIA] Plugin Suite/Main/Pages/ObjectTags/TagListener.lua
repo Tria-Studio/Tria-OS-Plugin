@@ -211,8 +211,8 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
 
                                                 function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
                                                     local Text = Value()
-                                                    local Childs = extraChild or {}
-                                                    table.insert(Childs, Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4)))
+                                                    local children = extraChild or {}
+                                                    table.insert(children, Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4)))
 
                                                     return Components.TextBox {
                                                         Size = UDim2.new(1, -textXBounds - 6 - (sizeSubtract or 0), 1, -6),
@@ -235,7 +235,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                             end
                                                         end,
                                                         
-                                                        [Children] = Childs,
+                                                        [Children] = children,
                                                     }
                                                 end
                                                 types.string = types.number
@@ -307,9 +307,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                             end
 
                                                         end
-                                                    }}, Computed(function()
-                                                        return dataValue:get()
-                                                    end))
+                                                    }}, dataValue)
                                                 end
 
                                                 return types[metadataType.data.dataType]()
