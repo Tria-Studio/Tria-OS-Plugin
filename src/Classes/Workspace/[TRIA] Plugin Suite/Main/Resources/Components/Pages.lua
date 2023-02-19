@@ -14,6 +14,10 @@ local PageHandler = {
     }
 }
 
+function updatePageNum(pageName: string)
+    require(Resources.Parent.Util)._currentPageNum:set(table.find(require(Resources.Parent.Util)._PageOrder, pageName))
+end
+
 function PageHandler:ChangePage(newPage: string)
     local currentPage = self.pageData.currentPage:get()
     if currentPage == newPage then
@@ -27,6 +31,7 @@ function PageHandler:ChangePage(newPage: string)
     self.pageData.pages[currentPage].Visible:set(false)
     self.pageData.pages[newPage].Visible:set(true)
     self.pageData.currentPage:set(newPage)
+    updatePageNum(newPage)
 
     if self.pageData.pages[newPage].onOpen then
         self.pageData.pages[newPage].onOpen()
@@ -47,8 +52,7 @@ function PageHandler:NewPage(data: {[string]: any}): Instance
 
     if newPageData.Visible:get(false) then
         self.pageData.currentPage:set(newPageData.Name)
-        -- Avoid loop
-        require(Resources.Parent.Util)._currentPageNum:set(table.find(require(Resources.Parent.Util)._PageOrder, data.Name))
+        updatePageNum(data.Name)
     end
 
     return newPageData.Frame
