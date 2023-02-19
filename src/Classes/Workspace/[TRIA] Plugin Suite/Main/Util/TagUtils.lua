@@ -218,10 +218,8 @@ function tagUtils:GetSelectedMetadataValue(name: string, tag: string): any
     local firstValue
     local numHas = 0
 
-    print("\n".. tag)
     for _, part: Instance in ipairs(Util._Selection.selectedParts:get()) do
         local tagData = tagUtils:GetPartMetaData(part, name, tag)
-        print(tagData)
         if firstValue == nil and tagData ~= nil then
             firstValue = tagData
         end

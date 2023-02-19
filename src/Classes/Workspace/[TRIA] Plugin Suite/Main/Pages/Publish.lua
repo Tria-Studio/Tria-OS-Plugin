@@ -85,7 +85,7 @@ local springs = {
  
 local frame = {}
 
-local function getInfoFrame(name: string, frames: {Instance}): Instance
+local function GetInfoFrame(name: string, frames: {Instance}): Instance
     return New "Frame" {
         BackgroundColor3 = Theme.TableItem.Default,
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -103,17 +103,127 @@ local function getInfoFrame(name: string, frames: {Instance}): Instance
     }
 end
 
-local function InfoTextLabel(Text, LayoutOrder)
+local function InfoTextLabel(text: string, layoutOrder: number): Instance
     return New "TextLabel" {
         RichText = true,
-        LayoutOrder = LayoutOrder,
+        LayoutOrder = layoutOrder,
         Size = UDim2.new(1, 0, 0, 20),
         AutomaticSize = Enum.AutomaticSize.Y,
         TextColor3 = Theme.MainText.Default,
         TextWrapped = true,
         BackgroundTransparency = 1,
-        Text = Text
+        Text = text
     }
+end
+
+local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instance
+    return function(visible)
+        return New "Frame" {
+            LayoutOrder = layoutOrder,
+            AutomaticSize = Enum.AutomaticSize.Y,
+            Size = UDim2.fromScale(1, 0),
+            BackgroundTransparency = 1,
+            Visible = visible,
+            Position = UDim2.new(0, 0, 0, 24),
+
+            [Children] = {
+                Components.Constraints.UISizeConstraint(nil, Vector2.new(math.huge, 256)),
+                Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
+                
+                ForValues(list, function(value)
+                    if value == noMapsFoundText:get() then
+                        return New "TextLabel" {
+                            Size = UDim2.new(1, 0, 0, 32),
+                            Text = noMapsFoundText,
+                            BackgroundTransparency = 0,
+                            BackgroundColor3 = Theme.InputFieldBackground.Default,
+                            TextColor3 = Theme.ErrorText.Default,
+                            TextYAlignment = Enum.TextYAlignment.Top,
+                            Font = Enum.Font.SourceSansSemibold,
+                            TextSize = 15,
+                            Visible = visible
+                        }
+                    else
+                        local colorMultiplier = Value(1)
+                        return Components.ImageButton {
+                            Visible = visible,
+                            LayoutOrder = value.ID,
+                            Image = value.Image,
+                            ScaleType = Enum.ScaleType.Crop,
+                            Size = Computed(function()
+                                return UDim2.new(1, 0, 0, publishedMaps[1] == noMapsFoundText:get() and 40 or 75)
+                            end),
+                            ImageColor3 = Spring(Computed(function()
+                                return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
+                            end), 20),
+
+                            [OnEvent "MouseEnter"] = function()
+                                colorMultiplier:set(0.7)
+                            end,
+                            [OnEvent "MouseButton1Down"] = function()
+                                colorMultiplier:set(1.15)
+
+                            end,
+                            [OnEvent "MouseButton1Up"] = function()
+                                colorMultiplier:set(0.7)
+                                selectedPublishMap:set(value)
+                                publishButtonText:set(list == whitelistedMaps and "Publish Map" or "Update Map")
+                            end,
+                            [OnEvent "MouseLeave"] = function()
+                                colorMultiplier:set(1)
+                            end,
+
+                            [Children] = New "Frame" {
+                                BackgroundColor3 = Color3.new(0, 0, 0),
+                                BackgroundTransparency = 0.625,
+                                Position = UDim2.fromScale(0, 1),
+                                Size = UDim2.new(1, 0, 0, 34),
+                                AnchorPoint = Vector2.new(0, 1),
+
+                                [Children] = {
+                                    New "TextLabel" { --// Map Name
+                                        Text = value.Name,
+                                        AnchorPoint = Vector2.new(0.5, 0),
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.fromScale(0.5, 0.45),
+                                        Size = UDim2.new(0, 110, 0.55, 0),
+                                        FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                                        TextSize = 18,
+                                        TextColor3 = Spring(Computed(function()
+                                            return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
+                                        end), 20)
+                                    },
+                                    New "TextLabel" { --// Difficulty
+                                        Text = string.format("[%s]", Util.Difficulty[value.Difficulty].Name),
+                                        AnchorPoint = Vector2.new(0.5, 0),
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.fromScale(0.5, 0),
+                                        Size = UDim2.new(0, 110, 0.45, 0),
+                                        FontFace = Font.new("SourceSansPro", Enum.FontWeight.SemiBold),
+                                        TextStrokeColor3 = Theme.Border.Default,
+                                        TextStrokeTransparency = 0,
+                                        TextColor3 = Spring(Computed(function()
+                                            local Color = Util.Difficulty[value.Difficulty].Color
+                                            return Color3.new(Color.R * colorMultiplier:get(), Color.G * colorMultiplier:get(), Color.B * colorMultiplier:get())
+                                        end), 20)
+                                    },
+                                    New "ImageLabel" {--// Difficulty Icon
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.new(1, -34, 0, 4),
+                                        Size = UDim2.fromOffset(26, 26),
+                                        Image = Util.Difficulty[value.Difficulty].Image,
+                                        ImageColor3 = Spring(Computed(function()
+                                            return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
+                                        end), 20)
+                                    }
+                                }
+                            }
+                        }
+                    end
+                end, Fusion.cleanup)
+            }
+        }
+    end
 end
 
 function frame.OnClose()
@@ -124,116 +234,6 @@ end
 function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
     local publishedMaps = {}
     local whitelistedMaps = {}
-
-    local function createMapList(list: {}, layoutOrder): (boolean) -> Instance
-        return function(visible)
-            return New "Frame" {
-                LayoutOrder = layoutOrder,
-                AutomaticSize = Enum.AutomaticSize.Y,
-                Size = UDim2.fromScale(1, 0),
-                BackgroundTransparency = 1,
-                Visible = visible,
-                Position = UDim2.new(0, 0, 0, 24),
-    
-                [Children] = {
-                    Components.Constraints.UISizeConstraint(nil, Vector2.new(math.huge, 256)),
-                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
-                    
-                    ForValues(list, function(value)
-                        if value == noMapsFoundText:get() then
-                            return New "TextLabel" {
-                                Size = UDim2.new(1, 0, 0, 32),
-                                Text = noMapsFoundText,
-                                BackgroundTransparency = 0,
-                                BackgroundColor3 = Theme.InputFieldBackground.Default,
-                                TextColor3 = Theme.ErrorText.Default,
-                                TextYAlignment = Enum.TextYAlignment.Top,
-                                Font = Enum.Font.SourceSansSemibold,
-                                TextSize = 15,
-                                Visible = visible
-                            }
-                        else
-                            local colorMultiplier = Value(1)
-                            return Components.ImageButton {
-                                Visible = visible,
-                                LayoutOrder = value.ID,
-                                Image = value.Image,
-                                ScaleType = Enum.ScaleType.Crop,
-                                Size = Computed(function()
-                                    return UDim2.new(1, 0, 0, publishedMaps[1] == noMapsFoundText:get() and 40 or 75)
-                                end),
-                                ImageColor3 = Spring(Computed(function()
-                                    return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
-                                end), 20),
-    
-                                [OnEvent "MouseEnter"] = function()
-                                    colorMultiplier:set(0.7)
-                                end,
-                                [OnEvent "MouseButton1Down"] = function()
-                                    colorMultiplier:set(1.15)
-    
-                                end,
-                                [OnEvent "MouseButton1Up"] = function()
-                                    colorMultiplier:set(0.7)
-                                    selectedPublishMap:set(value)
-                                    publishButtonText:set(list == whitelistedMaps and "Publish Map" or "Update Map")
-                                end,
-                                [OnEvent "MouseLeave"] = function()
-                                    colorMultiplier:set(1)
-                                end,
-    
-                                [Children] = New "Frame" {
-                                    BackgroundColor3 = Color3.new(0, 0, 0),
-                                    BackgroundTransparency = 0.625,
-                                    Position = UDim2.fromScale(0, 1),
-                                    Size = UDim2.new(1, 0, 0, 34),
-                                    AnchorPoint = Vector2.new(0, 1),
-    
-                                    [Children] = {
-                                        New "TextLabel" { --// Map Name
-                                            Text = value.Name,
-                                            AnchorPoint = Vector2.new(0.5, 0),
-                                            BackgroundTransparency = 1,
-                                            Position = UDim2.fromScale(0.5, 0.45),
-                                            Size = UDim2.new(0, 110, 0.55, 0),
-                                            FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                                            TextSize = 18,
-                                            TextColor3 = Spring(Computed(function()
-                                                return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
-                                            end), 20)
-                                        },
-                                        New "TextLabel" { --// Difficulty
-                                            Text = string.format("[%s]", Util.Difficulty[value.Difficulty].Name),
-                                            AnchorPoint = Vector2.new(0.5, 0),
-                                            BackgroundTransparency = 1,
-                                            Position = UDim2.fromScale(0.5, 0),
-                                            Size = UDim2.new(0, 110, 0.45, 0),
-                                            FontFace = Font.new("SourceSansPro", Enum.FontWeight.SemiBold),
-                                            TextStrokeColor3 = Theme.Border.Default,
-                                            TextStrokeTransparency = 0,
-                                            TextColor3 = Spring(Computed(function()
-                                                local Color = Util.Difficulty[value.Difficulty].Color
-                                                return Color3.new(Color.R * colorMultiplier:get(), Color.G * colorMultiplier:get(), Color.B * colorMultiplier:get())
-                                            end), 20)
-                                        },
-                                        New "ImageLabel" {--// Difficulty Icon
-                                            BackgroundTransparency = 1,
-                                            Position = UDim2.new(1, -34, 0, 4),
-                                            Size = UDim2.fromOffset(26, 26),
-                                            Image = Util.Difficulty[value.Difficulty].Image,
-                                            ImageColor3 = Spring(Computed(function()
-                                                return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
-                                            end), 20)
-                                        }
-                                    }
-                                }
-                            }
-                        end
-                    end, Fusion.cleanup)
-                }
-            }
-        end
-    end
 
     if #whitelistedMaps == 0 then
         table.insert(whitelistedMaps, noMapsFoundText:get())
@@ -300,7 +300,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                         }
                     },
 
-                    getInfoFrame("Map Whitelisting", { --// Whitelisting
+                    GetInfoFrame("Map Whitelisting", { --// Whitelisting
                         Components.TextBox { --// Insert Whitelist ID
                             LayoutOrder = 2,
                             Size = UDim2.new(1, 0, 0, 32),
@@ -332,7 +332,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                         }
                     }),
 
-                    getInfoFrame("Map Publishing", { --// Publishing
+                    GetInfoFrame("Map Publishing", { --// Publishing
                         InfoTextLabel("Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame.\n ", 2),
                         
                         New "TextLabel" {
@@ -400,18 +400,18 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                     DefaultState = true,
                                     Header = "Your Whitelisted Maps:",
                                     LayoutOrder = 2
-                                }, createMapList(whitelistedMaps, 2), true),
+                                }, CreateMapList(whitelistedMaps, 2), true),
 
                                 Components.Dropdown({
                                     DefaultState = true,
                                     Header = "Your Published Maps:",
                                     LayoutOrder = 4
-                                }, createMapList(publishedMaps, 4), true),
+                                }, CreateMapList(publishedMaps, 4), true),
                             }
                         },
                     }),
 
-                    getInfoFrame("TRIA Map Creator Key", { --// API Key
+                    GetInfoFrame("TRIA Map Creator Key", { --// API Key
                         InfoTextLabel("Your TRIA Map Creator Key is required to publish maps. This allows the game to authenticate you.\n", 1),
                         
                         Components.Dropdown({
