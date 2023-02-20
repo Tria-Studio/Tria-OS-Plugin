@@ -124,7 +124,6 @@ function Suggester:registerCallback()
 		-- Special Case 3: Creating a custom property with a dot index
 
 		for prefix, funcName, endString in currentScript.Source:gmatch(PROPERTY_VARIABLE_CREATE) do
-			print(endString, endString:match(PROPERTY_FUNCTION_MATCH))
 			if table.find(prefixes, prefix) and not endString:match(PROPERTY_FUNCTION_MATCH) then
 				insertCustomFunction(funcName, "", "Properties", false)
 			end
