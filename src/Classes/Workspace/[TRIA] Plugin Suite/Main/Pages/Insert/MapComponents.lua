@@ -42,7 +42,7 @@ return {
         LayoutOrder = 2,
         Tooltip = {
             Header = "Ziplines",
-            Tooltip = "A feature of the mapkit allowing users to ride along a customizable zipline, with the abillity to jump off and between ziplines."
+            Tooltip = "A feature of the mapkit allowing users to ride along a customizable zipline, with the ability to jump off and between ziplines."
         },
 
         InsertFunction = function()
@@ -54,7 +54,7 @@ return {
         LayoutOrder = 3,
         Tooltip = {
             Header = "Airtank",
-            Tooltip = "A feature allowing users to increasee their oxygen supply."
+            Tooltip = "A feature allowing users to increase their oxygen supply."
         },
 
         InsertFunction = function()
