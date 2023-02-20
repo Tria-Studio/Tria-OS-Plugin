@@ -17,7 +17,6 @@ local messageFrameSize = Value()
 
 return New "Frame" { --// Message
 	BackgroundTransparency = 0.75,
-	BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
 	Visible = Computed(function()
 		return Util._Message.Text:get() ~= ""
@@ -67,7 +66,6 @@ return New "Frame" { --// Message
 					Size = UDim2.fromScale(1, 0),
 					Text = Util._Message.Text,
 					TextColor3 = Theme.MainText.Default,
-					TextSize = 14,
 					TextWrapped = true,
 					RichText = true,
 					TextXAlignment = Enum.TextXAlignment.Left,
