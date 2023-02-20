@@ -119,7 +119,6 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                 Image = "rbxassetid://12537133710",
                                 ImageTransparency = 0.5,
                                 ScaleType = Enum.ScaleType.Crop
-
                             },
                 
                             New "TextLabel" {
