@@ -1,9 +1,9 @@
 return {
-	autocompleteArgs = {"player"},
-	name = "Survive",
-	branches = nil,
-	documentation = {
+	AutocompleteArgs= {"player"},
+	Name = "Survive",
+	Branches = nil,
+	Documentation = {
 		value = "Automatically makes a player survive"
 	},
-	codeSample = "MapLib:Survive(MapLib:GetPlayers()[1])",
+	CodeSample = "MapLib:Survive(MapLib:GetPlayers()[1])",
 }

@@ -97,11 +97,11 @@ function Suggester:registerCallback()
 			for arg in funcArgs:gmatch(ARGS_MATCH) do
 				table.insert(newArgs, arg)
 			end
-			AutocompleteData[index].branches[funcName] = {
-				autocompleteArgs = newArgs,
-				name = funcName,
+			AutocompleteData[index].Branches[funcName] = {
+				AutocompleteArgs= newArgs,
+				Name = funcName,
 				isFunction = isFunction,
-				branches = nil
+				Branches = nil
 			}
 		end
 
@@ -165,9 +165,9 @@ function Suggester:registerCallback()
 			end
 			
 			for _, branch in ipairs(branchList) do
-				if current.branches ~= nil then
-					if current.branches[branch] then
-						current = current.branches[branch]
+				if current.Branches ~= nil then
+					if current.Branches[branch] then
+						current = current.Branches[branch]
 					end
 				else
 					reachedEnd = true
@@ -175,8 +175,8 @@ function Suggester:registerCallback()
 				end
 			end
 			
-			if current and current.branches and not reachedEnd then
-				for name, data in pairs(current.branches) do
+			if current and current.Branches and not reachedEnd then
+				for name, data in pairs(current.Branches) do
 					local lastToken = lineTokens[#lineTokens].value
 					local isIndexer = lastToken == ":" or lastToken == "."
 
@@ -198,7 +198,7 @@ function Suggester:registerCallback()
 
 		local function suggestAll(index: string, tokens: {AutocompleteTypes.Token})
 			local allVariables = {}
-			for k in pairs(AutocompleteData[index].branches) do
+			for k in pairs(AutocompleteData[index].Branches) do
 				table.insert(allVariables, k)
 			end
 			suggestResponses({}, index, tokens)
@@ -326,8 +326,8 @@ function Suggester:registerCallback()
 		else 
 			-- Match Case 5: Normal line
 			if table.find(prefixes, tokens[1].value) then
-				local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
-				suggestResponses(branches, treeEntryIndex, tokens)
+				local Branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
+				suggestResponses(Branches, treeEntryIndex, tokens)
 			end
 		end
 		

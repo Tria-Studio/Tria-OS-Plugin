@@ -1,9 +1,9 @@
 return {
-	autocompleteArgs = {""},
-	name = "map",
-	branches = nil,
+	AutocompleteArgs= {""},
+	Name = "map",
+	Branches = nil,
 	
-	documentation = {
+	Documentation = {
 		value = "The current map"
 	}
 }

@@ -1,9 +1,9 @@
 return {
-	autocompleteArgs = {"musicId", "volume", "startTick"},
-	name = "ChangeMusic",
-	branches = nil,
-	documentation = {
+	AutocompleteArgs= {"musicId", "volume", "startTick"},
+	Name = "ChangeMusic",
+	Branches = nil,
+	Documentation = {
 		value = "Changes the map music, allowing for a custom sound ID, volume and starting position."
 	},
-	codeSample = "MapLib:ChangeMusic(123456789, 0.5, 50)"
+	CodeSample = "MapLib:ChangeMusic(123456789, 0.5, 50)"
 }

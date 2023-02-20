@@ -1,9 +1,9 @@
 return {
-	autocompleteArgs = {"featureName"},
-	name = "GetFeature",
-	branches = nil,
-	documentation = {
+	AutocompleteArgs= {"featureName"},
+	Name = "GetFeature",
+	Branches = nil,
+	Documentation = {
 		value = "Allows you to get a specific Feature from the MapLib"
 	},
-	codeSample = "local Skills = MapLib:GetFeature(\"Skills\")",
+	CodeSample = "local Skills = MapLib:GetFeature(\"Skills\")",
 }

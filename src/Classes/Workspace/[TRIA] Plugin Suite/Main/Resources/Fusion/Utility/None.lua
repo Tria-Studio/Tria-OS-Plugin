@@ -9,5 +9,5 @@ local Types = require(Package.Types)
 
 return {
 	type = "Symbol",
-	name = "None"
+	Name = "None"
 } :: Types.None
