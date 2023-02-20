@@ -236,25 +236,28 @@ function tagUtils:GetSelectedMetadataValue(name: string, tag: string): any
 end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
+    local currentMap = Util.mapModel:get(false)
     local function verifyFolder(folderName: string?)
-        if not Util.mapModel:get(false):FindFirstChild(folderName or "Geometry") then
-            Instance.new("Folder", Util.mapModel:get(false)).Name = folderName or "Geometry"
+        if not currentMap:FindFirstChild(folderName or "Geometry") then
+            local newFolder = Instance.new("Folder", currentMap)
+            newFolder.Name = folderName or "Geometry"
         end
     end
 
-    local isOptimized = Util.mapModel:get(false):FindFirstChild("Special")
+    local isOptimized = currentMap:FindFirstChild("Special")
     local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag]
     local methods = {}
 
     if not newTag then --// Clear tag
         local otherTags = tagUtils:GetPartTags(part, oldTag)
+        local currentMap = Util.mapModel:get(false)
 
         function methods._Action()
             if isOptimized then
                 verifyFolder()
             end
             part:SetAttribute("_action", nil)
-            part.Parent = if isOptimized and #otherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
+            part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
         end
 
         function methods.Name()
@@ -262,12 +265,12 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
                 verifyFolder()
             end
             part.Name = part.ClassName
-            part.Parent = if isOptimized and #otherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
+            part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
         end
 
         function methods.DetailParent()
             verifyFolder()
-            part.Parent = Util.mapModel:get(false).Geometry
+            part.Parent = currentMap.Geometry
         end
 
         function methods.Child()
@@ -279,7 +282,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
                     child.Parent = nil
                 end
             end
-            part.Parent = if isOptimized and #otherTags == 0 then Util.mapModel:get(false).Geometry else part.Parent
+            part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
         end
 
         local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
@@ -313,7 +316,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
         function methods.DetailParent()
             verifyFolder("Detail")
-            part.Parent = Util.mapModel:get(false).Detail
+            part.Parent = currentMap.Detail
         end
 
         function methods.Child()
@@ -371,7 +374,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     function types.DetailTag()
-        local DetailFolder = Util.mapModel:get(false) and Util.mapModel:get(false):FindFirstChild("Detail")
+        local DetailFolder = currentMap and currentMap:FindFirstChild("Detail")
         return DetailFolder and part:IsDescendantOf(DetailFolder)
     end
 
