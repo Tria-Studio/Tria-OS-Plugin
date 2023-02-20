@@ -272,10 +272,12 @@ function MapSelect:StopManualSelection()
     self._Maid:DoCleaning()
     plugin:Deactivate()
 
+    local currentMap = Util.mapModel:get(false)
+
     self.selectCancelImage:set("rbxassetid://6022668885")
-    self.selectCancelColor:set(if Util.mapModel:get(false) then Theme.ErrorText.Default:get(false) else Theme.SubText.Default:get(false))
-    self.selectTextState:set(if Util.mapModel:get(false) then Util.mapModel:get(false).Settings.Main:GetAttribute("Name") else "No map selected")
-    self.selectTextColor:set(if Util.mapModel:get(false) then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
+    self.selectCancelColor:set(if currentMap then Theme.ErrorText.Default:get(false) else Theme.SubText.Default:get(false))
+    self.selectTextState:set(if currentMap then currentMap.Settings.Main:GetAttribute("Name") else "No map selected")
+    self.selectTextColor:set(if currentMap then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
 end
 
 function MapSelect:AutoSelect(): boolean
