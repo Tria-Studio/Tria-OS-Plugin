@@ -43,7 +43,8 @@ local colorChosen = Util.Signal.new()
 local ColorWheel = {}
 
 local function updateColor()
-    local H, S, V = chosenColor:get(false):ToHSV()
+    local currentColor = chosenColor:get(false)
+    local H, S, V = currentColor:ToHSV()
     local angle = -(H * 360) - 90
 
     positions.slider:set(UDim2.fromScale(0.5, 1 - V))
@@ -79,16 +80,17 @@ local function getColorDisplay(data: {Display: string, LayoutOrder: number}): In
                 [OnEvent "FocusLost"] = function()
                     local newColor
                     local success = pcall(function()
+                        local currentColor = chosenColor:get(false)
                         if data.Display == "R" or data.Display == "G" or data.Display == "B" then
                             local textNumber = math.clamp(tonumber(textValue:get(false)) or 0, 0, 255)
                             newColor = Color3.fromRGB(
-                                data.Display == "R" and textNumber or chosenColor:get(false).R * 255,
-                                data.Display == "G" and textNumber or chosenColor:get(false).G * 255,
-                                data.Display == "B" and textNumber or chosenColor:get(false).B * 255
+                                data.Display == "R" and textNumber or currentColor.R * 255,
+                                data.Display == "G" and textNumber or currentColor.G * 255,
+                                data.Display == "B" and textNumber or currentColor.B * 255
                             )
                         else
                             local textNumber = math.clamp(tonumber(textValue:get(false)) or 0, 0, 255) / 255
-                            local H, S, V = chosenColor:get(false):ToHSV()
+                            local H, S, V = currentColor:ToHSV()
                             newColor = Color3.fromHSV(
                                 data.Display == "H" and textNumber or H,
                                 data.Display == "S" and textNumber or S,
@@ -107,7 +109,8 @@ local function getColorDisplay(data: {Display: string, LayoutOrder: number}): In
 end
 
 local function updatePos(type: string)
-    local H, S, V = chosenColor:get(false):ToHSV()
+    local currentColor = chosenColor:get(false)
+    local H, S, V = currentColor:ToHSV()
     local types = {}
 
     local relativeMousePos = Util.Widget:GetRelativeMousePosition()
