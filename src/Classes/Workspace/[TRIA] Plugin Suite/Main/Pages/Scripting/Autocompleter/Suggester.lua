@@ -12,19 +12,19 @@ local Lexer = require(Package.Lexer)
 local GlobalSettings = require(Package.GlobalSettings)
 
 local AUTOCOMPLETE_IDEN = "([%.:])"
+local ARGS_MATCH = "(%w+)[:%s%w+]*"
+local ANY_CHAR = "[%w%p]*"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
 
 local PROPERTY_FUNCTION_CREATE = "(%w+)%.(%w+)%s*=%s*function(%b())%s*"
-local PROPERTY_VARIABLE_CREATE = "(%w+)%.(%w+)%s*=%s*.+%s*"
+local PROPERTY_VARIABLE_CREATE = `(%w+)%.(%w+)%s*=%s({ANY_CHAR})%s*`
+local PROPERTY_FUNCTION_MATCH = `%s*function%({ANY_CHAR}%)%s*`
+local END_FUNCTION_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
 
 local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
-
-local END_FUNC_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
-
 local INLINE_FUNCTION = "function%(.+%)?%s*$"
-local ARGS_MATCH = "(%w+)[:%s%w+]*"
 
 local MAPLIB_IDEN = `local {ARGS_MATCH} = game.GetMapLib:Invoke%(%)%(%)`
 local CALLBACK_NAME = "__MapLibCompletion"
@@ -123,8 +123,9 @@ function Suggester:registerCallback()
 
 		-- Special Case 3: Creating a custom property with a dot index
 
-		for prefix, funcName in currentScript.Source:gmatch(PROPERTY_VARIABLE_CREATE) do
-			if table.find(prefixes, prefix) then
+		for prefix, funcName, endString in currentScript.Source:gmatch(PROPERTY_VARIABLE_CREATE) do
+			print(endString, endString:match(PROPERTY_FUNCTION_MATCH))
+			if table.find(prefixes, prefix) and not endString:match(PROPERTY_FUNCTION_MATCH) then
 				insertCustomFunction(funcName, "", "Properties", false)
 			end
 		end
@@ -308,14 +309,14 @@ function Suggester:registerCallback()
 		elseif 
 			line:match(VARIABLE_CREATE) 
 			or line:match(FUNCTION_CALL)
-			or line:match(END_FUNC_MATCH)
+			or line:match(END_FUNCTION_MATCH)
 		then 
 			-- Match Case 2: Property index
 			-- Match Case 3: Function call
 			-- Match Case 4: End with inline
 
 			do
-				for _, pattern in ipairs({VARIABLE_CREATE, FUNCTION_CALL, END_FUNC_MATCH}) do
+				for _, pattern in ipairs({VARIABLE_CREATE, FUNCTION_CALL, END_FUNCTION_MATCH}) do
 					local prefix, index = line:match(pattern)
 					if table.find(prefixes, prefix) then
 						suggestAll(stringToTreeIndex(index), tokens)
