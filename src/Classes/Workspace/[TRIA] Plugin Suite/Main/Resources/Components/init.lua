@@ -321,7 +321,7 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
         end,
 
         [Children] = {
-            Computed(function()
+            (function()
                 local props = {
                     Active = bypassRestriction or Util.interfaceActive,
                     BackgroundTransparency = 1,
@@ -369,7 +369,7 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
                         end,
                     }
                 end
-            end, Fusion.cleanup):get(),
+            end)(),
 
             New "ImageButton" {
                 AnchorPoint = Vector2.new(1, 0),

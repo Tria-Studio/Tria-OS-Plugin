@@ -144,9 +144,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                 TextSize = 12,
                                 TextTruncate = Enum.TextTruncate.AtEnd,
                 
-                                Visible = Computed(function()
-                                    return data.Creator ~= nil
-                                end):get()
+                                Visible = (data.Creator ~= nil)
                             }
                         }
                     },

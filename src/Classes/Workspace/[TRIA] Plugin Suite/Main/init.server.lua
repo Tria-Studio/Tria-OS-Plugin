@@ -163,9 +163,7 @@ New "Frame" {
 			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 			Size = UDim2.new(1, 0, 1, -76),
 			Position = UDim2.fromOffset(0, 52),
-			Visible = Computed(function()
-				return Util.isPluginFrozen()
-			end)
+			Visible = Computed(Util.isPluginFrozen)
 		}
 	}
 }

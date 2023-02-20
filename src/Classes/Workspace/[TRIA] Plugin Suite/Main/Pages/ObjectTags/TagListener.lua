@@ -122,7 +122,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                     Tooltip = data.Tooltip.Text,
                     Position = UDim2.new(1, -4, 0, 4)
                 },
-                Computed(function()
+                (function()
                     if #data.metadata == 0 then
                         return
                     end
@@ -183,7 +183,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
 
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
-                                            Computed(function()
+                                            (function()
                                                 if not dataVisible:get() then
                                                     return
                                                 end
@@ -311,14 +311,14 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                 end
 
                                                 return types[metadataType.data.dataType]()
-                                            end, Fusion.cleanup)
+                                            end)()
                                         }
                                     }
                                 end, Fusion.cleanup)
                             }
                         }
                     }
-                end, Fusion.cleanup)
+                end)()
             }
         }
     }

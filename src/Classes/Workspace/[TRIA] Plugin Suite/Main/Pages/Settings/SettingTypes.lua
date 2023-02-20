@@ -104,13 +104,12 @@ end
 
 function InputBox(data, baseButton)
     return function (props)
+        local isModifiable = Computed(function()
+            return isCurrentSettingModifiable(data)
+        end)
         return Hydrate(Components.TextBox {
-            Active = Computed(function()
-                return isCurrentSettingModifiable(data)
-            end),
-            TextEditable = Computed(function()
-                return isCurrentSettingModifiable(data)
-            end),
+            Active = isModifiable,
+            TextEditable = isModifiable,
 
             AnchorPoint = Vector2.new(1, 0),
             BackgroundTransparency = Computed(function()
