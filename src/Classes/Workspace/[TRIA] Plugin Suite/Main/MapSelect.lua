@@ -129,7 +129,7 @@ function MapSelect:SetMap(Map: Model | Workspace): boolean
         local success, message = self:IsTriaMap(Map)
 
         if not success then
-            Util:ShowMessage("Error", tostring(message))
+            Util:ShowMessage(Util.ERROR_HEADER, tostring(message))
             self:ResetSelection()
             return false
         end
