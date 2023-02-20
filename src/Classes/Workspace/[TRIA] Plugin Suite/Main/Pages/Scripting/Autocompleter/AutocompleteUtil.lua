@@ -86,7 +86,7 @@ function Util.backTraceMultiString(document: ScriptDocument, line: number, char:
 	return matchPatternOnMultiLine(document, line, char, {Start = "%[%[", End = "%]%]"})
 end
 
-function Util.getBranchesFromTokenList(tokens: {AutocompleteTypes.Token}): {string}	
+function Util.getBranchesFromTokenList(tokens: {AutocompleteTypes.Token}): ({string}, string)	
 	local branches = {}
 	local treeEntryIndex = nil
 	
