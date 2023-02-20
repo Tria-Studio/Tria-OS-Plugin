@@ -18,13 +18,13 @@ local ANY_CHAR = "[%w%p]*"
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
 
-local PROPERTY_FUNCTION_CREATE = "(%w+)%.(%w+)%s*=%s*function(%b())%s*"
+local PROPERTY_FUNCTION_CREATE = "(%w+)%.(%w+)%s*=%s*%(*function(%b())%s*"
 local PROPERTY_VARIABLE_CREATE = `(%w+)%.(%w+)%s*=%s({ANY_CHAR})%s*`
 local PROPERTY_FUNCTION_MATCH = `%s*function%({ANY_CHAR}%)%s*`
 local END_FUNCTION_MATCH = `end%s(%w+){AUTOCOMPLETE_IDEN}`
 
 local FUNCTION_CALL = `%(%s*(%w+){AUTOCOMPLETE_IDEN}`
-local INLINE_FUNCTION = "function%(.+%)?%s*$"
+local INLINE_FUNCTION = `function%({ANY_CHAR}%)?%s*$`
 
 local MAPLIB_IDEN = `local {ARGS_MATCH} = game.GetMapLib:Invoke%(%)%(%)`
 local CALLBACK_NAME = "__MapLibCompletion"
