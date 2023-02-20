@@ -25,11 +25,14 @@ local Computed = Fusion.Computed
 local ENABLE_VAR = "TRIA_AutocompleteEnabled"
 local GLOBAL_ENABLE_VAR = "TRIA_GlobalAutocompleteEnabled"
 
-local localMapScript = Value(false)
-local effectScript = Value(false)
+local ScriptMaid = Util.Maid.new()
 
-local maid = Util.Maid.new()
 local mapScripts = Value({})
+local hasScripts = {
+    LocalMapScript = Value(false),
+    EffectScript = Value(false)
+}
+
 local frame = {}
  
 function OptionFrame(props: PublicTypes.propertiesTable): Instance
@@ -199,7 +202,7 @@ You do not need to use LocalMapScript, however it is useful for creating client-
                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
                         }
                     },
-                    GetScriptButton(localMapScript, "LocalMapScript", 6),
+                    GetScriptButton(hasScripts.LocalMapScript, "LocalMapScript", 6),
 
                     Components.FrameHeader("About EffectScript", 7, nil, nil, nil),
                     New "TextLabel" {
@@ -221,7 +224,7 @@ The EffectScript can communicate with the server using RemoteEvents and gets clo
                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
                         }
                     },
-                    GetScriptButton(effectScript, "EffectScript", 9),
+                    GetScriptButton(hasScripts.EffectScript, "EffectScript", 9),
 
                     Components.FrameHeader("Script Autocomplete Settings", 10, nil, nil, [[Here you can customise how the script autocompleter works.
 
@@ -295,46 +298,51 @@ end
 
 
 Observer(mapScripts):onChange(function()
-    local children = mapScripts:get()
-    local hasEffectScript = false
-    local hasLocalMapScript = false
+    local children = mapScripts:get(false)
+    local scripts = {
+        LocalMapScript = false,
+        EffectScript = false
+    }
 
     local function checkScript(newScript: Instance)
-        if not hasLocalMapScript then
-            hasLocalMapScript = newScript.Name == "LocalMapScript"
-        end
-        if not hasEffectScript then
-            hasEffectScript = newScript.Name == "EffectScript"
+        for k in pairs(scripts) do
+            if not scripts[k] then
+                scripts[k] = newScript.Name == k
+            end
         end
     end
 
     for _, child in pairs(children) do
-        maid:GiveTask(child:GetPropertyChangedSignal("Name"):Connect(function()
-            hasEffectScript = false
-            hasLocalMapScript = false
+        ScriptMaid:GiveTask(child:GetPropertyChangedSignal("Name"):Connect(function()
+            for k in pairs(scripts) do
+                scripts[k] = false
+            end
 
             for _, child in pairs(mapScripts:get()) do
                 checkScript(child)
             end
 
-            localMapScript:set(hasLocalMapScript)
-            effectScript:set(hasEffectScript)
+            for k in pairs(hasScripts) do
+                hasScripts[k]:set(scripts[k])
+            end
         end))
         checkScript(child)
     end
 
-    localMapScript:set(hasLocalMapScript)
-    effectScript:set(hasEffectScript)
+    for k in pairs(hasScripts) do
+        hasScripts[k]:set(scripts[k])
+    end
 end)
 
 Util.MapChanged:Connect(function()
-    localMapScript:set(false)
-    effectScript:set(false)
+    for k in pairs(hasScripts) do
+        hasScripts[k]:set(false)
+    end
 
-    local newMap = Util.mapModel:get()
+    local newMap = Util.mapModel:get(false)
     if not newMap then
         mapScripts:set({})
-        maid:DoCleaning()
+        ScriptMaid:DoCleaning()
         return
     end
 
@@ -348,7 +356,7 @@ Util.MapChanged:Connect(function()
             end
         end
 
-        maid:DoCleaning()
+        ScriptMaid:DoCleaning()
         mapScripts:set(newTable)
     end
 
