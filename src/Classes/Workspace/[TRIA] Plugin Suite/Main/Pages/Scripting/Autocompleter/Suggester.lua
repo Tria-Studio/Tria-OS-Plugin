@@ -100,7 +100,7 @@ function Suggester:registerCallback()
 			AutocompleteData[index].Branches[funcName] = {
 				AutocompleteArgs= newArgs,
 				Name = funcName,
-				isFunction = isFunction,
+				IsFunction = isFunction,
 				Branches = nil
 			}
 		end
@@ -134,8 +134,8 @@ function Suggester:registerCallback()
 			table.insert(response.items, {
 				label = responseData.label,
 				kind = responseData.kind,
-				documentation = suggestionData.documentation,
-				codeSample = suggestionData.codeSample,
+				documentation = suggestionData.Documentation,
+				codeSample = suggestionData.CodeSample,
 				preselect = true,
 				
 				textEdit = AutocompleteUtil.buildReplacement(
@@ -143,14 +143,14 @@ function Suggester:registerCallback()
 					(
 						responseData.text 
 						.. (
-							(treeIndex == "Methods" or suggestionData.isFunction) 
-							and "(" .. table.concat(suggestionData.autocompleteArgs, ", ") .. ")" 
+							(treeIndex == "Methods" or suggestionData.IsFunction) 
+							and "(" .. table.concat(suggestionData.AutocompleteArgs, ", ") .. ")" 
 							or ""
 						)
-						.. afterCursor
+						.. responseData.afterCursor
 					),
-					responseData.beforeCursor,
-					responseData.afterCursor,
+					#responseData.beforeCursor,
+					#responseData.afterCursor,
 					responseData.alreadyTyped
 				)
 			})
@@ -186,9 +186,8 @@ function Suggester:registerCallback()
 							kind = index == "Methods" and Enum.CompletionItemKind.Function or Enum.CompletionItemKind.Property,
 							data = data,
 							text = name, 
-							
-							beforeCursor = #beforeCursor,
-							afterCursor = #afterCursor,
+							beforeCursor = beforeCursor,
+							afterCursor = afterCursor,
 							alreadyTyped = isIndexer and 0 or #lastToken
 						}, index)
 					end
