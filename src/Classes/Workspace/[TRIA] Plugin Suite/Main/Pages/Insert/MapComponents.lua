@@ -13,12 +13,14 @@ return {
 
         InsertFunction = function()
             local newVariant = Instance.new("Folder")
-            local variantsFolder = Util.mapModel:FindFirstChild("Variant") or Util.mapModel.Special:FindFirstChild("Variant")
+            local currentMap = Util.mapModel:get(false)
+            
+            local variantsFolder = currentMap:FindFirstChild("Variant") or currentMap.Special:FindFirstChild("Variant")
 
             if not variantsFolder then
                 local variantsFolder = Instance.new("Folder")
                 variantsFolder.Name = "Variant"
-                variantsFolder.Parent = Util.hasSpecialFolder:get() and Util.mapModel:get().Special or Util.mapModel:get()
+                variantsFolder.Parent = Util.hasSpecialFolder:get(false) and currentMap.Special or currentMap
             end
             
             newVariant.Name = string.format("Variant #%d", #variantsFolder:GetChildren() + 1)
