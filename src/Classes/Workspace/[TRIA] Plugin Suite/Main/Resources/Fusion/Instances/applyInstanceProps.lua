@@ -20,9 +20,6 @@ local xtypeof = require(Package.Utility.xtypeof)
 local logError = require(Package.Logging.logError)
 local Observer = require(Package.State.Observer)
 
--- THIS WILL GET REMOVED
-local defaultProps = require(script.Parent.defaultProps)
-
 local function setProperty_unsafe(instance: Instance, property: string, value: any)
 	(instance :: any)[property] = value
 end
