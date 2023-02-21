@@ -329,7 +329,6 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
                     Size = UDim2.new(1, -20, 0, 24),
                     Position = UDim2.fromOffset(24, 0),
     
-                    TextSize = 14,
                     Text = data.Header,
                     TextXAlignment = Enum.TextXAlignment.Left,
                     Visible = true,
