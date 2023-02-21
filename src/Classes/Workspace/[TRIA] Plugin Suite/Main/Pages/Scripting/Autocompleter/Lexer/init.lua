@@ -98,7 +98,7 @@ function Lexer.scan(line: string): () -> () -> AutocompleteTypes.Token
 		local currentIndex = 1
 		local stringSize = #line
 		
-		local function handleRequest(result: string)
+		local function handleRequest(result: any)
 			while result do
 				local resultType = type(result)
 				if (resultType == "table") then

@@ -40,7 +40,7 @@ local function canEditSetting(data: PublicTypes.dictionary): boolean
     return (not isErrored)
 end
 
-function BaseSettingButton(data: PublicTypes.dictionarys): (Instance, Fusion.StateObject<T>, Fusion.StateObject<T>)
+function BaseSettingButton(data: PublicTypes.dictionary): (Instance, Fusion.StateObject<Color3>, Fusion.StateObject<boolean>)
     local backgroundColor = Value(Theme.MainBackground.Default:get(false))
     local mouseInside = Value(false)
     local settingFrame = Value()

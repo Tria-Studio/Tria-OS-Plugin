@@ -133,7 +133,7 @@ function Util.lexerScanToTokens(line: string): {AutocompleteTypes.Token}
 	return tokens
 end
 
-function Util.flipArray(t: {any}): {}
+function Util.flipArray(t: {any})
 	for i = 1, math.floor(#t / 2) do
 		local j = #t - i + 1
 		t[i], t[j] = t[j], t[i]
