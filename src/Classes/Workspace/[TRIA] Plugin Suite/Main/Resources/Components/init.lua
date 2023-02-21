@@ -4,7 +4,6 @@ local Theme = require(Resources.Themes)
 local Util = require(Resources.Parent.Util)
 local lerpType = require(Resources.Fusion.Animation.lerpType)
 local PublicTypes = require(Resources.Parent.PublicTypes)
-local Dropdown = require(Resources.Parent.Util.Dropdown)
 
 local Pages = require(script.Pages)
 
@@ -495,13 +494,13 @@ function Components.DropdownButton(props: PublicTypes.dictionary): Instance
         [OnEvent "Activated"] = function()
             if not dropdownVisible:get() then
                 dropdownVisible:set(true)
-                local newData = Dropdown:GetValue(props.Options, arrowButton:get())
+                local newData = require(Resources.Parent.Util.Dropdown):GetValue(props.Options, arrowButton:get())
                 if newData and props.OnToggle then
                     props.OnToggle(newData)
                 end
                 dropdownVisible:set(false)
             else
-                Dropdown:Cancel()
+                require(Resources.Parent.Util.Dropdown):Cancel()
             end
         end
     }
