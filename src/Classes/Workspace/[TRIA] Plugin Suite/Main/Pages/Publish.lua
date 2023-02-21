@@ -176,6 +176,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                             end,
 
                             [Children] = New "Frame" {
+                                BackgroundColor3 = Color3.new(0, 0, 0),
                                 BackgroundTransparency = 0.625,
                                 Position = UDim2.fromScale(0, 1),
                                 Size = UDim2.new(1, 0, 0, 34),
