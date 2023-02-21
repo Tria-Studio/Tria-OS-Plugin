@@ -24,7 +24,7 @@ end
 local function getInsertFolder(specialChildName: string): Instance
     local currentMap = Util.mapModel:get(false)
 
-    return Util.hasSpecialFolder:get() 
+    return Util.hasSpecialFolder:get(false) 
         and currentMap.Special:FindFirstChild(specialChildName) 
         or currentMap:FindFirstChild("Geometry") 
         or currentMap
@@ -70,7 +70,7 @@ return {
         InsertFunction = function()
             local map = Util.mapModel:get(false)
 
-            local newParent = if Util.hasSpecialFolder:get() and map.Special:FindFirstChild("Button")
+            local newParent = if Util.hasSpecialFolder:get(false) and map.Special:FindFirstChild("Button")
                 then map.Special.Button
                 elseif map:FindFirstChild("Geometry") then map.Geometry
                 else map
@@ -132,7 +132,7 @@ return {
         },
 
         InsertFunction = function()
-            if Util.hasSpecialFolder:get() then
+            if Util.hasSpecialFolder:get(false) then
                 Util:ShowMessage("Cannot insert model", "Your map already has the optimized map structure format! (Folder named 'Special')")
                 return
             end
@@ -157,7 +157,7 @@ return {
             positionModel(newModel)
 
             local currentMap = Util.mapModel:get(false)
-            if Util.hasSpecialFolder:get() then
+            if Util.hasSpecialFolder:get(false) then
                 newModel.ExitRegion.Parent = currentMap.Special.Exit.ExitRegion
                 newModel.ExitBlock.Parent = currentMap.Special.Exit.ExitBlock
             else
