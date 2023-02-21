@@ -16,7 +16,6 @@ local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local MapSelect = {
     _Maid = Util.Maid.new(),
-    hasOptimizedStructure = Value(false),
     selectingMap = Value(false),
     selectTextState = Value("No map selected"),
     selectTextColor = Value(Theme.ErrorText.Default:get(false)),
@@ -25,9 +24,9 @@ local MapSelect = {
 }
 
 function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?): (boolean, string?)
-    local score_1 = 0 -- D2
-    local score_2 = 0 -- FE2/FP275
-    local score_3 = 0 -- TRIA.os
+    local score_1 = 0
+    local score_2 = 0
+    local score_3 = 0
 
     local hasMapScript, hasSettings, oldMapLib
 
@@ -168,6 +167,7 @@ function MapSelect:SetMap(Map: Model | Workspace): boolean
             end))
         end
 
+
         local parentChanged = false
         function ObjectType.Model()
             Util.MapMaid:GiveTask(Map.AncestryChanged:Connect(function() --// Model was either ungrouped or deleted
@@ -200,10 +200,10 @@ function MapSelect:SetMap(Map: Model | Workspace): boolean
         ObjectType[Map.ClassName]()
 
         local optimizedStructure = Map:FindFirstChild("Special")
-        self.hasOptimizedStructure:set(optimizedStructure and optimizedStructure:IsA("Folder"))
+        Util.hasSpecialFolder:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
         task.wait()
-        if not self.hasOptimizedStructure:get(false) then
+        if not Util.hasSpecialFolder:get(false) then
             Util:ShowMessage(Util.WARNING_HEADER, "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
         end
     else
@@ -303,7 +303,7 @@ function MapSelect:ResetSelection()
     Util._Selection.selectedParts:set({})
     Util.mapModel:set(nil)
     Util.MapChanged:Fire()
-    self.hasOptimizedStructure:set(false)
+    Util.hasSpecialFolder:set(false)
     self.selectCancelColor:set(Theme.SubText.Default:get(false))
     self.selectTextState:set("No map selected")
     self.selectTextColor:set(Theme.ErrorText.Default:get(false))

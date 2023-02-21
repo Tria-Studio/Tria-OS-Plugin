@@ -159,6 +159,7 @@ New "Frame" {
 
 		New "Frame" {
 			ZIndex = 4,
+			BackgroundColor3 = Color3.new(),
 			BackgroundTransparency = 0.75,
 			Size = UDim2.new(1, 0, 1, -76),
 			Position = UDim2.fromOffset(0, 52),

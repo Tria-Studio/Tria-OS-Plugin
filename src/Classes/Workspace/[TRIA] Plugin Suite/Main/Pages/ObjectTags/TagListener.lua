@@ -1,4 +1,5 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local TextService = game:GetService("TextService")
 
 local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
@@ -166,9 +167,10 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
 
                                 [Children] = ForValues(data.metadata, function(metadataType)
                                     local textBounds = Value(Vector2.new())
+                                    local frameSize = Value(Vector2.new())
 
                                     return New "TextLabel" {
-                                        [Out "TextBounds"] = textBounds,
+                                        [Out "AbsoluteSize"] = frameSize,
 
                                         BackgroundColor3 = Theme.ScrollBarBackground.Default,
                                         BorderColor3 = Theme.Border.Default,
@@ -193,7 +195,8 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                     dataValue:set(false)
                                                 end
 
-                                                local textXBounds = textBounds:get() and textBounds:get().X + 8 or 0
+                                                local Size = TextService:GetTextSize(metadataType.data.displayName, 15, Enum.Font.SourceSansSemibold, frameSize:get())
+                                                local textXBounds = Size and Size.X + 8 or 0
                                                 local types = {}
 
                                                 local function updateData(value)
@@ -219,7 +222,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                         AnchorPoint = Vector2.new(0, .5),
                                                         Position = UDim2.new(0, textXBounds + (sizeSubtract or 0), .5, 0),
                                                         TextXAlignment = Enum.TextXAlignment.Left,
-                                                        Text = textOverride or dataValue,
+                                                        Text = textOverride and textOverride or dataValue:get(),
 
                                                         [Ref] = Text,
                                                         [OnEvent "FocusLost"] = function()
@@ -257,7 +260,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                 function types.color()
                                                     return types.number(22, {Components.TextButton {
                                                         AnchorPoint = Vector2.new(1, .5),
-                                                        Position = UDim2.new(0, -4, .5, 0),
+                                                        Position = UDim2.new(0, -8, .5, 0),
                                                         Size = UDim2.fromOffset(16, 16),
                                                         BackgroundColor3 = Computed(function()
                                                             return (dataValue:get() == "" or not dataValue:get()) and Color3.new() or dataValue:get()

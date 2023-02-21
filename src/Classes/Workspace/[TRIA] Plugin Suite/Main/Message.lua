@@ -17,6 +17,7 @@ local messageFrameSize = Value()
 
 return New "Frame" { --// Message
 	BackgroundTransparency = 0.75,
+	BackgroundColor3 = Color3.new(),
 	Size = UDim2.fromScale(1, 1),
 	Visible = Computed(function()
 		return Util._Message.Text:get() ~= ""

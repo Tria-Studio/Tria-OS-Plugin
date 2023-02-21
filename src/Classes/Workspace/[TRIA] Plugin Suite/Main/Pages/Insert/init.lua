@@ -163,14 +163,20 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                     Size = UDim2.new(1, 0, 0, 32),
                                     LayoutOrder = data.LayoutOrder,
                                     Text = " " .. data.Name,
-                                    TextSize = 18,
+                                    TextSize = 17,
                                     BorderSizePixel = 0,
-                                    TextColor3 = Theme.MainText.Default,
+                                    TextColor3 = Theme.BrightText.Default,
                                     Font = Enum.Font.SourceSansSemibold,
                                     TextXAlignment = Enum.TextXAlignment.Left,
         
+                                    [OnEvent "Activated"] = function()
+                                        if Util.mapModel:get() then
+                                            data.InsertFunction()
+                                        end
+                                    end,
+
                                     [Children] = {
-                                        Components.Constraints.UIPadding(nil, nil, UDim.new(0, 32)),
+                                        Components.Constraints.UIPadding(nil, nil, UDim.new(0, 34)),
                                         New "ImageLabel" {
                                             Image = data.Icon,
                                             Size = UDim2.new(0, 28, 0, 28),
@@ -179,7 +185,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                                         },
                                         Components.TooltipImage({
-                                            Position = UDim2.new(1, -2, 0, 9),
+                                            Position = UDim2.new(1, -4, 0, 9),
                                             Header = data.Tooltip.Header,
                                             Tooltip = data.Tooltip.Tooltip,
                                         })

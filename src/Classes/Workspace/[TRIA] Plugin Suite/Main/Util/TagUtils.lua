@@ -74,7 +74,7 @@ local defaultMetadataTypes = {
     number = 0,
     color = Color3.new(),
     string = "",
-    boolean = Enum.TriStateBoolean.Unknown,
+    boolean = Enum.TriStateBoolean.False,
 }
 
 local function getTagInstance(part, tag): Instance | nil
@@ -182,8 +182,7 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
     local types = {}
 
     function types.Attribute()
-        local data = part:GetAttribute(data.dataName)
-        return if data then data else false
+        return part:GetAttribute(data.dataName) or defaultMetadataTypes[data.dataType]
     end
 
     function types.ConfigAttribute()
