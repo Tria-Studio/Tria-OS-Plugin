@@ -67,12 +67,28 @@ return {
 
         InsertFunction = function()
             local map = Util.mapModel:get(false)
+
             local newParent = if Util.hasSpecialFolder:get() and map.Special:FindFirstChild("Button")
                 then map.Special.Button
                 elseif map:FindFirstChild("Geometry") then map.Geometry
                 else map
+
+
+            local highestButton = 0
+
+            for _, model: Instance in ipairs(map:GetDescendants()) do 
+                if model:IsA("Model") and model.Name:match("_Button%d+") then 
+                    local buttonNum = tonumber(model.Name:match("_Button(%d+)")); 
+                    if buttonNum then
+                        highestButton = math.max(highestButton, buttonNum)
+                    end
+                end 
+            end
+
             local model = insertModel("_Button0", newParent)
+            model.Name = "_Button" .. (highestButton + 1)
             positionModel(model)
+
             Util.debugWarn("Successfully inserted new Button!")
         end
     }, {
