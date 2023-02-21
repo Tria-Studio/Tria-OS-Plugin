@@ -11,6 +11,8 @@ local Util = require(Package.Util)
 local ColorWheel = require(Package.Colorwheel)
 local Dropdown = require(Package.Util.Dropdown)
 
+local PublicTypes = require(Package.PublicTypes)
+
 local New = Fusion.New
 local Children = Fusion.Children
 local Hydrate = Fusion.Hydrate
@@ -23,22 +25,22 @@ local Spring = Fusion.Spring
 
 local currentEditing = Value(nil)
 
-local function isCurrentSettingModifiable(data)
+local function isCurrentSettingModifiable(data: PublicTypes.dictionary): boolean
     local isErrored = data.Errored:get()
     return (not isErrored and Util.interfaceActive:get())
 end
 
-local function getSettingTextColor(data)
+local function getSettingTextColor(data: PublicTypes.dictionary): Color3
     local isErrored = data.Errored:get()
     return (isErrored and Theme.ErrorText.Default:get()) or Theme.MainText.Default:get()
 end
 
-local function canEditSetting(data)
+local function canEditSetting(data: PublicTypes.dictionary): boolean
     local isErrored = data.Errored:get()
     return (not isErrored)
 end
 
-function BaseSettingButton(data)
+function BaseSettingButton(data: PublicTypes.dictionarys): (Instance, Fusion.StateObject<T>, Fusion.StateObject<T>)
     local backgroundColor = Value(Theme.MainBackground.Default:get(false))
     local mouseInside = Value(false)
     local settingFrame = Value()
@@ -102,7 +104,7 @@ function BaseSettingButton(data)
     }, backgroundColor, mouseInside
 end
 
-function InputBox(data, baseButton)
+function InputBox(data: PublicTypes.dictionary, baseButton)
     return function (props)
         local isModifiable = Computed(function()
             return isCurrentSettingModifiable(data)
