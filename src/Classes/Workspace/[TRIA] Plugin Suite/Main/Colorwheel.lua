@@ -147,7 +147,6 @@ function ColorWheel:GetUI()
         Size = UDim2.new(1, 0, 1, -76),
         Position = UDim2.fromOffset(0, 52),
         Visible = visible,
-        BackgroundColor3 = Color3.new(),
     
         [Children] = {
             New "ImageLabel" {
