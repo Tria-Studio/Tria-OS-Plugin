@@ -290,12 +290,17 @@ function MapSelect:AutoSelect(): boolean
 
     for _, v: Instance in ipairs(workspace:GetChildren()) do
         if v:IsA("Model") then
-            local isMap, value = self:IsTriaMap(v)
+            isMap, value = self:IsTriaMap(v)
             if isMap then
                 self:SetMap(v)
                 return true
             end
         end
+    end
+
+    if not isMap then
+        self:ResetSelection()
+        return false
     end
 end
 

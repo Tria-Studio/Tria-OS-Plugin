@@ -82,11 +82,6 @@ local function applyInstanceProps(props: PubTypes.PropertyTable, applyTo: Instan
 
 	for key, value in pairs(props) do
 		local keyType = xtypeof(key)
-
-		if defaultProps[applyTo.ClassName] and defaultProps[applyTo.ClassName][key] and value == defaultProps[applyTo.ClassName][key] then
-			print(key, "property is already in default:\n", debug.traceback())
-		end
-
 		if keyType == "string" then
 			if key ~= "Parent" then
 				bindProperty(applyTo, key :: string, value, cleanupTasks)

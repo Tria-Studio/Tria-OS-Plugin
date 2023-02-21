@@ -143,6 +143,7 @@ end
 function ColorWheel:GetUI()
     return New "Frame" {
         BackgroundTransparency = 0.75,
+        BackgroundColor3 = Color3.fromRGB(0, 0, 0),
         Size = UDim2.new(1, 0, 1, -76),
         Position = UDim2.fromOffset(0, 52),
         Visible = visible,
@@ -207,7 +208,6 @@ function ColorWheel:GetUI()
                                 Size = UDim2.fromScale(0.03, 0.03)
                             },
                             New "TextButton" {
-                                Text = "",
                                 Size = UDim2.fromScale(3, 2.05),
                                 Position = UDim2.fromScale(-1, -1),
                                 BackgroundTransparency = 1,
@@ -270,7 +270,6 @@ function ColorWheel:GetUI()
                             },
                             
                             New "TextButton" {
-                                Text = "",
                                 Position = UDim2.fromScale(-1, -0.07),
                                 Size = UDim2.fromScale(3, 1.13),
                                 BackgroundTransparency = 1,

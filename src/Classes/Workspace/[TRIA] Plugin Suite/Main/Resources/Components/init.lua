@@ -77,7 +77,6 @@ function Components.TopbarButton(index: number, data: PublicTypes.propertiesTabl
             local titlebarColor = Theme.RibbonButton.Default:get()
             return if data.Visible:get() then hoverColor else titlebarColor
         end), 20),
-        Text = "",
         
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get(false) or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil then
@@ -329,7 +328,6 @@ function Components.Dropdown(data: PublicTypes.propertiesTable, childrenProcesso
                     Size = UDim2.new(1, -20, 0, 24),
                     Position = UDim2.fromOffset(24, 0),
     
-                    TextSize = 14,
                     Text = data.Header,
                     TextXAlignment = Enum.TextXAlignment.Left,
                     Visible = true,
@@ -398,7 +396,6 @@ function Components.DropdownTextlabel(data: PublicTypes.propertiesTable): Instan
         TextXAlignment = data.TextXAlignment,
         BackgroundColor3 = Theme.Notification.Default,
         TextColor3 = Theme.MainText.Default,
-        BorderSizePixel = 0,
         Size = UDim2.fromScale(1, 0),
         Position = UDim2.fromOffset(0, 24),
         Text = data.Text,
