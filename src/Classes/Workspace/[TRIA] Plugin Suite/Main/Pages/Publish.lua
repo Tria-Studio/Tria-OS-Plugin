@@ -583,7 +583,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                 },
                             }
                         },
-                    }, 0),
+                    }),
                     
                     New "Frame" {
                         BackgroundTransparency = 1,
