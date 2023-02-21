@@ -37,7 +37,7 @@ function Constraints.UISizeConstraint(MinSize: Vector2?, MaxSize: Vector2?)
     }
 end
 
-function Constraints.UIStroke(Thickness: number, Color: Color3, StrokeMode: Enum.ApplyStrokeMode?, Transparency: number?)
+function Constraints.UIStroke(Thickness: number?, Color: Color3, StrokeMode: Enum.ApplyStrokeMode?, Transparency: number?)
 	return New "UIStroke" {
 		ApplyStrokeMode = StrokeMode,
 		Thickness = Thickness,

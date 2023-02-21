@@ -341,7 +341,7 @@ function SettingTypes.Dropdown(data)
                         Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                     end
                 }),
-            }
+            },
 
             Components.TextBox {
                 Active = Computed(function()

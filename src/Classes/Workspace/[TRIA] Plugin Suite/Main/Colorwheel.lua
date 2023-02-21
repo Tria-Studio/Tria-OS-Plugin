@@ -54,7 +54,7 @@ local function updateColor()
     )
 end
 
-local function getColorDisplay(data: {Display: string, LayoutOrder: number}): Instance
+local function getColorDisplay(data: {Display: string, LayoutOrder: number, Computed: () -> ()}): Instance
     local textValue = Value("")
 
     return New "Frame" {

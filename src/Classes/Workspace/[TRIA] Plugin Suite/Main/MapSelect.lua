@@ -23,7 +23,7 @@ local MapSelect = {
     selectCancelImage = Value("rbxassetid://6022668885")
 }
 
-function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?): (boolean, string?)
+function MapSelect:IsTriaMap(Map: Instance, ignoreChecks: boolean?): (boolean, string?)
     local score_1 = 0
     local score_2 = 0
     local score_3 = 0
@@ -48,7 +48,7 @@ function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?): (boolean, stri
         hasMapScript = true
     end
 
-    local settings2 = Map:FindFirstChild("Settings")
+    local settings2: Instance? = Map:FindFirstChild("Settings")
 
     if not ignoreChecks then
         local settings1 = Map:FindFirstChild("MapInfo")
@@ -123,7 +123,7 @@ function MapSelect:IsTriaMap(Map: Model, ignoreChecks: boolean?): (boolean, stri
     return false, "Invalid map model format. Must be a 'Model', 'Folder', or unparented in the workspace."
 end
 
-function MapSelect:SetMap(Map: Model | Workspace): boolean
+function MapSelect:SetMap(Map: Model | Workspace?): boolean
     if Map then -- add or change selection
         local success, message = self:IsTriaMap(Map)
 
