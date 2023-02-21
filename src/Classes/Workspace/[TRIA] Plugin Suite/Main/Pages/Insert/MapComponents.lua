@@ -4,21 +4,30 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
 
+local componentFiles = script.Parent.ComponentFiles
 
-
-local function PositionModel(Model)
-    local Position = workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -36)
-    Model:PivotTo(CFrame.new(Position.Position))
-    Selection:Set({Model})
+local function positionModel(model: Model)
+    local newPos = workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -36)
+    model:PivotTo(CFrame.new(newPos.Position))
+    Selection:Set({model})
 end
 
-local function InsertModel(Name, Parent)
-    ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", Name))
-    local NewModel = script.Parent.ComponentFiles:FindFirstChild(Name):Clone()
-    NewModel.Parent = Parent
+local function insertModel(modelName: string, parent: Instance): Instance
+    ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", modelName))
+    local newModel = componentFiles:FindFirstChild(modelName):Clone()
+    newModel.Parent = parent
 
-    ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", Name))
-    return NewModel
+    ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", modelName))
+    return newModel
+end
+
+local function getInsertFolder(specialChildName: string): Instance
+    local currentMap = Util.mapModel:get(false)
+
+    return Util.hasSpecialFolder:get() 
+        and currentMap.Special:FindFirstChild(specialChildName) 
+        or currentMap:FindFirstChild("Geometry") 
+        or currentMap
 end
 
 return {
@@ -57,13 +66,13 @@ return {
         },
 
         InsertFunction = function()
-            local map = Util.mapModel:get()
+            local map = Util.mapModel:get(false)
             local newParent = if Util.hasSpecialFolder:get() and map.Special:FindFirstChild("Button")
                 then map.Special.Button
                 elseif map:FindFirstChild("Geometry") then map.Geometry
                 else map
-            local model = InsertModel("_Button0", newParent)
-            PositionModel(model)
+            local model = insertModel("_Button0", newParent)
+            positionModel(model)
             Util.debugWarn("Successfully inserted new Button!")
         end
     }, {
@@ -76,9 +85,9 @@ return {
         },
 
         InsertFunction = function()
-            local newParent = Util.hasSpecialFolder:get() and Util.mapModel:get().Special:FindFirstChild("Zipline") or Util.mapModel:get():FindFirstChild("Geometry") or Util.mapModel:get()
-            local model = InsertModel("Zipline", newParent)
-            PositionModel(model)
+            local newParent = getInsertFolder("Zipline")
+            local model = insertModel("Zipline", newParent)
+            positionModel(model)
             Util.debugWarn("Successfully inserted new Zipline!")
         end
     }, {
@@ -91,9 +100,9 @@ return {
         },
 
         InsertFunction = function()
-            local newParent = Util.hasSpecialFolder:get() and Util.mapModel:get().Special:FindFirstChild("Interactable") or Util.mapModel:get():FindFirstChild("Geometry") or Util.mapModel:get()
-            local model = InsertModel("AirTank", newParent)
-            PositionModel(model)
+            local newParent = getInsertFolder("Interactable")
+            local model = insertModel("AirTank", newParent)
+            positionModel(model)
             Util.debugWarn("Successfully inserted new AirTank!")
         end
     }, {
@@ -111,8 +120,8 @@ return {
                 return
             end
 
-            local newParent = Util.mapModel:get()
-            InsertModel("Special", newParent)
+            local newParent = Util.mapModel:get(false)
+            insertModel("Special", newParent)
             Util.debugWarn("Successfully added OptimizedStructure!")
         end
     }, {
@@ -126,15 +135,17 @@ return {
 
         InsertFunction = function()
             ChangeHistoryService:SetWaypoint("Inserting model 'Spawn'")
-            local newModel = script.Parent.ComponentFiles.ExitRegion:Clone()
-            PositionModel(newModel)
 
+            local newModel = componentFiles.ExitRegion:Clone()
+            positionModel(newModel)
+
+            local currentMap = Util.mapModel:get(false)
             if Util.hasSpecialFolder:get() then
-                newModel.ExitRegion.Parent = Util.mapModel:get().Special.Exit.ExitRegion
-                newModel.ExitBlock.Parent = Util.mapModel:get().Special.Exit.ExitBlock
+                newModel.ExitRegion.Parent = currentMap.Special.Exit.ExitRegion
+                newModel.ExitBlock.Parent = currentMap.Special.Exit.ExitBlock
             else
-                newModel.ExitRegion.Parent = Util.mapModel:get()
-                newModel.ExitBlock.Parent = Util.mapModel:get()
+                newModel.ExitRegion.Parent = currentMap
+                newModel.ExitBlock.Parent = currentMap
             end
             newModel:Destroy()
             ChangeHistoryService:SetWaypoint("Inserted new map exit!")
@@ -149,9 +160,9 @@ return {
         },
 
         InsertFunction = function()
-            local newParent = Util.hasSpecialFolder:get() and Util.mapModel:get():FindFirstChild("Interactable") or Util.mapModel:get():FindFirstChild("Geometry") or Util.mapModel:get()
-            local model = InsertModel("Walljump", newParent)
-            PositionModel(model)
+            local newParent = getInsertFolder("Interactable")
+            local model = insertModel("Walljump", newParent)
+            positionModel(model)
             Util.debugWarn("Successfully inserted new Walljump!")
         end
     }, {
@@ -164,9 +175,9 @@ return {
         },
 
         InsertFunction = function()
-            local newParent = Util.hasSpecialFolder:get() and Util.mapModel:get():FindFirstChild("Interactable") or Util.mapModel:get():FindFirstChild("Geometry") or Util.mapModel:get()
-            local model = InsertModel("Wallrun", newParent)
-            PositionModel(model)
+            local newParent = getInsertFolder("Interactable")
+            local model = insertModel("Wallrun", newParent)
+            positionModel(model)
             Util.debugWarn("Successfully inserted new Wallrun!")
         end
     }, {
@@ -179,9 +190,9 @@ return {
         },
 
         InsertFunction = function()
-            local newParent = Util.hasSpecialFolder:get() and Util.mapModel:get():FindFirstChild("Fluid") or Util.mapModel:get():FindFirstChild("Geometry") or Util.mapModel:get()
-            local model = InsertModel("_Gas0", newParent)
-            PositionModel(model)
+            local newParent = getInsertFolder("Fluid")
+            local model = insertModel("_Gas0", newParent)
+            positionModel(model)
             Util.debugWarn("Successfully inserted new Gas!")
         end
     }, 
