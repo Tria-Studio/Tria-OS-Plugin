@@ -75,7 +75,6 @@ return {
                 elseif map:FindFirstChild("Geometry") then map.Geometry
                 else map
 
-
             local highestButton = 0
 
             for _, model: Instance in ipairs(map:GetDescendants()) do 
