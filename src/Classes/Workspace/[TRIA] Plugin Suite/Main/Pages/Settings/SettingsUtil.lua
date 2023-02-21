@@ -52,13 +52,13 @@ local SettingsUtil = {
     }
 }
 
-function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, callback)
+function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, callback: () -> ())
     SettingsUtil.SettingMaid:GiveTask(parent:GetAttributeChangedSignal(attribute):Once(function()
         task.defer(callback)
     end))
 end
 
-function SettingsUtil.updateStateValue(currentValue, newValue: any, tbl: {})
+function SettingsUtil.updateStateValue(currentValue, newValue: any, tbl: PublicTypes.dictionary)
     local acceptedValues = {
         ["String"] = {"string", "number"},
         ["Number"] = {"string", "number"},

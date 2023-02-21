@@ -9,6 +9,7 @@ local Components = require(Resources.Components)
 
 local MapSelect = require(Package.MapSelect)
 local Util = require(Package.Util)
+local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -65,7 +66,7 @@ function onMapChanged()
     end
 end
 
-function getStandardDropdown(dirKey, dirData, visible): Instance
+function getStandardDropdown(dirKey: string, dirData: PublicTypes.dictionary, visible): Instance
     return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
@@ -77,7 +78,7 @@ function getStandardDropdown(dirKey, dirData, visible): Instance
     }
 end
 
-function frame:GetFrame(data)
+function frame:GetFrame(data: PublicTypes.dictionary): Instance
     local lightingDropdownVisible = Value(true)
 
     return New "Frame" {
@@ -102,7 +103,7 @@ function frame:GetFrame(data)
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
 
-                    ForPairs(directories, function(dirKey, dirData)
+                    ForPairs(directories, function(dirKey: string, dirData: PublicTypes.dictionary): (string, Instance)
                         local dataModule = SettingData[dirKey]
                         dirData.HeaderChildren = if dataModule.Dynamic then dataModule:getHeaderChildren() else dirData.HeaderChildren
 
