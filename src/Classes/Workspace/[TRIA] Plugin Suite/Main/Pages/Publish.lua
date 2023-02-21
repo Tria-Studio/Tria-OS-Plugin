@@ -235,7 +235,7 @@ function frame.OnClose()
     selectedPublishMap:set(nil)
 end
 
-function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
+function frame:GetFrame(data: PublicTypes.dictionary): Instance
     if #whitelistedMaps == 0 then
         table.insert(whitelistedMaps, noMapsFoundText:get())
     end

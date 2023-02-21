@@ -31,7 +31,7 @@ local Ref = Fusion.Ref
 local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
  
-return function(name: string, data: PublicTypes.propertiesTable): Instance
+return function(name: string, data: PublicTypes.dictionary): Instance
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
 

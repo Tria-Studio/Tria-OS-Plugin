@@ -65,7 +65,7 @@ function attemptToInsertModel(assetID: number)
     ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
-function SubFrame(data: PublicTypes.propertiesTable): Instance
+function SubFrame(data: PublicTypes.dictionary): Instance
     return New "Frame" {
         BackgroundTransparency = 1,
         LayoutOrder = data.LayoutOrder,
@@ -78,7 +78,7 @@ function SubFrame(data: PublicTypes.propertiesTable): Instance
     }
 end
 
-function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
+function frame:GetFrame(data: PublicTypes.dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

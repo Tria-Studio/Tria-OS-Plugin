@@ -1,3 +1,3 @@
-export type propertiesTable = {[any]: any}
+export type dictionary = {[any]: any}
 
 return nil

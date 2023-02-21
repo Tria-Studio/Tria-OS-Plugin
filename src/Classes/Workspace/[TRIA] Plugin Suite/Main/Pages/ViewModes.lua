@@ -12,7 +12,7 @@ local Children = Fusion.Children
 
 local frame = {}
  
-function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
+function frame:GetFrame(data: PublicTypes.dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

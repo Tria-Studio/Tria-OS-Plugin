@@ -95,7 +95,7 @@ function SettingsUtil.modifyStateTable(state, action: string, ...)
     state:set(newTbl, true)
 end
 
-function SettingsUtil.connectValue(object: Instance, data: PublicTypes.propertiesTable)
+function SettingsUtil.connectValue(object: Instance, data: PublicTypes.dictionary)
     local currentValue = object:GetAttribute(data.Attribute)
     local function updateConnection()
         SettingsUtil.updateStateValue(currentValue, object:GetAttribute(data.Attribute), data)
@@ -104,12 +104,12 @@ function SettingsUtil.connectValue(object: Instance, data: PublicTypes.propertie
     updateConnection()
 end
 
-function SettingsUtil.settingOption(optionType: string, optionData: PublicTypes.propertiesTable): Instance
+function SettingsUtil.settingOption(optionType: string, optionData: PublicTypes.dictionary): Instance
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
 end
 
-function SettingsUtil.DirectoryDropdown(data: PublicTypes.propertiesTable, childProcessor: (boolean) -> Instance): Instance
+function SettingsUtil.DirectoryDropdown(data: PublicTypes.dictionary, childProcessor: (boolean) -> Instance): Instance
     return Components.Dropdown({
         DefaultState = data.Default, 
         Header = data.Display, 

@@ -40,7 +40,7 @@ function onMapChanged()
     -- Disconnect old connections
     SettingsUtil.SettingMaid:DoCleaning()
     
-    local function updateNormalDataModule(module)
+    local function updateNormalDataModule(module: PublicTypes.dictionary)
         for _, tbl in ipairs(module.Items) do
             local dirFolder = Util.getDirFolder(module.Directory)
             if not dirFolder then
@@ -65,7 +65,7 @@ function onMapChanged()
     end
 end
 
-function getStandardDropdown(dirKey, dirData, visible)
+function getStandardDropdown(dirKey, dirData, visible): Instance
     return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
