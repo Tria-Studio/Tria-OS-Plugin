@@ -212,7 +212,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                     ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
                                                 end
 
-                                                function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?)
+                                                function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?): Instance
                                                     local Text = Value()
                                                     local children = extraChild or {}
                                                     table.insert(children, Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4)))
@@ -243,7 +243,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                 end
                                                 types.string = types.number
 
-                                                function types.boolean()
+                                                function types.boolean(): Instance
                                                     return New "TextButton" {
                                                         Size = UDim2.new(1, -textXBounds, 1, 0),
                                                         Position = UDim2.fromOffset(textXBounds, 0),
@@ -257,7 +257,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                     }
                                                 end
 
-                                                function types.color()
+                                                function types.color(): Instance
                                                     return types.number(22, {Components.TextButton {
                                                         AnchorPoint = Vector2.new(1, .5),
                                                         Position = UDim2.new(0, -8, .5, 0),
@@ -274,7 +274,7 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                     end))
                                                 end
 
-                                                function types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
+                                                function types.dropdown(): Instance --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     return types.number(22, {
                                                         Components.DropdownButton({
                                                             Position = UDim2.fromOffset(-8, -1),
