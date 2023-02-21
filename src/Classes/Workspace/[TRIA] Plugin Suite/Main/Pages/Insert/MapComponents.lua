@@ -41,6 +41,7 @@ return {
         },
 
         InsertFunction = function()
+            ChangeHistoryService:SetWaypoint("Inserting new variant")
             local newVariant = Instance.new("Folder")
             local currentMap = Util.mapModel:get(false)
 
@@ -55,6 +56,7 @@ return {
             newVariant.Name = string.format("Variant #%d", #variantsFolder:GetChildren() + 1)
             newVariant.Parent = variantsFolder
             Util.debugWarn("Successfully inserted new map variant!")
+            ChangeHistoryService:SetWaypoint("Inserted new variant")
         end
     }, {
         Name = "New Button",
@@ -150,7 +152,7 @@ return {
         },
 
         InsertFunction = function()
-            ChangeHistoryService:SetWaypoint("Inserting model 'Spawn'")
+            ChangeHistoryService:SetWaypoint("Inserting part 'Exit Region'")
 
             local newModel = componentFiles.ExitRegion:Clone()
             positionModel(newModel)
