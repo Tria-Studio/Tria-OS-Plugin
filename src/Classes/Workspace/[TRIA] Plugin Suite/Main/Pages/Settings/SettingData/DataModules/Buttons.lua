@@ -4,6 +4,7 @@ local Package = script.Parent.Parent.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Util = require(Package.Util)
 local Components = require(Package.Resources.Components)
+local PublicTypes = require(Package.PublicTypes)
 
 local SettingsUtil = require(script.Parent.Parent.Parent.SettingsUtil)
 
@@ -131,12 +132,12 @@ function insertButtonFolders()
 end
 
 local buttonVisibleMap = {}
-function Data:getDropdown(visible): Instance
+function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-            ForPairs(directories.Buttons.Items, function(folder, data)
+            ForPairs(directories.Buttons.Items, function(folder: Instance, data: PublicTypes.dictionary): (Instance, Instance)
                 local itemName = data.Name
                 local itemData = data.Data
 
@@ -153,7 +154,7 @@ function Data:getDropdown(visible): Instance
                         folder.Name = newHeader
                     end
 
-                }, function(isSectionVisible)
+                }, function(isSectionVisible: Fusion.StateObject<boolean>): Instance
                     if buttonVisibleMap[data.ID] then
                         isSectionVisible:set(buttonVisibleMap[data.ID])
                     else
@@ -163,7 +164,7 @@ function Data:getDropdown(visible): Instance
                         DropdownVisible = isSectionVisible,
                         Children = {
                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-                            ForValues(itemData, function(tbl)
+                            ForValues(itemData, function(tbl: PublicTypes.dictionary): Instance
                                 return SettingsUtil.settingOption(tbl.Type, tbl)
                             end, Fusion.cleanup)
                         }

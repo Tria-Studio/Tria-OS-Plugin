@@ -5,6 +5,7 @@ local Package = script.Parent.Parent.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Util = require(Package.Util)
 local Components = require(Package.Resources.Components)
+local PublicTypes = require(Package.PublicTypes)
 
 local SettingsUtil = require(script.Parent.Parent.Parent.SettingsUtil)
 
@@ -103,7 +104,7 @@ function addLiquid()
     newLiquid:SetAttribute("OxygenDepletion", 1)
     newLiquid:SetAttribute("SplashSound", "water")
     newLiquid.Parent = liquidFolder
-    ChangeHistoryService:SetWaypoint("Created custom liqud")
+    ChangeHistoryService:SetWaypoint("Created custom liquid")
 end
 
 function removeLiquid(id: string)
@@ -130,14 +131,14 @@ end
 
 local liquidVisibleMap = {}
 
-function Data:getDropdown(visible): Instance
+function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
     local index = 0
 
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-            ForPairs(directories.Liquids.Items, function(liquid, data)
+            ForPairs(directories.Liquids.Items, function(liquid: Instance, data: PublicTypes.dictionary): (Instance, Instance)
                 local itemName = data.Name
                 local itemData = data.Data
 
@@ -167,7 +168,7 @@ function Data:getDropdown(visible): Instance
                         liquid.Name = newHeader
                     end
 
-                }, function(isSectionVisible)
+                }, function(isSectionVisible: Fusion.StateObject<boolean>): Instance
                     if liquidVisibleMap[data.ID] then
                         isSectionVisible:set(liquidVisibleMap[data.ID])
                     else
@@ -177,7 +178,7 @@ function Data:getDropdown(visible): Instance
                         DropdownVisible = isSectionVisible,
                         Children = {
                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-                            ForValues(itemData, function(liquidData)
+                            ForValues(itemData, function(liquidData: PublicTypes.dictionary): Instance
                                 return SettingsUtil.settingOption(liquidData.Type, liquidData)
                             end, Fusion.cleanup)
                         }
