@@ -206,7 +206,6 @@ function ColorWheel:GetUI()
                                 Size = UDim2.fromScale(0.03, 0.03)
                             },
                             New "TextButton" {
-                                Text = "",
                                 Size = UDim2.fromScale(3, 2.05),
                                 Position = UDim2.fromScale(-1, -1),
                                 BackgroundTransparency = 1,
@@ -269,7 +268,6 @@ function ColorWheel:GetUI()
                             },
                             
                             New "TextButton" {
-                                Text = "",
                                 Position = UDim2.fromScale(-1, -0.07),
                                 Size = UDim2.fromScale(3, 1.13),
                                 BackgroundTransparency = 1,
