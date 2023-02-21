@@ -170,7 +170,7 @@ function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
                                     TextXAlignment = Enum.TextXAlignment.Left,
         
                                     [OnEvent "Activated"] = function()
-                                        if Util.mapModel:get() then
+                                        if Util.mapModel:get(false) then
                                             data.InsertFunction()
                                         end
                                     end,

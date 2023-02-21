@@ -195,8 +195,8 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                     dataValue:set(false)
                                                 end
 
-                                                local Size = TextService:GetTextSize(metadataType.data.displayName, 15, Enum.Font.SourceSansSemibold, frameSize:get())
-                                                local textXBounds = Size and Size.X + 8 or 0
+                                                local textSize = TextService:GetTextSize(metadataType.data.displayName, 15, Enum.Font.SourceSansSemibold, frameSize:get())
+                                                local textXBounds = textSize and textSize.X + 8 or 0
                                                 local types = {}
 
                                                 local function updateData(value)
