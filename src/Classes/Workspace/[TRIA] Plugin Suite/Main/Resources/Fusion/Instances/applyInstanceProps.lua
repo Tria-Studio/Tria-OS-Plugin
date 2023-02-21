@@ -20,9 +20,6 @@ local xtypeof = require(Package.Utility.xtypeof)
 local logError = require(Package.Logging.logError)
 local Observer = require(Package.State.Observer)
 
--- THIS WILL GET REMOVED
-local defaultProps = require(script.Parent.defaultProps)
-
 local function setProperty_unsafe(instance: Instance, property: string, value: any)
 	(instance :: any)[property] = value
 end
@@ -85,8 +82,8 @@ local function applyInstanceProps(props: PubTypes.PropertyTable, applyTo: Instan
 	for key, value in pairs(props) do
 		local keyType = xtypeof(key)
 
-		if defaultProps[applyTo.ClassName] and defaultProps[applyTo.ClassName][key] then
-			print(key, "property is already in default:\n", debug.traceback(2))
+		if defaultProps[applyTo.ClassName] and defaultProps[applyTo.ClassName][key] and value == defaultProps[applyTo.ClassName][key] then
+			print(key, "property is already in default:\n", debug.traceback())
 		end
 
 		if keyType == "string" then

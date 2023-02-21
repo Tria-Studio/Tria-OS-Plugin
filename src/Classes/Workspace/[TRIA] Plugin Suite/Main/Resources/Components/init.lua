@@ -260,7 +260,6 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         Font = Enum.Font.SourceSansBold,
         Text = text,
         TextColor3 = Theme.MainText.Default,
-        TextSize = 14,
         ZIndex = ZIndex,
 
         [Children] = tooltip and Components.TooltipImage ({
