@@ -158,7 +158,7 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                         [Children] = {
                             Components.Constraints.UIListLayout(),
                             Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
-                            ForValues(MapComponents, function(data)
+                            ForValues(MapComponents, function(data: PublicTypes.dictionary): Instance
                                 return Components.TextButton {
                                     Size = UDim2.new(1, 0, 0, 32),
                                     LayoutOrder = data.LayoutOrder,
