@@ -374,7 +374,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     function types.DetailTag()
-        local DetailFolder = currentMap and currentMap:FindFirstChild("Detail")
+        local DetailFolder = Util.mapModel:get() and Util.mapModel:get():FindFirstChild("Detail")
         return DetailFolder and part:IsDescendantOf(DetailFolder)
     end
 

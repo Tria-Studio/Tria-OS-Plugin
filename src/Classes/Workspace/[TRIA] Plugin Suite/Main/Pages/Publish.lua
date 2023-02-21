@@ -31,6 +31,8 @@ local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local noMapsFoundText = Value("No maps found.")
 local publishButtonText = Value("Publish Map")
 local whitelistMapId = Value("")
+local publishedMaps = {}
+local whitelistedMaps = {}
 
 local selectedPublishMap = Value(nil)
 
@@ -231,9 +233,6 @@ function frame.OnClose()
 end
 
 function frame:GetFrame(data: PublicTypes.propertiesTable): Instance
-    local publishedMaps = {}
-    local whitelistedMaps = {}
-
     if #whitelistedMaps == 0 then
         table.insert(whitelistedMaps, noMapsFoundText:get())
     end
