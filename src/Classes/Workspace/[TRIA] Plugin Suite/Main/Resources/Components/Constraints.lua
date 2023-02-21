@@ -4,7 +4,7 @@ local New = Fusion.New
 
 local Constraints = {}
 
-function Constraints.UIListLayout(FillDirection: Enum.FillDirection, HorizontalAlignment: Enum.HorizontalAlignment, Padding: UDim?, VerticalAlignment: Enum.VerticalAlignment?, SortOrder: Enum.SortOrder?): Instance
+function Constraints.UIListLayout(FillDirection: Enum.FillDirection?, HorizontalAlignment: Enum.HorizontalAlignment?, Padding: UDim?, VerticalAlignment: Enum.VerticalAlignment?, SortOrder: Enum.SortOrder?): Instance
     return New "UIListLayout" {
         Padding = Padding,
         FillDirection = FillDirection,
