@@ -143,7 +143,9 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                             TextYAlignment = Enum.TextYAlignment.Center,
                             Font = Enum.Font.SourceSansSemibold,
                             TextSize = 15,
-                            Visible = visible
+                            Visible = visible,
+
+                            [Children] = Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Contextual)
                         }
                     else
                         local colorMultiplier = Value(1)
