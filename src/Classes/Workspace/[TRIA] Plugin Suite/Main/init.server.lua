@@ -33,7 +33,7 @@ local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
 
-widget.Title = "[TRIA] Plugin Suite"
+widget.Title = "TRIA.os Mapmaker"
 Util.Widget = widget
 Util.attemptScriptInjection()
 
