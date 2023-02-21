@@ -4,6 +4,7 @@ local Theme = require(Resources.Themes)
 local Util = require(Resources.Parent.Util)
 local lerpType = require(Resources.Fusion.Animation.lerpType)
 local PublicTypes = require(Resources.Parent.PublicTypes)
+local Dropdown = require(Resources.Parent.Util.Dropdown)
 
 local Pages = require(script.Pages)
 
@@ -464,6 +465,45 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
                 else "rbxassetid://6031068445" --// Unknown
         end),
         ImageColor3 = Theme.CheckedFieldIndicator.Default,
+    }
+end
+
+function Components.DropdownButton(data: PublicTypes.propertiesTable, props: PublicTypes.propertiesTable): Instance
+    local arrowButton = Value()
+    local dropdownVisible = Value(false)
+
+    return Components.ImageButton {
+        AnchorPoint = Vector2.new(1, 0),
+        Position = props.Position,
+        Size = props.Size,
+
+        [Ref] = arrowButton,
+
+        [Children] = {
+            Components.Constraints.UIAspectRatio(1),
+            New "ImageLabel" {
+                Size = UDim2.fromScale(1, 1),
+                BackgroundTransparency = 1,
+                Image = "rbxassetid://6031094687",
+                Rotation = Spring(Computed(function()
+                    return dropdownVisible:get() and 0 or 180
+                end), 20),
+                ZIndex = 8,
+            }
+        },
+
+        [OnEvent "Activated"] = function()
+            if not dropdownVisible:get() then
+                dropdownVisible:set(true)
+                local newData = Dropdown:GetValue(props.Options, arrowButton:get())
+                if newData and props.OnToggle then
+                    props.OnToggle(newData)
+                end
+                dropdownVisible:set(false)
+            else
+                Dropdown:Cancel()
+            end
+        end
     }
 end
 

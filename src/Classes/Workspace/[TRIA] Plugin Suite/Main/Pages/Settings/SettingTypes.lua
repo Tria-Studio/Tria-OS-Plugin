@@ -319,9 +319,6 @@ function SettingTypes.Time(data)
 end
 
 function SettingTypes.Dropdown(data)
-    local arrowButton = Value()
-    local dropdownVisible = Value(false)
-
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
     local inputBox = Value()
 
@@ -333,41 +330,16 @@ function SettingTypes.Dropdown(data)
                 Position = UDim2.new(0.45, -2, 0, 0),
                 BackgroundTransparency = 1,
     
-                [Children] = Components.ImageButton {
-                    AnchorPoint = Vector2.new(1, 0),
+                [Children] = Components.DropdownButton(data, {
                     Position = UDim2.fromOffset(24, 1),
                     Size = UDim2.fromOffset(16, 16),
-    
-                    [Ref] = arrowButton,
-    
-                    [Children] = {
-                        Components.Constraints.UIAspectRatio(1),
-                        New "ImageLabel" {
-                            Size = UDim2.fromScale(1, 1),
-                            BackgroundTransparency = 1,
-                            Image = "rbxassetid://6031094687",
-                            Rotation = Spring(Computed(function()
-                                return dropdownVisible:get() and 0 or 180
-                            end), 20),
-                            ZIndex = 8,
-                        }
-                    },
-    
-                    [OnEvent "Activated"] = function()
-                        if not dropdownVisible:get() then
-                            dropdownVisible:set(true)
-                            local newData = Dropdown:GetValue(data.DropdownArray, arrowButton:get())
-                            if newData then
-                                data.Value:set(newData)
-                                Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
-                            end
-                            dropdownVisible:set(false)
-                        else
-                            Dropdown:Cancel()
-                        end
+                    Options = data.DropdownArray,
+                    OnToggle = function(newData)
+                        data.Value:set(newData)
+                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                     end
-                }
-            },
+                }),
+            }
 
             Components.TextBox {
                 Active = Computed(function()
