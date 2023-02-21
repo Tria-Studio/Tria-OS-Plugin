@@ -7,6 +7,7 @@
 local Package = script.Parent.Parent
 local TagData = require(Package.Pages.ObjectTags.tagData)
 local Util = require(script.Parent)
+local PublicTypes = require(Package.PublicTypes)
 
 local tagUtils = {}
 local tagTypes = {
@@ -77,7 +78,7 @@ local defaultMetadataTypes = {
     boolean = Enum.TriStateBoolean.False,
 }
 
-local function getTagInstance(part, tag): Instance | nil
+local function getTagInstance(part: Instance, tag: string): Instance | nil
     for _, child in ipairs(part:GetChildren()) do
         if string.find(child.Name, tag, 1, true) then
             return child
@@ -86,7 +87,7 @@ local function getTagInstance(part, tag): Instance | nil
     return nil
 end
 
-function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
+function tagUtils:GetPartTags(part: Instance, excludeTag: string): {string}
     local partTags = {}
     for tagType, tags in pairs(tagTypes) do
         for key, tag in ipairs(tags) do
@@ -98,7 +99,7 @@ function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
     return partTags
 end
 
-function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: {}, newValue: any)
+function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicTypes.dictionary, newValue: any)
     if table.find(tagTypes.ModelTags, tag) then
         part = part:IsA("Model") and part or part.Parent
     end
@@ -234,7 +235,7 @@ function tagUtils:GetSelectedMetadataValue(name: string, tag: string): any
         else metaDataData.hideWhenNil and "" or defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
 end
 
-function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string | boolean?)
+function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string)
     local currentMap = Util.mapModel:get(false)
     local function verifyFolder(folderName: string?)
         if not currentMap:FindFirstChild(folderName or "Geometry") then
@@ -381,7 +382,9 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         if table.find(tags, tag) and types[type]() then
             return true
         end
-    end 
+    end
+
+    return false
 end
 
 function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.TriStateBoolean
