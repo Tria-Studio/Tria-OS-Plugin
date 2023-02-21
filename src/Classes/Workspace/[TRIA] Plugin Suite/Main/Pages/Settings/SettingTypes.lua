@@ -104,7 +104,7 @@ function BaseSettingButton(data: PublicTypes.dictionary): (Instance, Fusion.Stat
     }, backgroundColor, mouseInside
 end
 
-function InputBox(data: PublicTypes.dictionary, baseButton)
+function InputBox(data: PublicTypes.dictionary, baseButton: Instance): (PublicTypes.dictionary) -> Instance)
     return function (props)
         local isModifiable = Computed(function()
             return isCurrentSettingModifiable(data)
@@ -132,7 +132,7 @@ function InputBox(data: PublicTypes.dictionary, baseButton)
     end
 end
 
-function SettingTypes.String(data): Instance
+function SettingTypes.String(data: PublicTypes.dictionary): Instance
     local inputBox = Value()
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
 
@@ -167,7 +167,7 @@ function SettingTypes.String(data): Instance
     }
 end
 
-function SettingTypes.Checkbox(data) 
+function SettingTypes.Checkbox(data: PublicTypes.dictionary): Instance 
     return Hydrate(BaseSettingButton(data)) {
         [Children] = New "TextButton" {
             Active = Util.interfaceActive,
@@ -188,7 +188,7 @@ function SettingTypes.Checkbox(data)
     }
 end
 
-function SettingTypes.Color(data)
+function SettingTypes.Color(data: PublicTypes.dictionary): Instance
     local inputBox = Value()
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
 
@@ -277,7 +277,7 @@ function SettingTypes.Color(data)
     }
 end
 
-function SettingTypes.Time(data)
+function SettingTypes.Time(data: PublicTypes.dictionary): Instance
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
     local inputBox = Value()
 
@@ -320,7 +320,7 @@ function SettingTypes.Time(data)
     }
 end
 
-function SettingTypes.Dropdown(data)
+function SettingTypes.Dropdown(data: PublicTypes.dictionary): Instance
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
     local inputBox = Value()
 
