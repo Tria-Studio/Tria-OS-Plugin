@@ -330,7 +330,7 @@ function SettingTypes.Dropdown(data)
                 Position = UDim2.new(0.45, -2, 0, 0),
                 BackgroundTransparency = 1,
     
-                [Children] = Components.DropdownButton(data, {
+                [Children] = Components.DropdownButton({
                     Position = UDim2.fromOffset(24, 1),
                     Size = UDim2.fromOffset(16, 16),
                     Options = data.DropdownArray,

@@ -468,7 +468,7 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
     }
 end
 
-function Components.DropdownButton(data: PublicTypes.propertiesTable, props: PublicTypes.propertiesTable): Instance
+function Components.DropdownButton(props: PublicTypes.propertiesTable): Instance
     local arrowButton = Value()
     local dropdownVisible = Value(false)
 

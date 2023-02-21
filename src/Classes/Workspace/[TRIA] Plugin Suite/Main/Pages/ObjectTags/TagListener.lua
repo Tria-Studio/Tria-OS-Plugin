@@ -275,42 +275,16 @@ return function(name: string, data: PublicTypes.propertiesTable): Instance
                                                 end
 
                                                 function types.dropdown() --// LiquidType, Difficulty, Locator Image, Zipline Material
-                                                    local dropdownVisible = Value(false)
-                                                    local arrowButton = Value()
-
-                                                    return types.number(22, {Components.ImageButton {
-                                                        AnchorPoint = Vector2.new(1, 0),
-                                                        Position = UDim2.fromOffset(-8, -1),
-                                                        Size = UDim2.fromOffset(18, 18),
-                                        
-                                                        [Ref] = arrowButton,
-                                                        [Children] = {
-                                                            Components.Constraints.UIAspectRatio(1),
-                                                            New "ImageLabel" {
-                                                                Size = UDim2.fromScale(1, 1),
-                                                                BackgroundTransparency = 1,
-                                                                ImageColor3 = Theme.MainText.Default,
-                                                                Image = "rbxassetid://6031094687",
-                                                                Rotation = Spring(Computed(function()
-                                                                    return dropdownVisible:get() and 0 or 180
-                                                                end), 20),
-                                                                ZIndex = 8,
-                                                            }
-                                                        },
-                                                        [OnEvent "Activated"] = function()
-                                                            if not dropdownVisible:get() then
-                                                                dropdownVisible:set(true)
-                                                                local newData = Dropdown:GetValue(metadataType.data.dropdownType, arrowButton:get())
-                                                                if newData then
-                                                                    updateData(newData)
-                                                                end
-                                                                dropdownVisible:set(false)
-                                                            else
-                                                                Dropdown:Cancel()
+                                                    return types.number(22, {
+                                                        Components.DropdownButton({
+                                                            Position = UDim2.fromOffset(-8, -1),
+                                                            Size = UDim2.fromOffset(18, 18),
+                                                            Options = metadataType.data.dropdownType,
+                                                            OnToggle = function(newData)
+                                                                updateData(newData)
                                                             end
-
-                                                        end
-                                                    }}, dataValue)
+                                                        })
+                                                    }, dataValue)
                                                 end
 
                                                 return types[metadataType.data.dataType]()
