@@ -56,7 +56,8 @@ local Util = {
         "Settings",
         "Scripting",
         "Publish",
-        "Insert"
+        "Insert",
+        "AudioLibrary"
     },
     Difficulty = {
         [0] = {
