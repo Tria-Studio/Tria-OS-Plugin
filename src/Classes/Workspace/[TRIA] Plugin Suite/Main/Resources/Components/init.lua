@@ -473,6 +473,7 @@ function Components.DropdownButton(props: PublicTypes.dictionary): Instance
 
     return Components.ImageButton {
         AnchorPoint = Vector2.new(1, 0),
+        Active = Util.interfaceActive,
         Position = props.Position,
         Size = props.Size,
 
