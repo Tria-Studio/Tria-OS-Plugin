@@ -114,6 +114,7 @@ local function updatePos(type: string)
     local types = {}
 
     local relativeMousePos = Util.Widget:GetRelativeMousePosition()
+
     function types.Slider()
         local mousePos = sliderData.Position:get(false) - relativeMousePos
         local sliderPos = math.clamp(-1 + ((mousePos.Y + sliderData.Size:get(false).Y) / 2 / sliderData.Size:get(false).Y + 0.5) * 2, 0, 1)
@@ -140,7 +141,7 @@ local function updatePos(type: string)
     updateColor()
 end
 
-function ColorWheel:GetUI()
+function ColorWheel:GetUI(): Instance
     return New "Frame" {
         BackgroundTransparency = 0.75,
         BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -314,7 +315,7 @@ function ColorWheel:GetUI()
 
                         [Children] = {
                             Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
-                            ForPairs({"R", "G", "B"}, function(index, value)
+                            ForPairs({"R", "G", "B"}, function(index: number, value: string): (number, Instance)
                                 return index, getColorDisplay({
                                     LayoutOrder = index,
                                     Display = value,
@@ -326,7 +327,7 @@ function ColorWheel:GetUI()
                                     end
                                 })
                             end, Fusion.cleanup),
-                            ForPairs({"H", "S", "V"}, function(index, value)
+                            ForPairs({"H", "S", "V"}, function(index: number, value: string): (number, Instance)
                                 return index, getColorDisplay({
                                     LayoutOrder = index,
                                     Display = value,
@@ -389,7 +390,7 @@ function ColorWheel:GetUI()
     }
 end
 
-function ColorWheel:GetColor()
+function ColorWheel:GetColor(): Color3
     local Maid = Util.Maid.new()
     Util._Topbar.FreezeFrame:set(true)
     Util:ToggleInterface(false)

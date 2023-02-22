@@ -23,7 +23,7 @@ local MapSelect = {
     selectCancelImage = Value("rbxassetid://6022668885")
 }
 
-function MapSelect:IsTriaMap(Map: Instance, ignoreChecks: boolean?): (boolean, string?)
+function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean, string?)
     local score_1 = 0
     local score_2 = 0
     local score_3 = 0
@@ -33,7 +33,7 @@ function MapSelect:IsTriaMap(Map: Instance, ignoreChecks: boolean?): (boolean, s
     --// script check
 
     if not ignoreChecks then
-        local script1: Script? = Map:FindFirstChild("EventScript")
+        local script1: Script? = newMap:FindFirstChild("EventScript")
         if script1 and string.find(script1.Source, "workspace.MapTest.GetMapFunctions:Invoke()", 1, true) then
             score_1 += 0.5
         end
@@ -42,16 +42,16 @@ function MapSelect:IsTriaMap(Map: Instance, ignoreChecks: boolean?): (boolean, s
         end
     end
 
-    local script2: Script? = Map:FindFirstChild("MapScript")
+    local script2: Script? = newMap:FindFirstChild("MapScript")
     if script2 then
         score_3 += 0.5
         hasMapScript = true
     end
 
-    local settings2: Instance? = Map:FindFirstChild("Settings")
+    local settings2: Instance? = newMap:FindFirstChild("Settings")
 
     if not ignoreChecks then
-        local settings1 = Map:FindFirstChild("MapInfo")
+        local settings1 = newMap:FindFirstChild("MapInfo")
         if settings1 and settings1:FindFirstChild("Lighting")and settings1:FindFirstChild("Audio") and settings1:FindFirstChild("Creator")
         and settings1:FindFirstChild("Difficulty") and settings1:FindFirstChild("MapImage") and settings1:FindFirstChild("MapName") then
             score_1 += 0.5
@@ -77,35 +77,35 @@ function MapSelect:IsTriaMap(Map: Instance, ignoreChecks: boolean?): (boolean, s
     --// other checks
 
     if not ignoreChecks then
-        if Map:FindFirstChild("ExitWall") and Map:FindFirstChild("MapPreviewCamera") then
+        if newMap:FindFirstChild("ExitWall") and newMap:FindFirstChild("MapPreviewCamera") then
             score_1 += 0.25
         end
-        if Map:FindFirstChild("WalkspeedBooster", true) or Map:FindFirstChild("TeleporterA1", true) and Map:FindFirstChild("TeleporterA2", true) then
+        if newMap:FindFirstChild("WalkspeedBooster", true) or newMap:FindFirstChild("TeleporterA1", true) and newMap:FindFirstChild("TeleporterA2", true) then
             score_1 += 0.125
         end
 
-        if Map:FindFirstChild("Intro") and Map:FindFirstChild("Intro"):IsA("Model") then
+        if newMap:FindFirstChild("Intro") and newMap:FindFirstChild("Intro"):IsA("Model") then
             score_2 += 0.125
         end
-        if Map:FindFirstChild("OST_List") or Map:FindFirstChild("_Variants", true) then
+        if newMap:FindFirstChild("OST_List") or newMap:FindFirstChild("_Variants", true) then
             score_2 += 0.125
         end
-        if Map:FindFirstChild("EndPole", true) and Map:FindFirstChild("EndPole", true):FindFirstChild("RopePiece")
-        and Map:FindFirstChild("StartPole", true) and Map:FindFirstChild("StartPole", true):FindFirstChild("RopePiece") then
+        if newMap:FindFirstChild("EndPole", true) and newMap:FindFirstChild("EndPole", true):FindFirstChild("RopePiece")
+        and newMap:FindFirstChild("StartPole", true) and newMap:FindFirstChild("StartPole", true):FindFirstChild("RopePiece") then
             score_2 += 0.125
         end
     end
 
-     if Map:IsA("Model") or Map:IsA("Workspace") then
+     if newMap:IsA("Model") or newMap:IsA("Workspace") then
         if score_1 > 0.875 or score_2 > 1 then
             return false, "Unknown map type detected. Please make sure this map is a TRIA.os map as this plugin only supports TRIA.os map development."
         end
 
-        if not Map:FindFirstChild("Spawn", true) then
+        if not newMap:FindFirstChild("Spawn", true) then
             return false, "No spawn point found. Add a part named 'Spawn', and add it into the Special folder. "
         end
 
-        if not Map:FindFirstChild("ExitBlock", true) then
+        if not newMap:FindFirstChild("ExitBlock", true) then
             return false, "No ExitRegion found. Add a part named 'ExitBlock', and add it into the Special folder. "
         end
 
@@ -123,9 +123,9 @@ function MapSelect:IsTriaMap(Map: Instance, ignoreChecks: boolean?): (boolean, s
     return false, "Invalid map model format. Must be a 'Model', 'Folder', or unparented in the workspace."
 end
 
-function MapSelect:SetMap(Map: Model | Workspace?): boolean
-    if Map then -- add or change selection
-        local success, message = self:IsTriaMap(Map)
+function MapSelect:SetMap(newMap: Model | Workspace?): boolean
+    if newMap then -- add or change selection
+        local success, message = self:IsTriaMap(newMap)
 
         if not success then
             Util:ShowMessage(Util.ERROR_HEADER, tostring(message))
@@ -135,15 +135,15 @@ function MapSelect:SetMap(Map: Model | Workspace?): boolean
 
         self.selectCancelColor:set(Theme.ErrorText.Default:get(false))
         self.selectTextColor:set(Theme.MainText.Default:get(false))
-        Util.mapModel:set(Map)
+        Util.mapModel:set(newMap)
         Util.MapChanged:Fire()
         Util.MapMaid:DoCleaning()
         Util.updateSelectedParts()
 
-        self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
+        self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
 
-        local nameChangedSignal; nameChangedSignal = Map.Settings.Main:GetAttributeChangedSignal("Name"):Connect(function()
-            self.selectTextState:set(Map.Settings.Main:GetAttribute("Name"))
+        local nameChangedSignal; nameChangedSignal = newMap.Settings.Main:GetAttributeChangedSignal("Name"):Connect(function()
+            self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
         end)
         Util.MapMaid:GiveTask(nameChangedSignal)
 
@@ -151,11 +151,11 @@ function MapSelect:SetMap(Map: Model | Workspace?): boolean
 
         function ObjectType.Workspace()
             local workspaceUpdate = false
-            Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(function(child)
+            Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(function(child)
                 if not workspaceUpdate and (child.Name == "Settings" or child.Name == "MapScript") then
                     workspaceUpdate = true
 
-                     if not self:IsTriaMap(Map, true) then
+                     if not self:IsTriaMap(newMap, true) then
                         task.wait()
 
                         if not self:AutoSelect() then
@@ -170,8 +170,8 @@ function MapSelect:SetMap(Map: Model | Workspace?): boolean
 
         local parentChanged = false
         function ObjectType.Model()
-            Util.MapMaid:GiveTask(Map.AncestryChanged:Connect(function() --// Model was either ungrouped or deleted
-				if not Map.Parent then
+            Util.MapMaid:GiveTask(newMap.AncestryChanged:Connect(function() --// Model was either ungrouped or deleted
+				if not newMap.Parent then
                     parentChanged = true
 
 	                if not self:AutoSelect() then
@@ -180,14 +180,14 @@ function MapSelect:SetMap(Map: Model | Workspace?): boolean
 				end
             end))
 
-            Util.MapMaid:GiveTask(Map.ChildRemoved:Connect(function(child)
+            Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(function(child)
                 task.wait()
                 if parentChanged then 
                     return 
                 end
 
                 if child.Name == "Settings" or child.Name == "MapScript" then
-                    if #Map:GetChildren() == 0 and not self:IsTriaMap(Map, true) then
+                    if #newMap:GetChildren() == 0 and not self:IsTriaMap(newMap, true) then
                         if not self:AutoSelect() then
                             self:SetMap(nil)
                             return 
@@ -197,9 +197,9 @@ function MapSelect:SetMap(Map: Model | Workspace?): boolean
             end))
         end
 
-        ObjectType[Map.ClassName]()
+        ObjectType[newMap.ClassName]()
 
-        local optimizedStructure = Map:FindFirstChild("Special")
+        local optimizedStructure = newMap:FindFirstChild("Special")
         Util.hasSpecialFolder:set(optimizedStructure and optimizedStructure:IsA("Folder"))
 
         task.wait()
