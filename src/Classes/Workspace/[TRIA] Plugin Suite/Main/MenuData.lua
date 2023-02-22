@@ -18,6 +18,9 @@ return {
 		}, {
 			Name = "Insert",
 			Icon = "rbxassetid://6023565892",
+		}, {
+			Name = "AudioLibrary",
+			Icon = "rbxassetid://0",
 		}
 	},
 
@@ -27,6 +30,7 @@ return {
 		{Name = "Settings"},
 		{Name = "Scripting"},
 		{Name = "Publish"},
-		{Name = "Insert"}
+		{Name = "Insert"},
+		{Name = "AudioLibrary"}
 	}
 }
