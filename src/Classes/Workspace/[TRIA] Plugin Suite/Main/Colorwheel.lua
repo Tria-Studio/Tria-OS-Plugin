@@ -211,7 +211,7 @@ function ColorWheel:GetUI(): Instance
                                 Size = UDim2.fromScale(3, 2.05),
                                 Position = UDim2.fromScale(-1, -1),
                                 BackgroundTransparency = 1,
-                                ZIndex = 2,
+                                ZIndex = 9,
 
                                 [OnEvent "MouseMoved"] = function()
                                     if mouseDownWheel:get(false) then
@@ -273,7 +273,7 @@ function ColorWheel:GetUI(): Instance
                                 Position = UDim2.fromScale(-1, -0.07),
                                 Size = UDim2.fromScale(3, 1.13),
                                 BackgroundTransparency = 1,
-                                ZIndex = 2,
+                                ZIndex = 9,
 
                                 [OnEvent "MouseMoved"] = function()
                                     if mouseDownSlider:get(false) then
@@ -311,7 +311,7 @@ function ColorWheel:GetUI(): Instance
                         BackgroundTransparency = 1,
                         Position = UDim2.fromScale(0.339, 0.698),
                         Size = UDim2.fromScale(0.641, 0.192),
-                        ZIndex = 2,
+                        ZIndex = 9,
 
                         [Children] = {
                             Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
@@ -364,7 +364,7 @@ function ColorWheel:GetUI(): Instance
                         Size = UDim2.fromScale(0.26, 0.06),
                         TextColor3 = Theme.MainText.Default,
                         PlaceholderText = "Hex",
-                        ZIndex = 2,
+                        ZIndex = 9,
                         Text = Computed(function()
                             if not chosenColor:get() then
                                 return ""
