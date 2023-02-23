@@ -264,7 +264,8 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         [Children] = tooltip and Components.TooltipImage ({
             Header = text,
             Tooltip = tooltip,
-            Position = UDim2.new(1, -12, 0, 5)
+            Position = UDim2.new(1, -12, 0, 5),
+            ZIndex = ZIndex
         }) or nil
     }
 end
@@ -424,10 +425,14 @@ function Components.DropdownHolderFrame(data: PublicTypes.dictionary): Instance
 end
 
 function Components.TooltipImage(data: PublicTypes.dictionary): Instance
+    if not data.Tooltip and not data.Header then
+        return
+    end
     local isActive = Computed(function()
         return not Util.isPluginFrozen()
     end)
     return New "ImageButton" {
+        ZIndex = data.ZIndex,
         Active = isActive,
         Position = data.Position,
         AnchorPoint = Vector2.new(1, 0),

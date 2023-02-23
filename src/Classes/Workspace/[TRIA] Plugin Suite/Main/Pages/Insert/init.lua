@@ -1,5 +1,6 @@
 local InsertService = game:GetService("InsertService")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local ProximityPromptService = game:GetService("ProximityPromptService")
 local Selection = game:GetService("Selection")
 
 local Package = script.Parent.Parent
@@ -16,6 +17,7 @@ local PublicTypes = require(Package.PublicTypes)
 local New = Fusion.New
 local Children = Fusion.Children
 local OnEvent = Fusion.OnEvent
+local Value = Fusion.Value
 local Computed = Fusion.Computed
 local ForValues = Fusion.ForValues
 
@@ -78,6 +80,89 @@ function SubFrame(data: PublicTypes.dictionary): Instance
     }
 end
 
+local function GetAssetButton(data)
+    local ImageColor = Value(Color3.new(1, 1, 1))
+
+    return Components.ImageButton {
+        BackgroundColor3 = data.backgroundColor or Color3.new(1, 1, 1),
+        BackgroundTransparency = data.fullsize and 1 or 0,
+        LayoutOrder = 2,
+        Size = UDim2.new(1, -24, 0, 95),
+        ScaleType = data.imagecrop,
+
+        [OnEvent "Activated"] = function()
+            if data.activatedFunction then
+                data.activatedFunction()
+            else
+                attemptToInsertModel(data.modelId)
+            end
+        end,
+
+        [Children] = {
+            Components.Constraints.UICorner(0, 6),
+            Components.Constraints.UIGradient(data.backgroundGradient, nil, nil),
+
+            New "ImageLabel" {
+                [OnEvent "MouseEnter"] = function()
+                    if ImageColor:get() == Color3.new(1, 1, 1) then
+                        ImageColor:set(Color3.new(.875, .875, .875))
+                    end
+                end,
+                [OnEvent "MouseLeave"] = function()
+                    if ImageColor:get() == Color3.new(.875, .875, .875) then
+                        ImageColor:set(Color3.new(1, 1, 1))
+                    end
+                end,
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BackgroundTransparency = 1,
+                ImageColor3 = Computed(function()
+                    local Color = ImageColor:get()
+                    return data.fullsize and Color or Color3.new(1, 1, 1)
+                end),
+                Position = UDim2.fromScale(0.5, 0.5),
+                Size = UDim2.fromScale(data.fullsize and 1 or 0.8, 1),
+                Image = data.overlayImage,
+                ImageTransparency = data.overlayImageTransparency,
+
+                [Children] = Components.Constraints.UICorner(0, 6),
+            },
+
+            New "TextLabel" {
+                AnchorPoint = Vector2.new(0, 1),
+                BackgroundTransparency = 1,
+                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                Position = UDim2.fromScale(0, data.fullsize and 1.05 or 1),
+                Size = UDim2.new(1, 0, 0, 24),
+                Text = data.name,
+                TextColor3 = Theme.BrightText.Default,
+                TextSize = not data.fullsize and 18 or 16,
+                TextTruncate = Enum.TextTruncate.AtEnd,
+                TextStrokeTransparency = 0.5
+            },
+
+            New "TextLabel" {
+                AnchorPoint = Vector2.new(0, data.fullsize and 0 or 1),
+                BackgroundTransparency = 1,
+                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                Position = UDim2.fromScale(0, data.fullsize and 0.1 or 0.65),
+                Size = UDim2.new(1, 0, -0.325, 24),
+                Text = "by " .. tostring(data.creator),
+                TextColor3 = Theme.BrightText.Default,
+                TextSize = not data.fullsize and 14 or 12,
+                TextTruncate = Enum.TextTruncate.AtEnd,
+                TextStrokeTransparency = 0.5
+            },
+
+            Components.TooltipImage {
+                Position = UDim2.new(1, -4, 1, -36),
+                Tooltip = data.tooltip.Tooltip,
+                Header = data.tooltip.Header
+            }
+        }
+    }
+end
+
 function frame:GetFrame(data: PublicTypes.dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -91,62 +176,20 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                 BackgroundColor3 = Theme.MainBackground.Default,
                 BackgroundTransparency = 0,
                 ClipsDescendants = true,
-                Size=  UDim2.fromScale(1, 1),
+                Size = UDim2.fromScale(1, 1),
 
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 6), Enum.VerticalAlignment.Top),
                     Components.FrameHeader("Map Kits", 1, nil, nil, "Here you can insert Map kits which can help you get started on making a map!"),
 
-                    Components.ImageButton {
-                        BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
-                        BackgroundTransparency = 0,
-                        LayoutOrder = 2,
-                        Size = UDim2.new(1, -24, 0, 84),
-                
-                        [OnEvent "Activated"] = function()
-                            attemptToInsertModel(6404661021)
-                        end,
-                
-                        [Children] = {
-                            Components.Constraints.UICorner(0, 6),
-                            Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)), nil, nil),
-                
-                            New "ImageLabel" {
-                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                BackgroundTransparency = 1,
-                                Position = UDim2.fromScale(0.5, 0.5),
-                                Size = UDim2.fromScale(0.8, 1),
-                                Image = "rbxassetid://12537133710",
-                                ImageTransparency = 0.5,
-                                ScaleType = Enum.ScaleType.Crop
-                            },
-                
-                            New "TextLabel" {
-                                AnchorPoint = Vector2.new(0, 1),
-                                BackgroundTransparency = 1,
-                                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                                Position = UDim2.fromScale(0, 1),
-                                Size = UDim2.new(1, 0, 0, 24),
-                                Text = "Official TRIA.OS Map Kit",
-                                TextColor3 = Theme.BrightText.Default,
-                                TextSize = 16,
-                                TextTruncate = Enum.TextTruncate.AtEnd,
-                            },
-                
-                            New "TextLabel" {
-                                AnchorPoint = Vector2.new(0, 1),
-                                BackgroundTransparency = 1,
-                                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                                Position = UDim2.fromScale(0, 0.65),
-                                Size = UDim2.new(1, 0, -0.325, 24),
-                                Text = "by @" .. tostring(data.Creator),
-                                TextColor3 = Theme.BrightText.Default,
-                                TextSize = 12,
-                                TextTruncate = Enum.TextTruncate.AtEnd,
-                
-                                Visible = (data.Creator ~= nil)
-                            }
-                        }
+                    GetAssetButton {
+                        modelId = 6404661021,
+                        backgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
+                        overlayImage = "rbxassetid://12537133710",
+                        overlayImageTransparency = 0.5,
+                        name = "Official TRIA.OS Map Kit",
+                        creator = "TRIA",
+                        tooltip = {}
                     },
 
                     New "Frame" {
@@ -157,8 +200,32 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
+                            Components.FrameHeader("Featured Map Addons", -2, nil, nil, "Featured assets created by the community for use in mapmaking.", 2),
+                            New "Frame" {
+                                Size = UDim2.new(1, 0, 0, 0),
+                                AutomaticSize = Enum.AutomaticSize.Y,
+                                LayoutOrder = -1,
+                                BackgroundTransparency = 1,
+
+                                [Children] = {
+                                    Components.Constraints.UIGridLayout(UDim2.new(0, 140, 0, 79), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
+                                    Components.Constraints.UIPadding(UDim.new(0, 6), UDim.new(0, 6)),
+                                    ForValues(MapComponents.Addons, function(data: PublicTypes.dictionary): Instance
+                                        return GetAssetButton {
+                                            overlayImage = data.Icon,
+                                            overlayImageTransparency = 0,
+                                            name = data.Name,
+                                            creator = data.Creator,
+                                            fullsize = true,
+                                            tooltip = data.Tooltip,
+                                            activatedFunction = data.InsertFunction,
+                                            LayoutOrder = data.LayoutOrder,
+                                        }
+                                    end, Fusion.Cleanup)
+                                },
+                            },
                             Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
-                            ForValues(MapComponents, function(data: PublicTypes.dictionary): Instance
+                            ForValues(MapComponents.Components, function(data: PublicTypes.dictionary): Instance
                                 return Components.TextButton {
                                     Size = UDim2.new(1, 0, 0, 32),
                                     LayoutOrder = data.LayoutOrder,

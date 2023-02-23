@@ -104,7 +104,7 @@ function BaseSettingButton(data: PublicTypes.dictionary): (Instance, Fusion.Stat
     }, backgroundColor, mouseInside
 end
 
-function InputBox(data: PublicTypes.dictionary, baseButton: Instance): (PublicTypes.dictionary) -> Instance)
+function InputBox(data: PublicTypes.dictionary, baseButton: Instance): (PublicTypes.dictionary) -> Instance
     return function (props)
         local isModifiable = Computed(function()
             return isCurrentSettingModifiable(data)

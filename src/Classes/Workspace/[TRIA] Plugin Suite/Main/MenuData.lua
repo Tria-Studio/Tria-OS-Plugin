@@ -20,7 +20,7 @@ return {
 			Icon = "rbxassetid://6023565892",
 		}, {
 			Name = "AudioLibrary",
-			Icon = "rbxassetid://0",
+			Icon = "rbxassetid://6026660075",
 		}
 	},
 

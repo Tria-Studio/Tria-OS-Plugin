@@ -61,11 +61,13 @@ function Constraints.UIGradient(Color: ColorSequence?, Transparency: NumberSeque
 	}
 end
 
-function Constraints.UIGridLayout(CellSize: UDim2, CellPadding: UDim2, FillDirection: Enum.FillDirection): Instance
+function Constraints.UIGridLayout(CellSize: UDim2, CellPadding: UDim2, FillDirection: Enum.FillDirection, HorizontalAlignment: Enum.HorizontalAlignment): Instance
 	return New "UIGridLayout" {
 		CellSize = CellSize,
 		CellPadding = CellPadding,
 		FillDirection = FillDirection,
+        HorizontalAlignment = HorizontalAlignment,
+        SortOrder = Enum.SortOrder.LayoutOrder
 	}
 end
 
