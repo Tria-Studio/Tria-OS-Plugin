@@ -80,27 +80,27 @@ function SubFrame(data: PublicTypes.dictionary): Instance
     }
 end
 
-local function GetAssetButton(data)
+local function GetAssetButton(data: PublicTypes.dictionary): Instance
     local imageColor = Value(Color3.new(1, 1, 1))
 
     return Components.ImageButton {
-        BackgroundColor3 = data.backgroundColor or Color3.new(1, 1, 1),
-        BackgroundTransparency = data.fullsize and 1 or 0,
+        BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
+        BackgroundTransparency = data.FullSize and 1 or 0,
         LayoutOrder = 2,
         Size = UDim2.new(1, -24, 0, 95),
-        ScaleType = data.imagecrop,
+        ScaleType = data.ImageCrop,
 
         [OnEvent "Activated"] = function()
-            if data.activatedFunction then
-                data.activatedFunction()
+            if data.ActivatedFunction then
+                data.ActivatedFunction()
             else
-                attemptToInsertModel(data.modelId)
+                attemptToInsertModel(data.ModelId)
             end
         end,
 
         [Children] = {
             Components.Constraints.UICorner(0, 6),
-            Components.Constraints.UIGradient(data.backgroundGradient, nil, nil),
+            Components.Constraints.UIGradient(data.BackgroundGradient, nil, nil),
 
             New "ImageLabel" {
                 [OnEvent "MouseEnter"] = function()
@@ -117,12 +117,12 @@ local function GetAssetButton(data)
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 BackgroundTransparency = 1,
                 ImageColor3 = Computed(function()
-                    return data.fullsize and imageColor:get() or Color3.new(1, 1, 1)
+                    return data.FullSize and imageColor:get() or Color3.new(1, 1, 1)
                 end),
                 Position = UDim2.fromScale(0.5, 0.5),
-                Size = UDim2.fromScale(data.fullsize and 1 or 0.8, 1),
-                Image = data.overlayImage,
-                ImageTransparency = data.overlayImageTransparency,
+                Size = UDim2.fromScale(data.FullSize and 1 or 0.8, 1),
+                Image = data.OverlayImage,
+                ImageTransparency = data.OverlayImageTransparency,
 
                 [Children] = Components.Constraints.UICorner(0, 6),
             },
@@ -131,32 +131,32 @@ local function GetAssetButton(data)
                 AnchorPoint = Vector2.new(0, 1),
                 BackgroundTransparency = 1,
                 FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                Position = UDim2.fromScale(0, data.fullsize and 1.05 or 1),
+                Position = UDim2.fromScale(0, data.FullSize and 1.05 or 1),
                 Size = UDim2.new(1, 0, 0, 24),
-                Text = data.name,
+                Text = data.Name,
                 TextColor3 = Theme.BrightText.Default,
-                TextSize = not data.fullsize and 18 or 16,
+                TextSize = not data.FullSize and 18 or 16,
                 TextTruncate = Enum.TextTruncate.AtEnd,
                 TextStrokeTransparency = 0.5
             },
 
             New "TextLabel" {
-                AnchorPoint = Vector2.new(0, data.fullsize and 0 or 1),
+                AnchorPoint = Vector2.new(0, data.FullSize and 0 or 1),
                 BackgroundTransparency = 1,
                 FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
-                Position = UDim2.fromScale(0, data.fullsize and 0.1 or 0.65),
+                Position = UDim2.fromScale(0, data.FullSize and 0.1 or 0.65),
                 Size = UDim2.new(1, 0, -0.325, 24),
-                Text = "by " .. tostring(data.creator),
+                Text = "by " .. tostring(data.Creator),
                 TextColor3 = Theme.BrightText.Default,
-                TextSize = not data.fullsize and 14 or 12,
+                TextSize = not data.FullSize and 14 or 12,
                 TextTruncate = Enum.TextTruncate.AtEnd,
                 TextStrokeTransparency = 0.5
             },
 
             Components.TooltipImage {
                 Position = UDim2.new(1, -4, 1, -36),
-                Tooltip = data.tooltip.Tooltip,
-                Header = data.tooltip.Header
+                Tooltip = data.Tooltip.Tooltip,
+                Header = data.Tooltip.Header
             }
         }
     }
@@ -182,13 +182,13 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                     Components.FrameHeader("Map Kits", 1, nil, nil, "Here you can insert Map kits which can help you get started on making a map!"),
 
                     GetAssetButton {
-                        modelId = 6404661021,
-                        backgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
-                        overlayImage = "rbxassetid://12537133710",
-                        overlayImageTransparency = 0.5,
-                        name = "Official TRIA.OS Map Kit",
-                        creator = "TRIA",
-                        tooltip = {}
+                        ModelId = 6404661021,
+                        BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
+                        OverlayImage = "rbxassetid://12537133710",
+                        OverlayImageTransparency = 0.5,
+                        Name = "Official TRIA.OS Map Kit",
+                        Creator = "TRIA",
+                        Tooltip = {}
                     },
 
                     New "Frame" {
@@ -211,13 +211,13 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                                     Components.Constraints.UIPadding(UDim.new(0, 6), UDim.new(0, 6)),
                                     ForValues(MapComponents.Addons, function(data: PublicTypes.dictionary): Instance
                                         return GetAssetButton {
-                                            overlayImage = data.Icon,
-                                            overlayImageTransparency = 0,
-                                            name = data.Name,
-                                            creator = data.Creator,
-                                            fullsize = true,
-                                            tooltip = data.Tooltip,
-                                            activatedFunction = data.InsertFunction,
+                                            OverlayImage = data.Icon,
+                                            OverlayImageTransparency = 0,
+                                            Name = data.Name,
+                                            Creator = data.Creator,
+                                            FullSize = true,
+                                            Tooltip = data.Tooltip,
+                                            ActivatedFunction = data.InsertFunction,
                                             LayoutOrder = data.LayoutOrder,
                                         }
                                     end, Fusion.Cleanup)
