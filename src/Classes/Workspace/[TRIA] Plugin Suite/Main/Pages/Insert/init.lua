@@ -81,7 +81,7 @@ function SubFrame(data: PublicTypes.dictionary): Instance
 end
 
 local function GetAssetButton(data)
-    local ImageColor = Value(Color3.new(1, 1, 1))
+    local imageColor = Value(Color3.new(1, 1, 1))
 
     return Components.ImageButton {
         BackgroundColor3 = data.backgroundColor or Color3.new(1, 1, 1),
@@ -104,21 +104,20 @@ local function GetAssetButton(data)
 
             New "ImageLabel" {
                 [OnEvent "MouseEnter"] = function()
-                    if ImageColor:get() == Color3.new(1, 1, 1) then
-                        ImageColor:set(Color3.new(.875, .875, .875))
+                    if imageColor:get(false) == Color3.new(1, 1, 1) then
+                        imageColor:set(Color3.new(.875, .875, .875))
                     end
                 end,
                 [OnEvent "MouseLeave"] = function()
-                    if ImageColor:get() == Color3.new(.875, .875, .875) then
-                        ImageColor:set(Color3.new(1, 1, 1))
+                    if imageColor:get(false) == Color3.new(.875, .875, .875) then
+                        imageColor:set(Color3.new(1, 1, 1))
                     end
                 end,
 
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 BackgroundTransparency = 1,
                 ImageColor3 = Computed(function()
-                    local Color = ImageColor:get()
-                    return data.fullsize and Color or Color3.new(1, 1, 1)
+                    return data.fullsize and imageColor:get() or Color3.new(1, 1, 1)
                 end),
                 Position = UDim2.fromScale(0.5, 0.5),
                 Size = UDim2.fromScale(data.fullsize and 1 or 0.8, 1),
