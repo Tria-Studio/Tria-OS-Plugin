@@ -10,6 +10,7 @@ local Theme = require(Resources.Themes)
 local Util = require(Package.Util)
 local ColorWheel = require(Package.Colorwheel)
 local Dropdown = require(Package.Util.Dropdown)
+local DropdownComponents = require(Package.Util.Dropdown.DropdownComponents)
 
 local PublicTypes = require(Package.PublicTypes)
 
@@ -332,7 +333,7 @@ function SettingTypes.Dropdown(data: PublicTypes.dictionary): Instance
                 Position = UDim2.new(0.45, -2, 0, 0),
                 BackgroundTransparency = 1,
     
-                [Children] = Components.DropdownButton({
+                [Children] = DropdownComponents.DropdownButton({
                     Position = UDim2.fromOffset(24, 1),
                     Size = UDim2.fromOffset(16, 16),
                     Options = data.DropdownArray,
