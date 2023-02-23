@@ -12,7 +12,7 @@ local PageHandler = {
         bypassedPages = {"Insert", "Publish"},
         currentPage = Value(nil),
     },
-    _currentPageNum = 0,
+    _currentPageNum = Value(0),
     _PageOrder = {
         "ObjectTags",
         "ViewModes",

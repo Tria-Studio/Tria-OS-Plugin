@@ -62,7 +62,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.dictionary): I
     end), 20)
 
     local pageRatio = Computed(function()
-        return Pages._currentPageNum:get() / #Util._PageOrder
+        return Pages._currentPageNum:get() / #Pages._PageOrder
     end)
 
     local colorSpring = Spring(Computed(function()
@@ -139,10 +139,10 @@ function Components.TopbarButton(index: number, data: PublicTypes.dictionary): I
                 [Children] = {
                     Components.Constraints.UIAspectRatio(1),
                     Components.Constraints.UIGradient(Computed(function()
-                        local ratio = (index - 1) / #Util._PageOrder
+                        local ratio = (index - 1) / #Pages._PageOrder
 
                         local start = lerpType(startColor, endColor, ratio)
-                        local finish = lerpType(startColor, endColor, ratio + (1 / #Util._PageOrder))
+                        local finish = lerpType(startColor, endColor, ratio + (1 / #Pages._PageOrder))
 
                         return ColorSequence.new(start, finish)
                     end):get(), NumberSequence.new(0), 0)        

@@ -12,6 +12,7 @@ local Spring = Fusion.Spring
 local Children = Fusion.Children
 local New = Fusion.New
 local OnEvent = Fusion.OnEvent
+local Computed = Fusion.Computed
 
 local DropdownComponents = {}
 
