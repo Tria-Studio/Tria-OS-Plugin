@@ -62,7 +62,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.dictionary): I
     end), 20)
 
     local pageRatio = Computed(function()
-        return Util._currentPageNum:get() / #Util._PageOrder
+        return Pages._currentPageNum:get() / #Util._PageOrder
     end)
 
     local colorSpring = Spring(Computed(function()
@@ -81,7 +81,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.dictionary): I
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get(false) or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil then
                 Pages:ChangePage(data.Name)
-                Util._currentPageNum:set(table.find(Util._PageOrder, data.Name))
+                Pages._currentPageNum:set(table.find(Pages._PageOrder, data.Name))
             end
         end,
 
@@ -469,46 +469,6 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
                 else "rbxassetid://6031068445" --// Unknown
         end),
         ImageColor3 = Theme.CheckedFieldIndicator.Default,
-    }
-end
-
-function Components.DropdownButton(props: PublicTypes.dictionary): Instance
-    local arrowButton = Value()
-    local dropdownVisible = Value(false)
-
-    return Components.ImageButton {
-        AnchorPoint = Vector2.new(1, 0),
-        Active = Util.interfaceActive,
-        Position = props.Position,
-        Size = props.Size,
-
-        [Ref] = arrowButton,
-
-        [Children] = {
-            Components.Constraints.UIAspectRatio(1),
-            New "ImageLabel" {
-                Size = UDim2.fromScale(1, 1),
-                BackgroundTransparency = 1,
-                Image = "rbxassetid://6031094687",
-                Rotation = Spring(Computed(function()
-                    return dropdownVisible:get() and 0 or 180
-                end), 20),
-                ZIndex = 8,
-            }
-        },
-
-        [OnEvent "Activated"] = function()
-            if not dropdownVisible:get() then
-                dropdownVisible:set(true)
-                local newData = require(Resources.Parent.Util.Dropdown):GetValue(props.Options, arrowButton:get())
-                if newData and props.OnToggle then
-                    props.OnToggle(newData)
-                end
-                dropdownVisible:set(false)
-            else
-                require(Resources.Parent.Util.Dropdown):Cancel()
-            end
-        end
     }
 end
 

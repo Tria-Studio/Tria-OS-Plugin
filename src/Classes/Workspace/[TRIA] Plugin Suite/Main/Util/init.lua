@@ -50,15 +50,6 @@ local Util = {
         Option1 = Value({}),
         Option2 = Value({}),
     },
-    _PageOrder = {
-        "ObjectTags",
-        "ViewModes",
-        "Settings",
-        "Scripting",
-        "Publish",
-        "Insert",
-        "AudioLibrary"
-    },
     Difficulty = {
         [0] = {
             Name = "Unrated",

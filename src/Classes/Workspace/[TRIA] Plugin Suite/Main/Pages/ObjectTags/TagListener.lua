@@ -13,6 +13,7 @@ local Pages = require(Resources.Components.Pages)
 local Util = require(UtilModule)
 local TagUtils = require(UtilModule.TagUtils)
 local Dropdown = require(UtilModule.Dropdown)
+local DropdownComponents = require(UtilModule.Dropdown.DropdownComponents)
 
 local Colorwheel = require(Package.Colorwheel)
 local PublicTypes = require(Package.PublicTypes)
@@ -275,7 +276,7 @@ return function(name: string, data: PublicTypes.dictionary): Instance
 
                                                 function types.dropdown(): Instance --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     return types.number(22, {
-                                                        Components.DropdownButton({
+                                                        DropdownComponents.DropdownButton({
                                                             Position = UDim2.fromOffset(-8, -1),
                                                             Size = UDim2.fromOffset(18, 18),
                                                             Options = metadataType.data.dropdownType,
