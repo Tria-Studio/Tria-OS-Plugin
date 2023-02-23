@@ -62,7 +62,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.dictionary): I
     end), 20)
 
     local pageRatio = Computed(function()
-        return Util._currentPageNum:get() / #Util._PageOrder
+        return Pages._currentPageNum:get() / #Util._PageOrder
     end)
 
     local colorSpring = Spring(Computed(function()
@@ -81,7 +81,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.dictionary): I
         [OnEvent "Activated"] = function()
             if not Util._Topbar.FreezeFrame:get(false) or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil then
                 Pages:ChangePage(data.Name)
-                Util._currentPageNum:set(table.find(Util._PageOrder, data.Name))
+                Pages._currentPageNum:set(table.find(Pages._PageOrder, data.Name))
             end
         end,
 

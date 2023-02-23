@@ -11,11 +11,21 @@ local PageHandler = {
         pages = {},
         bypassedPages = {"Insert", "Publish"},
         currentPage = Value(nil),
+    },
+    _currentPageNum = 0,
+    _PageOrder = {
+        "ObjectTags",
+        "ViewModes",
+        "Settings",
+        "Scripting",
+        "Publish",
+        "Insert",
+        "AudioLibrary"
     }
 }
 
 function updatePageNum(pageName: string)
-    require(Resources.Parent.Util)._currentPageNum:set(table.find(require(Resources.Parent.Util)._PageOrder, pageName))
+    PageHandler._currentPageNum:set(table.find(PageHandler._PageOrder, pageName))
 end
 
 function PageHandler:ChangePage(newPage: string)

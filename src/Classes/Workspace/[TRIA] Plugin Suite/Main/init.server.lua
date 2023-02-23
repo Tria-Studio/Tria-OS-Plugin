@@ -92,11 +92,11 @@ New "Frame" {
 
 			[OnEvent "InputChanged"] = function(InputObject: InputObject)
 				if InputObject.UserInputType == Enum.UserInputType.MouseWheel then
-					local newPage = Util._currentPageNum:get(false) - InputObject.Position.Z
-					newPage = if newPage < 1 then #Util._PageOrder elseif newPage > #Util._PageOrder then 1 else newPage
+					local newPage = Pages._currentPageNum:get(false) - InputObject.Position.Z
+					newPage = if newPage < 1 then #Pages._PageOrder elseif newPage > #Pages._PageOrder then 1 else newPage
 
-					Util._currentPageNum:set(newPage)
-					PageHandler:ChangePage(Util._PageOrder[Util._currentPageNum:get(false)])
+					Pages._currentPageNum:set(newPage)
+					Pages:ChangePage(Pages._PageOrder[Pages._currentPageNum:get(false)])
 				end
 			end,
 			[Children] = {
