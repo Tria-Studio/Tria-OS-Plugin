@@ -472,4 +472,23 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
     }
 end
 
+function Components.BasicTextLabel(text: string, layoutOrder: number): Instance
+    return New "TextLabel" {
+        AutomaticSize = Enum.AutomaticSize.Y,
+        BackgroundTransparency = 1,
+        LayoutOrder = layoutOrder,
+        Size = UDim2.fromScale(1, 0),
+        RichText = true,
+        Text = text,
+        TextColor3 = Theme.SubText.Default,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        TextWrapped = true,
+        TextSize = 16,
+
+        [Children] = {
+            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
+        }
+    }
+end
+
 return Components

@@ -167,66 +167,22 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                 [Children] = {
                     Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 6)),
                     Components.FrameHeader("About MapScript", 1, nil, nil, nil),
-                    New "TextLabel" {
-                        AutomaticSize = Enum.AutomaticSize.Y,
-                        BackgroundTransparency = 1,
-                        LayoutOrder = 2,
-                        Size = UDim2.fromScale(1, 0),
-                        RichText = true,
-                        Text = [[The MapScript is the main script in which most of a maps scripting takes place. 
+                    Components.BasicTextLabel([[The MapScript is the main script in which most of a maps scripting takes place. 
                         
-All maps must have a MapScript in order to be loaded and ran, however not all of a maps scripting needs to be done in the MapScript.]],
-                        TextColor3 = Theme.SubText.Default,
-                        TextXAlignment = Enum.TextXAlignment.Left,
-                        TextWrapped = true,
-                        TextSize = 16,
-
-                        [Children] = {
-                            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
-                        }
-                    },
+All maps must have a MapScript in order to be loaded and ran, however not all of a maps scripting needs to be done in the MapScript.]], 2),
 
                     Components.FrameHeader("About LocalMapScript", 4, nil, nil, nil),
-                    New "TextLabel" {
-                        AutomaticSize = Enum.AutomaticSize.Y,
-                        BackgroundTransparency = 1,
-                        LayoutOrder = 5,
-                        Size = UDim2.fromScale(1, 0),
-                        RichText = true,
-                        Text = [[The LocalMapScript is a client-sided script which runs when players load into the game.
-                        
-You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]],
-                        TextColor3 = Theme.SubText.Default,
-                        TextXAlignment = Enum.TextXAlignment.Left,
-                        TextWrapped = true,
-                        TextSize = 16,
+                    Components.BasicTextLabel([[The LocalMapScript is a client-sided script which runs when players load into the game.
 
-                        [Children] = {
-                            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
-                        }
-                    },
+You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]], 5),
+                    
                     GetScriptButton(hasScripts.LocalMapScript, "LocalMapScript", 6),
 
                     Components.FrameHeader("About EffectScript", 7, nil, nil, nil),
-                    New "TextLabel" {
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        AutomaticSize = Enum.AutomaticSize.Y,
-                        BackgroundTransparency = 1,
-                        LayoutOrder = 8,
-                        Size = UDim2.fromScale(1, 0),
-                        RichText = true,
-                        Text = [[The EffectScript is a localscript which allows your code to be replicated to other spectators.
+                    Components.BasicTextLabel([[The EffectScript is a localscript which allows your code to be replicated to other spectators.
 
-The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]],
-                        TextColor3 = Theme.SubText.Default,
-                        TextXAlignment = Enum.TextXAlignment.Left,
-                        TextWrapped = true,
-                        TextSize = 16,
+The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]], 8),
 
-                        [Children] = {
-                            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
-                        }
-                    },
                     GetScriptButton(hasScripts.EffectScript, "EffectScript", 9),
 
                     Components.FrameHeader("Script Autocomplete Settings", 10, nil, nil, [[Here you can customise how the script autocompleter works.
