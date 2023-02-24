@@ -193,7 +193,9 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                                 [OnEvent "Activated"] = function()
                                                     pageLayout:get(false):Next()
-                                                    CURRENT_PAGE_COUNT:set(CURRENT_PAGE_COUNT:get(false) + 1)
+
+                                                    local currentPage = CURRENT_PAGE_COUNT:get(false)
+                                                    CURRENT_PAGE_COUNT:set((currentPage + 1 > TOTAL_PAGE_COUNT:get(false) and 1 or currentPage + 1))
                                                 end
                                             },
 
