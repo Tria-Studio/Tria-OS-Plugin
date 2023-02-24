@@ -35,12 +35,34 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                     Components.ScrollingFrame {
                         Size = UDim2.fromScale(1, 0.625),
-                        BackgroundTransparency = 0.75,
-                        BackgroundColor3 = Color3.new(1, 0, 1),
+                        BackgroundTransparency = 1,
+                        BackgroundColor3 = Color3.new(1, 1, 1),
                         LayoutOrder = 4,
 
                         [Children] = {
-                            
+                            New "Frame" { -- Audio library
+                                AnchorPoint = Vector2.new(0.5, 0),
+                                BackgroundTransparency = 0.75,
+                                Position = UDim2.fromScale(0.5, 0),
+                                Size = UDim2.fromScale(1, 0.875),
+                                LayoutOrder = 1,
+
+                                [Children] = {
+                                    
+                                }
+                            },
+
+                            New "Frame" { -- Audio library
+                                AnchorPoint = Vector2.new(0.5, 1),
+                                BackgroundTransparency = 0.8,
+                                Position = UDim2.fromScale(0.5, 1),
+                                Size = UDim2.fromScale(1, 0.125),
+                                LayoutOrder = 1,
+
+                                [Children] = {
+                                    
+                                }
+                            }
                         }
                     },
 
