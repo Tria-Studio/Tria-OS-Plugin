@@ -31,16 +31,44 @@ local MOCK_DATA = {
 }
 
 local ITEMS_PER_PAGE = 2
+local TOTAL_PAGE_COUNT = Value(0)
 
 local function AudioButton(data: PublicTypes.Dictionary): Instance
-    return New "Frame" {
-        Size = UDim2.fromScale(1, 1)
+    return New "TextLabel" {
+        Size = UDim2.new(1, 0, 1 / ITEMS_PER_PAGE, -4),
+        Text = data.Name,
+        TextSize = 18,
+        BackgroundTransparency = 0.75
     }
 end
 
 local function getAudioChildren(): {Instance}
     local children = {}
 
+    -- MOCK_DATA will be a state object, so we can hook a computed later on.
+
+    for index = 1, #MOCK_DATA, ITEMS_PER_PAGE do 
+        table.insert(children, New "Frame" {
+            BackgroundTransparency = 1,
+            LayoutOrder = index,
+            Size = UDim2.fromScale(1, 1),
+
+            [Children] = {
+                Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
+                Computed(function()
+                    local pageChildren = {}
+                    for count = index, index + (ITEMS_PER_PAGE - 1) do
+                        if MOCK_DATA[count] then
+                            table.insert(pageChildren, AudioButton(MOCK_DATA[count]))
+                        end
+                    end
+                    return pageChildren
+                end):get()
+            }
+        })
+    end
+
+    TOTAL_PAGE_COUNT:set(#children)
     return children
 end
 
@@ -148,8 +176,12 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 Rotation = -90,
                                                 Position = UDim2.fromScale(0.7, 0.5),
                                                 Size = UDim2.new(0.2, -5, 1, -5),
-                                
+
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
+                                                [OnEvent "Activated"] = function()
+                                                    local layout = pageLayout:get(false)
+                                                    layout:Next()
+                                                end
                                             },
 
                                             Components.ImageButton { -- Skip to end page
