@@ -107,7 +107,6 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                             
                                             New "TextLabel" {
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
-                                                Active = Util.interfaceActive,
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 3,
                                                 Text = "Page 1/10",
