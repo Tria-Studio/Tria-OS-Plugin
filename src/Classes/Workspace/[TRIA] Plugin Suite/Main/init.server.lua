@@ -39,7 +39,7 @@ Util.attemptScriptInjection()
 
 New "Frame" {
 	Name = "TRIA.os Plugin",
-	Parent = game.StarterGui,
+	Parent = widget,
 	Size = UDim2.fromScale(1, 1),
 	BackgroundColor3 = Theme.MainBackground.Default,
 
