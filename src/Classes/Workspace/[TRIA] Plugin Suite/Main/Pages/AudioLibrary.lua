@@ -48,9 +48,36 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                         [Children] = {
                             New "Frame" { -- Audio Library
-                                BackgroundTransparency = 0.75,
+                                BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(1, 0.95),
-                                BackgroundColor3 = Color3.new(0, 1, 0),
+
+                                [Children] = {
+                                    New "Frame" { -- Main
+                                        BackgroundTransparency = 0.5,
+                                        BackgroundColor3 = Color3.new(1, 0, 0),
+                                        Size = UDim2.fromScale(1, 0.925),
+                                    },
+
+                                    New "Frame" { -- Page Cycler
+                                        BackgroundTransparency = 0.5,
+                                        BackgroundColor3 = Color3.new(0, 1, 0),
+                                        Size = UDim2.fromScale(1, 0.075),
+                                        Position = UDim2.fromScale(0, 0.925),
+
+                                        [Children] = {
+                                            New "TextLabel" {
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BackgroundTransparency = 1,
+                                                Position = UDim2.fromScale(0.5, 0.5),
+                                                Size = UDim2.fromScale(0.5, 1),
+                                                Text = "Showing 1/10 (10/100)",
+                                                TextColor3 = Theme.TitlebarText.Default,
+                                                TextXAlignment = Enum.TextXAlignment.Center,
+                                                TextSize = 18,
+                                            },
+                                        }
+                                    }
+                                }
                             },
 
                             New "Frame" { -- Refresh time
