@@ -6,6 +6,7 @@ local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 
 local PublicTypes = require(Package.PublicTypes)
+local Util = require(Package.Util)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -80,6 +81,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         [Children] = {
                                             Components.ImageButton { -- Skip to first page
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
+                                                Active = Util.interfaceActive,
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 1,
                                                 Image = "rbxassetid://4458877936",
@@ -92,6 +94,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                             
                                             Components.ImageButton { -- Skip one page left
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
+                                                Active = Util.interfaceActive,
                                                 BackgroundTransparency = 1,
                                                 Image = "rbxassetid://6031094687",
                                                 LayoutOrder = 2,
@@ -104,6 +107,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                             
                                             New "TextLabel" {
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
+                                                Active = Util.interfaceActive,
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 3,
                                                 Text = "Page 1/10",
@@ -116,6 +120,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                                             Components.ImageButton { -- Skip one page right
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
+                                                Active = Util.interfaceActive,
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 4,
                                                 Image = "rbxassetid://6031094687",
@@ -128,6 +133,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                                             Components.ImageButton { -- Skip to end page
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
+                                                Active = Util.interfaceActive,
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 5,
                                                 Image = "rbxassetid://4458877936",
