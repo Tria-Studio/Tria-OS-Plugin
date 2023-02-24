@@ -78,6 +78,7 @@ function Constraints.UIPageLayout(tweenTime: number, easingStyle: Enum.EasingSty
         EasingDirection = easingDirection,
         Circular = circular,
         Padding = padding,
+        ScrollWheelInputEnabled = false
     }
 end
 

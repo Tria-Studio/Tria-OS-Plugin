@@ -15,25 +15,33 @@ local OnEvent = Fusion.OnEvent
 local OnChange = Fusion.OnChange
 local Value = Fusion.Value
 local ForValues = Fusion.ForValues
+local Hydrate = Fusion.Hydrate
+local Ref = Fusion.Ref
 
 local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local MOCK_DATA = {
-    {["Name"] = "Test Audio One", ["ID"] = 123456789, ["Artist"] = "Kris"}
+    {["Name"] = "Test Audio 1", ["ID"] = 123456789, ["Artist"] = "Kris"},
+    {["Name"] = "Test Audio 2", ["ID"] = 123456789, ["Artist"] = "Grif"},
+    {["Name"] = "Test Audio 3", ["ID"] = 123456789, ["Artist"] = "Ethan"},
+    {["Name"] = "Test Audio 4", ["ID"] = 123456789, ["Artist"] = "Umbreon"},
+    {["Name"] = "Test Audio 5", ["ID"] = 123456789, ["Artist"] = "Super"}
 }
 
-local ITEMS_PER_PAGE = 10
+local ITEMS_PER_PAGE = 2
 
 local function AudioButton(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
-        Size = UDim2.fromScale(1, 0)
+        Size = UDim2.fromScale(1, 1)
     }
 end
 
-local function getAudioChildren()
-    return AudioButton(MOCK_DATA[1])
+local function getAudioChildren(): {Instance}
+    local children = {}
+
+    return children
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -78,7 +86,11 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Size = UDim2.fromScale(1, 0.925),
 
                                         [Children] = {
-                                            getAudioChildren()
+                                            Hydrate(Components.Constraints.UIPageLayout(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), true)) {
+                                                [Ref] = pageLayout
+                                            },
+
+                                            Computed(getAudioChildren)
                                         }
                                     },
 
