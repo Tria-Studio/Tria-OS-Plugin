@@ -9,6 +9,10 @@ local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
+local Computed = Fusion.Computed
+local OnEvent = Fusion.OnEvent
+local OnChange = Fusion.OnChange
+local Value = Fusion.Value
 
 local frame = {}
 
@@ -65,22 +69,41 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Position = UDim2.fromScale(0, 0.925),
 
                                         [Children] = {
+                                            Components.Constraints.UIGridLayout(UDim2.new(1/5, -5, 1, -5), UDim2.fromOffset(5, 5), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
+                                            Components.ImageButton { -- Skip to first page
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BackgroundTransparency = 1,
+                                                LayoutOrder = 1,
+                                                Image = "rbxassetid://4458877936",
+                                                Rotation = 0,
+                                                
+                                                [Children] = Components.Constraints.UIAspectRatio(1),
+                                            },
+                                            
+                                            Components.ImageButton { -- Skip one page left
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BackgroundTransparency = 1,
+                                                Image = "rbxassetid://6031094687",
+                                                LayoutOrder = 2,
+                                                Rotation = 90,
+                                
+                                                [Children] = Components.Constraints.UIAspectRatio(1),
+                                            },
+                                            
                                             New "TextLabel" {
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                                 BackgroundTransparency = 1,
-                                                Position = UDim2.fromScale(0.5, 0.5),
-                                                Size = UDim2.fromScale(0.225, 1),
-                                                Text = "Showing 1/10 (10/100)",
+                                                LayoutOrder = 3,
+                                                Text = "Page 1/10",
                                                 TextColor3 = Theme.TitlebarText.Default,
                                                 TextXAlignment = Enum.TextXAlignment.Center,
-                                                TextSize = 18,
+                                                TextSize = 16,
                                             },
 
                                             Components.ImageButton { -- Skip one page right
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                                 BackgroundTransparency = 1,
-                                                Position = UDim2.new(0.625, 5, 0.5, 0),
-                                                Size = UDim2.fromOffset(30, 30),
+                                                LayoutOrder = 4,
                                                 Image = "rbxassetid://6031094687",
                                 
                                                 Rotation = -90,
@@ -88,38 +111,14 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                             },
 
-                                            Components.ImageButton { -- Skip one page left
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                                BackgroundTransparency = 1,
-                                                Position = UDim2.new(0.375, -5, 0.5, 0),
-                                                Size = UDim2.fromOffset(30, 30),
-                                                Image = "rbxassetid://6031094687",
-                                
-                                                Rotation = 90,
-                                
-                                                [Children] = Components.Constraints.UIAspectRatio(1),
-                                            },
-
                                             Components.ImageButton { -- Skip to end page
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                                 BackgroundTransparency = 1,
-                                                Position = UDim2.fromScale(0.675, 0.5),
-                                                Size = UDim2.fromOffset(30, 30),
+                                                LayoutOrder = 5,
                                                 Image = "rbxassetid://4458877936",
 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
-                                            },
-
-                                            Components.ImageButton { -- Skip to end page
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                                BackgroundTransparency = 1,
-                                                Position = UDim2.fromScale(0.325, 0.5),
-                                                Size = UDim2.fromOffset(30, 30),
-                                                Image = "rbxassetid://4458877936",
-                                                Rotation = 180,
-                                                
-                                                [Children] = Components.Constraints.UIAspectRatio(1),
-                                            },
+                                            }
                                         }
                                     },
 
