@@ -1,3 +1,4 @@
+local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local ContentProvider = game:GetService("ContentProvider")
@@ -114,15 +115,19 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
     previewSound.Volume = 0
 
     local soundLength = Value(1)
+    local isPlaying = false
 
-    previewSound:GetPropertyChangedSignal("TimePosition"):Connect(function()
-        timePosition:set(previewSound.TimePosition)
-    end)
     previewSound.Loaded:Connect(function()
         soundLength:set(previewSound.TimeLength)
     end)
     previewSound.Ended:Connect(function()
         currentAudio:set(nil)
+    end)
+
+    RunService.Heartbeat:Connect(function(deltaTime)
+        if isPlaying then
+            timePosition:set(timePosition:get(false) + deltaTime)
+        end
     end)
 
     return New "Frame" {
@@ -198,13 +203,18 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                                 if playing then
                                     fade(playing, "Out")
                                 end
+
+                                timePosition:set(0)
                                 previewSound:Play()
+                                isPlaying = true
                                 fade(previewSound, "In")
                                 currentAudio:set(previewSound)
                             else
                                 if not playing then
                                     return
                                 end
+                                isPlaying = false
+                                timePosition:set(0)
                                 fade(playing, "Out")
                                 currentAudio:set(nil)
                             end
