@@ -122,7 +122,14 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
 end
 
 local function fade(sound: Sound, direction: string)
-    TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)}):Play()
+    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
+    tween:Play()
+
+    if direction == "Out" then
+        tween.Completed:Connect(function()
+            sound:Stop()
+        end)
+    end
 end
 
 local function AudioButton(data: PublicTypes.Dictionary): Instance
@@ -137,14 +144,22 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
     previewSound.Loaded:Connect(function()
         soundLength:set(previewSound.TimeLength)
     end)
-    previewSound.Ended:Connect(function()
+    previewSound.Played:Connect(function()
+        timePosition:set(0)
+        isPlaying = true
+    end)
+    previewSound.Stopped:Connect(function()
+        timePosition:set(0)
         isPlaying = false
+    end)
+    previewSound.Ended:Connect(function()
         timePosition:set(0)
         currentAudio:set(nil)
+        isPlaying = false
     end)
 
     RunService.Heartbeat:Connect(function(deltaTime)
-        if isPlaying and previewSound.IsLoaded then
+        if isPlaying and previewSound.IsLoaded and previewSound == currentAudio:get(false) then
             timePosition:set(timePosition:get(false) + deltaTime)
         end
     end)
@@ -214,18 +229,13 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                                 if playing then
                                     fade(playing, "Out")
                                 end
-
-                                timePosition:set(0)
                                 previewSound:Play()
-                                isPlaying = true
-                                fade(previewSound, "In")
                                 currentAudio:set(previewSound)
+                                fade(previewSound, "In")
                             else
                                 if not playing then
                                     return
                                 end
-                                isPlaying = false
-                                timePosition:set(0)
                                 fade(playing, "Out")
                                 currentAudio:set(nil)
                             end
