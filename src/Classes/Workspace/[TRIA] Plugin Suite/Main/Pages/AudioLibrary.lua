@@ -11,6 +11,7 @@ local Components = require(Resources.Components)
 
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
+local PlguinSoundManager = require(Package.PluginSoundManager)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -107,8 +108,13 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
     previewSound.SoundId = "rbxassetid://" .. data.ID
 
     local soundLength = Value(1)
-    previewSound.Loaded:Connect(function(soundId)
+    previewSound.Loaded:Connect(function()
         soundLength:set(previewSound.TimeLength)
+    end)
+
+    previewSound.Ended:Connect(function()
+        PlguinSoundManager:StopSound()
+        currentAudio:set(nil)
     end)
 
     local isEditing = Value(false)
@@ -179,16 +185,16 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
         
                         [Children] = Components.Constraints.UICorner(1, 0),
                         [OnEvent "Activated"] = function()
-                            local playing = currentAudio:get(false)
+                            local playing = PlguinSoundManager:GetCurrentSound()
                             if playing ~= previewSound then
                                 if playing then
-                                    playing:Stop()
+                                    PlguinSoundManager:StopSound()
                                 end
-                                SoundService:PlayLocalSound(previewSound)
+                                PlguinSoundManager:PlaySound(previewSound)
                                 currentAudio:set(previewSound)
                             else
                                 if playing then
-                                    playing:Stop()
+                                    PlguinSoundManager:StopSound()
                                 end
                                 currentAudio:set(nil)
                             end
