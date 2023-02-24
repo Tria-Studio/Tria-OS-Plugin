@@ -32,8 +32,8 @@ local MOCK_DATA = {
 
 local ITEMS_PER_PAGE = 2
 
-local CURRENT_PAGE_COUNT = Value(0)
-local TOTAL_PAGE_COUNT = Value(0)
+local CURRENT_PAGE_COUNT = Value(1)
+local TOTAL_PAGE_COUNT = Value(1)
 
 local function AudioButton(data: PublicTypes.Dictionary): Instance
     return New "TextLabel" {
@@ -142,7 +142,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                                 [OnEvent "Activated"] = function()
-                                                    pageLayout:get(false):JumpToIndex(1)
+                                                    pageLayout:get(false):JumpToIndex(0)
                                                     CURRENT_PAGE_COUNT:set(1)
                                                 end
                                             },
@@ -160,7 +160,9 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                                 [OnEvent "Activated"] = function()
                                                     pageLayout:get(false):Previous()
-                                                    CURRENT_PAGE_COUNT:set(CURRENT_PAGE_COUNT:get(false) - 1)
+
+                                                    local currentPage = CURRENT_PAGE_COUNT:get(false)
+                                                    CURRENT_PAGE_COUNT:set((currentPage - 1 < 1 and TOTAL_PAGE_COUNT:get(false) or currentPage - 1))
                                                 end
                                             },
                                             
@@ -206,8 +208,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                                 [OnEvent "Activated"] = function()
-                                                    pageLayout:get(false):JumpToIndex(TOTAL_PAGE_COUNT)
-                                                    CURRENT_PAGE_COUNT:set(TOTAL_PAGE_COUNT)
+                                                    pageLayout:get(false):JumpToIndex(TOTAL_PAGE_COUNT:get(false) - 1)
+                                                    CURRENT_PAGE_COUNT:set(TOTAL_PAGE_COUNT:get(false))
                                                 end
                                             }
                                         }
