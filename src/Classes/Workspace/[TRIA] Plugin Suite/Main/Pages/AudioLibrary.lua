@@ -94,18 +94,21 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
             New "ImageButton" {
                 ImageTransparency = 1,
                 AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundColor3 = Theme.Button.Selected,
+                BackgroundColor3 = Color3.fromRGB(247, 0, 255),
                 Position = sliderPosition,
 
                 Size = UDim2.fromOffset(12, 12),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
 
-                [Children] = Components.Constraints.UICorner(1, 0)
+                [Children] = {
+                    Components.Constraints.UICorner(1, 0),
+                    Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
+                }
             },
 
             New "Frame" {
-                BackgroundColor3 = Color3.new(),
+                BackgroundColor3 = Color3.fromRGB(245, 158, 29),
                 Size = backFrameSize,
 
                 [Children] = Components.Constraints.UICorner(0, 8)
