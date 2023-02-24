@@ -13,10 +13,15 @@ local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local OnChange = Fusion.OnChange
 local Value = Fusion.Value
+local ForValues = Fusion.ForValues
 
 local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
+
+local MOCK_DATA = {
+    {["Name"] = "Test Audio One", ["ID"] = 123456789, ["Artist"] = "Kris"}
+}
 
 local function AudioButton(data: PublicTypes.Dictionary): Instance
     
@@ -60,6 +65,10 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         BackgroundTransparency = 0.8,
                                         BackgroundColor3 = Color3.new(1, 0, 0),
                                         Size = UDim2.fromScale(1, 0.925),
+
+                                        [Children] = {
+
+                                        }
                                     },
 
                                     New "Frame" { -- Page Cycler
