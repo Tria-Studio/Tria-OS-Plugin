@@ -54,12 +54,19 @@ Below you will find a list of audios which have been approved for use by TRIA st
                             },
 
                             New "Frame" { -- Refresh time
-                                BackgroundTransparency = 0.75,
+                                BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(1, 0.05),
                                 Position = UDim2.fromScale(0, 0.95),
 
                                 [Children] = {
-                                    
+                                    New "TextLabel" {
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.new(0.5, -4, 0, 0),
+                                        Size = UDim2.fromScale(0.5, 1),
+                                        Text = "Refreshing in 12:00:00",
+                                        TextColor3 = Theme.SubText.Default,
+                                        TextXAlignment = Enum.TextXAlignment.Right
+                                    },
                                 }
                             }
                         }
