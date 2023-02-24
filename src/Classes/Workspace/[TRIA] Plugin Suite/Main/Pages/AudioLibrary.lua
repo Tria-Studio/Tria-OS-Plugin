@@ -30,17 +30,62 @@ local MOCK_DATA = {
     {["Name"] = "Test Audio 5", ["ID"] = 123456789, ["Artist"] = "Super"}
 }
 
-local ITEMS_PER_PAGE = 10
+local ITEMS_PER_PAGE = 5
 
 local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 
 local function AudioButton(data: PublicTypes.Dictionary): Instance
-    return New "TextLabel" {
+    return New "Frame" {
+        BackgroundColor3 = Color3.new(),
+        BackgroundTransparency = 0.6,
         Size = UDim2.new(1, 0, 1 / ITEMS_PER_PAGE, -4),
-        Text = data.Name,
-        TextSize = 18,
-        BackgroundTransparency = 0.75
+        
+        [Children] = {
+            New "TextLabel" {
+                BackgroundTransparency = 1,
+                Size = UDim2.fromScale(0.5, 0.5),
+                Text = data.Name,
+                TextColor3 = Theme.TitlebarText.Default,
+                TextSize = 18,
+                TextXAlignment = Enum.TextXAlignment.Left,
+
+                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+            },
+
+            New "TextLabel" {
+                BackgroundTransparency = 1,
+                Size = UDim2.fromScale(0.5, 0.5),
+                Position = UDim2.fromScale(0, 0.5),
+                Text = "by " .. data.Artist,
+                TextColor3 = Theme.SubText.Default,
+                TextSize = 18,
+                TextXAlignment = Enum.TextXAlignment.Left,
+
+                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+            },
+
+            Components.TextButton {
+                Size = UDim2.fromScale(0.4, 0.4),
+                Position = UDim2.new(0.55, 0, 0.6, -5),
+                Text = "Set as Map BGM",
+
+                [Children] = {
+                    Components.Constraints.UICorner(0, 8)
+                }
+            },
+
+            New "Frame" {
+                AnchorPoint = Vector2.new(0.5, 0),
+                BackgroundTransparency = 0.8,
+                Size = UDim2.fromScale(0.45, 0.4),
+                Position = UDim2.fromScale(0.75, 0.05),
+
+                [Children] = {
+                    
+                }
+            }
+        }
     }
 end
 
