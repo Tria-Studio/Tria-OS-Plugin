@@ -53,14 +53,14 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                                 [Children] = {
                                     New "Frame" { -- Main
-                                        BackgroundTransparency = 0.5,
+                                        BackgroundTransparency = 0.8,
                                         BackgroundColor3 = Color3.new(1, 0, 0),
                                         Size = UDim2.fromScale(1, 0.925),
                                     },
 
                                     New "Frame" { -- Page Cycler
-                                        BackgroundTransparency = 0.5,
-                                        BackgroundColor3 = Color3.new(0, 1, 0),
+                                        BackgroundColor3 = Color3.new(),
+                                        BackgroundTransparency = 0.25,
                                         Size = UDim2.fromScale(1, 0.075),
                                         Position = UDim2.fromScale(0, 0.925),
 
@@ -69,14 +69,65 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                                 BackgroundTransparency = 1,
                                                 Position = UDim2.fromScale(0.5, 0.5),
-                                                Size = UDim2.fromScale(0.5, 1),
+                                                Size = UDim2.fromScale(0.225, 1),
                                                 Text = "Showing 1/10 (10/100)",
                                                 TextColor3 = Theme.TitlebarText.Default,
                                                 TextXAlignment = Enum.TextXAlignment.Center,
                                                 TextSize = 18,
                                             },
+
+                                            Components.ImageButton { -- Skip one page right
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BackgroundTransparency = 1,
+                                                Position = UDim2.new(0.625, 5, 0.5, 0),
+                                                Size = UDim2.fromOffset(30, 30),
+                                                Image = "rbxassetid://6031094687",
+                                
+                                                Rotation = -90,
+                                
+                                                [Children] = Components.Constraints.UIAspectRatio(1),
+                                            },
+
+                                            Components.ImageButton { -- Skip one page left
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BackgroundTransparency = 1,
+                                                Position = UDim2.new(0.375, -5, 0.5, 0),
+                                                Size = UDim2.fromOffset(30, 30),
+                                                Image = "rbxassetid://6031094687",
+                                
+                                                Rotation = 90,
+                                
+                                                [Children] = Components.Constraints.UIAspectRatio(1),
+                                            },
+
+                                            Components.ImageButton { -- Skip to end page
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BackgroundTransparency = 1,
+                                                Position = UDim2.fromScale(0.675, 0.5),
+                                                Size = UDim2.fromOffset(30, 30),
+                                                Image = "rbxassetid://4458877936",
+
+                                                [Children] = Components.Constraints.UIAspectRatio(1),
+                                            },
+
+                                            Components.ImageButton { -- Skip to end page
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BackgroundTransparency = 1,
+                                                Position = UDim2.fromScale(0.325, 0.5),
+                                                Size = UDim2.fromOffset(30, 30),
+                                                Image = "rbxassetid://4458877936",
+                                                Rotation = 180,
+                                                
+                                                [Children] = Components.Constraints.UIAspectRatio(1),
+                                            },
                                         }
-                                    }
+                                    },
+
+                                    New "Frame" { -- Line
+                                        BackgroundColor3 = Theme.Border.Default,
+                                        Position = UDim2.new(0, 0, 1, -2),
+                                        Size = UDim2.new(1, 0, 0, 2)
+                                    },
                                 }
                             },
 
