@@ -212,7 +212,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                         end),
                         BackgroundTransparency = 1,
                         AnchorPoint = Vector2.new(0.5, 0.5),
-                        Position = UDim2.fromScale(0, 0.4),
+                        Position = UDim2.fromScale(0.025, 0.4),
         
                         Size = UDim2.fromOffset(18, 18),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
