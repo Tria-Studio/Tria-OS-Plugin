@@ -1,3 +1,4 @@
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local ContentProvider = game:GetService("ContentProvider")
 local SoundService = game:GetService("SoundService")
@@ -45,6 +46,7 @@ local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 
 local currentAudio = Value(nil)
+local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
 local function round(num: number, step: number): number
 	return math.round(num / step) * step
@@ -101,23 +103,27 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
     return sliderFrame
 end
 
-local function AudioButton(data: PublicTypes.Dictionary): Instance
-    local previewTime = Value(0)
+local function fade(sound: Sound, direction: string)
+    TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)}):Play()
+end
 
-    local previewSound = Instance.new("Sound")
-    previewSound.SoundId = "rbxassetid://" .. data.ID
+local function AudioButton(data: PublicTypes.Dictionary): Instance
+    local timePosition = Value(0)
+
+    local previewSound = PlguinSoundManager:QueueSound(data.ID)
+    previewSound.Volume = 0
 
     local soundLength = Value(1)
+
+    previewSound:GetPropertyChangedSignal("TimePosition"):Connect(function()
+        timePosition:set(previewSound.TimePosition)
+    end)
     previewSound.Loaded:Connect(function()
         soundLength:set(previewSound.TimeLength)
     end)
-
     previewSound.Ended:Connect(function()
-        PlguinSoundManager:StopSound()
         currentAudio:set(nil)
     end)
-
-    local isEditing = Value(false)
 
     return New "Frame" {
         BackgroundColor3 = Color3.new(),
@@ -167,7 +173,9 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
                 [Children] = {
                     Slider {
-                        Value = previewTime,
+                        Value = Computed(function()
+                            return timePosition:get() / soundLength:get()
+                        end),
                         Min = Value(0),
                         Max = soundLength
                     },
@@ -185,17 +193,19 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
         
                         [Children] = Components.Constraints.UICorner(1, 0),
                         [OnEvent "Activated"] = function()
-                            local playing = PlguinSoundManager:GetCurrentSound()
+                            local playing = currentAudio:get(false)
                             if playing ~= previewSound then
                                 if playing then
-                                    PlguinSoundManager:StopSound()
+                                    fade(playing, "Out")
                                 end
-                                PlguinSoundManager:PlaySound(previewSound)
+                                previewSound:Play()
+                                fade(previewSound, "In")
                                 currentAudio:set(previewSound)
                             else
-                                if playing then
-                                    PlguinSoundManager:StopSound()
+                                if not playing then
+                                    return
                                 end
+                                fade(playing, "Out")
                                 currentAudio:set(nil)
                             end
                         end
