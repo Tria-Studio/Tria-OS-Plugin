@@ -41,15 +41,26 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                     New "Frame" { -- Holder
                         AnchorPoint = Vector2.new(0.5, 0),
-                        BackgroundColor3 = Color3.fromRGB(255, 0, 0),
-                        BackgroundTransparency = 0.5,
+                        BackgroundTransparency = 1,
                         Position = UDim2.fromScale(0.5, 0),
-                        Size = UDim2.fromScale(1, 0.5),
+                        Size = UDim2.fromScale(1, 0.85),
                         LayoutOrder = 4,
 
                         [Children] = {
-                            New "Frame" { -- Holder
-                                
+                            New "Frame" { -- Audio Library
+                                BackgroundTransparency = 0.75,
+                                Size = UDim2.fromScale(1, 0.95),
+                                BackgroundColor3 = Color3.new(0, 1, 0),
+                            },
+
+                            New "Frame" { -- Refresh time
+                                BackgroundTransparency = 0.75,
+                                Size = UDim2.fromScale(1, 0.05),
+                                Position = UDim2.fromScale(0, 0.95),
+
+                                [Children] = {
+                                    
+                                }
                             }
                         }
                     },
