@@ -5,6 +5,7 @@ local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
 
 local componentFiles = script.Parent.ComponentFiles
+local addonFiles = script.Parent.AddonFiles
 
 local function positionModel(model: Model)
     local newPos = workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -36)
@@ -14,7 +15,7 @@ end
 
 local function insertModel(modelName: string, parent: Instance): Instance
     ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", modelName))
-    local newModel = componentFiles:FindFirstChild(modelName):Clone()
+    local newModel = (componentFiles:FindFirstChild(modelName) or addonFiles:FindFirstChild(modelName)):Clone()
     newModel.Parent = parent
 
     ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", modelName))
@@ -28,21 +29,6 @@ local function getInsertFolder(specialChildName: string): Instance
         and currentMap.Special:FindFirstChild(specialChildName) 
         or currentMap:FindFirstChild("Geometry") 
         or currentMap
-end
-
-local function getObjectCountWithNameMatch(pattern: string): number
-    local map = Util.mapModel:get(false)
-
-    local highest = 0
-    for _, model: Instance in ipairs(map:GetDescendants()) do 
-        if model:IsA("Model") and model.Name:match(pattern .. "%d+") then 
-            local objectNum = tonumber(model.Name:match(pattern .. "(%d+)")); 
-            if objectNum then
-                highest = math.max(highest, objectNum)
-            end
-        end 
-    end
-    return highest
 end
 
 return {
@@ -67,11 +53,22 @@ return {
             LayoutOrder = 3,
             Tooltip = {
                 Header = "Jump & Fall Measurement Tools",
-                Tooltip = "jump measurement tooltip"
+                Tooltip = [[Allows for precise measurement of jumps for your maps. Each of the 5 different lines tracks a different part of the characters body within a jump.
+                
+<font color = "rgb(0,200,0)">Green line</font> - represents the bottom of the player's legs
+<font color = "rgb(200,200,0)">Yellow line</font> - represents the bottom of the player's legs, but indicates the highest jump that could be made
+<font color = "rgb(70,70,255)">Blue line</font> - represents the center of the torso
+<font color = "rgb(225,0,0)">Red line</font> - represents the top of the player's head
+<font color = "rgb(165,0,0)">Deep red line</font> - represents the top of the player's head, but indicates the highest jump that could be made ]]
             },
     
             InsertFunction = function()
-                
+                local model = insertModel("JumpMeasurement", nil)
+                positionModel(model)
+                model.JumpMeasurement.Parent = workspace
+                model.FallMeasurement.Parent = workspace
+                model:Destroy()
+                Util.debugWarn("Successfully inserted Jump Measurement Tools addon!")
             end
         }, {
             Name = "",
@@ -80,7 +77,7 @@ return {
             LayoutOrder = 2,
             Tooltip = {
                 Header = "EasyTP",
-                Tooltip = "jump measurement tooltip"
+                Tooltip = "Allows for you to easily add timed teleports into your maps with minimal setup. \n\nOpen the ModuleScript for instructions on how to use."
             },
     
             InsertFunction = function()
@@ -133,7 +130,7 @@ return {
                     elseif map:FindFirstChild("Geometry") then map.Geometry
                     else map
     
-                local highestButton = getObjectCountWithNameMatch("_Button")
+                local highestButton = Util.getObjectCountWithNameMatch("_Button")
                 local model = insertModel("_Button0", newParent)
                 model.Name = "_Button" .. (highestButton + 1)
                 positionModel(model)
@@ -257,7 +254,7 @@ return {
             InsertFunction = function()
                 local newParent = getInsertFolder("Fluid")
     
-                local highestGas = getObjectCountWithNameMatch("_Gas")
+                local highestGas = Util.getObjectCountWithNameMatch("_Gas")
                 local model = insertModel("_Gas0", newParent)
                 model.Name = "_Gas" .. (highestGas + 1)
                 positionModel(model)

@@ -1,6 +1,5 @@
 local InsertService = game:GetService("InsertService")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
-local ProximityPromptService = game:GetService("ProximityPromptService")
 local Selection = game:GetService("Selection")
 
 local Package = script.Parent.Parent
@@ -23,6 +22,7 @@ local ForValues = Fusion.ForValues
 
 local frame = {}
 
+
 local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
     local MAX_ATTEMPTS = 5
 
@@ -31,18 +31,18 @@ local function attemptTask(service: Instance, functionName: string, ...): (boole
 
     repeat
         attemptCount += 1
-        Util.debugWarn(("Calling '%s', attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
+        -- Util.debugWarn(("Calling '%s', attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
         success, result = pcall(service[functionName], service, ...)
         if not success then
-            warn(("Attempt to call '%s' failed, attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
-            task.wait(1)
+            -- Util.debugWarn(("Attempt to call '%s' failed, attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
+            task.wait(.75)
         else
             break
         end
     until attemptCount >= MAX_ATTEMPTS
 
     if not success then
-        warn(("Process '%s' failed after %d attempt(s)"):format(functionName, MAX_ATTEMPTS))
+        Util.debugWarn(("Process '%s' failed after %d attempt(s)"):format(functionName, MAX_ATTEMPTS))
     end
     return success, result
 end
@@ -57,11 +57,15 @@ function attemptToInsertModel(assetID: number)
     if not success then return end
 
     success, result = attemptTask(InsertService, "LoadAssetVersion", result)
-    if not success then return end
+    if not success then 
+        Util:ShowMessage("Unable to Insert Model", "Unable to insert the selected model into the workspace. This could be because of you are in offline mode.")
+        return
+    end
 
     result = result:GetChildren()[1]
+    Util.debugWarn(("Successfuly inserted %s!"):format(result.Name))
     result.Name = "[INSERTED] - " .. result.Name
-    result:PivotTo(CFrame.new())
+    result:PivotTo(CFrame.new((workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -125) - Vector3.new(0, 50, 0)).Position))
     result.Parent = workspace
     Selection:Set({result})
     ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
@@ -89,6 +93,16 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         LayoutOrder = 2,
         Size = UDim2.new(1, -24, 0, 95),
         ScaleType = data.ImageCrop,
+        [OnEvent "MouseButton1Down"] = function()
+            if imageColor:get(false) == Color3.new(.8, .8, .8) then
+                imageColor:set(Color3.new(.99,.99,.99))
+            end
+        end,
+        [OnEvent "MouseButton1Up"] = function()
+            if imageColor:get(false) ~= Color3.new(1, 1, 1) then
+                imageColor:set(Color3.new(.8,.8,.8))
+            end
+        end,
 
         [OnEvent "Activated"] = function()
             if data.ActivatedFunction then
@@ -105,11 +119,11 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
             New "ImageLabel" {
                 [OnEvent "MouseEnter"] = function()
                     if imageColor:get(false) == Color3.new(1, 1, 1) then
-                        imageColor:set(Color3.new(.875, .875, .875))
+                        imageColor:set(Color3.new(.8, .8, .8))
                     end
                 end,
                 [OnEvent "MouseLeave"] = function()
-                    if imageColor:get(false) == Color3.new(.875, .875, .875) then
+                    if imageColor:get(false) ~= Color3.new(1, 1, 1) then
                         imageColor:set(Color3.new(1, 1, 1))
                     end
                 end,
@@ -130,7 +144,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
             New "TextLabel" {
                 AnchorPoint = Vector2.new(0, 1),
                 BackgroundTransparency = 1,
-                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold),
                 Position = UDim2.fromScale(0, data.FullSize and 1.05 or 1),
                 Size = UDim2.new(1, 0, 0, 24),
                 Text = data.Name,
@@ -143,7 +157,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
             New "TextLabel" {
                 AnchorPoint = Vector2.new(0, data.FullSize and 0 or 1),
                 BackgroundTransparency = 1,
-                FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold),
                 Position = UDim2.fromScale(0, data.FullSize and 0.1 or 0.65),
                 Size = UDim2.new(1, 0, -0.325, 24),
                 Text = "by " .. tostring(data.Creator),
@@ -217,7 +231,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                             Creator = data.Creator,
                                             FullSize = true,
                                             Tooltip = data.Tooltip,
-                                            ActivatedFunction = data.InsertFunction,
+                                            ActivatedFunction = function()
+                                                if Util.mapModel:get(false) then
+                                                    data.InsertFunction()
+                                                else
+                                                    Util:ShowMessage("Cannot insert map addons", "Please select a map to continue inserting map addons. \n\nHowever, you can insert a map kit whenever!")
+                                                end
+                                            end,
                                             LayoutOrder = data.LayoutOrder,
                                         }
                                     end, Fusion.Cleanup)
@@ -238,6 +258,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     [OnEvent "Activated"] = function()
                                         if Util.mapModel:get(false) then
                                             data.InsertFunction()
+                                        else
+                                            Util:ShowMessage("Cannot insert map components", "Please select a map to continue inserting map components. \n\nHowever, you can insert a map kit whenever!")
                                         end
                                     end,
 

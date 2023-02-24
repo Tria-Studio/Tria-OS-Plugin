@@ -191,7 +191,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                                         BackgroundTransparency = 1,
                                         Position = UDim2.fromScale(0.5, 0.45),
                                         Size = UDim2.new(0, 110, 0.55, 0),
-                                        FontFace = Font.new("SourceSansPro", Enum.FontWeight.Bold),
+                                        FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold),
                                         TextSize = 18,
                                         TextColor3 = Spring(Computed(function()
                                             return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
@@ -203,7 +203,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                                         BackgroundTransparency = 1,
                                         Position = UDim2.fromScale(0.5, 0),
                                         Size = UDim2.new(0, 110, 0.45, 0),
-                                        FontFace = Font.new("SourceSansPro", Enum.FontWeight.SemiBold),
+                                        FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.SemiBold),
                                         TextStrokeColor3 = Theme.Border.Default,
                                         TextStrokeTransparency = 0,
                                         TextColor3 = Spring(Computed(function()
