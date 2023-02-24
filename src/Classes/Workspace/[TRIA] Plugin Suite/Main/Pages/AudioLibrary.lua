@@ -84,7 +84,7 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
 
     local sliderFrame = New "Frame" {
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = UDim2.fromScale(0.35, 0.4),
+        Position = UDim2.fromScale(0.5, 0.4),
         Size = UDim2.fromScale(0.75, 0.25),
 
         [Out "AbsolutePosition"] = absolutePosition,
@@ -181,7 +181,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
             Components.TextButton {
                 Size = UDim2.fromScale(0.4, 0.4),
-                Position = UDim2.new(0.55, 0, 0.6, -5),
+                Position = UDim2.new(0.45, 0, 0.6, -5),
                 Text = "Set as Map BGM",
 
                 [Children] = {
@@ -196,8 +196,8 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
             New "Frame" {
                 AnchorPoint = Vector2.new(0.5, 0),
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.45, 0.4),
-                Position = UDim2.new(0.75, 0, 0.075, 0),
+                Size = UDim2.fromScale(0.425, 0.4),
+                Position = UDim2.new(0.675, 0, 0.075, 0),
 
                 [Children] = {
                     Slider {
@@ -212,7 +212,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                         end),
                         BackgroundTransparency = 1,
                         AnchorPoint = Vector2.new(0.5, 0.5),
-                        Position = UDim2.fromScale(0.85, 0.4),
+                        Position = UDim2.fromScale(0, 0.4),
         
                         Size = UDim2.fromOffset(18, 18),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
