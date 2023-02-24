@@ -183,7 +183,11 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
                 [Children] = {
                     Components.Constraints.UICorner(0, 8)
-                }
+                },
+
+                [OnEvent "Activated"] = function()
+                    Util.updateMapSetting("Main", "Music", data.ID)
+                end
             },
 
             New "Frame" {
