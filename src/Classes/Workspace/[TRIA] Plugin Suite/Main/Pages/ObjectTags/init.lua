@@ -18,7 +18,7 @@ local Value = Fusion.Value
 
 local frame = {}
  
-function frame:GetFrame(data: PublicTypes.dictionary): Instance
+function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local objectFrameSize = Value()
     local buttonFrameSize = Value()
 
@@ -47,7 +47,7 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
-                            ForPairs(TagData.dataTypes.buttonTags, function(tagName: string, data: PublicTypes.dictionary): (string, Instance)
+                            ForPairs(TagData.dataTypes.buttonTags, function(tagName: string, data: PublicTypes.Dictionary): (string, Instance)
                                 return tagName, TagListener(tagName, data)
                             end, Fusion.cleanup)
                         },
@@ -65,7 +65,7 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
-                            ForPairs(TagData.dataTypes.objectTags, function(tagName: string, data: PublicTypes.dictionary): (string, Instance)
+                            ForPairs(TagData.dataTypes.objectTags, function(tagName: string, data: PublicTypes.Dictionary): (string, Instance)
                                 return tagName, TagListener(tagName, data)
                             end, Fusion.cleanup)
                         },

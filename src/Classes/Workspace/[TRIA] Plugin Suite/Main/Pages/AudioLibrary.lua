@@ -14,7 +14,11 @@ local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
-function frame:GetFrame(data: PublicTypes.dictionary): Instance
+local function AudioButton(data: PublicTypes.Dictionary): Instance
+    
+end
+
+function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

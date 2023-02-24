@@ -137,7 +137,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
         DropdownVisible = visible,
         Children = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-            ForPairs(directories.Buttons.Items, function(folder: Instance, data: PublicTypes.dictionary): (Instance, Instance)
+            ForPairs(directories.Buttons.Items, function(folder: Instance, data: PublicTypes.Dictionary): (Instance, Instance)
                 local itemName = data.Name
                 local itemData = data.Data
 
@@ -164,7 +164,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                         DropdownVisible = isSectionVisible,
                         Children = {
                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-                            ForValues(itemData, function(tbl: PublicTypes.dictionary): Instance
+                            ForValues(itemData, function(tbl: PublicTypes.Dictionary): Instance
                                 return SettingsUtil.settingOption(tbl.Type, tbl)
                             end, Fusion.cleanup)
                         }

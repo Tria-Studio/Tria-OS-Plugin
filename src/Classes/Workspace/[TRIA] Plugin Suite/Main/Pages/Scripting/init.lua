@@ -35,7 +35,7 @@ local hasScripts = {
 
 local frame = {}
  
-function OptionFrame(props: PublicTypes.dictionary): Instance
+function OptionFrame(props: PublicTypes.Dictionary): Instance
     local enabled = Value(props.Enabled)
     if props.OnToggle then
         props.OnToggle(props.Enabled)
@@ -150,7 +150,7 @@ local function GetScriptButton(state, scriptName: string, layoutOrder: number): 
     }
 end
 
-function frame:GetFrame(data: PublicTypes.dictionary): Instance
+function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,

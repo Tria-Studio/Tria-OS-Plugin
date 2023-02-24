@@ -58,7 +58,7 @@ function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, 
     end))
 end
 
-function SettingsUtil.updateStateValue(currentValue, newValue: any, tbl: PublicTypes.dictionary)
+function SettingsUtil.updateStateValue(currentValue, newValue: any, tbl: PublicTypes.Dictionary)
     local acceptedValues = {
         ["String"] = {"string", "number"},
         ["Number"] = {"string", "number"},
@@ -95,7 +95,7 @@ function SettingsUtil.modifyStateTable(state, action: string, ...)
     state:set(newTbl, true)
 end
 
-function SettingsUtil.connectValue(object: Instance, data: PublicTypes.dictionary)
+function SettingsUtil.connectValue(object: Instance, data: PublicTypes.Dictionary)
     local currentValue = object:GetAttribute(data.Attribute)
     local function updateConnection()
         SettingsUtil.updateStateValue(currentValue, object:GetAttribute(data.Attribute), data)
@@ -104,12 +104,12 @@ function SettingsUtil.connectValue(object: Instance, data: PublicTypes.dictionar
     updateConnection()
 end
 
-function SettingsUtil.settingOption(optionType: string, optionData: PublicTypes.dictionary): Instance
+function SettingsUtil.settingOption(optionType: string, optionData: PublicTypes.Dictionary): Instance
     local newOption = SettingTypes[optionType](optionData)
     return newOption 
 end
 
-function SettingsUtil.DirectoryDropdown(data: PublicTypes.dictionary, childProcessor: (boolean) -> Instance): Instance
+function SettingsUtil.DirectoryDropdown(data: PublicTypes.Dictionary, childProcessor: (boolean) -> Instance): Instance
     return Components.Dropdown({
         DefaultState = data.Default, 
         Header = data.Display, 

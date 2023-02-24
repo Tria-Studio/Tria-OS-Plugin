@@ -129,7 +129,7 @@ function Suggester:registerCallback()
 			end
 		end
 
-		local function addResponse(responseData: PublicTypes.dictionary, treeIndex: string)
+		local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string)
 			local suggestionData = responseData.data
 			table.insert(response.items, {
 				label = responseData.label,

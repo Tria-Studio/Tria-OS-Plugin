@@ -99,7 +99,7 @@ function tagUtils:GetPartTags(part: Instance, excludeTag: string): {string}
     return partTags
 end
 
-function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicTypes.dictionary, newValue: any)
+function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicTypes.Dictionary, newValue: any)
     if table.find(tagTypes.ModelTags, tag) then
         part = part:IsA("Model") and part or part.Parent
     end

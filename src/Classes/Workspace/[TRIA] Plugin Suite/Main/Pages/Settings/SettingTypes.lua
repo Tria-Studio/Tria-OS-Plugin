@@ -26,22 +26,22 @@ local Spring = Fusion.Spring
 
 local currentEditing = Value(nil)
 
-local function isCurrentSettingModifiable(data: PublicTypes.dictionary): boolean
+local function isCurrentSettingModifiable(data: PublicTypes.Dictionary): boolean
     local isErrored = data.Errored:get()
     return (not isErrored and Util.interfaceActive:get())
 end
 
-local function getSettingTextColor(data: PublicTypes.dictionary): Color3
+local function getSettingTextColor(data: PublicTypes.Dictionary): Color3
     local isErrored = data.Errored:get()
     return (isErrored and Theme.ErrorText.Default:get()) or Theme.MainText.Default:get()
 end
 
-local function canEditSetting(data: PublicTypes.dictionary): boolean
+local function canEditSetting(data: PublicTypes.Dictionary): boolean
     local isErrored = data.Errored:get()
     return (not isErrored)
 end
 
-function BaseSettingButton(data: PublicTypes.dictionary): (Instance, Fusion.StateObject<Color3>, Fusion.StateObject<boolean>)
+function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.StateObject<Color3>, Fusion.StateObject<boolean>)
     local backgroundColor = Value(Theme.MainBackground.Default:get(false))
     local mouseInside = Value(false)
     local settingFrame = Value()
@@ -105,7 +105,7 @@ function BaseSettingButton(data: PublicTypes.dictionary): (Instance, Fusion.Stat
     }, backgroundColor, mouseInside
 end
 
-function InputBox(data: PublicTypes.dictionary, baseButton: Instance): (PublicTypes.dictionary) -> Instance
+function InputBox(data: PublicTypes.Dictionary, baseButton: Instance): (PublicTypes.Dictionary) -> Instance
     return function (props)
         local isModifiable = Computed(function()
             return isCurrentSettingModifiable(data)
@@ -133,7 +133,7 @@ function InputBox(data: PublicTypes.dictionary, baseButton: Instance): (PublicTy
     end
 end
 
-function SettingTypes.String(data: PublicTypes.dictionary): Instance
+function SettingTypes.String(data: PublicTypes.Dictionary): Instance
     local inputBox = Value()
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
 
@@ -168,7 +168,7 @@ function SettingTypes.String(data: PublicTypes.dictionary): Instance
     }
 end
 
-function SettingTypes.Checkbox(data: PublicTypes.dictionary): Instance 
+function SettingTypes.Checkbox(data: PublicTypes.Dictionary): Instance 
     return Hydrate(BaseSettingButton(data)) {
         [Children] = New "TextButton" {
             Active = Util.interfaceActive,
@@ -189,7 +189,7 @@ function SettingTypes.Checkbox(data: PublicTypes.dictionary): Instance
     }
 end
 
-function SettingTypes.Color(data: PublicTypes.dictionary): Instance
+function SettingTypes.Color(data: PublicTypes.Dictionary): Instance
     local inputBox = Value()
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
 
@@ -278,7 +278,7 @@ function SettingTypes.Color(data: PublicTypes.dictionary): Instance
     }
 end
 
-function SettingTypes.Time(data: PublicTypes.dictionary): Instance
+function SettingTypes.Time(data: PublicTypes.Dictionary): Instance
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
     local inputBox = Value()
 
@@ -321,7 +321,7 @@ function SettingTypes.Time(data: PublicTypes.dictionary): Instance
     }
 end
 
-function SettingTypes.Dropdown(data: PublicTypes.dictionary): Instance
+function SettingTypes.Dropdown(data: PublicTypes.Dictionary): Instance
     local baseButton, backgroundColor, buttonInside = BaseSettingButton(data)
     local inputBox = Value()
 

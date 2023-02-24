@@ -20,7 +20,7 @@ local Hydrate = Fusion.Hydrate
 
 local directories = SettingsUtil.Directories
  
-function ExportButton(props: PublicTypes.dictionary): Instance
+function ExportButton(props: PublicTypes.Dictionary): Instance
     return Hydrate(Components.TextButton {
         Active = Util.interfaceActive,
         AutoButtonColor = Util.interfaceActive,

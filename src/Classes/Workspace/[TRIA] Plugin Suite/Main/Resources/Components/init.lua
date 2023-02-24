@@ -20,7 +20,7 @@ local Components = {
     Constraints = require(script.Constraints),
 }
  
-function Components.TextButton(data: PublicTypes.dictionary): Instance
+function Components.TextButton(data: PublicTypes.Dictionary): Instance
     return Hydrate(New "TextButton" {
         AutoButtonColor = true,
         BackgroundColor3 = Theme.Button.Default,
@@ -31,7 +31,7 @@ function Components.TextButton(data: PublicTypes.dictionary): Instance
     })(data)
 end
 
-function Components.ImageButton(data: PublicTypes.dictionary): Instance
+function Components.ImageButton(data: PublicTypes.Dictionary): Instance
     return Hydrate(New "ImageButton" {
         BackgroundColor3 = Theme.Button.Default,
         BorderSizePixel = 1,
@@ -41,7 +41,7 @@ function Components.ImageButton(data: PublicTypes.dictionary): Instance
     })(data)
 end
 
-function Components.TextBox(data: PublicTypes.dictionary): Instance
+function Components.TextBox(data: PublicTypes.Dictionary): Instance
     return Hydrate(New "TextBox" {
         PlaceholderColor3 = Theme.DimmedText.Default,
         BackgroundColor3 = Theme.InputFieldBackground.Default,
@@ -51,7 +51,7 @@ function Components.TextBox(data: PublicTypes.dictionary): Instance
     })(data)
 end
 
-function Components.TopbarButton(index: number, data: PublicTypes.dictionary): Instance
+function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): Instance
     data.Visible = Pages.pageData.pages[data.Name].Visible
 
     local startColor = Color3.fromRGB(245, 158, 29)
@@ -174,7 +174,7 @@ function Components.PageHeader(pageName: string): Instance
     }
 end
 
-function Components.MiniTopbar(data: PublicTypes.dictionary): Instance
+function Components.MiniTopbar(data: PublicTypes.Dictionary): Instance
   return New "Frame" { --// Topbar
         BackgroundColor3 = Theme.CategoryItem.Default,
         BorderColor3 = Theme.Border.Default,
@@ -210,7 +210,7 @@ function Components.MiniTopbar(data: PublicTypes.dictionary): Instance
     }
 end
 
-function optionButtonComponent(data: PublicTypes.dictionary, zIndex: number): Instance
+function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): Instance
     return Components.TextButton({
         LayoutOrder = 1,
         ZIndex = zIndex,
@@ -231,7 +231,7 @@ function optionButtonComponent(data: PublicTypes.dictionary, zIndex: number): In
     })
 end
 
-function Components.TwoOptions(option1Data: PublicTypes.dictionary, option2Data: PublicTypes.dictionary, zIndex: number): Instance
+function Components.TwoOptions(option1Data: PublicTypes.Dictionary, option2Data: PublicTypes.Dictionary, zIndex: number): Instance
     return New "Frame" { --// Buttons
         BackgroundTransparency = 1,
         AnchorPoint = Vector2.new(0, 0),
@@ -270,7 +270,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
     }
 end
 
-function Components.ScrollingFrame(data: PublicTypes.dictionary, bypassRestriction: boolean?): Instance
+function Components.ScrollingFrame(data: PublicTypes.Dictionary, bypassRestriction: boolean?): Instance
     return Hydrate(New "ScrollingFrame" {
         ScrollingEnabled = bypassRestriction or Util.interfaceActive,
         BorderColor3 = Theme.Border.Default,
@@ -285,7 +285,7 @@ function Components.ScrollingFrame(data: PublicTypes.dictionary, bypassRestricti
     })(data)
 end
 
-function Components.Dropdown(data: PublicTypes.dictionary, childrenProcessor: (boolean) -> Instance | {Instance}, bypassRestriction: boolean?): Instance
+function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (boolean) -> Instance | {Instance}, bypassRestriction: boolean?): Instance
     local dropdownVisible = Value(data.DefaultState)
     local headerColor = Value(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
     local frame = Value()
@@ -392,7 +392,7 @@ function Components.Dropdown(data: PublicTypes.dictionary, childrenProcessor: (b
     return dropdown
 end
 
-function Components.DropdownTextlabel(data: PublicTypes.dictionary): Instance
+function Components.DropdownTextlabel(data: PublicTypes.Dictionary): Instance
     return New "TextLabel" {
         TextXAlignment = data.TextXAlignment,
         BackgroundColor3 = Theme.Notification.Default,
@@ -410,7 +410,7 @@ function Components.DropdownTextlabel(data: PublicTypes.dictionary): Instance
    }
 end
 
-function Components.DropdownHolderFrame(data: PublicTypes.dictionary): Instance
+function Components.DropdownHolderFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         AutomaticSize = Computed(function()
             return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None
@@ -424,7 +424,7 @@ function Components.DropdownHolderFrame(data: PublicTypes.dictionary): Instance
     }
 end
 
-function Components.TooltipImage(data: PublicTypes.dictionary): Instance
+function Components.TooltipImage(data: PublicTypes.Dictionary): Instance
     if not data.Tooltip and not data.Header then
         return
     end

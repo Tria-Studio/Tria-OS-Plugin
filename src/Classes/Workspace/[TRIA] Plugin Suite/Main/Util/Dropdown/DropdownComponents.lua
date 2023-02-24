@@ -16,7 +16,7 @@ local Computed = Fusion.Computed
 
 local DropdownComponents = {}
 
-function DropdownComponents.DropdownButton(props: PublicTypes.dictionary): Instance
+function DropdownComponents.DropdownButton(props: PublicTypes.Dictionary): Instance
     local arrowButton = Value()
     local dropdownVisible = Value(false)
 

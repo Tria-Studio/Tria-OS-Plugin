@@ -32,7 +32,7 @@ local Ref = Fusion.Ref
 local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
  
-return function(name: string, data: PublicTypes.dictionary): Instance
+return function(name: string, data: PublicTypes.Dictionary): Instance
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
 
@@ -165,7 +165,7 @@ return function(name: string, data: PublicTypes.dictionary): Instance
                                 BackgroundTransparency = 1,
                                 LayoutOrder = 2,
 
-                                [Children] = ForValues(data.metadata, function(metadataType: PublicTypes.dictionary): Instance
+                                [Children] = ForValues(data.metadata, function(metadataType: PublicTypes.Dictionary): Instance
                                     local textBounds = Value(Vector2.new())
                                     local frameSize = Value(Vector2.new())
 

@@ -67,7 +67,7 @@ function attemptToInsertModel(assetID: number)
     ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
-function SubFrame(data: PublicTypes.dictionary): Instance
+function SubFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         BackgroundTransparency = 1,
         LayoutOrder = data.LayoutOrder,
@@ -80,7 +80,7 @@ function SubFrame(data: PublicTypes.dictionary): Instance
     }
 end
 
-local function GetAssetButton(data: PublicTypes.dictionary): Instance
+local function GetAssetButton(data: PublicTypes.Dictionary): Instance
     local imageColor = Value(Color3.new(1, 1, 1))
 
     return Components.ImageButton {
@@ -162,7 +162,7 @@ local function GetAssetButton(data: PublicTypes.dictionary): Instance
     }
 end
 
-function frame:GetFrame(data: PublicTypes.dictionary): Instance
+function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
@@ -209,7 +209,7 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                                 [Children] = {
                                     Components.Constraints.UIGridLayout(UDim2.new(0, 140, 0, 79), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
                                     Components.Constraints.UIPadding(UDim.new(0, 6), UDim.new(0, 6)),
-                                    ForValues(MapComponents.Addons, function(data: PublicTypes.dictionary): Instance
+                                    ForValues(MapComponents.Addons, function(data: PublicTypes.Dictionary): Instance
                                         return GetAssetButton {
                                             OverlayImage = data.Icon,
                                             OverlayImageTransparency = 0,
@@ -224,7 +224,7 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                                 },
                             },
                             Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
-                            ForValues(MapComponents.Components, function(data: PublicTypes.dictionary): Instance
+                            ForValues(MapComponents.Components, function(data: PublicTypes.Dictionary): Instance
                                 return Components.TextButton {
                                     Size = UDim2.new(1, 0, 0, 32),
                                     LayoutOrder = data.LayoutOrder,

@@ -1,3 +1,3 @@
-export type dictionary = {[any]: any}
+export type Dictionary = {[any]: any}
 
 return nil

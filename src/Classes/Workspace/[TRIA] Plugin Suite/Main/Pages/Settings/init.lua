@@ -41,7 +41,7 @@ function onMapChanged()
     -- Disconnect old connections
     SettingsUtil.SettingMaid:DoCleaning()
     
-    local function updateNormalDataModule(module: PublicTypes.dictionary)
+    local function updateNormalDataModule(module: PublicTypes.Dictionary)
         for _, tbl in ipairs(module.Items) do
             local dirFolder = Util.getDirFolder(module.Directory)
             if not dirFolder then
@@ -66,7 +66,7 @@ function onMapChanged()
     end
 end
 
-function getStandardDropdown(dirKey: string, dirData: PublicTypes.dictionary, visible): Instance
+function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictionary, visible): Instance
     return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
@@ -78,7 +78,7 @@ function getStandardDropdown(dirKey: string, dirData: PublicTypes.dictionary, vi
     }
 end
 
-function frame:GetFrame(data: PublicTypes.dictionary): Instance
+function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local lightingDropdownVisible = Value(true)
 
     return New "Frame" {
@@ -103,7 +103,7 @@ function frame:GetFrame(data: PublicTypes.dictionary): Instance
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
 
-                    ForPairs(directories, function(dirKey: string, dirData: PublicTypes.dictionary): (string, Instance)
+                    ForPairs(directories, function(dirKey: string, dirData: PublicTypes.Dictionary): (string, Instance)
                         local dataModule = SettingData[dirKey]
                         dirData.HeaderChildren = if dataModule.Dynamic then dataModule:getHeaderChildren() else dirData.HeaderChildren
 
