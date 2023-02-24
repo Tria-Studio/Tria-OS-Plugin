@@ -27,7 +27,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
-        Name = "ViewModes",
+        Name = "AudioLib",
 
         [Children] = {
             Components.PageHeader("Audio Library"),
@@ -69,13 +69,14 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Position = UDim2.fromScale(0, 0.925),
 
                                         [Children] = {
-                                            Components.Constraints.UIGridLayout(UDim2.new(1/5, -5, 1, -5), UDim2.fromOffset(5, 5), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
                                             Components.ImageButton { -- Skip to first page
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 1,
                                                 Image = "rbxassetid://4458877936",
-                                                Rotation = 0,
+                                                Rotation = 180,
+                                                Position = UDim2.fromScale(0.1, 0.5),
+                                                Size = UDim2.new(0.2, -5, 1, -5),
                                                 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                             },
@@ -86,6 +87,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 Image = "rbxassetid://6031094687",
                                                 LayoutOrder = 2,
                                                 Rotation = 90,
+                                                Position = UDim2.fromScale(0.3, 0.5),
+                                                Size = UDim2.new(0.2, -5, 1, -5),
                                 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                             },
@@ -98,6 +101,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 TextColor3 = Theme.TitlebarText.Default,
                                                 TextXAlignment = Enum.TextXAlignment.Center,
                                                 TextSize = 16,
+                                                Position = UDim2.fromScale(0.5, 0.5),
+                                                Size = UDim2.new(0.2, -5, 1, -5),
                                             },
 
                                             Components.ImageButton { -- Skip one page right
@@ -105,8 +110,9 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 4,
                                                 Image = "rbxassetid://6031094687",
-                                
                                                 Rotation = -90,
+                                                Position = UDim2.fromScale(0.7, 0.5),
+                                                Size = UDim2.new(0.2, -5, 1, -5),
                                 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                             },
@@ -116,6 +122,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 5,
                                                 Image = "rbxassetid://4458877936",
+                                                Position = UDim2.fromScale(0.9, 0.5),
+                                                Size = UDim2.new(0.2, -5, 1, -5),
 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                             }
