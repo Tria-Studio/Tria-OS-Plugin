@@ -30,7 +30,7 @@ local MOCK_DATA = {
     {["Name"] = "Test Audio 5", ["ID"] = 123456789, ["Artist"] = "Super"}
 }
 
-local ITEMS_PER_PAGE = 2
+local ITEMS_PER_PAGE = 10
 
 local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
@@ -115,7 +115,9 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Size = UDim2.fromScale(1, 0.925),
 
                                         [Children] = {
-                                            Hydrate(Components.Constraints.UIPageLayout(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), true)) {
+                                            Hydrate(Components.Constraints.UIPageLayout(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                                return TOTAL_PAGE_COUNT:get() > 1
+                                            end))) {
                                                 [Ref] = pageLayout
                                             },
 
