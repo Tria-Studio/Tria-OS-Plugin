@@ -81,7 +81,7 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
             New "ImageButton" {
                 ImageTransparency = 1,
                 AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundColor3 = Theme.Button.Pressed,
+                BackgroundColor3 = Theme.Button.Selected,
                 Position = sliderPosition,
 
                 Size = UDim2.fromOffset(12, 12),
@@ -110,7 +110,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
     return New "Frame" {
         BackgroundColor3 = Color3.new(),
-        BackgroundTransparency = 0.6,
+        BackgroundTransparency = 1,
         Size = UDim2.new(1, 0, 1 / ITEMS_PER_PAGE, -4),
         
         [Children] = {
@@ -131,7 +131,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                 Size = UDim2.fromScale(0.5, 0.25),
                 Position = UDim2.fromScale(0, 0.5),
                 Text = "by " .. data.Artist,
-                TextColor3 = Theme.Titlebar.Default,
+                TextColor3 = Theme.SubText.Default,
                 TextSize = 18,
                 TextXAlignment = Enum.TextXAlignment.Left,
 
@@ -150,9 +150,9 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
             New "Frame" {
                 AnchorPoint = Vector2.new(0.5, 0),
-                BackgroundTransparency = 0.8,
+                BackgroundTransparency = 1,
                 Size = UDim2.fromScale(0.45, 0.4),
-                Position = UDim2.new(0.75, 0, 0.05, -5),
+                Position = UDim2.new(0.75, 0, 0.075, 0),
 
                 [Children] = {
                     Slider {
