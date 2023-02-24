@@ -31,6 +31,8 @@ local MOCK_DATA = {
 }
 
 local ITEMS_PER_PAGE = 2
+
+local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
 
 local function AudioButton(data: PublicTypes.Dictionary): Instance
@@ -109,12 +111,11 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                                 [Children] = {
                                     New "Frame" { -- Main
-                                        BackgroundTransparency = 0.8,
-                                        BackgroundColor3 = Color3.new(1, 0, 0),
+                                        BackgroundTransparency = 1,
                                         Size = UDim2.fromScale(1, 0.925),
 
                                         [Children] = {
-                                            Hydrate(Components.Constraints.UIPageLayout(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), true)) {
+                                            Hydrate(Components.Constraints.UIPageLayout(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), true)) {
                                                 [Ref] = pageLayout
                                             },
 
@@ -140,6 +141,10 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 Size = UDim2.new(0.2, -5, 1, -5),
                                                 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
+                                                [OnEvent "Activated"] = function()
+                                                    pageLayout:get(false):JumpToIndex(1)
+                                                    CURRENT_PAGE_COUNT:set(1)
+                                                end
                                             },
                                             
                                             Components.ImageButton { -- Skip one page left
@@ -153,13 +158,19 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 Size = UDim2.new(0.2, -5, 1, -5),
                                 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
+                                                [OnEvent "Activated"] = function()
+                                                    pageLayout:get(false):Previous()
+                                                    CURRENT_PAGE_COUNT:set(CURRENT_PAGE_COUNT:get(false) - 1)
+                                                end
                                             },
                                             
                                             New "TextLabel" {
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                                 BackgroundTransparency = 1,
                                                 LayoutOrder = 3,
-                                                Text = "Page 1/10",
+                                                Text = Computed(function()
+                                                    return ("Page %d/%d"):format(CURRENT_PAGE_COUNT:get(), TOTAL_PAGE_COUNT:get())
+                                                end),
                                                 TextColor3 = Theme.TitlebarText.Default,
                                                 TextXAlignment = Enum.TextXAlignment.Center,
                                                 TextSize = 16,
@@ -179,8 +190,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
                                                 [OnEvent "Activated"] = function()
-                                                    local layout = pageLayout:get(false)
-                                                    layout:Next()
+                                                    pageLayout:get(false):Next()
+                                                    CURRENT_PAGE_COUNT:set(CURRENT_PAGE_COUNT:get(false) + 1)
                                                 end
                                             },
 
@@ -194,6 +205,10 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                                 Size = UDim2.new(0.2, -5, 1, -5),
 
                                                 [Children] = Components.Constraints.UIAspectRatio(1),
+                                                [OnEvent "Activated"] = function()
+                                                    pageLayout:get(false):JumpToIndex(TOTAL_PAGE_COUNT)
+                                                    CURRENT_PAGE_COUNT:set(TOTAL_PAGE_COUNT)
+                                                end
                                             }
                                         }
                                     },
