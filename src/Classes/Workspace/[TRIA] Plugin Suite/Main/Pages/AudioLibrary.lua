@@ -1,4 +1,7 @@
 local UserInputService = game:GetService("UserInputService")
+local ContentProvider = game:GetService("ContentProvider")
+local SoundService = game:GetService("SoundService")
+
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
@@ -28,17 +31,19 @@ local frame = {}
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local MOCK_DATA = {
-    {["Name"] = "Test Audio 1", ["ID"] = 123456789, ["Artist"] = "Kris"},
-    {["Name"] = "Test Audio 2", ["ID"] = 123456789, ["Artist"] = "Grif"},
-    {["Name"] = "Test Audio 3", ["ID"] = 123456789, ["Artist"] = "Ethan"},
-    {["Name"] = "Test Audio 4", ["ID"] = 123456789, ["Artist"] = "Umbreon"},
-    {["Name"] = "Test Audio 5", ["ID"] = 123456789, ["Artist"] = "Super"}
+    {["Name"] = "Test Audio 1", ["ID"] = 5410085763, ["Artist"] = "Kris"},
+    {["Name"] = "Test Audio 2", ["ID"] = 0, ["Artist"] = "Grif"},
+    {["Name"] = "Test Audio 3", ["ID"] = 0, ["Artist"] = "Ethan"},
+    {["Name"] = "Test Audio 4", ["ID"] = 0, ["Artist"] = "Umbreon"},
+    {["Name"] = "Test Audio 5", ["ID"] = 0, ["Artist"] = "Super"}
 }
 
 local ITEMS_PER_PAGE = 5
 
 local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
+
+local currentAudio = Value(nil)
 
 local function round(num: number, step: number): number
 	return math.round(num / step) * step
@@ -159,7 +164,36 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                         Value = previewTime,
                         Min = Value(0),
                         Max = soundLength
-                    }
+                    },
+
+                    New "ImageButton" {
+                        Image = Computed(function()
+                            return "rbxasset://textures/StudioToolbox/AudioPreview/" .. (currentAudio:get() == previewSound and "Pause" or "Play") .. ".png"
+                        end),
+                        BackgroundTransparency = 1,
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        Position = UDim2.fromScale(0.85, 0.4),
+        
+                        Size = UDim2.fromOffset(18, 18),
+                        SizeConstraint = Enum.SizeConstraint.RelativeYY,
+        
+                        [Children] = Components.Constraints.UICorner(1, 0),
+                        [OnEvent "Activated"] = function()
+                            local playing = currentAudio:get(false)
+                            if playing ~= previewSound then
+                                if playing then
+                                    playing:Stop()
+                                end
+                                SoundService:PlayLocalSound(previewSound)
+                                currentAudio:set(previewSound)
+                            else
+                                if playing then
+                                    playing:Stop()
+                                end
+                                currentAudio:set(nil)
+                            end
+                        end
+                    },
                 }
             }
         }
