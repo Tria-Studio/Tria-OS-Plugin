@@ -1,3 +1,4 @@
+local UserInputService = game:GetService("UserInputService")
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
@@ -17,6 +18,10 @@ local Value = Fusion.Value
 local ForValues = Fusion.ForValues
 local Hydrate = Fusion.Hydrate
 local Ref = Fusion.Ref
+local Out = Fusion.Out
+local Spring = Fusion.Spring
+
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local frame = {}
 
@@ -35,7 +40,74 @@ local ITEMS_PER_PAGE = 5
 local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 
+local function round(num: number, step: number): number
+	return math.round(num / step) * step
+end
+
+local function secondsToTime(seconds: number): string
+    return ("%02i:%02i"):format(seconds / 60 % 60, seconds % 60)
+end
+
+local function Slider(data: PublicTypes.Dictionary): {Instance}
+    local absolutePosition = Value(Vector2.zero)
+    local absoluteSize = Value(Vector2.zero)
+    local text = Value("")
+
+    local increment = 0.5
+
+    local min = data.Min
+    local max = data.Max
+
+    local sliderPosition = Spring(Computed(function()
+        return UDim2.fromScale((data.Value:get() - min:get()) / (max:get() - min:get()), 0.5)
+    end), 10)
+
+    --[[
+        The slider is currently non-scrollable due to a bug with roblox's plugin UI's.
+        For now it'll only show progress, but once this bug is fixed I'll reupdate it to be able to drag.
+
+        Link: https://devforum.roblox.com/t/1549608
+    --]]
+
+    local sliderFrame = New "Frame" {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Position = UDim2.fromScale(0.45, 0.4),
+        Size = UDim2.fromScale(0.6, 0.25),
+
+        [Out "AbsolutePosition"] = absolutePosition,
+        [Out "AbsoluteSize"] = absoluteSize,
+
+        [Children] = {
+            New "ImageButton" {
+                ImageTransparency = 1,
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BackgroundColor3 = Theme.Button.Pressed,
+                Position = sliderPosition,
+
+                Size = UDim2.fromOffset(12, 12),
+                SizeConstraint = Enum.SizeConstraint.RelativeYY,
+
+                [Children] = Components.Constraints.UICorner(1, 0)
+            },
+        },
+    }
+
+    return sliderFrame
+end
+
 local function AudioButton(data: PublicTypes.Dictionary): Instance
+    local previewTime = Value(0)
+
+    local previewSound = Instance.new("Sound")
+    previewSound.SoundId = "rbxassetid://" .. data.ID
+
+    local soundLength = Value(1)
+    previewSound.Loaded:Connect(function(soundId)
+        soundLength:set(previewSound.TimeLength)
+    end)
+
+    local isEditing = Value(false)
+
     return New "Frame" {
         BackgroundColor3 = Color3.new(),
         BackgroundTransparency = 0.6,
@@ -44,9 +116,10 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.5, 0.5),
+                Size = UDim2.fromScale(0.5, 0.25),
+                Position = UDim2.fromScale(0, 0.25),
                 Text = data.Name,
-                TextColor3 = Theme.TitlebarText.Default,
+                TextColor3 = Theme.SubText.Default,
                 TextSize = 18,
                 TextXAlignment = Enum.TextXAlignment.Left,
 
@@ -55,10 +128,10 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
             New "TextLabel" {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.5, 0.5),
+                Size = UDim2.fromScale(0.5, 0.25),
                 Position = UDim2.fromScale(0, 0.5),
                 Text = "by " .. data.Artist,
-                TextColor3 = Theme.SubText.Default,
+                TextColor3 = Theme.Titlebar.Default,
                 TextSize = 18,
                 TextXAlignment = Enum.TextXAlignment.Left,
 
@@ -79,10 +152,14 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                 AnchorPoint = Vector2.new(0.5, 0),
                 BackgroundTransparency = 0.8,
                 Size = UDim2.fromScale(0.45, 0.4),
-                Position = UDim2.fromScale(0.75, 0.05),
+                Position = UDim2.new(0.75, 0, 0.05, -5),
 
                 [Children] = {
-                    
+                    Slider {
+                        Value = previewTime,
+                        Min = Value(0),
+                        Max = soundLength
+                    }
                 }
             }
         }
