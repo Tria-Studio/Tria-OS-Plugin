@@ -41,7 +41,7 @@ local MOCK_DATA = {
     {["Name"] = "Test Audio 5", ["ID"] = 0, ["Artist"] = "Super"}
 }
 
-local ITEMS_PER_PAGE = 5
+local ITEMS_PER_PAGE = 8
 
 local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
@@ -97,7 +97,7 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
                 BackgroundColor3 = Color3.fromRGB(247, 0, 255),
                 Position = sliderPosition,
 
-                Size = UDim2.fromOffset(12, 12),
+                Size = UDim2.fromScale(1.9, 1.9),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
 
@@ -138,42 +138,31 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
         soundLength:set(previewSound.TimeLength)
     end)
     previewSound.Ended:Connect(function()
+        isPlaying = false
+        timePosition:set(0)
         currentAudio:set(nil)
     end)
 
     RunService.Heartbeat:Connect(function(deltaTime)
-        if isPlaying then
+        if isPlaying and previewSound.IsLoaded then
             timePosition:set(timePosition:get(false) + deltaTime)
         end
     end)
 
     return New "Frame" {
         BackgroundColor3 = Color3.new(),
-        BackgroundTransparency = 1,
+        BackgroundTransparency = 0.8,
         Size = UDim2.new(1, 0, 1 / ITEMS_PER_PAGE, -4),
         
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.4, 0.25),
-                Position = UDim2.fromScale(0, 0.25),
-                Text = data.Name,
+                Size = UDim2.fromScale(0.4, 1),
+                Position = UDim2.fromScale(0, 0),
+                Text = ("%s - %s"):format(data.Artist, data.Name),
                 TextColor3 = Theme.SubText.Default,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 18,
-                TextXAlignment = Enum.TextXAlignment.Left,
-
-                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
-            },
-
-            New "TextLabel" {
-                BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.4, 0.25),
-                Position = UDim2.fromScale(0, 0.5),
-                Text = "by " .. data.Artist,
-                TextColor3 = Theme.SubText.Default,
-                TextTruncate = Enum.TextTruncate.AtEnd,
-                TextSize = 18,
+                TextSize = 15,
                 TextXAlignment = Enum.TextXAlignment.Left,
 
                 [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
@@ -183,6 +172,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                 Size = UDim2.fromScale(0.4, 0.4),
                 Position = UDim2.new(0.45, 0, 0.6, -5),
                 Text = "Set as Map BGM",
+                TextSize = 15,
 
                 [Children] = {
                     Components.Constraints.UICorner(0, 8)
@@ -214,7 +204,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         Position = UDim2.fromScale(0.025, 0.4),
         
-                        Size = UDim2.fromOffset(18, 18),
+                        Size = UDim2.fromScale(1, 1),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         
                         [Children] = Components.Constraints.UICorner(1, 0),
