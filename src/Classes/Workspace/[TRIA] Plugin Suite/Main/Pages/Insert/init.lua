@@ -71,19 +71,6 @@ function attemptToInsertModel(assetID: number)
     ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
-function SubFrame(data: PublicTypes.Dictionary): Instance
-    return New "Frame" {
-        BackgroundTransparency = 1,
-        LayoutOrder = data.LayoutOrder,
-        Size = UDim2.new(1, 0, 0, 64),
-
-        [Children] = {
-            Components.Constraints.UIListLayout(Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center, UDim.new(0, 8), Enum.VerticalAlignment.Top),
-            data.Children
-        }
-    }
-end
-
 local function GetAssetButton(data: PublicTypes.Dictionary): Instance
     local imageColor = Value(Color3.new(1, 1, 1))
 
@@ -94,11 +81,17 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         Size = UDim2.new(1, -24, 0, 95),
         ScaleType = data.ImageCrop,
         [OnEvent "MouseButton1Down"] = function()
+            if data.FullSize and not Util.interfaceActive:get() then
+                return
+            end
             if imageColor:get(false) == Color3.new(.8, .8, .8) then
                 imageColor:set(Color3.new(.99,.99,.99))
             end
         end,
         [OnEvent "MouseButton1Up"] = function()
+            if data.FullSize and not Util.interfaceActive:get() then
+                return
+            end
             if imageColor:get(false) ~= Color3.new(1, 1, 1) then
                 imageColor:set(Color3.new(.8,.8,.8))
             end
@@ -106,7 +99,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
 
         [OnEvent "Activated"] = function()
             if data.ActivatedFunction then
-                data.ActivatedFunction()
+                    data.ActivatedFunction()
             else
                 attemptToInsertModel(data.ModelId)
             end
@@ -118,11 +111,17 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
 
             New "ImageLabel" {
                 [OnEvent "MouseEnter"] = function()
+                    if data.FullSize and not Util.interfaceActive:get() then
+                        return
+                    end
                     if imageColor:get(false) == Color3.new(1, 1, 1) then
                         imageColor:set(Color3.new(.8, .8, .8))
                     end
                 end,
                 [OnEvent "MouseLeave"] = function()
+                    if data.FullSize and not Util.interfaceActive:get() then
+                        return
+                    end
                     if imageColor:get(false) ~= Color3.new(1, 1, 1) then
                         imageColor:set(Color3.new(1, 1, 1))
                     end
@@ -246,6 +245,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
                             ForValues(MapComponents.Components, function(data: PublicTypes.Dictionary): Instance
                                 return Components.TextButton {
+                                    Active = Util.interfaceActive,
+                                    AutoButtonColor = Util.interfaceActive,
                                     Size = UDim2.new(1, 0, 0, 32),
                                     LayoutOrder = data.LayoutOrder,
                                     Text = " " .. data.Name,
