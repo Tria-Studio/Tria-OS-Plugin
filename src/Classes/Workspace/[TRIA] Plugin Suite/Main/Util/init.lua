@@ -269,6 +269,22 @@ function Util.attemptScriptInjection()
     plugin:SetSetting("TRIA_ScriptInjectionEnabled", hasScriptInjection)
 end
 
+function Util.getObjectCountWithNameMatch(pattern: string, path: Instance?, anyInstance: boolean?): number
+    local map = Util.mapModel:get(false)
+    local check = path or Util.hasSpecialFolder:get(false) and map.Special or map
+
+    local highest = 0
+    for _, model: Instance in ipairs(check:GetDescendants()) do 
+        if (model:IsA("Model") or anyInstance) and model.Name:match(pattern .. "%d+") then 
+            local objectNum = tonumber(model.Name:match(pattern .. "(%d+)")); 
+            if objectNum then
+                highest = math.max(highest, objectNum)
+            end
+        end 
+    end
+    return highest
+end
+
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
 Observer(Util.mapModel):onChange(updateButtonsActive)

@@ -1,5 +1,4 @@
-local Settings = {}
-Settings.enabled = true
-Settings.runsInTriaScripts = false
-
-return Settings
+return {
+    enabled = true,
+    runsInTriaScripts = false
+}

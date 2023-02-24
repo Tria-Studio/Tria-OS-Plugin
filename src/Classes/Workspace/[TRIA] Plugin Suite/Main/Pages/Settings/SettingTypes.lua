@@ -77,7 +77,7 @@ function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.Stat
             New "TextLabel" {
                 BackgroundTransparency = 1,
                 Size = UDim2.fromScale(0.45, 1),
-                FontFace = Font.new("SourceSansPro"),
+                FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json"),
                 Text = data.Text,
                 TextTruncate = Enum.TextTruncate.AtEnd,
                 TextColor3 = Computed(function()
@@ -120,7 +120,7 @@ function InputBox(data: PublicTypes.Dictionary, baseButton: Instance): (PublicTy
             end),
             BackgroundColor3 = Theme.InputFieldBackground.Default,
             BorderSizePixel = 1,
-            FontFace = Font.new("SourceSansPro"),
+            FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json"),
             TextColor3 = Computed(function()
                 return getSettingTextColor(data)
             end),
@@ -352,7 +352,7 @@ function SettingTypes.Dropdown(data: PublicTypes.Dictionary): Instance
                 AnchorPoint = Vector2.new(1, 0),
                 BackgroundTransparency = 1,
                 BorderSizePixel = 1,
-                FontFace = Font.new("SourceSansPro"),
+                FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json"),
                 Position = UDim2.fromScale(1, 0),
                 Size = UDim2.new(0.575, -28, 1, 0),
                 Text = data.Value,

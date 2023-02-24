@@ -219,7 +219,8 @@ function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): In
         Text = data.Text, 
         AutomaticSize = Enum.AutomaticSize.X,
         TextColor3 = Theme.BrightText.Default,
-        Font = Enum.Font.SourceSansSemibold,
+        TextStrokeTransparency = data.IsPrimary and 0.75,
+        Font = Enum.Font.SourceSansBold,
         BorderMode = Enum.BorderMode.Outline,
         Visible = Computed(function()
             if typeof(data.Text) == "table" then
@@ -227,11 +228,13 @@ function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): In
             end
             return true
         end),
-        [OnEvent "Activated"] = data.Callback
+        [OnEvent "Activated"] = data.Callback,
+        [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 2), UDim.new(0, 2))
     })
 end
 
 function Components.TwoOptions(option1Data: PublicTypes.Dictionary, option2Data: PublicTypes.Dictionary, zIndex: number): Instance
+    option1Data.IsPrimary = true
     return New "Frame" { --// Buttons
         BackgroundTransparency = 1,
         AnchorPoint = Vector2.new(0, 0),
@@ -309,6 +312,9 @@ function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (b
             headerPos = true
         end,
         [OnEvent "MouseMoved"] = function(_, Ypos)
+            if Util.isPluginFrozen() then
+                return
+            end
             Ypos -= frame:get().AbsolutePosition.Y
             if Ypos <= 24 and headerPos then
                 headerPos = false
@@ -325,7 +331,7 @@ function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (b
                     Active = bypassRestriction or Util.interfaceActive,
                     BackgroundTransparency = 1,
     
-                    FontFace = Font.new("SourceSans", Enum.FontWeight.Bold),
+                    FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold),
                     Size = UDim2.new(1, -20, 0, 24),
                     Position = UDim2.fromOffset(24, 0),
     

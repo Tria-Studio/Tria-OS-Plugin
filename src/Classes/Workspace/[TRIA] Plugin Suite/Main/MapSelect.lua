@@ -128,7 +128,9 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         local success, message = self:IsTriaMap(newMap)
 
         if not success then
-            Util:ShowMessage(Util.ERROR_HEADER, tostring(message))
+            Util:ShowMessage(Util.ERROR_HEADER, tostring(message), {Text = "Get Mapkit", Callback = function()
+                Pages:ChangePage("Insert")
+            end})
             self:ResetSelection()
             return false
         end
