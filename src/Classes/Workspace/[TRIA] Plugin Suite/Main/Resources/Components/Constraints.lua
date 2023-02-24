@@ -4,71 +4,81 @@ local New = Fusion.New
 
 local Constraints = {}
 
-function Constraints.UIListLayout(FillDirection: Enum.FillDirection?, HorizontalAlignment: Enum.HorizontalAlignment?, Padding: UDim?, VerticalAlignment: Enum.VerticalAlignment?, SortOrder: Enum.SortOrder?): Instance
+function Constraints.UIListLayout(fillDirection: Enum.FillDirection?, horizontalAlignment: Enum.HorizontalAlignment?, padding: UDim?, verticalAlignment: Enum.VerticalAlignment?, sortOrder: Enum.SortOrder?): Instance
     return New "UIListLayout" {
-        Padding = Padding,
-        FillDirection = FillDirection,
-        HorizontalAlignment = HorizontalAlignment,
-        VerticalAlignment = VerticalAlignment,
-        SortOrder = SortOrder or Enum.SortOrder.LayoutOrder,
+        Padding = padding,
+        FillDirection = fillDirection,
+        HorizontalAlignment = horizontalAlignment,
+        VerticalAlignment = verticalAlignment,
+        SortOrder = sortOrder or Enum.SortOrder.LayoutOrder,
     }
 end
 
-function Constraints.UIAspectRatio(AspectRatio: number, AspectType: Enum.AspectType?): Instance
+function Constraints.UIAspectRatio(aspectRatio: number, aspectType: Enum.AspectType?): Instance
     return New "UIAspectRatioConstraint" {
-        AspectRatio = AspectRatio,
-        AspectType = AspectType
+        AspectRatio = aspectRatio,
+        AspectType = aspectType
     }
 end
 
-function Constraints.UIPadding(Top: UDim?, Bottom: UDim?, Left: UDim?, Right: UDim?): Instance
+function Constraints.UIPadding(top: UDim?, bottom: UDim?, left: UDim?, right: UDim?): Instance
     return New "UIPadding" {
-        PaddingTop = Top,
-        PaddingBottom = Bottom,
-        PaddingLeft = Left,
-        PaddingRight = Right,
+        PaddingTop = top,
+        PaddingBottom = bottom,
+        PaddingLeft = left,
+        PaddingRight = right,
     }
 end
 
-function Constraints.UISizeConstraint(MinSize: Vector2?, MaxSize: Vector2?): Instance
+function Constraints.UISizeConstraint(minSize: Vector2?, maxSize: Vector2?): Instance
     return New "UISizeConstraint" {
-        MinSize = MinSize,
-        MaxSize = MaxSize
+        MinSize = minSize,
+        MaxSize = maxSize
     }
 end
 
-function Constraints.UIStroke(Thickness: number?, Color: Color3, StrokeMode: Enum.ApplyStrokeMode?, Transparency: number?): Instance
+function Constraints.UIStroke(thickness: number?, color: Color3, strokeMode: Enum.ApplyStrokeMode?, transparency: number?): Instance
 	return New "UIStroke" {
-		ApplyStrokeMode = StrokeMode,
-		Thickness = Thickness,
-		Color = Color,
-		Transparency = Transparency
+		ApplyStrokeMode = strokeMode,
+		Thickness = thickness,
+		Color = color,
+		Transparency = transparency
 	}
 end
 
-function Constraints.UICorner(Scale: number, Offset: number): Instance
+function Constraints.UICorner(scale: number, offset: number): Instance
 	return New "UICorner" {
-		CornerRadius = UDim.new(Scale, Offset)
+		CornerRadius = UDim.new(scale, offset)
 	}
 end
 
-function Constraints.UIGradient(Color: ColorSequence?, Transparency: NumberSequence?, Rotation: number?, Enabled: any?): Instance
+function Constraints.UIGradient(color: ColorSequence?, transparency: NumberSequence?, rotation: number?, enabled: any?): Instance
 	return New "UIGradient" {
-		Color = Color,
-        Enabled = Enabled,
-		Rotation = Rotation,
-		Transparency = Transparency
+		Color = color,
+        Enabled = enabled,
+		Rotation = rotation,
+		Transparency = transparency
 	}
 end
 
-function Constraints.UIGridLayout(CellSize: UDim2, CellPadding: UDim2, FillDirection: Enum.FillDirection, HorizontalAlignment: Enum.HorizontalAlignment): Instance
+function Constraints.UIGridLayout(cellSize: UDim2, cellPadding: UDim2, fillDirection: Enum.FillDirection, horizontalAlignment: Enum.HorizontalAlignment): Instance
 	return New "UIGridLayout" {
-		CellSize = CellSize,
-		CellPadding = CellPadding,
-		FillDirection = FillDirection,
-        HorizontalAlignment = HorizontalAlignment,
+		CellSize = cellSize,
+		CellPadding = cellPadding,
+		FillDirection = fillDirection,
+        HorizontalAlignment = horizontalAlignment,
         SortOrder = Enum.SortOrder.LayoutOrder
 	}
+end
+
+function Constraints.UIPageLayout(tweenTime: number, easingStyle: Enum.EasingStyle?, easingDirection: Enum.EasingDirection?, padding: UDim?, circular: boolean?): Instance
+    return New "UIPageLayout" {
+        TweenTime = tweenTime,
+        EasingStyle = easingStyle,
+        EasingDirection = easingDirection,
+        Circular = circular,
+        Padding = padding,
+    }
 end
 
 return Constraints

@@ -24,11 +24,21 @@ local MOCK_DATA = {
     {["Name"] = "Test Audio One", ["ID"] = 123456789, ["Artist"] = "Kris"}
 }
 
+local ITEMS_PER_PAGE = 10
+
 local function AudioButton(data: PublicTypes.Dictionary): Instance
-    
+    return New "Frame" {
+        Size = UDim2.fromScale(1, 0)
+    }
+end
+
+local function getAudioChildren()
+    return AudioButton(MOCK_DATA[1])
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
+    local pageLayout = Value()
+    
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
@@ -68,7 +78,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Size = UDim2.fromScale(1, 0.925),
 
                                         [Children] = {
-
+                                            getAudioChildren()
                                         }
                                     },
 
