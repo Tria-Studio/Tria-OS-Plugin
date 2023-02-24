@@ -69,7 +69,11 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
 
     local sliderPosition = Spring(Computed(function()
         return UDim2.fromScale((data.Value:get() - min:get()) / (max:get() - min:get()), 0.5)
-    end), 10)
+    end), 20)
+
+    local backFrameSize = Spring(Computed(function()
+        return UDim2.fromScale(data.Value:get() / max:get(), 1)
+    end), 20)
 
     --[[
         The slider is currently non-scrollable due to a bug with roblox's plugin UI's.
@@ -80,8 +84,8 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
 
     local sliderFrame = New "Frame" {
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = UDim2.fromScale(0.45, 0.4),
-        Size = UDim2.fromScale(0.6, 0.25),
+        Position = UDim2.fromScale(0.35, 0.4),
+        Size = UDim2.fromScale(0.75, 0.25),
 
         [Out "AbsolutePosition"] = absolutePosition,
         [Out "AbsoluteSize"] = absoluteSize,
@@ -95,9 +99,19 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
 
                 Size = UDim2.fromOffset(12, 12),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
+                ZIndex = 2,
 
                 [Children] = Components.Constraints.UICorner(1, 0)
             },
+
+            New "Frame" {
+                BackgroundColor3 = Color3.new(),
+                Size = backFrameSize,
+
+                [Children] = Components.Constraints.UICorner(0, 8)
+            },
+
+            Components.Constraints.UICorner(0, 8)
         },
     }
 
@@ -138,10 +152,11 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.5, 0.25),
+                Size = UDim2.fromScale(0.4, 0.25),
                 Position = UDim2.fromScale(0, 0.25),
                 Text = data.Name,
                 TextColor3 = Theme.SubText.Default,
+                TextTruncate = Enum.TextTruncate.AtEnd,
                 TextSize = 18,
                 TextXAlignment = Enum.TextXAlignment.Left,
 
@@ -150,10 +165,11 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
             New "TextLabel" {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.5, 0.25),
+                Size = UDim2.fromScale(0.4, 0.25),
                 Position = UDim2.fromScale(0, 0.5),
                 Text = "by " .. data.Artist,
                 TextColor3 = Theme.SubText.Default,
+                TextTruncate = Enum.TextTruncate.AtEnd,
                 TextSize = 18,
                 TextXAlignment = Enum.TextXAlignment.Left,
 
@@ -178,9 +194,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
 
                 [Children] = {
                     Slider {
-                        Value = Computed(function()
-                            return timePosition:get() / soundLength:get()
-                        end),
+                        Value = timePosition,
                         Min = Value(0),
                         Max = soundLength
                     },
