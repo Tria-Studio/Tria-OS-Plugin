@@ -251,7 +251,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     LayoutOrder = data.LayoutOrder,
                                     Text = " " .. data.Name,
                                     TextSize = 17,
-                                    BorderSizePixel = 0,
                                     TextColor3 = Theme.BrightText.Default,
                                     Font = Enum.Font.SourceSansSemibold,
                                     TextXAlignment = Enum.TextXAlignment.Left,
