@@ -602,7 +602,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
 end
 
 frame.OnOpen = fetchApi
-frame.OnClose = function()
+
+function frame.OnClose()
     local playing = currentAudio:get(false)
     if not playing then
         return
