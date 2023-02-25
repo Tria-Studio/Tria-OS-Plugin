@@ -6,7 +6,7 @@ local openButton = toolbar:CreateButton(
 	"TRIA.os Mapmaker"
 )
 
-local widgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 300)
+local widgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 400, 300)
 local widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", widgetInfo)
 
 local Resources = script.Resources
