@@ -47,6 +47,7 @@ local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 
 local currentAudio = Value(nil)
+local isUsingSlider = Value(false)
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
 local function round(num: number, step: number): number
@@ -57,38 +58,59 @@ local function secondsToTime(seconds: number): string
     return ("%02i:%02i"):format(seconds / 60 % 60, seconds % 60)
 end
 
-local function Slider(data: PublicTypes.Dictionary): {Instance}
+local function lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
+    return (1 - t) * a + t * b
+end
+
+local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance}
     local absolutePosition = Value(Vector2.zero)
     local absoluteSize = Value(Vector2.zero)
+
     local text = Value("")
 
-    local increment = 0.5
+    local increment = 1
 
     local min = data.Min
     local max = data.Max
 
-    local sliderPosition = Spring(Computed(function()
+    local sliderPosition = Computed(function()
         return UDim2.fromScale((data.Value:get() - min:get()) / (max:get() - min:get()), 0.5)
-    end), 20)
+    end)
 
-    local backFrameSize = Spring(Computed(function()
+    local backFrameSize = Computed(function()
         return UDim2.fromScale(data.Value:get() / max:get(), 1)
-    end), 20)
+    end)
 
-    --[[
-        The slider is currently non-scrollable due to a bug with roblox's plugin UI's.
-        For now it'll only show progress, but once this bug is fixed I'll reupdate it to be able to drag.
+    local function updateSliderValue(mousePos: Vector2)
+        local percent = 1 - math.clamp(-1 + ((mousePos.X + absoluteSize:get(false).X) / 2 / absoluteSize:get(false).X + 0.5) * 2, 0, 1)
+    
+        data.Value:set(math.clamp(
+            round(lerp(min:get(false), max:get(false), percent), increment), 
+            min:get(false), 
+            max:get(false)
+        ))
+    end
 
-        Link: https://devforum.roblox.com/t/1549608
-    --]]
-
-    local sliderFrame = New "Frame" {
+    local sliderFrame = New "ImageButton" {
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.4),
         Size = UDim2.fromScale(0.75, 0.25),
+        ImageTransparency = 1,
 
         [Out "AbsolutePosition"] = absolutePosition,
         [Out "AbsoluteSize"] = absoluteSize,
+
+        [OnEvent "MouseButton1Down"] = function()
+            local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
+            updateSliderValue(mousePos)
+        end,
+
+        [OnEvent "MouseMoved"] = function()
+            if isUsingSlider:get(false) then
+                local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
+                updateSliderValue(mousePos)
+            end
+        end,
 
         [Children] = {
             New "ImageButton" {
@@ -97,14 +119,22 @@ local function Slider(data: PublicTypes.Dictionary): {Instance}
                 BackgroundColor3 = Color3.fromRGB(247, 0, 255),
                 Position = sliderPosition,
 
-                Size = UDim2.fromScale(1.9, 1.9),
+                Size = UDim2.fromScale(1.6, 1.6),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
 
                 [Children] = {
                     Components.Constraints.UICorner(1, 0),
                     Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
-                }
+                },
+
+                [OnEvent "MouseButton1Up"] = function()
+                    isUsingSlider:set(false)
+                end,
+
+                [OnEvent "MouseButton1Down"] = function()
+                    isUsingSlider:set(true)
+                end
             },
 
             New "Frame" {
@@ -132,7 +162,7 @@ local function fade(sound: Sound, direction: string)
     end
 end
 
-local function AudioButton(data: PublicTypes.Dictionary): Instance
+local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     local timePosition = Value(0)
 
     local previewSound = PlguinSoundManager:QueueSound(data.ID)
@@ -145,7 +175,6 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
         soundLength:set(previewSound.TimeLength)
     end)
     previewSound.Played:Connect(function()
-        timePosition:set(0)
         isPlaying = true
     end)
     previewSound.Stopped:Connect(function()
@@ -159,7 +188,12 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
     end)
 
     RunService.Heartbeat:Connect(function(deltaTime)
-        if isPlaying and previewSound.IsLoaded and previewSound == currentAudio:get(false) then
+        if 
+            isPlaying 
+            and previewSound.IsLoaded 
+            and previewSound == currentAudio:get(false) 
+            and not isUsingSlider:get(false) 
+        then
             timePosition:set(timePosition:get(false) + deltaTime)
         end
     end)
@@ -184,10 +218,11 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
             },
 
             Components.TextButton {
-                Size = UDim2.fromScale(0.4, 0.4),
-                Position = UDim2.new(0.45, 0, 0.6, -5),
-                Text = "Set as Map BGM",
+                Size = UDim2.fromScale(0.1, 0.9),
+                Position = UDim2.new(0.875, 0, 0.05, 0),
+                Text = "Set Map BGM",
                 TextSize = 15,
+                TextScaled = true,
 
                 [Children] = {
                     Components.Constraints.UICorner(0, 8)
@@ -201,14 +236,14 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
             New "Frame" {
                 AnchorPoint = Vector2.new(0.5, 0),
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.425, 0.4),
-                Position = UDim2.new(0.675, 0, 0.075, 0),
+                Size = UDim2.fromScale(0.425, 0.8),
+                Position = UDim2.new(0.675, 0, 0.2, 0),
 
                 [Children] = {
                     Slider {
                         Value = timePosition,
                         Min = Value(0),
-                        Max = soundLength
+                        Max = soundLength,
                     },
 
                     New "ImageButton" {
@@ -219,7 +254,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         Position = UDim2.fromScale(0.025, 0.4),
         
-                        Size = UDim2.fromScale(1, 1),
+                        Size = UDim2.fromScale(0.5, 0.5),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         
                         [Children] = Components.Constraints.UICorner(1, 0),
@@ -229,6 +264,7 @@ local function AudioButton(data: PublicTypes.Dictionary): Instance
                                 if playing then
                                     fade(playing, "Out")
                                 end
+                                previewSound.TimePosition = timePosition:get(false)
                                 previewSound:Play()
                                 currentAudio:set(previewSound)
                                 fade(previewSound, "In")
@@ -257,7 +293,6 @@ local function getAudioChildren(): {Instance}
             BackgroundTransparency = 1,
             LayoutOrder = index,
             Size = UDim2.fromScale(1, 1),
-
             [Children] = {
                 Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
                 Computed(function()
