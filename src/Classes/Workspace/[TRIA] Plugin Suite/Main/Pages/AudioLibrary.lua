@@ -48,11 +48,13 @@ local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 
 local currentAudio = Value(nil)
+local currentAudioVolume = Value(1)
+
 local isUsingSlider = Value(false)
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
 function fade(sound: Sound, direction: string)
-    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
+    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and currentAudioVolume:get(false) or 0)})
     tween:Play()
 
     if direction == "Out" then
@@ -67,8 +69,6 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
     local absoluteSize = Value(Vector2.zero)
 
     local text = Value("")
-
-    local increment = 1
 
     local min = data.Min
     local max = data.Max
@@ -85,7 +85,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
         local percent = 1 - math.clamp(-1 + ((mousePos.X + absoluteSize:get(false).X) / 2 / absoluteSize:get(false).X + 0.5) * 2, 0, 1)
     
         data.Value:set(math.clamp(
-            Util.round(Util.lerp(min:get(false), max:get(false), percent), increment), 
+            Util.round(Util.lerp(min:get(false), max:get(false), percent), data.Increment), 
             min:get(false), 
             max:get(false)
         ))
@@ -93,8 +93,8 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
 
     local sliderFrame = New "ImageButton" {
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = UDim2.fromScale(0.5, 0.4),
-        Size = UDim2.fromScale(0.7, 0.25),
+        Position = data.Position,
+        Size = data.Size,
         BackgroundColor3 = Theme.SubText.Default,
         ImageTransparency = 1,
 
@@ -242,6 +242,9 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         Value = timePosition,
                         Min = Value(0),
                         Max = soundLength,
+                        Position = UDim2.fromScale(0.5, 0.4),
+                        Size = UDim2.fromScale(0.7, 0.25),
+                        Increment = 1
                     },
 
                     New "TextLabel" {
@@ -300,6 +303,7 @@ local function getAudioChildren(): {Instance}
             BackgroundTransparency = 1,
             LayoutOrder = index,
             Size = UDim2.fromScale(1, 1),
+
             [Children] = {
                 Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
                 Computed(function()
@@ -478,6 +482,26 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                 Position = UDim2.fromScale(0, 0.95),
 
                                 [Children] = {
+                                    New "TextLabel" {
+                                        BackgroundTransparency = 1,
+                                        Position = UDim2.fromOffset(4, 0),
+                                        Size = UDim2.fromScale(0.5, 1),
+                                        Text = Computed(function()
+                                            return ("Volume: %.2f"):format(currentAudioVolume)
+                                        end),
+                                        TextColor3 = Theme.SubText.Default,
+                                        TextXAlignment = Enum.TextXAlignment.Left
+                                    },
+
+                                    Slider {
+                                        Value = currentAudioVolume,
+                                        Min = Value(0),
+                                        Max = Value(1),
+                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        Size = UDim2.fromScale(0.2, 0.35),
+                                        Increment = 0.01,
+                                    },
+
                                     New "TextLabel" {
                                         BackgroundTransparency = 1,
                                         Position = UDim2.new(0.5, -4, 0, 0),
