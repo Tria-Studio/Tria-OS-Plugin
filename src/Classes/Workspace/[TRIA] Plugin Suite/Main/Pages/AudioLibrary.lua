@@ -346,6 +346,7 @@ local function getAudioChildren(): {Instance}
 end
 
 local function fetchApi()
+    print("Called")
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(1.5)
 

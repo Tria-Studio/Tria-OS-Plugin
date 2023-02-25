@@ -138,14 +138,14 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
 
                 [Children] = {
                     Components.Constraints.UIAspectRatio(1),
-                    Components.Constraints.UIGradient(Computed(function()
+                    Components.Constraints.UIGradient((function()
                         local ratio = (index - 1) / #Pages._PageOrder
 
                         local start = lerpType(startColor, endColor, ratio)
                         local finish = lerpType(startColor, endColor, ratio + (1 / #Pages._PageOrder))
 
                         return ColorSequence.new(start, finish)
-                    end):get(), NumberSequence.new(0), 0)        
+                    end)(), NumberSequence.new(0), 0)        
                 },
             }
         }

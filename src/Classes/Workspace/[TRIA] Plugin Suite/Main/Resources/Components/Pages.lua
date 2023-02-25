@@ -34,7 +34,7 @@ function PageHandler:ChangePage(newPage: string)
         return
     end
     if self.pageData.pages[currentPage].onClose then
-        self.pageData.pages[currentPage].onClose()
+        task.spawn(self.pageData.pages[currentPage].onClose)
     end
 
     PageHandler.pageChanged:Fire()
@@ -63,10 +63,10 @@ function PageHandler:NewPage(data: {[string]: any}): Instance
 
     if newPageData.Visible:get(false) then
         self.pageData.currentPage:set(newPageData.Name)
-        if newPageData.OnOpen then
-            newPageData.OnOpen()
-        end
         updatePageNum(data.Name)
+        if newPageData.onOpen then
+            task.spawn(newPageData.onOpen)
+        end
     end
 
     return newPageData.Frame
