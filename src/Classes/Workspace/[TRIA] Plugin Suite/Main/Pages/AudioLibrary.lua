@@ -48,8 +48,6 @@ local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 local CURRENT_FETCH_STATUS = Value("Fetching")
 
-local refreshTime = Value(GitUtil:GetTimeUntilNextRefresh())
-
 local STATUS_ERRORS = {
     ["Fetching"] = "Currently fetching the latest audio...",
     ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plguin Settings\" tab.",
@@ -574,8 +572,6 @@ end
 
 function frame.OnOpen()
     CURRENT_FETCH_STATUS:set("Fetching")
-    print("Fetching")
-
     task.wait(1.5)
 
     local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
