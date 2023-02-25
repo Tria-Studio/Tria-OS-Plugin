@@ -322,7 +322,7 @@ local function getAudioChildren(): {Instance}
 
             [Children] = {
                 Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
-                Computed(function()
+                (function()
                     local pageChildren = {}
                     for count = index, index + (ITEMS_PER_PAGE - 1) do
                         if CURRENT_AUDIO_DATA:get()[count] then
@@ -330,7 +330,7 @@ local function getAudioChildren(): {Instance}
                         end
                     end
                     return pageChildren
-                end)
+                end)()
             }
         })
     end
