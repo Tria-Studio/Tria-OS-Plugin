@@ -14,6 +14,7 @@ local Components = require(Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
 local PlguinSoundManager = require(Package.PluginSoundManager)
+local GitUtil = require(Package.GitUtil)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -43,9 +44,16 @@ local MOCK_DATA = {
 }
 
 local ITEMS_PER_PAGE = 8
-
 local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
+local CURRENT_FETCH_STATUS = Value("Fetching")
+
+local STATUS_ERRORS = {
+    ["Fetching"] = "Currently fetching the latest audio...",
+    ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plguin Settings\" tab.",
+    ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
+    ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
+}
 
 local currentAudio = Value(nil)
 local currentAudioVolume = Value(1)
@@ -367,9 +375,40 @@ Below you will find a list of audios which have been approved for use by TRIA st
                         LayoutOrder = 4,
 
                         [Children] = {
+                            New "Frame" { -- Status Message
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(1, 0.95),
+                                Visible = Computed(function()
+                                    return CURRENT_FETCH_STATUS:get() ~= "Success"
+                                end),
+
+                                [Children] = {
+                                    Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 2), Enum.VerticalAlignment.Center),
+                                    New "ImageLabel" {
+                                        BackgroundTransparency = 1,
+                                        Size = UDim2.fromOffset(24, 24),
+                                        Image = "rbxasset://textures/ui/ErrorIcon.png",
+                                    },
+                                    New "TextLabel" {
+                                        BackgroundTransparency = 1,
+                                        Size = UDim2.fromScale(1, 0.1),
+                                        Text = Computed(function()
+                                            return STATUS_ERRORS[CURRENT_FETCH_STATUS:get()] or "N/A"
+                                        end),
+                                        TextSize = 18,
+                                        TextColor3 = Theme.SubText.Default,
+                                        TextXAlignment = Enum.TextXAlignment.Center,
+                                        TextYAlignment = Enum.TextYAlignment.Top
+                                    },
+                                }
+                            },
+
                             New "Frame" { -- Audio Library
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(1, 0.95),
+                                Visible = Computed(function()
+                                    return CURRENT_FETCH_STATUS:get() == "Success"
+                                end),
 
                                 [Children] = {
                                     New "Frame" { -- Main
@@ -493,6 +532,9 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(1, 0.05),
                                 Position = UDim2.fromScale(0, 0.95),
+                                Visible = Computed(function()
+                                    return CURRENT_FETCH_STATUS:get() == "Success"
+                                end),
 
                                 [Children] = {
                                     New "TextLabel" {
@@ -534,10 +576,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
 end
 
 task.spawn(function()
-    local GitUtil = require(Package.GitUtil)
-    local fired, result, errorMessage, errorDetails = GitUtil:Fetch(URL)
-
-    print(fired, result, errorMessage, errorDetails)
+    CURRENT_FETCH_STATUS:set("Fetching")
+    local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
 end)
 
 return frame
