@@ -58,10 +58,14 @@ function PageHandler:NewPage(data: {[string]: any}): Instance
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
     newPageData.onClose = newPage.OnClose
+    newPageData.onOpen = newPage.OnOpen
     self.pageData.pages[data.Name] = newPageData
 
     if newPageData.Visible:get(false) then
         self.pageData.currentPage:set(newPageData.Name)
+        if newPageData.OnOpen then
+            newPageData.OnOpen()
+        end
         updatePageNum(data.Name)
     end
 

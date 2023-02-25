@@ -345,6 +345,16 @@ local function getAudioChildren(): {Instance}
     return children
 end
 
+local function fetchApi()
+    CURRENT_FETCH_STATUS:set("Fetching")
+    task.wait(1.5)
+
+    local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
+    print("Fired:", fired, "Code:", errorCode)
+
+    CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
+end
+
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local pageLayout = Value()
     
@@ -401,6 +411,17 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         TextXAlignment = Enum.TextXAlignment.Center,
                                         TextYAlignment = Enum.TextYAlignment.Top
                                     },
+                                    Components.TextButton {
+                                        Active = Util.interfaceActive,
+                                        Size = UDim2.fromScale(0.5, 0.1),
+                                        BackgroundColor3 = Theme.Button.Hover,
+
+                                        [OnEvent "Activated"] = function()
+                                            if CURRENT_FETCH_STATUS:get(false) ~= "Fetching" then
+                                                
+                                            end
+                                        end
+                                    }
                                 }
                             },
 
@@ -570,14 +591,6 @@ Below you will find a list of audios which have been approved for use by TRIA st
     }
 end
 
-function frame.OnOpen()
-    CURRENT_FETCH_STATUS:set("Fetching")
-    task.wait(1.5)
-
-    local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
-    print("Fired:", fired, "Code:", errorCode)
-
-    CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
-end
+frame.OnOpen = fetchApi
 
 return frame
