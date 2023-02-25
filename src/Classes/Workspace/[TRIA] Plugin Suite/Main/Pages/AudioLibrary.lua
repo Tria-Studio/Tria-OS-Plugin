@@ -51,6 +51,8 @@ local currentAudio = Value(nil)
 local currentAudioVolume = Value(1)
 
 local isUsingSlider = Value(false)
+local currentSlider = Value(nil)
+
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
 Observer(currentAudioVolume):onChange(function()
@@ -73,6 +75,7 @@ end
 local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance}
     local absolutePosition = Value(Vector2.zero)
     local absoluteSize = Value(Vector2.zero)
+    local sliderButton = Value()
 
     local text = Value("")
 
@@ -115,7 +118,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
         end,
 
         [OnEvent "MouseMoved"] = function()
-            if isUsingSlider:get(false) then
+            if isUsingSlider:get(false) and currentSlider:get(false) == sliderButton:get(false) then
                 local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
                 updateSliderValue(mousePos)
             end
@@ -132,6 +135,8 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
 
+                [Ref] = sliderButton,
+
                 [Children] = {
                     Components.Constraints.UICorner(1, 0),
                     Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
@@ -139,10 +144,12 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
 
                 [OnEvent "MouseButton1Up"] = function()
                     isUsingSlider:set(false)
+                    currentSlider:set(nil)
                 end,
 
                 [OnEvent "MouseButton1Down"] = function()
                     isUsingSlider:set(true)
+                    currentSlider:set(sliderButton:get(false))
                 end
             },
 
