@@ -55,7 +55,7 @@ local currentAudioVolume = Value(1)
 local isUsingSlider = Value(false)
 local currentSlider = Value(nil)
 
-local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
 Observer(currentAudioVolume):onChange(function()
     if currentAudio:get(false) then
