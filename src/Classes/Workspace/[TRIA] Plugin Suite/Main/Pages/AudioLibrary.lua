@@ -147,16 +147,6 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
                 [Children] = Components.Constraints.UICorner(0, 8)
             },
 
-            New "TextLabel" {
-                BackgroundTransparency = 1,
-                Position = UDim2.fromScale(0, 1.5),
-                Size = UDim2.fromScale(1, 1),
-                Text = Computed(function()
-                    return Util.secondsToTime(data.Value:get()) .. "/" .. Util.secondsToTime(max:get())
-                end),
-                TextColor3 = Theme.SubText.Default,
-            },
-
             Components.Constraints.UICorner(0, 8)
         },
     }
@@ -252,6 +242,16 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         Value = timePosition,
                         Min = Value(0),
                         Max = soundLength,
+                    },
+
+                    New "TextLabel" {
+                        BackgroundTransparency = 1,
+                        Position = UDim2.new(0.15, 0, 0.7, -1),
+                        Size = UDim2.fromScale(0.7, 0.25),
+                        Text = Computed(function()
+                            return Util.secondsToTime(timePosition:get()) .. "/" .. Util.secondsToTime(soundLength:get())
+                        end),
+                        TextColor3 = Theme.SubText.Default,
                     },
 
                     New "ImageButton" {
