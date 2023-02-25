@@ -330,7 +330,7 @@ local function getAudioChildren(): {Instance}
                         end
                     end
                     return pageChildren
-                end):get()
+                end)
             }
         })
     end
