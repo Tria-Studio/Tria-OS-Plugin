@@ -341,7 +341,7 @@ end
 
 local function fetchApi()
     CURRENT_FETCH_STATUS:set("Fetching")
-    task.wait(0.75)
+    task.wait(0.5)
 
     local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
     
