@@ -561,18 +561,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Visible = Computed(function()
                                             return CURRENT_FETCH_STATUS:get() == "Success"
                                         end),
-                                    },
-
-                                    New "TextLabel" {
-                                        BackgroundTransparency = 1,
-                                        Position = UDim2.new(0.5, -4, 0, 0),
-                                        Size = UDim2.fromScale(0.5, 1),
-                                        Text = Computed(function()
-                                            return "Refreshing in " .. Util.secondsToLongTime(refreshTime:get())
-                                        end),
-                                        TextColor3 = Theme.SubText.Default,
-                                        TextXAlignment = Enum.TextXAlignment.Right,
-                                    },
+                                    }
                                 }
                             }
                         }
