@@ -1,3 +1,4 @@
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -244,6 +245,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 [OnEvent "Activated"] = function()
                     Util.debugWarn("Updated map music!")
                     Util.updateMapSetting("Main", "Music", data.ID)
+                    ChangeHistoryService:SetWaypoint("Updated map music")
                 end
             },
 
