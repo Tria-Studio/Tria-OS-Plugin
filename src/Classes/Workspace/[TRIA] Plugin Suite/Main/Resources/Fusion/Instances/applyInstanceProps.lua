@@ -20,6 +20,8 @@ local xtypeof = require(Package.Utility.xtypeof)
 local logError = require(Package.Logging.logError)
 local Observer = require(Package.State.Observer)
 
+local defaultProps = require(Package.Instances.defaultProps)
+
 local function setProperty_unsafe(instance: Instance, property: string, value: any)
 	(instance :: any)[property] = value
 end
@@ -80,6 +82,11 @@ local function applyInstanceProps(props: PubTypes.PropertyTable, applyTo: Instan
 	local cleanupTasks = {}
 
 	for key, value in pairs(props) do
+
+		if defaultProps[applyTo.ClassName] and defaultProps[applyTo.ClassName][key] and defaultProps[applyTo.ClassName][key] == value then
+			print("Duplicate property found (" .. key .. ") >>", debug.traceback())
+		end
+
 		local keyType = xtypeof(key)
 		if keyType == "string" then
 			if key ~= "Parent" then

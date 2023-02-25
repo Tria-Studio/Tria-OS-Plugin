@@ -25,5 +25,4 @@ function PluginSoundManager:QueueSound(soundId: number)
 	return newSound
 end
 
-
 return PluginSoundManager
