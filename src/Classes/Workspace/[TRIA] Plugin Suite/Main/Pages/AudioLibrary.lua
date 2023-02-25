@@ -26,6 +26,7 @@ local Hydrate = Fusion.Hydrate
 local Ref = Fusion.Ref
 local Out = Fusion.Out
 local Spring = Fusion.Spring
+local Observer = Fusion.Observer
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
@@ -95,6 +96,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.4),
         Size = UDim2.fromScale(0.75, 0.25),
+        BackgroundColor3 = Theme.SubText.Default,
         ImageTransparency = 1,
 
         [Out "AbsolutePosition"] = absolutePosition,
@@ -102,7 +104,9 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
 
         [OnEvent "MouseButton1Down"] = function()
             local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
+            isUsingSlider:set(true)
             updateSliderValue(mousePos)
+            isUsingSlider:set(false)
         end,
 
         [OnEvent "MouseMoved"] = function()
@@ -195,6 +199,12 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
             and not isUsingSlider:get(false) 
         then
             timePosition:set(timePosition:get(false) + deltaTime)
+        end
+    end)
+
+    Observer(timePosition):onChange(function()
+        if isUsingSlider:get(false) then
+            previewSound.TimePosition = timePosition:get(false)
         end
     end)
 
