@@ -14,7 +14,7 @@ function GitUtil:Fetch(url: string): (boolean, any?, string?, string?)
 	end
 	
 	fired, err = pcall(function()
-		result = HttpService:JSONDecode(tostring(result))
+		result = HttpService:JSONDecode(result)
 	end)
 
 	if not fired then
