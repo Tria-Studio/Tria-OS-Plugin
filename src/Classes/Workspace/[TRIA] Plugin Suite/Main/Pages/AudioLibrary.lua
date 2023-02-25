@@ -147,6 +147,16 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
                 [Children] = Components.Constraints.UICorner(0, 8)
             },
 
+            New "TextLabel" {
+                BackgroundTransparency = 1,
+                Position = UDim2.fromScale(0, 1.5),
+                Size = UDim2.fromScale(1, 1),
+                Text = Computed(function()
+                    return Util.secondsToTime(data.Value:get()) .. "/" .. Util.secondsToTime(max:get())
+                end),
+                TextColor3 = Theme.SubText.Default,
+            },
+
             Components.Constraints.UICorner(0, 8)
         },
     }
