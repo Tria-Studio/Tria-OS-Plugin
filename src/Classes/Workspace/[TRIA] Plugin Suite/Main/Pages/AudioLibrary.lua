@@ -35,18 +35,11 @@ local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
-local MOCK_DATA = {
-    {["Name"] = "Test Audio 1", ["ID"] = 5410083912, ["Artist"] = "Kris"},
-    {["Name"] = "Test Audio 2", ["ID"] = 5409360995, ["Artist"] = "Grif"},
-    {["Name"] = "Test Audio 3", ["ID"] = 7023635858, ["Artist"] = "Ethan"},
-    {["Name"] = "Test Audio 4", ["ID"] = 5410085763, ["Artist"] = "Umbreon"},
-    {["Name"] = "Test Audio 5", ["ID"] = 5410085189, ["Artist"] = "Super"}
-}
-
 local ITEMS_PER_PAGE = 8
 local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 local CURRENT_FETCH_STATUS = Value("Fetching")
+local CURRENT_AUDIO_DATA = Value({})
 
 local STATUS_ERRORS = {
     ["Fetching"] = "Currently fetching the latest audio...",
@@ -318,9 +311,7 @@ end
 local function getAudioChildren(): {Instance}
     local children = {}
 
-    -- MOCK_DATA will be a state object, so we can hook a computed later on.
-
-    for index = 1, #MOCK_DATA, ITEMS_PER_PAGE do 
+    for index = 1, #CURRENT_AUDIO_DATA:get(), ITEMS_PER_PAGE do 
         table.insert(children, New "Frame" {
             BackgroundTransparency = 1,
             LayoutOrder = index,
@@ -331,8 +322,8 @@ local function getAudioChildren(): {Instance}
                 Computed(function()
                     local pageChildren = {}
                     for count = index, index + (ITEMS_PER_PAGE - 1) do
-                        if MOCK_DATA[count] then
-                            table.insert(pageChildren, AudioButton(MOCK_DATA[count]))
+                        if CURRENT_AUDIO_DATA:get()[count] then
+                            table.insert(pageChildren, AudioButton(CURRENT_AUDIO_DATA:get()[count]))
                         end
                     end
                     return pageChildren
@@ -346,14 +337,26 @@ local function getAudioChildren(): {Instance}
 end
 
 local function fetchApi()
-    print("Called")
     CURRENT_FETCH_STATUS:set("Fetching")
-    task.wait(1.5)
+    task.wait(0.75)
 
     local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
-    print("Fired:", fired, "Code:", errorCode)
-
+    
     CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
+
+    if fired then
+        local newData = {}
+
+        for _, tbl in ipairs(result) do
+            table.insert(newData, {
+                ["Name"] = tbl.name or "N/A", 
+                ["ID"] = tbl.id or 0, 
+                ["Artist"] = tbl.artist or "N/A"
+            })
+        end
+
+        CURRENT_AUDIO_DATA:set(newData)
+    end
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -403,7 +406,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                     },
                                     New "TextLabel" {
                                         BackgroundTransparency = 1,
-                                        Size = UDim2.fromScale(1, 0.1),
+                                        Size = UDim2.fromScale(1, 0.06),
                                         Text = Computed(function()
                                             return STATUS_ERRORS[CURRENT_FETCH_STATUS:get()] or "N/A"
                                         end),
@@ -414,12 +417,18 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                     },
                                     Components.TextButton {
                                         Active = Util.interfaceActive,
-                                        Size = UDim2.fromScale(0.5, 0.1),
-                                        BackgroundColor3 = Theme.Button.Hover,
+                                        Size = UDim2.fromScale(0.5, 0.05),
+                                        BackgroundColor3 = Theme.Button.Default,
+                                        Text = "Retry",
+
+                                        [Children] = {
+                                            Components.Constraints.UICorner(0, 8),
+                                            Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
+                                        },
 
                                         [OnEvent "Activated"] = function()
-                                            if CURRENT_FETCH_STATUS:get(false) ~= "Fetching" then
-                                                
+                                            if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) then
+                                                task.spawn(fetchApi)
                                             end
                                         end
                                     }
