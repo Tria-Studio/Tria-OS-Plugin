@@ -242,6 +242,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 },
 
                 [OnEvent "Activated"] = function()
+                    Util.debugWarn("Updated map music!")
                     Util.updateMapSetting("Main", "Music", data.ID)
                 end
             },
