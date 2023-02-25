@@ -53,6 +53,12 @@ local currentAudioVolume = Value(1)
 local isUsingSlider = Value(false)
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
+Observer(currentAudioVolume):onChange(function()
+    if currentAudio:get(false) then
+        currentAudio:get(false).Volume = currentAudioVolume:get(false)
+    end
+end)
+
 function fade(sound: Sound, direction: string)
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and currentAudioVolume:get(false) or 0)})
     tween:Play()
@@ -487,7 +493,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Position = UDim2.fromOffset(4, 0),
                                         Size = UDim2.fromScale(0.5, 1),
                                         Text = Computed(function()
-                                            return ("Volume: %.2f"):format(currentAudioVolume)
+                                            return ("Volume: %.2f"):format(currentAudioVolume:get())
                                         end),
                                         TextColor3 = Theme.SubText.Default,
                                         TextXAlignment = Enum.TextXAlignment.Left
@@ -497,7 +503,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Value = currentAudioVolume,
                                         Min = Value(0),
                                         Max = Value(1),
-                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        Position = UDim2.fromScale(0.225, 0.55),
                                         Size = UDim2.fromScale(0.2, 0.35),
                                         Increment = 0.01,
                                     },
