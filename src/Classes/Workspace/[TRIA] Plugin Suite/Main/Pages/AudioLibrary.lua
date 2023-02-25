@@ -94,7 +94,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
     local sliderFrame = New "ImageButton" {
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.4),
-        Size = UDim2.fromScale(0.75, 0.25),
+        Size = UDim2.fromScale(0.7, 0.25),
         BackgroundColor3 = Theme.SubText.Default,
         ImageTransparency = 1,
 
@@ -260,9 +260,8 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         end),
                         BackgroundTransparency = 1,
                         AnchorPoint = Vector2.new(0.5, 0.5),
-                        Position = UDim2.fromScale(0.025, 0.4),
-        
-                        Size = UDim2.fromScale(0.5, 0.5),
+                        Position = UDim2.fromScale(0, 0.4),
+                        Size = UDim2.fromScale(0.6, 0.6),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         
                         [Children] = Components.Constraints.UICorner(1, 0),
