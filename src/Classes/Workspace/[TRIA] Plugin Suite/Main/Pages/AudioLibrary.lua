@@ -545,7 +545,10 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                             return ("Volume: %.2f"):format(currentAudioVolume:get())
                                         end),
                                         TextColor3 = Theme.SubText.Default,
-                                        TextXAlignment = Enum.TextXAlignment.Left
+                                        TextXAlignment = Enum.TextXAlignment.Left,
+                                        Visible = Computed(function()
+                                            return CURRENT_FETCH_STATUS:get() == "Success"
+                                        end),
                                     },
 
                                     Slider {
@@ -569,10 +572,6 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         end),
                                         TextColor3 = Theme.SubText.Default,
                                         TextXAlignment = Enum.TextXAlignment.Right,
-
-                                        Visible = Computed(function()
-                                            return CURRENT_FETCH_STATUS:get() == "Success"
-                                        end),
                                     },
                                 }
                             }
