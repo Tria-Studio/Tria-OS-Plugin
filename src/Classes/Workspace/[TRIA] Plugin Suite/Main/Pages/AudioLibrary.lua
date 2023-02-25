@@ -490,7 +490,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                 [Children] = {
                                     New "TextLabel" {
                                         BackgroundTransparency = 1,
-                                        Position = UDim2.fromOffset(4, 0),
+                                        Position = UDim2.fromScale(0.275, 0),
                                         Size = UDim2.fromScale(0.5, 1),
                                         Text = Computed(function()
                                             return ("Volume: %.2f"):format(currentAudioVolume:get())
@@ -503,7 +503,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Value = currentAudioVolume,
                                         Min = Value(0),
                                         Max = Value(1),
-                                        Position = UDim2.fromScale(0.225, 0.55),
+                                        Position = UDim2.fromScale(0.125, 0.55),
                                         Size = UDim2.fromScale(0.2, 0.35),
                                         Increment = 0.01,
                                     },
@@ -525,7 +525,5 @@ Below you will find a list of audios which have been approved for use by TRIA st
         }
     }
 end
-
-
 
 return frame
