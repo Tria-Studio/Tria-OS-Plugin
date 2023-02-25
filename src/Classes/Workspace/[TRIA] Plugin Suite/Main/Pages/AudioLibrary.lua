@@ -48,6 +48,8 @@ local CURRENT_PAGE_COUNT = Value(1)
 local TOTAL_PAGE_COUNT = Value(1)
 local CURRENT_FETCH_STATUS = Value("Fetching")
 
+local refreshTime = Value(GitUtil:GetTimeUntilNextRefresh())
+
 local STATUS_ERRORS = {
     ["Fetching"] = "Currently fetching the latest audio...",
     ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plguin Settings\" tab.",
@@ -114,6 +116,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
         Size = data.Size,
         BackgroundColor3 = Theme.SubText.Default,
         ImageTransparency = 1,
+        Visible = if data.Visible then data.Visible else true,
 
         [Out "AbsolutePosition"] = absolutePosition,
         [Out "AbsoluteSize"] = absoluteSize,
@@ -532,9 +535,6 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(1, 0.05),
                                 Position = UDim2.fromScale(0, 0.95),
-                                Visible = Computed(function()
-                                    return CURRENT_FETCH_STATUS:get() == "Success"
-                                end),
 
                                 [Children] = {
                                     New "TextLabel" {
@@ -555,15 +555,24 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Position = UDim2.fromScale(0.125, 0.55),
                                         Size = UDim2.fromScale(0.2, 0.35),
                                         Increment = 0.01,
+                                        Visible = Computed(function()
+                                            return CURRENT_FETCH_STATUS:get() == "Success"
+                                        end),
                                     },
 
                                     New "TextLabel" {
                                         BackgroundTransparency = 1,
                                         Position = UDim2.new(0.5, -4, 0, 0),
                                         Size = UDim2.fromScale(0.5, 1),
-                                        Text = "Refreshing in 12:00:00",
+                                        Text = Computed(function()
+                                            return "Refreshing in " .. Util.secondsToLongTime(refreshTime:get())
+                                        end),
                                         TextColor3 = Theme.SubText.Default,
-                                        TextXAlignment = Enum.TextXAlignment.Right
+                                        TextXAlignment = Enum.TextXAlignment.Right,
+
+                                        Visible = Computed(function()
+                                            return CURRENT_FETCH_STATUS:get() == "Success"
+                                        end),
                                     },
                                 }
                             }
@@ -578,6 +587,13 @@ end
 task.spawn(function()
     CURRENT_FETCH_STATUS:set("Fetching")
     local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
+end)
+
+task.spawn(function()
+    while true do
+        refreshTime:set(GitUtil:GetTimeUntilNextRefresh())
+        task.wait(1)
+    end
 end)
 
 return frame

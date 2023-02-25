@@ -293,6 +293,10 @@ function Util.secondsToTime(seconds: number): string
     return ("%02i:%02i"):format(seconds / 60 % 60, seconds % 60)
 end
 
+function Util.secondsToLongTime(seconds: number): string
+    return ("%02i:%02i:%02i"):format(seconds / 60^2, seconds / 60 % 60, seconds % 60)
+end
+
 function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
     return (1 - t) * a + t * b
 end
