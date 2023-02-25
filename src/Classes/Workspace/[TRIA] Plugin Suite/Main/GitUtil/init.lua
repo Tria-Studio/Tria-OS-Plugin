@@ -1,7 +1,7 @@
 local GitUtil = {}
 
 local HttpService = game:GetService("HttpService")
-local REFRESH_HOURS = 12
+local REFRESH_SECONDS = 60
 
 function GitUtil:Fetch(url: string): (boolean, any?, string?, string?)
 	local result
@@ -26,13 +26,16 @@ function GitUtil:Fetch(url: string): (boolean, any?, string?, string?)
 end
 
 function GitUtil:GetNextRefreshTime(): number
-	local date = os.date("!*t")
-	return os.time({
-		year = date.year,
-		month = date.month,
-		day = date.day,
-		hour = math.ceil((date.hour + 1) / REFRESH_HOURS) * REFRESH_HOURS,
+	local currentDate = os.date("!*t")
+	local current = os.time({
+		year = currentDate.year,
+		month = currentDate.month,
+		day = currentDate.day,
+		hour = currentDate.hour,
+		min = currentDate.min,
 	})
+
+	return os.time(os.date("!*t", current + REFRESH_SECONDS))
 end
 
 function GitUtil:GetTimeUntilNextRefresh(): number
