@@ -285,6 +285,18 @@ function Util.getObjectCountWithNameMatch(pattern: string, path: Instance?, anyI
     return highest
 end
 
+function Util.round(num: number, step: number): number
+	return math.round(num / step) * step
+end
+
+function Util.secondsToTime(seconds: number): string
+    return ("%02i:%02i"):format(seconds / 60 % 60, seconds % 60)
+end
+
+function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
+    return (1 - t) * a + t * b
+end
+
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
 Observer(Util.mapModel):onChange(updateButtonsActive)

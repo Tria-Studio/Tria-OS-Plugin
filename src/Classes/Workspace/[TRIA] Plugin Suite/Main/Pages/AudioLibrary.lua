@@ -51,16 +51,15 @@ local currentAudio = Value(nil)
 local isUsingSlider = Value(false)
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
-local function round(num: number, step: number): number
-	return math.round(num / step) * step
-end
+function fade(sound: Sound, direction: string)
+    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
+    tween:Play()
 
-local function secondsToTime(seconds: number): string
-    return ("%02i:%02i"):format(seconds / 60 % 60, seconds % 60)
-end
-
-local function lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
-    return (1 - t) * a + t * b
+    if direction == "Out" then
+        tween.Completed:Connect(function()
+            sound:Stop()
+        end)
+    end
 end
 
 local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance}
@@ -86,7 +85,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
         local percent = 1 - math.clamp(-1 + ((mousePos.X + absoluteSize:get(false).X) / 2 / absoluteSize:get(false).X + 0.5) * 2, 0, 1)
     
         data.Value:set(math.clamp(
-            round(lerp(min:get(false), max:get(false), percent), increment), 
+            Util.round(Util.lerp(min:get(false), max:get(false), percent), increment), 
             min:get(false), 
             max:get(false)
         ))
@@ -153,17 +152,6 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
     }
 
     return sliderFrame
-end
-
-local function fade(sound: Sound, direction: string)
-    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
-    tween:Play()
-
-    if direction == "Out" then
-        tween.Completed:Connect(function()
-            sound:Stop()
-        end)
-    end
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
