@@ -533,4 +533,11 @@ Below you will find a list of audios which have been approved for use by TRIA st
     }
 end
 
+task.spawn(function()
+    local GitUtil = require(Package.GitUtil)
+    local fired, result, errorMessage, errorDetails = GitUtil:Fetch(URL)
+
+    print(fired, result, errorMessage, errorDetails)
+end)
+
 return frame

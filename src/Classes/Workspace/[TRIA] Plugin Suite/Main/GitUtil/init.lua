@@ -9,7 +9,7 @@ function GitUtil:Fetch(url: string): (boolean, any?, string?, string?)
 	end)
 
 	if not fired then
-		local httpDisabled = err:find("not enabled")
+		local httpDisabled = err:find("permission denied")
 		return false, nil, httpDisabled and "HTTPDisabled" or "HTTPError", err
 	end
 	
