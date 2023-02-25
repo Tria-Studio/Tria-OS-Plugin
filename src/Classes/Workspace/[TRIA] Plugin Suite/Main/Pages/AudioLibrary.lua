@@ -583,20 +583,16 @@ Below you will find a list of audios which have been approved for use by TRIA st
     }
 end
 
-task.spawn(function()
-    while true do
-        CURRENT_FETCH_STATUS:set("Fetching")
-        print("Fetching")
+function frame.OnOpen()
+    CURRENT_FETCH_STATUS:set("Fetching")
+    print("Fetching")
 
-        task.wait(1.5)
+    task.wait(1.5)
 
-        local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
-        print("Fired:", fired, "Code:", errorCode)
+    local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
+    print("Fired:", fired, "Code:", errorCode)
 
-        CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
-        
-        task.wait(GitUtil:GetTimeUntilNextRefresh())
-    end
-end)
+    CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
+end
 
 return frame
