@@ -247,9 +247,14 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 },
 
                 [OnEvent "Activated"] = function()
-                    Util.debugWarn("Updated map music!")
-                    Util.updateMapSetting("Main", "Music", data.ID)
-                    ChangeHistoryService:SetWaypoint("Updated map music")
+                    Util:ShowMessage("Update map BGM?", "This will update the map BGM to \"" .. ("%s - %s"):format(data.Artist, data.Name) .. "\", press okay to confirm.", {
+                        Text = "Okay",
+                        Callback = function()
+                            Util.debugWarn("Updated map music!")
+                            Util.updateMapSetting("Main", "Music", data.ID)
+                            ChangeHistoryService:SetWaypoint("Updated map music")
+                        end
+                    })
                 end
             },
 
