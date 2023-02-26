@@ -246,12 +246,13 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 TextScaled = true,
 
                 [Children] = {
-                    Components.Constraints.UICorner(0, 8)
+                    Components.Constraints.UICorner(0, 8),
+                    Components.Constraints.UIPadding(UDim.new(0, 2), UDim.new(0, 2), UDim.new(0, 2), UDim.new(0, 2))
                 },
 
                 [OnEvent "Activated"] = function()
-                    Util:ShowMessage("Update map BGM?", "This will update the map BGM to \"" .. ("%s - %s"):format(data.Artist, data.Name) .. "\", press okay to confirm.", {
-                        Text = "Okay",
+                    Util:ShowMessage("Update map BGM?", "This will update the map BGM to '" .. ("%s - %s"):format(data.Artist, data.Name) .. "', press 'Update' to confirm.", {
+                        Text = "Update",
                         Callback = function()
                             Util.debugWarn("Updated map music!")
                             Util.updateMapSetting("Main", "Music", data.ID)
