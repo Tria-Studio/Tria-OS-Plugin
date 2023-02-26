@@ -186,8 +186,11 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     previewSound.Loaded:Connect(function()
         soundLength:set(previewSound.TimeLength)
     end)
-    previewSound.Played:Connect(function()
+    previewSound.Resumed:Connect(function()
         isPlaying = true
+    end)
+    previewSound.Paused:Connect(function()
+        isPlaying = false
     end)
     previewSound.Stopped:Connect(function()
         timePosition:set(0)
@@ -302,14 +305,14 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                     fade(playing, "Out")
                                 end
                                 previewSound.TimePosition = timePosition:get(false)
-                                previewSound:Play()
+                                previewSound:Resume()
                                 currentAudio:set(previewSound)
                                 fade(previewSound, "In")
                             else
                                 if not playing then
                                     return
                                 end
-                                fade(playing, "Out")
+                                playing:Pause()
                                 currentAudio:set(nil)
                             end
                         end
