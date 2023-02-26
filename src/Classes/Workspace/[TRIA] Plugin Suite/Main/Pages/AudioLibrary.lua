@@ -363,7 +363,7 @@ local function fetchApi()
     if fired then
         local newData = {}
 
-        for _, tbl in ipairs(result) do
+        for key, tbl in pairs(result) do
             table.insert(newData, {
                 ["Name"] = tbl.name or "N/A", 
                 ["ID"] = tbl.id or 0, 
