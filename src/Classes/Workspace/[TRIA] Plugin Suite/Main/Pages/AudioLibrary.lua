@@ -50,7 +50,7 @@ local STATUS_ERRORS = {
 }
 
 local currentAudio = Value(nil)
-local currentAudioVolume = Value(1)
+local currentAudioVolume = Value(plugin:GetSetting("TRIA_AudioLibraryVolume") or 1)
 
 local isUsingSlider = Value(false)
 local currentSlider = Value(nil)
@@ -100,6 +100,10 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
             min:get(false), 
             max:get(false)
         ))
+
+        if data.OnChange then
+            data.OnChange(data.Value:get(false))
+        end
     end
 
     local sliderFrame = New "ImageButton" {
@@ -131,7 +135,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
             New "ImageButton" {
                 ImageTransparency = 1,
                 AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundColor3 = Color3.fromRGB(247, 0, 255),
+                BackgroundColor3 = Color3.fromRGB(200, 200, 200),
                 Position = sliderPosition,
 
                 Size = UDim2.fromScale(1.6, 1.6),
@@ -157,7 +161,7 @@ local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance
             },
 
             New "Frame" {
-                BackgroundColor3 = Color3.fromRGB(245, 158, 29),
+                BackgroundColor3 = Color3.fromRGB(255, 180, 0),
                 Size = backFrameSize,
 
                 [Children] = Components.Constraints.UICorner(0, 8)
@@ -262,7 +266,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         Max = soundLength,
                         Position = UDim2.fromScale(0.5, 0.4),
                         Size = UDim2.fromScale(0.7, 0.25),
-                        Increment = 1
+                        Increment = 1,
                     },
 
                     New "TextLabel" {
@@ -571,7 +575,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                 [Children] = {
                                     New "TextLabel" {
                                         BackgroundTransparency = 1,
-                                        Position = UDim2.fromScale(0.275, 0),
+                                        Position = UDim2.fromScale(0.265, 0),
                                         Size = UDim2.fromScale(0.5, 1),
                                         Text = Computed(function()
                                             return ("Volume: %.2f"):format(currentAudioVolume:get())
@@ -593,6 +597,9 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Visible = Computed(function()
                                             return CURRENT_FETCH_STATUS:get() == "Success"
                                         end),
+                                        OnChange = function(newValue)
+                                            plugin:SetSetting("TRIA_AudioLibraryVolume", newValue)
+                                        end
                                     }
                                 }
                             }
