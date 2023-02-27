@@ -38,6 +38,11 @@ function areStringsSimilar(...): (boolean, string)
     local strings = {...}
     local similar = false
     
+   
+    if #strings == 0 then
+        return false, nil
+    end
+
     if #strings < 2 then
         return true, strings[1]
     end
