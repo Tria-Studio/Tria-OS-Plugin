@@ -66,6 +66,20 @@ local function mergeSources(sourceA: string, sourceB: string, line: number): str
 	return table.concat(lines, "\n")
 end
 
+local function getScriptLineMatch(source: string, match: string): (number?)
+    local line = -1
+    local lines = source:split("\n")
+
+    for i = 1, #lines do
+        if lines[i]:match(match) do
+            line = i
+            break
+        end
+    end
+
+    return if line == -1 then nil else line
+end
+
 return {
     Addons = {
         {
@@ -97,7 +111,13 @@ return {
                     return
                 end
 
-                
+                local line = getScriptLineMatch(mapScript.Source, "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)")
+                if line then
+                    mergeSources(mapScript.Source, [[
+                        local _, Tune = pcall(require, 9193619374)
+                        pcall(Tune.Init, Tune, true, true)
+                    ]], line + 1)
+                end
             end
         }, {
             Name = "Jump Measurement",
