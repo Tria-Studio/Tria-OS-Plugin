@@ -59,8 +59,8 @@ function areStringsSimilar(...): (boolean, string)
 end
 
 local function mergeSources(sourceA: string, sourceB: string, line: number): string
-	local lines = source:split("\n");
-	local newLines = newSource:split("\n");
+	local lines = sourceA:split("\n");
+	local newLines = sourceB:split("\n");
 	table.remove(newLines, #newLines)
     table.insert(newLines, 1, "\n")
     table.insert(newLines, "\n")
