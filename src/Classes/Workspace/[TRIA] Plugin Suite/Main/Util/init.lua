@@ -316,7 +316,7 @@ function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
 end
 
 task.defer(function()
-    local lastUpdate = os.clock()
+    local lastUpdate = 0
     Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
         if os.clock() - lastUpdate > 0.5 then
             lastUpdate = os.clock()
@@ -326,7 +326,7 @@ task.defer(function()
 end)
 
 task.defer(function()
-    local lastUpdate = os.clock()
+    local lastUpdate = 0
     Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
         if os.clock() - lastUpdate > 10 then
             lastUpdate = os.clock()
