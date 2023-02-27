@@ -353,6 +353,7 @@ local function getAudioChildren(): {Instance}
 end
 
 local function fetchApi()
+    CURRENT_PAGE_COUNT:set(0)
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(0.5)
 
@@ -371,6 +372,7 @@ local function fetchApi()
             })
         end
 
+        CURRENT_PAGE_COUNT:set(1)
         CURRENT_AUDIO_DATA:set(newData)
     end
 end
