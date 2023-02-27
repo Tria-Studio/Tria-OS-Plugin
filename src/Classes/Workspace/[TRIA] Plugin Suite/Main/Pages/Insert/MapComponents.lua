@@ -44,7 +44,7 @@ return {
             },
     
             InsertFunction = function()
-                if Util.failedScriptInjection("MSG") then
+                if Util.failedScriptInjection(Util.SCRIPT_INSERT_ERROR) then
                     return
                 end
 

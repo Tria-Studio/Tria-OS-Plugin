@@ -127,7 +127,7 @@ local function GetScriptButton(state, scriptName: string, layoutOrder: number): 
         [OnEvent "Activated"] = function()
             ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
 
-            if not Util.failedScriptInjection("There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.") then
+            if not Util.failedScriptInjection(Util.SCRIPT_INSERT_ERROR) then
                 return;
             end
 
@@ -206,7 +206,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 
                                 Validate = function(newState)
                                     if newState:get(false) == true then
-                                        return not Util.failedScriptInjection("There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
+                                        return not Util.failedScriptInjection(Util.AUTOCOMPLETE_ERROR)
                                     end
                                     return true
                                 end,
