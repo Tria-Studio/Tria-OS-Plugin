@@ -44,7 +44,7 @@ return {
             },
     
             InsertFunction = function()
-                if Util.failedScriptInjection() then
+                if Util.failedScriptInjection("MSG") then
                     return
                 end
 
@@ -85,7 +85,7 @@ return {
             },
     
             InsertFunction = function()
-                if Util.failedScriptInjection() then
+                if Util.failedScriptInjection("MSG") then
                     return
                 end
             end

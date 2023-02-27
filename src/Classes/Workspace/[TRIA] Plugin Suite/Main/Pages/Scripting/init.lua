@@ -127,21 +127,20 @@ local function GetScriptButton(state, scriptName: string, layoutOrder: number): 
         [OnEvent "Activated"] = function()
             ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
 
-            Util.attemptScriptInjection()
-            if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
-                Util:ShowMessage(Util.ERROR_HEADER, "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
-            else
-                local currentMap = Util.mapModel:get(false)
-
-                local newScript = Instance.new("LocalScript")
-                newScript.Name = scriptName
-                newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
-                newScript.Enabled = false
-                newScript.Parent = currentMap
-                
-                plugin:OpenScript(newScript)
-                ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
+            if not Util.failedScriptInjection("There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.") then
+                return;
             end
+
+            local currentMap = Util.mapModel:get(false)
+
+            local newScript = Instance.new("LocalScript")
+            newScript.Name = scriptName
+            newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
+            newScript.Enabled = false
+            newScript.Parent = currentMap
+
+            plugin:OpenScript(newScript)
+            ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
         end,
         [Children] = {
             Components.Constraints.UICorner(0, 6),
@@ -207,7 +206,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 
                                 Validate = function(newState)
                                     if newState:get(false) == true then
-                                        return not Util.failedScriptInjection()
+                                        return not Util.failedScriptInjection("There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
                                     end
                                     return true
                                 end,

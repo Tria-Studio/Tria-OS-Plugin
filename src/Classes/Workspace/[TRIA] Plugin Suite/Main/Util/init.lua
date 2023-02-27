@@ -269,10 +269,10 @@ function Util.attemptScriptInjection()
     plugin:SetSetting("TRIA_ScriptInjectionEnabled", hasScriptInjection)
 end
 
-function Util.failedScriptInjection(): boolean
+function Util.failedScriptInjection(errorMessage: string): boolean
     Util.attemptScriptInjection()
     if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
-        Util:ShowMessage(Util.ERROR_HEADER, "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.")
+        Util:ShowMessage(Util.ERROR_HEADER, errorMessage)
         return true
     end
     return false
