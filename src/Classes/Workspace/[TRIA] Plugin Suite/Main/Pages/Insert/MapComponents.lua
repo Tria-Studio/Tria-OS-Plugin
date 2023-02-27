@@ -31,6 +31,24 @@ local function getInsertFolder(specialChildName: string): Instance
         or currentMap
 end
 
+local function areStringsSimilar(...): (boolean, string)
+    local strings = {...}
+    local similar = false
+    
+    if #strings < 2 then
+        return true, strings[1]
+    end
+
+    for i = 2, #strings do
+        if strings[1] ~= strings[i] then
+            similar = false
+            break
+        end 
+    end
+    
+    return similar, if similar then strings[1] else nil
+end
+
 return {
     Addons = {
         {
@@ -48,6 +66,19 @@ return {
                     return
                 end
 
+                local currentMap = Util.mapModel:get(false)
+                local mapScript = currentMap:FindFirstChild("MapScript")
+
+                if not mapScript then
+                    return;
+                end
+
+                local variable, moduleId, pcallVar1, pcallVar2 = mapScript.Source:match("local%s[%w%p+],*%s*(%w+)%s=%spcall%(require,%s*(%d+)%)%w*%s*pcall%((%w+)%.Init,*%s*(%w+),*%s*true,*%s*true%)")
+                local similar, match = areStringsSimilar(variable, pcallVar1, pcallVar2)
+                if similar and match:lower() == "tune" then
+                    Util:ShowMessage("Module already installed", "TUNE is already installed in your map!")
+                    return;
+                end
             end
         }, {
             Name = "Jump Measurement",
@@ -85,7 +116,7 @@ return {
             },
     
             InsertFunction = function()
-                if Util.failedScriptInjection("MSG") then
+                if Util.failedScriptInjection(Util.SCRIPT_INSERT_ERROR) then
                     return
                 end
             end
