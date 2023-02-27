@@ -34,8 +34,7 @@ local function getInsertFolder(specialChildName: string): Instance
         or currentMap
 end
 
-local function areStringsSimilar(...): (boolean, string)
-    local strings = {...}
+local function areStringsSimilar(strings: {string}): (boolean, string)
     local similar = false
     
     if #strings < 2 then
@@ -48,7 +47,8 @@ local function areStringsSimilar(...): (boolean, string)
             break
         end 
     end
-    
+
+
     return similar, if similar then strings[1] else nil
 end
 
@@ -105,7 +105,8 @@ return {
                 end
 
                 local variable, moduleId, pcallVar1, pcallVar2 = mapScript.Source:match(TUNE_MATCH)
-                local similar, match = areStringsSimilar(variable, pcallVar1, pcallVar2)
+                local similar, match = areStringsSimilar({variable, pcallVar1, pcallVar2})
+                warn(similar, match)
                 if similar and match:lower() == "tune" then
                     Util:ShowMessage("Module already installed", "TUNE is already installed in your map!")
                     return
