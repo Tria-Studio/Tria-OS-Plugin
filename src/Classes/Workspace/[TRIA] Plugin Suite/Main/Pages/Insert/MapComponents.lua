@@ -61,7 +61,6 @@ end
 local function mergeSources(sourceA: string, sourceB: string, line: number): string
 	local lines = sourceA:split("\n");
 	local newLines = sourceB:split("\n");
-	table.remove(newLines, #newLines)
     table.insert(newLines, 1, "\n")
     table.insert(newLines, "\n")
 
@@ -118,11 +117,14 @@ return {
                 end
 
                 local line = getScriptLineMatch(mapScript.Source, "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)")
+                
                 if line then
-                    mergeSources(mapScript.Source, [[
-                        local _, Tune = pcall(require, 9193619374)
-                        pcall(Tune.Init, Tune, true, true)
-                    ]], line + 1)
+                    mapScript.Source = mergeSources(mapScript.Source, [[
+task.spawn(function()
+    local _, Tune = pcall(require, 9193619374)
+    pcall(Tune.Init, Tune, true, true)
+end)                ]], line + 1)
+                    Util.debugWarn("Successfully inserted TUNE!")
                 end
             end
         }, {
