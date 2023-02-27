@@ -99,7 +99,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
 
         [OnEvent "Activated"] = function()
             if data.ActivatedFunction then
-                    data.ActivatedFunction()
+                data.ActivatedFunction()
             else
                 attemptToInsertModel(data.ModelId)
             end

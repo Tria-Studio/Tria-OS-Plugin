@@ -69,6 +69,7 @@ return {
                 model.FallMeasurement.Parent = workspace
                 model:Destroy()
                 Util.debugWarn("Successfully inserted Jump Measurement Tools addon!")
+                ChangeHistoryService:SetWaypoint("Inserted jump measurement")
             end
         }, {
             Name = "",
