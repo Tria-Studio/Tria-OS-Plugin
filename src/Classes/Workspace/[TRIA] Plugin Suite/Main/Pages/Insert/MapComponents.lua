@@ -127,6 +127,8 @@ task.spawn(function()
 end)                ]], line + 1)
                     Util.debugWarn("Successfully inserted TUNE!")
                     ChangeHistoryService:SetWaypoint("Inserted tune")
+                else
+                    Util:ShowMessage(Util.ERROR_HEADER, "Failed to install TUNE, this could be because the MapScript is setup incorrectly. Please make sure you have the following line at the top of your MapScript:\n\n<b>local MapLib = game.GetMapLib:Invoke()()</b>")
                 end
             end
         }, {
