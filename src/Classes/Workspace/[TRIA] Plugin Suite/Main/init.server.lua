@@ -1,3 +1,5 @@
+local UserInputService = game:GetService("UserInputService")
+
 local toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local openButton = toolbar:CreateButton(
 	"TRIA.os Companion Plugin", 

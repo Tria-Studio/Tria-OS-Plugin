@@ -30,6 +30,7 @@ local Util = {
 
     ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>",
     WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>",
+    DEBUG_HEADER = "<font color='rgb(100, 100, 100)'>Plugin Debug Menu</font>sw",
     SCRIPT_INSERT_ERROR = "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.",
     AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
 
