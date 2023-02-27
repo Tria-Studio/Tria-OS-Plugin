@@ -36,8 +36,7 @@ end
 
 function areStringsSimilar(...): (boolean, string)
     local strings = {...}
-    local similar = false
-    
+    local similar = true
    
     if #strings == 0 then
         return false, nil
@@ -48,12 +47,11 @@ function areStringsSimilar(...): (boolean, string)
     end
 
     for i = 2, #strings do
-        if strings[1] ~= strings[i] or typeof(strings[i]) ~= "string" then
+        if strings[1] ~= strings[i] then
             similar = false
             break
         end 
     end
-
 
     return similar, if similar then strings[1] else nil
 end
@@ -125,6 +123,7 @@ task.spawn(function()
     pcall(Tune.Init, Tune, true, true)
 end)                ]], line + 1)
                     Util.debugWarn("Successfully inserted TUNE!")
+                    ChangeHistoryService:SetWaypoint("Inserted tune")
                 end
             end
         }, {
