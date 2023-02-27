@@ -1,3 +1,4 @@
+local PathfindingService = game:GetService("PathfindingService")
 local UserInputService = game:GetService("UserInputService")
 
 local toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
@@ -34,10 +35,33 @@ local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
+local Value = Fusion.Value
 
 widget.Title = "TRIA.os Mapmaker"
 Util.Widget = widget
 Util.attemptScriptInjection()
+
+local debugMenu = plugin:CreatePluginMenu(math.random(), "Debug Menu")
+debugMenu.Name = "Debug Menu"
+debugMenu:AddNewAction("ShowDebug", "Show Debug Menu", "rbxasset://textures/loading/robloxTilt.png")
+
+local function showDebug()
+	local selectedAction = debugMenu:ShowAsync()
+	if selectedAction then
+		if selectedAction.ActionId:find("ShowDebug") then
+			Util:ShowMessage(Util.DEBUG_HEADER, Computed(function()
+				return ([[<font color='rgb(120, 120, 120)'><b>Debug Information</b></font>
+<b>Version</b>: 0.1-dev
+<b>Release</b>: false
+<b>Average FPS</b>: %dfps
+<b>Average HTTP Response</b>: %dms
+]]):format(Util._Fps:get(), Util._HttpPing:get())
+			end))
+		end
+	else
+		return;
+	end
+end
 
 New "Frame" {
 	Name = "TRIA.os Plugin",
@@ -151,6 +175,10 @@ New "Frame" {
 						else
 							MapSelect:SetMap(nil)
 						end
+					end,
+
+					[OnEvent "MouseButton2Down"] = function()
+						showDebug()
 					end
 				})
 			}

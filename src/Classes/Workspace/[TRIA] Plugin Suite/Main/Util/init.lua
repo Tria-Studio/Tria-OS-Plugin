@@ -1,5 +1,8 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
 local Selection = game:GetService("Selection")
+local TextService = game:GetService("TextService")
 
 local Package = script.Parent
 local Resources = Package.Resources
@@ -30,7 +33,7 @@ local Util = {
 
     ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>",
     WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>",
-    DEBUG_HEADER = "<font color='rgb(100, 100, 100)'>Plugin Debug Menu</font>sw",
+    DEBUG_HEADER = "<font color='rgb(100, 100, 100)'>Plugin Debug Menu</font>",
     SCRIPT_INSERT_ERROR = "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.",
     AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
 
@@ -90,6 +93,9 @@ local Util = {
             Image = "rbxassetid://12132025606"
         }
     }, 
+
+    _HttpPing = Value(0),
+    _Fps = Value(0)
 }
 
 function getSettingsDirFolder(directory: string)
@@ -308,6 +314,28 @@ end
 function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
     return (1 - t) * a + t * b
 end
+
+task.defer(function()
+    local lastUpdate = os.clock()
+    Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+        if os.clock() - lastUpdate > 0.5 then
+            lastUpdate = os.clock()
+            Util._Fps:set(math.floor(1 / deltaTime))
+        end
+    end))
+end)
+
+task.defer(function()
+    local lastUpdate = os.clock()
+    Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+        if os.clock() - lastUpdate > 10 then
+            lastUpdate = os.clock()
+            local start = os.clock()
+            HttpService:GetAsync("https://www.google.com", true)
+            Util._HttpPing:set((os.clock() - start) * 1000)
+        end
+    end))
+end)
 
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)

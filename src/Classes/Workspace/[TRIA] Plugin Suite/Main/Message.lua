@@ -65,7 +65,13 @@ return New "Frame" { --// Message
 					BackgroundTransparency = 1,
 					Position = UDim2.fromOffset(0, 24),
 					Size = UDim2.fromScale(1, 0),
-					Text = Util._Message.Text,
+					Text = Computed(function()
+						local message = Util._Message.Text:get()
+						if typeof(message) == "table" then
+							message = message:get()
+						end
+						return message
+					end),
 					TextColor3 = Theme.MainText.Default,
 					TextWrapped = true,
 					RichText = true,
