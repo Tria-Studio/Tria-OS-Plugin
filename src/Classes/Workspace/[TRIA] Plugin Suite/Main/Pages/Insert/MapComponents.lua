@@ -44,7 +44,10 @@ return {
             },
     
             InsertFunction = function()
-                
+                if Util.runScriptInjectionCheck() then
+                    return
+                end
+
             end
         }, {
             Name = "Jump Measurement",
@@ -82,7 +85,9 @@ return {
             },
     
             InsertFunction = function()
-                
+                if Util.runScriptInjectionCheck() then
+                    return
+                end
             end
         }, 
     },
