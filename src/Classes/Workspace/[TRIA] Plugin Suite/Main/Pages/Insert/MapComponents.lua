@@ -7,6 +7,9 @@ local Util = require(Package.Util)
 local componentFiles = script.Parent.ComponentFiles
 local addonFiles = script.Parent.AddonFiles
 
+local COMMA_BREAK = ",*%s*"
+local TUNE_MATCH = `local%s[%w%p+]{COMMA_BREAK}(%w+)%s=%spcall%(require,%s*(%d+)%)%w*%s*pcall%((%w+)%.Init{COMMA_BREAK}(%w+){COMMA_BREAK}true{COMMA_BREAK}true%)`
+
 local function positionModel(model: Model)
     local newPos = workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -36)
     model:PivotTo(CFrame.new(newPos.Position))
@@ -73,7 +76,7 @@ return {
                     return;
                 end
 
-                local variable, moduleId, pcallVar1, pcallVar2 = mapScript.Source:match("local%s[%w%p+],*%s*(%w+)%s=%spcall%(require,%s*(%d+)%)%w*%s*pcall%((%w+)%.Init,*%s*(%w+),*%s*true,*%s*true%)")
+                local variable, moduleId, pcallVar1, pcallVar2 = mapScript.Source:match(TUNE_MATCH)
                 local similar, match = areStringsSimilar(variable, pcallVar1, pcallVar2)
                 if similar and match:lower() == "tune" then
                     Util:ShowMessage("Module already installed", "TUNE is already installed in your map!")
