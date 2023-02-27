@@ -71,7 +71,7 @@ local function getScriptLineMatch(source: string, match: string): (number?)
     local lines = source:split("\n")
 
     for i = 1, #lines do
-        if lines[i]:match(match) do
+        if lines[i]:match(match) then
             line = i
             break
         end
