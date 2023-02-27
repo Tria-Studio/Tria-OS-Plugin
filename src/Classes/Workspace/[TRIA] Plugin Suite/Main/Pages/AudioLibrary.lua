@@ -372,7 +372,7 @@ local function fetchApi()
             })
         end
 
-        CURRENT_PAGE_COUNT:set(1)
+        CURRENT_PAGE_COUNT:set(#newData > 0 and 1 or 0)
         CURRENT_AUDIO_DATA:set(newData)
     end
 end
