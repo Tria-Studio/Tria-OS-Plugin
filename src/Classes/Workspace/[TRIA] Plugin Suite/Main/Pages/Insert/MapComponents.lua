@@ -52,6 +52,20 @@ local function areStringsSimilar(...): (boolean, string)
     return similar, if similar then strings[1] else nil
 end
 
+local function mergeSources(sourceA: string, sourceB: string, line: number): string
+	local lines = source:split("\n");
+	local newLines = newSource:split("\n");
+	table.remove(newLines, #newLines)
+    table.insert(newLines, 1, "\n")
+    table.insert(newLines, "\n")
+
+	for i = 1, #newLines do
+		table.insert(lines, i + line - 1, newLines[i])
+	end
+	
+	return table.concat(lines, "\n")
+end
+
 return {
     Addons = {
         {
@@ -73,15 +87,17 @@ return {
                 local mapScript = currentMap:FindFirstChild("MapScript")
 
                 if not mapScript then
-                    return;
+                    return
                 end
 
                 local variable, moduleId, pcallVar1, pcallVar2 = mapScript.Source:match(TUNE_MATCH)
                 local similar, match = areStringsSimilar(variable, pcallVar1, pcallVar2)
                 if similar and match:lower() == "tune" then
                     Util:ShowMessage("Module already installed", "TUNE is already installed in your map!")
-                    return;
+                    return
                 end
+
+                
             end
         }, {
             Name = "Jump Measurement",
