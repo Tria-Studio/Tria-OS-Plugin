@@ -136,6 +136,7 @@ New "Frame" {
 			AnchorPoint = Vector2.new(0, 1),
 			Position = UDim2.fromScale(0, 1),
 			Size = UDim2.new(1, 0, 0, 24),
+			Name = "Bottom",
 			BackgroundColor3 = Theme.Titlebar.Default,
 			BorderColor3 = Theme.Border.Default,
 			BorderSizePixel = 1,
@@ -183,7 +184,6 @@ New "Frame" {
 				})
 			}
 		},
-
 		Message,
 		ColorWheel:GetUI(),
 
@@ -193,7 +193,8 @@ New "Frame" {
 			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 			Size = UDim2.new(1, 0, 1, -76),
 			Position = UDim2.fromOffset(0, 52),
-			Visible = Computed(Util.isPluginFrozen)
+			Visible = Computed(Util.isPluginFrozen),
+			Name = "Freezer"
 		}
 	}
 }
