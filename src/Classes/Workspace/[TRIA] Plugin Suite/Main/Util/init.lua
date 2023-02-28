@@ -357,7 +357,6 @@ end, 10)
 
 task.defer(schedule, function()
     local response = HttpService:JSONDecode(HttpService:GetAsync("https://www.githubstatus.com/api/v2/status.json", true))
-    
     local colorMap = {
         ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
         ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",
