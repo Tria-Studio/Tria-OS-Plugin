@@ -423,12 +423,14 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Image = "rbxasset://textures/ui/ErrorIcon.png",
                                     },
                                     New "TextLabel" {
+                                        AutomaticSize = Enum.AutomaticSize.Y,
                                         BackgroundTransparency = 1,
-                                        Size = UDim2.fromScale(0.5, 0.06),
+                                        Size = UDim2.fromScale(0.75, 0),
                                         Text = Computed(function()
                                             return STATUS_ERRORS[CURRENT_FETCH_STATUS:get()] or "N/A"
                                         end),
                                         TextSize = 18,
+                                        TextWrapped = true,
                                         TextColor3 = Theme.SubText.Default,
                                         TextXAlignment = Enum.TextXAlignment.Center,
                                         TextYAlignment = Enum.TextYAlignment.Top
