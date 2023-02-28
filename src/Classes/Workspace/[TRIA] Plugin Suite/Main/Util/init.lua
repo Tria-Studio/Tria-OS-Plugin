@@ -316,27 +316,46 @@ function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
     return (1 - t) * a + t * b
 end
 
-local function schedule(task: () -> (), repeatDelay: number)
+local function schedule(task: () -> (), interval: number)
     local lastUpdate = 0
+
     Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
-        if os.clock() - lastUpdate > repeatDelay then
+        if os.clock() - lastUpdate >= interval then
             lastUpdate = os.clock()
             task(deltaTime)
         end
     end))
 end
 
-task.defer(schedule, function(deltaTime: number)
-    Util._Fps:set(math.floor(1 / deltaTime))
-end, 0.5)
+local fpsData = {
+    data = {},
+    lastUpdate = os.clock(),
+    start = os.clock(),
+    interval = 0.2
+}
 
 task.defer(schedule, function(deltaTime: number)
+    fpsData.lastUpdate = os.clock()
+    for c = #fpsData.data, 1, -1 do
+        fpsData.data[c + 1] = fpsData.data[c] >= fpsData.lastUpdate - 1 and fpsData.data[c] or nil
+    end
+    fpsData.data[1] = fpsData.lastUpdate
+
+    local currentFps = os.clock() - fpsData.start >= 1 and #fpsData.data or #fpsData.data / (os.clock() - fpsData.start)
+    Util._Fps:set(math.floor(currentFps * (fpsData.interval / math.clamp(
+        deltaTime, 
+        1/1000, 
+        deltaTime + 0.1
+    ))))
+end, fpsData.interval)
+
+task.defer(schedule, function()
     local start = os.clock()
     HttpService:GetAsync("https://www.google.com", true)
     Util._HttpPing:set((os.clock() - start) * 1000)
 end, 10)
 
-task.defer(schedule, function(deltaTime: number)
+task.defer(schedule, function()
     local response = HttpService:JSONDecode(HttpService:GetAsync("https://www.githubstatus.com/api/v2/status.json", true))
     
     local colorMap = {
