@@ -34,6 +34,7 @@ local Util = {
     ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>",
     WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>",
     DEBUG_HEADER = "<font color='rgb(100, 100, 100)'>Plugin Debug Menu</font>",
+    HTTP_ERROR = "<font color='rgb(180, 180, 180)'>HTTP Error</font>",
     SCRIPT_INSERT_ERROR = "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.",
     AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
 
@@ -94,7 +95,7 @@ local Util = {
         }
     }, 
 
-    _HttpPing = Value(0),
+    _HttpPing = Value("Pinging..."),
     _Fps = Value(0),
     _GitStatus = Value("Pinging...")
 }
@@ -351,12 +352,16 @@ end, fpsData.interval)
 
 task.defer(schedule, function()
     local start = os.clock()
-    HttpService:GetAsync("https://www.google.com", true)
-    Util._HttpPing:set((os.clock() - start) * 1000)
+    local fired, result = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
+    if fired then
+        Util._HttpPing:set(("%dms"):format((os.clock() - start) * 1000))
+    else
+        Util._HttpPing:set(Util.HTTP_ERROR)
+    end
 end, 10)
 
 task.defer(schedule, function()
-    local response = HttpService:JSONDecode(HttpService:GetAsync("https://www.githubstatus.com/api/v2/status.json", true))
+    local fired, response = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
     local colorMap = {
         ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
         ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",
@@ -364,8 +369,13 @@ task.defer(schedule, function()
         ["critical"] = "<font color='rgb(209, 66, 59)'>%s</font>"
     }
 
-    if colorMap[response.status.indicator] then
-        Util._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
+    if fired then
+        response = HttpService:JSONDecode(response)
+        if colorMap[response.status.indicator] then
+            Util._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
+        end
+    else
+        Util._GitStatus:set(Util.HTTP_ERROR)
     end
 end, 10)
 

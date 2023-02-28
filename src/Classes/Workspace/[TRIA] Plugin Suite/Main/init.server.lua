@@ -54,7 +54,7 @@ local function showDebug()
 <b>Version</b>: 0.1-dev
 <b>Release</b>: false
 <b>Average FPS</b>: %dfps
-<b>Average HTTP Response</b>: %dms
+<b>Average HTTP Response</b>: %s
 <b>Github Status</b>: %s
 ]]):format(Util._Fps:get(), Util._HttpPing:get(), Util._GitStatus:get())
 			end))
