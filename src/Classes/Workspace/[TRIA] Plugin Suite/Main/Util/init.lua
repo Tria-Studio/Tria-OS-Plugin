@@ -95,7 +95,8 @@ local Util = {
     }, 
 
     _HttpPing = Value(0),
-    _Fps = Value(0)
+    _Fps = Value(0),
+    _GitStatus = Value("Pinging...")
 }
 
 function getSettingsDirFolder(directory: string)
@@ -315,27 +316,41 @@ function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
     return (1 - t) * a + t * b
 end
 
-task.defer(function()
+local function schedule(task: () -> (), repeatDelay: number)
     local lastUpdate = 0
     Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
-        if os.clock() - lastUpdate > 0.5 then
+        if os.clock() - lastUpdate > repeatDelay then
             lastUpdate = os.clock()
-            Util._Fps:set(math.floor(1 / deltaTime))
+            task(deltaTime)
         end
     end))
-end)
+end
 
-task.defer(function()
-    local lastUpdate = 0
-    Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
-        if os.clock() - lastUpdate > 10 then
-            lastUpdate = os.clock()
-            local start = os.clock()
-            HttpService:GetAsync("https://www.google.com", true)
-            Util._HttpPing:set((os.clock() - start) * 1000)
-        end
-    end))
-end)
+task.defer(schedule, function(deltaTime: number)
+    Util._Fps:set(math.floor(1 / deltaTime))
+end, 0.5)
+
+task.defer(schedule, function(deltaTime: number)
+    local start = os.clock()
+    HttpService:GetAsync("https://www.google.com", true)
+    Util._HttpPing:set((os.clock() - start) * 1000)
+end, 10)
+
+task.defer(schedule, function(deltaTime: number)
+    local response = HttpService:JSONDecode(HttpService:GetAsync("https://www.githubstatus.com/api/v2/status.json", true))
+    
+    local colorMap = {
+        ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
+        ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",
+        ["major"] = "<font color='rgb(235, 140, 68)'>%s</font>",
+        ["critical"] = "<font color='rgb(209, 66, 59)'>%s</font>"
+    }
+
+    if colorMap[response.status.indicator] then
+        Util._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
+    end
+end, 10)
+
 
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
