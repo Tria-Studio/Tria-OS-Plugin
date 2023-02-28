@@ -316,16 +316,18 @@ function Util.secondsToTime(t: number): string
     local timeStr = ""
 
     local formatters = {
-        t % 60, 
-        t / 60 % 60,
-        t / 60 ^ 2
+        t / 60 ^ 2,     -- H
+        t / 60 % 60,    -- M
+        t % 60,         -- S
     }
     
     for i = 1, #formatters do
-        if math.floor(formatters[i]) > 0 then
-            timeStr ..= ("%02i%s"):format(formatters[i], i == #formatters and ":" or "")
+        if math.floor(formatters[i]) > 0 or i > 1 then
+            timeStr ..= ("%02i%s"):format(formatters[i], i == #formatters and "" or ":")
         end
     end
+
+    return timeStr
 end
 
 function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>

@@ -53,10 +53,16 @@ local function showDebug()
 				return ([[<font color='rgb(120, 120, 120)'><b>Debug Information</b></font>
 <b>Version</b>: 0.1-dev
 <b>Release</b>: false
+<b>Plugin Uptime</b>: %s
 <b>Average FPS</b>: %dfps
-<b>Average HTTP Response</b>: %s
+<b>Average HTTP Response Time</b>: %s
 <b>Github Status</b>: %s
-]]):format(Util._Fps:get(), Util._HttpPing:get(), Util._GitStatus:get())
+				]]):format(
+					Util.secondsToTime(Util._DEBUG._Uptime:get()),
+					Util._DEBUG._Fps:get(), 
+					Util._DEBUG._HttpPing:get(), 
+					Util._DEBUG._GitStatus:get()
+				)
 			end))
 		end
 	else
