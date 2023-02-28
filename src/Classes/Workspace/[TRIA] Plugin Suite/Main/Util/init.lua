@@ -95,9 +95,12 @@ local Util = {
         }
     }, 
 
-    _HttpPing = Value("Pinging..."),
-    _Fps = Value(0),
-    _GitStatus = Value("Pinging...")
+    _DEBUG = {
+        _HttpPing = Value("Pinging..."),
+        _Fps = Value(0),
+        _Uptime = Value(0),
+        _GitStatus = Value("Pinging...")
+    }
 }
 
 function getSettingsDirFolder(directory: string)
@@ -309,8 +312,20 @@ function Util.round(num: number, step: number): number
 	return math.round(num / step) * step
 end
 
-function Util.secondsToTime(seconds: number): string
-    return ("%02i:%02i"):format(seconds / 60 % 60, seconds % 60)
+function Util.secondsToTime(t: number): string
+    local timeStr = ""
+
+    local formatters = {
+        t % 60, 
+        t / 60 % 60,
+        t / 60 ^ 2
+    }
+    
+    for i = 1, #formatters do
+        if math.floor(formatters[i]) > 0 then
+            timeStr ..= ("%02i%s"):format(formatters[i], i == #formatters and ":" or "")
+        end
+    end
 end
 
 function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
@@ -343,7 +358,7 @@ task.defer(schedule, function(deltaTime: number)
     fpsData.data[1] = fpsData.lastUpdate
 
     local currentFps = os.clock() - fpsData.start >= 1 and #fpsData.data or #fpsData.data / (os.clock() - fpsData.start)
-    Util._Fps:set(math.floor(currentFps * (fpsData.interval / math.clamp(
+    Util._DEBUG._Fps:set(math.floor(currentFps * (fpsData.interval / math.clamp(
         deltaTime, 
         1/1000, 
         deltaTime + 0.1
@@ -351,12 +366,16 @@ task.defer(schedule, function(deltaTime: number)
 end, fpsData.interval)
 
 task.defer(schedule, function()
+    Util._DEBUG._Uptime:set(Util._DEBUG._Uptime:get(false) + 1)
+end, 1)
+
+task.defer(schedule, function()
     local start = os.clock()
     local fired, result = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
     if fired then
-        Util._HttpPing:set(("%dms"):format((os.clock() - start) * 1000))
+        Util._DEBUG._HttpPing:set(("%dms"):format((os.clock() - start) * 1000))
     else
-        Util._HttpPing:set(Util.HTTP_ERROR)
+        Util._DEBUG._HttpPing:set(Util.HTTP_ERROR)
     end
 end, 10)
 
@@ -372,10 +391,10 @@ task.defer(schedule, function()
     if fired then
         response = HttpService:JSONDecode(response)
         if colorMap[response.status.indicator] then
-            Util._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
+            Util._DEBUG._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
         end
     else
-        Util._GitStatus:set(Util.HTTP_ERROR)
+        Util._DEBUG._GitStatus:set(Util.HTTP_ERROR)
     end
 end, 10)
 
