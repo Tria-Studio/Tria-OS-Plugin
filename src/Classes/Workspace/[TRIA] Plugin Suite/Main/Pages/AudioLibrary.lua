@@ -44,7 +44,7 @@ local CURRENT_AUDIO_DATA = Value({})
 
 local STATUS_ERRORS = {
     ["Fetching"] = "Currently fetching the latest audio...",
-    ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plguin Settings\" tab.",
+    ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plugin Settings\" tab.",
     ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
 }
@@ -424,7 +424,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                     },
                                     New "TextLabel" {
                                         BackgroundTransparency = 1,
-                                        Size = UDim2.fromScale(1, 0.06),
+                                        Size = UDim2.fromScale(0.5, 0.06),
                                         Text = Computed(function()
                                             return STATUS_ERRORS[CURRENT_FETCH_STATUS:get()] or "N/A"
                                         end),
