@@ -2,14 +2,18 @@ local Suggester = {}
 
 local ScriptEditorService = game:GetService("ScriptEditorService")
 
-local Package = script.Parent
-local AutocompleteData = require(Package.AutocompleteData)
-local AutocompleteUtil = require(Package.AutocompleteUtil)
-local AutocompleteTypes = require(Package.AutocompleteTypes)
-local PublicTypes = require(Package.Parent.Parent.Parent.PublicTypes)
+local Package = script.Parent.Parent.Parent.Parent
 
-local Lexer = require(Package.Lexer)
-local GlobalSettings = require(Package.GlobalSettings)
+local Autocomplete = script.Parent
+local AutocompleteData = require(Autocomplete.AutocompleteData)
+local AutocompleteUtil = require(Autocomplete.AutocompleteUtil)
+local AutocompleteTypes = require(Autocomplete.AutocompleteTypes)
+
+local Lexer = require(Autocomplete.Lexer)
+local GlobalSettings = require(Autocomplete.GlobalSettings)
+
+local PublicTypes = require(Package.PublicTypes)
+local Util = require(Package.Util)
 
 local AUTOCOMPLETE_IDEN = "([%.:])"
 local ARGS_MATCH = "(%w+)[:%s%w+]*"
@@ -47,7 +51,11 @@ function Suggester:registerCallback()
 			return response
 		end
 
-		-- Return Case 2: Only specific scripts
+		-- Return Case 2: No map selected
+
+		-- Return Case 3: Outside of map model
+
+		-- Return Case 4: Only specific scripts
 
 		if GlobalSettings.runsInTriaScripts then
 			if not table.find({"MapScript", "LocalMapScript", "EffectScript"}, currentScript.Name) then
@@ -55,12 +63,12 @@ function Suggester:registerCallback()
 			end
 		end
 		
-		-- Return Case 3: Inside a comment
+		-- Return Case 5: Inside a comment
 		if AutocompleteUtil.backTraceComments(currentDocument, request.position.line, request.position.character) then
 			return response
 		end
 
-		-- Return Case 4: Inside a multiline string
+		-- Return Case 6: Inside a multiline string
 		if AutocompleteUtil.backTraceMultiString(currentDocument, request.position.line, request.position.character) then
 			return response
 		end
@@ -70,7 +78,7 @@ function Suggester:registerCallback()
 			table.insert(prefixes, prefix)
 		end
 
-		-- Return Case 5: No prefix
+		-- Return Case 7: No prefix
 		if #prefixes < 1 then
 			return response
 		end
@@ -82,7 +90,7 @@ function Suggester:registerCallback()
 		
 		local tokens = AutocompleteUtil.lexerScanToTokens(line)
 
-		-- Return Case 6: Multiple : or .
+		-- Return Case 8: Multiple : or .
 		if #tokens > 1 then
 			if AutocompleteUtil.isTokenSeriesBroken(tokens) then
 				return response
