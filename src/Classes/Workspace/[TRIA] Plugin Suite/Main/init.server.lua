@@ -51,7 +51,7 @@ local function showDebug()
 		if selectedAction.ActionId:find("ShowDebug") then
 			Util:ShowMessage(Util.DEBUG_HEADER, Computed(function()
 				return ([[<font color='rgb(120, 120, 120)'><b>Debug Information</b></font>
-<b>Version</b>: 0.1-dev
+<b>Version</b>: 0.5-dev
 <b>Release</b>: false
 <b>Plugin Uptime</b>: %s
 <b>Average FPS</b>: %dfps
