@@ -35,7 +35,7 @@ local function attemptTask(service: Instance, functionName: string, ...): (boole
         success, result = pcall(service[functionName], service, ...)
         if not success then
             -- Util.debugWarn(("Attempt to call '%s' failed, attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
-            task.wait(.75)
+            task.wait(0.75)
         else
             break
         end
@@ -84,8 +84,8 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
             if data.FullSize and not Util.interfaceActive:get() then
                 return
             end
-            if imageColor:get(false) == Color3.new(.8, .8, .8) then
-                imageColor:set(Color3.new(.99,.99,.99))
+            if imageColor:get(false) == Color3.new(0.8, 0.8, 0.8) then
+                imageColor:set(Color3.new(0.99,0.99,0.99))
             end
         end,
         [OnEvent "MouseButton1Up"] = function()
@@ -93,7 +93,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
                 return
             end
             if imageColor:get(false) ~= Color3.new(1, 1, 1) then
-                imageColor:set(Color3.new(.8,.8,.8))
+                imageColor:set(Color3.new(0.8,0.8,0.8))
             end
         end,
 
@@ -115,7 +115,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
                         return
                     end
                     if imageColor:get(false) == Color3.new(1, 1, 1) then
-                        imageColor:set(Color3.new(.8, .8, .8))
+                        imageColor:set(Color3.new(0.8, 0.8, 0.8))
                     end
                 end,
                 [OnEvent "MouseLeave"] = function()
@@ -268,8 +268,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         New "ImageLabel" {
                                             Image = data.Icon,
                                             Size = UDim2.new(0, 28, 0, 28),
-                                            AnchorPoint = Vector2.new(1, .5),
-                                            Position = UDim2.new(0, -4, .5, 0),
+                                            AnchorPoint = Vector2.new(1, 0.5),
+                                            Position = UDim2.new(0, -4, 0.5, 0),
                                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                                         },
                                         Components.TooltipImage({

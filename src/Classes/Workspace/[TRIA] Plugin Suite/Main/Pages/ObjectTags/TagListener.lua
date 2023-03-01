@@ -219,8 +219,8 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
                                                     return Components.TextBox {
                                                         Size = UDim2.new(1, -textXBounds - 6 - (sizeSubtract or 0), 1, -6),
-                                                        AnchorPoint = Vector2.new(0, .5),
-                                                        Position = UDim2.new(0, textXBounds + (sizeSubtract or 0), .5, 0),
+                                                        AnchorPoint = Vector2.new(0, 0.5),
+                                                        Position = UDim2.new(0, textXBounds + (sizeSubtract or 0), 0.5, 0),
                                                         TextXAlignment = Enum.TextXAlignment.Left,
                                                         Text = textOverride and textOverride or dataValue:get(),
 
@@ -259,8 +259,8 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
                                                 function types.color(): Instance
                                                     return types.number(22, {Components.TextButton {
-                                                        AnchorPoint = Vector2.new(1, .5),
-                                                        Position = UDim2.new(0, -8, .5, 0),
+                                                        AnchorPoint = Vector2.new(1, 0.5),
+                                                        Position = UDim2.new(0, -8, 0.5, 0),
                                                         Size = UDim2.fromOffset(16, 16),
                                                         BackgroundColor3 = Computed(function()
                                                             return (dataValue:get() == "" or not dataValue:get()) and Color3.new() or dataValue:get()
