@@ -31,14 +31,11 @@ local function attemptTask(service: Instance, functionName: string, ...): (boole
 
     repeat
         attemptCount += 1
-        -- Util.debugWarn(("Calling '%s', attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
         success, result = pcall(service[functionName], service, ...)
-        if not success then
-            -- Util.debugWarn(("Attempt to call '%s' failed, attempt %d/%d"):format(functionName, attemptCount, MAX_ATTEMPTS))
-            task.wait(0.75)
-        else
+        if success then
             break
         end
+        task.wait(0.75)
     until attemptCount >= MAX_ATTEMPTS
 
     if not success then
@@ -80,6 +77,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         LayoutOrder = 2,
         Size = UDim2.new(1, -24, 0, 95),
         ScaleType = data.ImageCrop,
+
         [OnEvent "MouseButton1Down"] = function()
             if data.FullSize and not Util.interfaceActive:get() then
                 return
@@ -201,6 +199,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         OverlayImageTransparency = 0.5,
                         Name = "Official TRIA.OS Map Kit",
                         Creator = "TRIA",
+                        ImageCrop = Enum.ScaleType.Crop,
                         Tooltip = {}
                     },
 
@@ -247,10 +246,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 return Components.TextButton {
                                     Active = Util.interfaceActive,
                                     AutoButtonColor = Util.interfaceActive,
-                                    Size = UDim2.new(1, 0, 0, 32),
+                                    Size = UDim2.new(1, 0, 0, 30),
                                     LayoutOrder = data.LayoutOrder,
                                     Text = " " .. data.Name,
                                     TextSize = 17,
+                                    BorderSizePixel = 0,
                                     TextColor3 = Theme.BrightText.Default,
                                     Font = Enum.Font.SourceSansSemibold,
                                     TextXAlignment = Enum.TextXAlignment.Left,
@@ -267,13 +267,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         Components.Constraints.UIPadding(nil, nil, UDim.new(0, 34)),
                                         New "ImageLabel" {
                                             Image = data.Icon,
-                                            Size = UDim2.new(0, 28, 0, 28),
+                                            Size = UDim2.new(0, 26, 0, 26),
                                             AnchorPoint = Vector2.new(1, 0.5),
                                             Position = UDim2.new(0, -4, 0.5, 0),
                                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                                         },
                                         Components.TooltipImage({
-                                            Position = UDim2.new(1, -4, 0, 9),
+                                            Position = UDim2.new(1, -4, 0, 7),
                                             Header = data.Tooltip.Header,
                                             Tooltip = data.Tooltip.Tooltip,
                                         })

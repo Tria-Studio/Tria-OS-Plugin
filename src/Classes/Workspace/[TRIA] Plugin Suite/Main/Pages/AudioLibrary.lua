@@ -1,9 +1,6 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-local ContentProvider = game:GetService("ContentProvider")
-local SoundService = game:GetService("SoundService")
 
 local Package = script.Parent.Parent
 local Resources = Package.Resources
@@ -21,13 +18,10 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
-local OnChange = Fusion.OnChange
 local Value = Fusion.Value
-local ForValues = Fusion.ForValues
 local Hydrate = Fusion.Hydrate
 local Ref = Fusion.Ref
 local Out = Fusion.Out
-local Spring = Fusion.Spring
 local Observer = Fusion.Observer
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
@@ -628,11 +622,8 @@ Below you will find a list of audios which have been approved for use by TRIA st
     }
 end
 
-function frame.OnOpen()
-    fetchApi()
-end
-
 function frame.OnClose()
+    fetchApi()
     local playing = currentAudio:get(false)
     if not playing then
         return
@@ -641,4 +632,5 @@ function frame.OnClose()
     currentAudio:set(nil)
 end
 
+fetchApi()
 return frame
