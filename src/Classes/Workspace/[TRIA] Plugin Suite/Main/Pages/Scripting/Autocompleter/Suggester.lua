@@ -348,9 +348,14 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	return response
 end
 
+local responseTimes = {}
 function Suggester:registerCallback()
 	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
+		local start = os.clock()
 		local response = handleCallback(request, response)
+
+		table.insert(responseTimes, (os.clock() - start) * 1000)
+		Util._DEBUG._SuggesterResponse:set(string.format("%dms", Util.getRollingAverage(responseTimes, 20)))
 		return response
 	end)
 end

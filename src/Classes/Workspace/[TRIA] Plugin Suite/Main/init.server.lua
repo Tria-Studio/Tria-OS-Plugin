@@ -55,12 +55,14 @@ local function showDebug()
 <b>Release</b>: false
 <b>Plugin Uptime</b>: %s
 <b>Average FPS</b>: %dfps
-<b>Average HTTP Response Time</b>: %s
+<b>Average HTTP Response Time</b>: %s,
+<b>Average Autocomplete Response Time</b>: %s
 <b>Github Status</b>: %s
 				]]):format(
 					Util.secondsToTime(Util._DEBUG._Uptime:get()),
 					Util._DEBUG._Fps:get(), 
-					Util._DEBUG._HttpPing:get(), 
+					Util._DEBUG._HttpPing:get(),
+					Util._DEBUG._SuggesterResponse:get(), 
 					Util._DEBUG._GitStatus:get()
 				)
 			end))

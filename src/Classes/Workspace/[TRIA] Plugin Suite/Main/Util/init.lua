@@ -102,6 +102,7 @@ local Util = {
     _DEBUG = {
         _HttpPing = Value("Pinging..."),
         _Fps = Value(0),
+        _SuggesterResponse = Value("Waiting..."),
         _Uptime = Value(0),
         _GitStatus = Value("Pinging...")
     }
@@ -366,7 +367,7 @@ end
 local fpsTimes = {}
 task.defer(schedule, function(deltaTime: number)
     table.insert(fpsTimes, 1 / math.clamp(deltaTime, 1/1000, deltaTime + 0.1))
-    Util._DEBUG._Fps:set(math.floor(getRollingAverage(fpsTimes, 30)))
+    Util._DEBUG._Fps:set(math.floor(Util.getRollingAverage(fpsTimes, 30)))
 end, 0.05)
 
 local httpTimes = {}
@@ -375,7 +376,7 @@ task.defer(schedule, function()
     local fired, result = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
     if fired then
         table.insert(httpTimes, (os.clock() - start) * 1000)
-        Util._DEBUG._HttpPing:set(("%dms"):format(getRollingAverage(httpTimes, 10)))
+        Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
     else
         Util._DEBUG._HttpPing:set(Util.HTTP_ERROR)
     end
