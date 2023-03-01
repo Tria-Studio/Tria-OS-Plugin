@@ -338,18 +338,7 @@ function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
     return (1 - t) * a + t * b
 end
 
-local function schedule(task: () -> (), interval: number)
-    local lastUpdate = 0
-
-    Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
-        if os.clock() - lastUpdate >= interval then
-            lastUpdate = os.clock()
-            task(deltaTime)
-        end
-    end))
-end
-
-local function getRollingAverage(data: {number}, backCount: number): number
+function Util.getRollingAverage(data: {number}, backCount: number): number
     if #data + 1 > backCount then
         for i = 1, #data - backCount do
             table.remove(data, 1)
@@ -363,16 +352,22 @@ local function getRollingAverage(data: {number}, backCount: number): number
     return sum / #data
 end
 
+local function schedule(task: () -> (), interval: number)
+    local lastUpdate = 0
+
+    Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+        if os.clock() - lastUpdate >= interval then
+            lastUpdate = os.clock()
+            task(deltaTime)
+        end
+    end))
+end
 
 local fpsTimes = {}
 task.defer(schedule, function(deltaTime: number)
     table.insert(fpsTimes, 1 / math.clamp(deltaTime, 1/1000, deltaTime + 0.1))
     Util._DEBUG._Fps:set(math.floor(getRollingAverage(fpsTimes, 30)))
 end, 0.05)
-
-task.defer(schedule, function()
-    Util._DEBUG._Uptime:set(Util._DEBUG._Uptime:get(false) + 1)
-end, 1)
 
 local httpTimes = {}
 task.defer(schedule, function()
@@ -405,6 +400,9 @@ task.defer(schedule, function()
     end
 end, 10)
 
+task.defer(schedule, function()
+    Util._DEBUG._Uptime:set(Util._DEBUG._Uptime:get(false) + 1)
+end, 1)
 
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
