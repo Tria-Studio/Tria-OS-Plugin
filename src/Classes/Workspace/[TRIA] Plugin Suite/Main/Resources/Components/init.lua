@@ -18,6 +18,7 @@ local Ref = Fusion.Ref
 
 local Components = {
     Constraints = require(script.Constraints),
+    Slider = require(script.Slider)
 }
  
 function Components.TextButton(data: PublicTypes.Dictionary): Instance

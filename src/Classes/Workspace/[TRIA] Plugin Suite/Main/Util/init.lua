@@ -44,6 +44,10 @@ local Util = {
     interfaceActive = Value(false),
     dropdownActive = Value(false),
 
+    _Slider = {
+        isUsingSlider = Value(false),
+        currentSlider = Value(nil)
+    },
     _Selection = {
         selectedParts = Value({}),
         selectedUpdate = Value(0)

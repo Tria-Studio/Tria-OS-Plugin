@@ -162,13 +162,32 @@ end)                ]], line + 1)
             LayoutOrder = 2,
             Tooltip = {
                 Header = "EasyTP",
-                Tooltip = "Allows for you to easily add timed teleports into your maps with minimal setup. \n\nOpen the ModuleScript for instructions on how to use."
+                Tooltip = "Allows for you to easily add timed teleports into your maps with minimal setup. \n\nThis addon will be integrated with Object Tag selection and View Mode selection!"
             },
     
             InsertFunction = function()
                 if Util.failedScriptInjection(Util.SCRIPT_INSERT_ERROR) then
                     return
                 end
+                if Util.mapModel:get().MapScript:FindFirstChild("EasyTP") and Util.mapModel:get().MapScript.EasyTP:FindFirstChild("LocalFlash") then
+                    Util:ShowMessage("Cannot Insert Addon", "This addon already exists in your map! To update the addon, delete it from your map and retry.")
+                    return
+                end
+
+                local NewModel = addonFiles:FindFirstChild("EasyTP"):Clone()
+                NewModel.Parent = Util.mapModel:get().MapScript
+                Util.mapModel:get().MapScript.Source = string.format("%s%s", "local EasyTP = require(script.EasyTP)\n", Util.mapModel:get().MapScript.Source)
+
+                if Util.hasSpecialFolder:get() and not Util.mapModel:get().Special:FindFirstChild("Teleports") then
+                    local NewFolder = Instance.new("Folder")
+                    NewFolder.Parent = Util.mapModel:get().Special
+                    NewFolder.Name = "Teleports"
+                end
+
+                local Demo = addonFiles.EasyTPDemo:Clone()
+                Demo._TeleportStart1.Parent = Util.mapModel:get().Special.Teleports
+                Demo._TeleportEnd1.Parent = Util.mapModel:get().Special.Teleport
+                Demo:Destroy()
             end
         }, 
     },

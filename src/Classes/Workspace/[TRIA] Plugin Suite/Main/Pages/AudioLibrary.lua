@@ -21,7 +21,6 @@ local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Hydrate = Fusion.Hydrate
 local Ref = Fusion.Ref
-local Out = Fusion.Out
 local Observer = Fusion.Observer
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
@@ -46,8 +45,6 @@ local STATUS_ERRORS = {
 local currentAudio = Value(nil)
 local currentAudioVolume = Value(plugin:GetSetting("TRIA_AudioLibraryVolume") or 1)
 
-local isUsingSlider = Value(false)
-local currentSlider = Value(nil)
 local lastFetchTime = 0
 
 local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
@@ -67,106 +64,6 @@ function fade(sound: Sound, direction: string)
             sound:Stop()
         end)
     end
-end
-
-local function Slider(data: PublicTypes.Dictionary, holder: Instance): {Instance}
-    local absolutePosition = Value(Vector2.zero)
-    local absoluteSize = Value(Vector2.zero)
-    local sliderButton = Value()
-
-    local text = Value("")
-
-    local min = data.Min
-    local max = data.Max
-
-    local sliderPosition = Computed(function()
-        return UDim2.fromScale((data.Value:get() - min:get()) / (max:get() - min:get()), 0.5)
-    end)
-
-    local backFrameSize = Computed(function()
-        return UDim2.fromScale(data.Value:get() / max:get(), 1)
-    end)
-
-    local function updateSliderValue(mousePos: Vector2)
-        local percent = 1 - math.clamp(-1 + ((mousePos.X + absoluteSize:get(false).X) / 2 / absoluteSize:get(false).X + 0.5) * 2, 0, 1)
-    
-        data.Value:set(math.clamp(
-            Util.round(Util.lerp(min:get(false), max:get(false), percent), data.Increment), 
-            min:get(false), 
-            max:get(false)
-        ))
-
-        if data.OnChange then
-            data.OnChange(data.Value:get(false))
-        end
-    end
-
-    local sliderFrame = New "ImageButton" {
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = data.Position,
-        Size = data.Size,
-        BackgroundColor3 = Theme.SubText.Default,
-        ImageTransparency = 1,
-        Visible = if data.Visible then data.Visible else true,
-
-        [Out "AbsolutePosition"] = absolutePosition,
-        [Out "AbsoluteSize"] = absoluteSize,
-
-        [OnEvent "MouseButton1Down"] = function()
-            local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
-            isUsingSlider:set(true)
-            updateSliderValue(mousePos)
-            isUsingSlider:set(false)
-        end,
-
-        [OnEvent "MouseMoved"] = function()
-            if isUsingSlider:get(false) and currentSlider:get(false) == sliderButton:get(false) then
-                local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
-                updateSliderValue(mousePos)
-            end
-        end,
-
-        [Children] = {
-            New "ImageButton" {
-                ImageTransparency = 1,
-                AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundColor3 = Color3.fromRGB(200, 200, 200),
-                Position = sliderPosition,
-
-                Size = UDim2.fromScale(1.6, 1.6),
-                SizeConstraint = Enum.SizeConstraint.RelativeYY,
-                ZIndex = 2,
-
-                [Ref] = sliderButton,
-
-                [Children] = {
-                    Components.Constraints.UICorner(1, 0),
-                    Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
-                },
-
-                [OnEvent "MouseButton1Up"] = function()
-                    isUsingSlider:set(false)
-                    currentSlider:set(nil)
-                end,
-
-                [OnEvent "MouseButton1Down"] = function()
-                    isUsingSlider:set(true)
-                    currentSlider:set(sliderButton:get(false))
-                end
-            },
-
-            New "Frame" {
-                BackgroundColor3 = Color3.fromRGB(255, 180, 0),
-                Size = backFrameSize,
-
-                [Children] = Components.Constraints.UICorner(0, 8)
-            },
-
-            Components.Constraints.UICorner(0, 8)
-        },
-    }
-
-    return sliderFrame
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
@@ -202,14 +99,14 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
             isPlaying 
             and previewSound.IsLoaded 
             and previewSound == currentAudio:get(false) 
-            and not isUsingSlider:get(false) 
+            and not Util._Slider.isUsingSlider:get(false) 
         then
             timePosition:set(timePosition:get(false) + deltaTime)
         end
     end)
 
     Observer(timePosition):onChange(function()
-        if isUsingSlider:get(false) then
+        if Util._Slider.isUsingSlider:get(false) then
             previewSound.TimePosition = timePosition:get(false)
         end
     end)
@@ -264,7 +161,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 Position = UDim2.new(0.675, 0, 0.2, 0),
 
                 [Children] = {
-                    Slider {
+                    Components.Slider {
                         Value = timePosition,
                         Min = Value(0),
                         Max = soundLength,
@@ -598,7 +495,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         end),
                                     },
 
-                                    Slider {
+                                    Components.Slider {
                                         Value = currentAudioVolume,
                                         Min = Value(0),
                                         Max = Value(1),
