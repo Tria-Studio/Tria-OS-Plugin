@@ -15,8 +15,6 @@ local Value = Fusion.Value
 local Ref = Fusion.Ref
 local Out = Fusion.Out
 
-
-
 return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
     local absolutePosition = Value(Vector2.zero)
     local absoluteSize = Value(Vector2.zero)
