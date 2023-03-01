@@ -16,7 +16,7 @@ local Out = Fusion.Out
 local messageFrameSize = Value()
 
 return New "Frame" { --// Message
-	BackgroundTransparency = 0.75,
+	BackgroundTransparency = 0.625,
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
 	Visible = Computed(function()
@@ -35,7 +35,7 @@ return New "Frame" { --// Message
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Image = "rbxassetid://8697780388",
 			ImageColor3 = Color3.fromRGB(0, 0, 0),
-			ImageTransparency = 0.5,
+			ImageTransparency = 0.75,
 			ScaleType = Enum.ScaleType.Slice,
 			SliceCenter = Rect.new(200, 200, 300, 300),
 			ZIndex = 10,

@@ -632,5 +632,5 @@ function frame.OnClose()
     currentAudio:set(nil)
 end
 
-fetchApi()
+task.spawn(fetchApi)
 return frame
