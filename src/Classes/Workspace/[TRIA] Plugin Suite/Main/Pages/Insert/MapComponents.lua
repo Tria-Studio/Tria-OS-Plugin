@@ -112,6 +112,7 @@ return {
                     return
                 end
 
+                ChangeHistoryService:SetWaypoint("Inserting TUNE")
                 local line = getScriptLineMatch(mapScript.Source, "local (%w+)[:%s%w+]* = game.GetMapLib:Invoke%(%)%(%)")
                 
                 if line then
@@ -129,6 +130,9 @@ end)                ]], line + 1)
                 else
                     Util:ShowMessage(Util.ERROR_HEADER, "Failed to install TUNE, this could be because the MapScript is setup incorrectly. Please make sure you have the following line at the top of your MapScript:\n\n<b>local MapLib = game.GetMapLib:Invoke()()</b>")
                 end
+                ChangeHistoryService:SetWaypoint("Inserted TUNE")
+
+                return true
             end
         }, {
             Name = "Jump Measurement",
@@ -147,6 +151,7 @@ end)                ]], line + 1)
             },
     
             InsertFunction = function()
+                ChangeHistoryService:SetWaypoint("Inserting jump measurement")
                 local model = insertModel("JumpMeasurement", nil)
                 positionModel(model)
                 model.JumpMeasurement.Parent = workspace
@@ -154,6 +159,8 @@ end)                ]], line + 1)
                 model:Destroy()
                 Util.debugWarn("Successfully inserted Jump Measurement Tools addon!")
                 ChangeHistoryService:SetWaypoint("Inserted jump measurement")
+
+                return true
             end
         }, {
             Name = "",
@@ -174,6 +181,7 @@ end)                ]], line + 1)
                     return
                 end
 
+                ChangeHistoryService:SetWaypoint("Inserting EasyTP")
                 local NewModel = addonFiles:FindFirstChild("EasyTP"):Clone()
                 NewModel.Parent = Util.mapModel:get().MapScript
                 Util.mapModel:get().MapScript.Source = string.format("%s%s", "local EasyTP = require(script.EasyTP)\n", Util.mapModel:get().MapScript.Source)
@@ -185,9 +193,14 @@ end)                ]], line + 1)
                 end
 
                 local Demo = addonFiles.EasyTPDemo:Clone()
+                positionModel(Demo)
                 Demo._TeleportStart1.Parent = Util.mapModel:get().Special.Teleports
-                Demo._TeleportEnd1.Parent = Util.mapModel:get().Special.Teleport
+                Demo._TeleportEnd1.Parent = Util.mapModel:get().Special.Teleports
                 Demo:Destroy()
+                Util.debugWarn("Successfully inserted EasyTP!")
+                ChangeHistoryService:SetWaypoint("Inserted EasyTP")
+
+                return true
             end
         }, 
     },
