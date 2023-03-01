@@ -349,37 +349,38 @@ local function schedule(task: () -> (), interval: number)
     end))
 end
 
-local fpsData = {
-    data = {},
-    lastUpdate = os.clock(),
-    start = os.clock(),
-    interval = 0.2
-}
-
-task.defer(schedule, function(deltaTime: number)
-    fpsData.lastUpdate = os.clock()
-    for c = #fpsData.data, 1, -1 do
-        fpsData.data[c + 1] = fpsData.data[c] >= fpsData.lastUpdate - 1 and fpsData.data[c] or nil
+local function getRollingAverage(data: {number}, backCount: number): number
+    if #data + 1 > backCount then
+        for i = 1, #data - backCount do
+            table.remove(data, 1)
+        end
     end
-    fpsData.data[1] = fpsData.lastUpdate
 
-    local currentFps = os.clock() - fpsData.start >= 1 and #fpsData.data or #fpsData.data / (os.clock() - fpsData.start)
-    Util._DEBUG._Fps:set(math.floor(currentFps * (fpsData.interval / math.clamp(
-        deltaTime, 
-        1/1000, 
-        deltaTime + 0.1
-    ))))
-end, fpsData.interval)
+    local sum = 0
+    for i = 1, #data do
+        sum += data[i]
+    end
+    return sum / #data
+end
+
+
+local fpsTimes = {}
+task.defer(schedule, function(deltaTime: number)
+    table.insert(fpsTimes, 1 / math.clamp(deltaTime, 1/1000, deltaTime + 0.1))
+    Util._DEBUG._Fps:set(math.floor(getRollingAverage(fpsTimes, 30)))
+end, 0.05)
 
 task.defer(schedule, function()
     Util._DEBUG._Uptime:set(Util._DEBUG._Uptime:get(false) + 1)
 end, 1)
 
+local httpTimes = {}
 task.defer(schedule, function()
     local start = os.clock()
     local fired, result = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
     if fired then
-        Util._DEBUG._HttpPing:set(("%dms"):format((os.clock() - start) * 1000))
+        table.insert(httpTimes, (os.clock() - start) * 1000)
+        Util._DEBUG._HttpPing:set(("%dms"):format(getRollingAverage(httpTimes, 10)))
     else
         Util._DEBUG._HttpPing:set(Util.HTTP_ERROR)
     end
