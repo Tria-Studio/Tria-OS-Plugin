@@ -349,7 +349,10 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 end
 
 function Suggester:registerCallback()
-	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, handleCallback)
+	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
+		local response = handleCallback(request, response)
+		return response
+	end)
 end
 
 function Suggester:disableCallback()
