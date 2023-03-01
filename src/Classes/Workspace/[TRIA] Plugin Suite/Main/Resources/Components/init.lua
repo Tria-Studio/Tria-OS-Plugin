@@ -61,12 +61,18 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
         return data.Visible:get() and 0 or 1
     end), 20)
 
+    local PageActive = Computed(function()
+        return Util.mapModel:get() ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
+    end)
     local pageRatio = Computed(function()
         return Pages._currentPageNum:get() / #Pages._PageOrder
     end)
-
+   
     local colorSpring = Spring(Computed(function()
-        return lerpType(startColor, endColor, pageRatio:get())
+        local Mult = PageActive:get() and 1 or .6
+        local newStartColor = Color3.new(startColor.R * Mult, startColor.G * Mult, startColor.B * Mult)
+        local newEndColor = Color3.new(endColor.R * Mult, endColor.G * Mult, endColor.B * Mult)
+        return lerpType(newStartColor, newEndColor, pageRatio:get())
     end), 20)
 
     return New "TextButton" {
@@ -138,14 +144,17 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
 
                 [Children] = {
                     Components.Constraints.UIAspectRatio(1),
-                    Components.Constraints.UIGradient((function()
+                    Components.Constraints.UIGradient(Spring(Computed((function()
+                        local Mult = PageActive:get() and 1 or .6 
+                        local newStartColor = Color3.new(startColor.R * Mult, startColor.G * Mult, startColor.B * Mult)
+                        local newEndColor = Color3.new(endColor.R * Mult, endColor.G * Mult, endColor.B * Mult)
                         local ratio = (index - 1) / #Pages._PageOrder
 
-                        local start = lerpType(startColor, endColor, ratio)
-                        local finish = lerpType(startColor, endColor, ratio + (1 / #Pages._PageOrder))
+                        local start = lerpType(newStartColor, newEndColor, ratio)
+                        local finish = lerpType(newStartColor, newEndColor, ratio + (1 / #Pages._PageOrder))
 
                         return ColorSequence.new(start, finish)
-                    end)(), NumberSequence.new(0), 0)        
+                    end)), 20), NumberSequence.new(0), 0)        
                 },
             }
         }
