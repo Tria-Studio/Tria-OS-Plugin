@@ -54,7 +54,6 @@ local currentAudioVolume = Value(plugin:GetSetting("TRIA_AudioLibraryVolume") or
 
 local isUsingSlider = Value(false)
 local currentSlider = Value(nil)
-local pageOpened = false
 local lastFetchTime = 0
 
 local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
@@ -632,12 +631,10 @@ Below you will find a list of audios which have been approved for use by TRIA st
 end
 
 function frame.OnOpen()
-    pageOpened = true
-
+    fetchApi()
 end
 
 function frame.OnClose()
-    pageOpened = false
     local playing = currentAudio:get(false)
     if not playing then
         return
