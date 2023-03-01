@@ -37,8 +37,8 @@ local frame = {}
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local ITEMS_PER_PAGE = 8
-local CURRENT_PAGE_COUNT = Value(1)
-local TOTAL_PAGE_COUNT = Value(1)
+local CURRENT_PAGE_COUNT = Value(0)
+local TOTAL_PAGE_COUNT = Value(0)
 local CURRENT_FETCH_STATUS = Value("Fetching")
 local CURRENT_AUDIO_DATA = Value({})
 
@@ -359,14 +359,12 @@ local function fetchApi()
     end
     
     lastFetchTime = os.clock()
-    CURRENT_PAGE_COUNT:set(0)
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(0.5)
 
     local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
     
     CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
-
     if fired then
         local newData = {}
 
