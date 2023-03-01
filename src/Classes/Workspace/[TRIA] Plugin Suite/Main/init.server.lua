@@ -210,7 +210,9 @@ openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
 end)
 
-MapSelect:AutoSelect()
+if not MapSelect:AutoSelect() then
+	PageHandler:ChangePage("Publish")
+end
 
 plugin.Unloading:Connect(function()
     MapSelect._Maid:DoCleaning()
