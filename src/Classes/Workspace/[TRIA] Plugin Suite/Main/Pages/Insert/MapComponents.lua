@@ -169,7 +169,7 @@ end)                ]], line + 1)
             LayoutOrder = 2,
             Tooltip = {
                 Header = "EasyTP",
-                Tooltip = "Allows for you to easily add timed teleports into your maps with minimal setup. \n\nThis addon will be integrated with Object Tag selection and View Mode selection!"
+                Tooltip = "Allows for you to easily add timed teleports into your maps with minimal setup. \n\nThis addon is integrated with Object Tag selection and View Mode selection."
             },
     
             InsertFunction = function()
