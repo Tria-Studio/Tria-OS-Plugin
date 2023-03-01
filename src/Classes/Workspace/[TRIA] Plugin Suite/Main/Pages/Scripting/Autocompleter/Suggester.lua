@@ -53,7 +53,15 @@ function Suggester:registerCallback()
 
 		-- Return Case 2: No map selected
 
+		if not Util.mapModel:get(false) then
+			return response;
+		end
+
 		-- Return Case 3: Outside of map model
+
+		if not currentScript:IsDescendantOf(Util.mapModel:get(false)) then
+			return response;
+		end
 
 		-- Return Case 4: Only specific scripts
 
