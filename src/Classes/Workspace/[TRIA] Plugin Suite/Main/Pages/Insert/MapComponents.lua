@@ -67,7 +67,7 @@ local function mergeSources(sourceA: string, sourceB: string, line: number): str
 	return table.concat(lines, "\n")
 end
 
-local function getScriptLineMatch(source: string, match: string): (number?)
+local function getScriptLineMatch(source: string, match: string): number?
     local line = -1
     local lines = source:split("\n")
 
