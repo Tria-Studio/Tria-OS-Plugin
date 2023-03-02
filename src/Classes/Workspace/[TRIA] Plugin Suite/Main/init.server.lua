@@ -27,6 +27,7 @@ local Util = require(script.Util)
 local ColorWheel = require(script.Colorwheel)
 local Message = require(script.Message)
 local MenuData = require(script.MenuData)
+local PluginSoundManager = require(script.PluginSoundManager)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -72,7 +73,7 @@ local function showDebug()
 	end
 end
 
-New "Frame" {
+local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
 	Parent = widget,
 	Size = UDim2.fromScale(1, 1),
@@ -207,6 +208,19 @@ New "Frame" {
 		}
 	}
 }
+
+local clickSound = PluginSoundManager:QueueSound(876939830)
+clickSound.Volume = 0.5
+
+for _, object in ipairs(mainFrame:GetDescendants()) do
+	if not object:IsA("GuiButton") then
+		continue
+	end
+
+	object.MouseButton1Down:Connect(function()
+		clickSound:Play()
+	end)
+end
 
 openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
