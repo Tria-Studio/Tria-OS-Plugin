@@ -246,6 +246,8 @@ local function getAudioChildren(): {Instance}
                 end)()
             }
         })
+
+        assetsRemaining -= ITEMS_PER_PAGE
     end
 
     TOTAL_PAGE_COUNT:set(totalPages)
