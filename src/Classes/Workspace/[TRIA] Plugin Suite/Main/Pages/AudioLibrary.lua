@@ -257,7 +257,7 @@ local function getAudioChildren(): {Instance}
 end
 
 local function fetchApi()
-    if os.clock() - lastFetchTime < 120 then
+    if os.clock() - lastFetchTime < 120 and CURRENT_FETCH_STATUS:get(false) ~= "Success" then
         return;
     end
     
