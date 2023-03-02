@@ -355,7 +355,7 @@ function Suggester:registerCallback()
 		local response = handleCallback(request, response)
 
 		table.insert(responseTimes, (os.clock() - start) * 1000)
-		Util._DEBUG._SuggesterResponse:set(string.format("%dms", Util.getRollingAverage(responseTimes, 20)))
+		Util._DEBUG._SuggesterResponse:set(string.format("%.2fms", Util.getRollingAverage(responseTimes, 20)))
 		return response
 	end)
 end
