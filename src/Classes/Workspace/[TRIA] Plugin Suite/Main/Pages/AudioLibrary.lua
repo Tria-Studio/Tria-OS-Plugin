@@ -303,9 +303,20 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                 [Children] = {
                     Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 2)),
-                    Components.FrameHeader("About the Audio Library", 1, nil, nil, nil),
-                    Components.BasicTextLabel([[The audio library allows map creators to find approved music to use in their maps.
-Below you will find a list of audios which have been approved for use by TRIA staff. You can choose to preview the song or automatically set your map's BGM to the selected audio.]], 2),
+                    Components.Dropdown({
+                        Header = "About the Audio Library",
+                        DefaultState = true,
+                        LayoutOrder = 1
+                    }, function(visible)
+                        return Components.DropdownTextlabel({
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            DropdownVisible = visible,
+                            Text = [[The audio library allows map creators to find approved music to use in their maps.
+                            Below you will find a list of audios which have been approved for use by TRIA staff. You can choose to preview the song or automatically set your map's BGM to the selected audio.]],
+                            LayoutOrder = 2
+                        })
+                    end, true),
+                    
                     Components.FrameHeader("Audio Library", 3, nil, nil, nil),
 
                     New "Frame" { -- Holder
