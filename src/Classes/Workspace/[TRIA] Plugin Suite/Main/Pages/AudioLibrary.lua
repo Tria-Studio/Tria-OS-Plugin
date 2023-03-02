@@ -33,6 +33,8 @@ local ITEMS_PER_PAGE = 8
 local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
 local CURRENT_FETCH_STATUS = Value("Fetching")
+
+local FETCHED_AUDIO_DATA = Value({})
 local CURRENT_AUDIO_DATA = Value({})
 
 local STATUS_ERRORS = {
@@ -278,6 +280,7 @@ local function fetchApi()
         end
 
         CURRENT_PAGE_COUNT:set(#newData > 0 and 1 or 0)
+        FETCHED_AUDIO_DATA:set(newData)
         CURRENT_AUDIO_DATA:set(newData)
     end
 end
