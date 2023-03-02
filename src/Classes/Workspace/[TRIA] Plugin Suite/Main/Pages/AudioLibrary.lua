@@ -316,15 +316,30 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             LayoutOrder = 2
                         })
                     end, true),
-                    
-                    Components.FrameHeader("Audio Library", 3, nil, nil, nil),
+
+                    Components.Dropdown({
+                        Header = "How to submit Audios",
+                        DefaultState = true,
+                        LayoutOrder = 3
+                    }, function(visible)
+                        return Components.DropdownTextlabel({
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            DropdownVisible = visible,
+                            Text = [[**1)** In the TRIA discord server, run the "/submitAudio" command and provide it with the Audio Name, Audio Artist, License, and Audio File
+**2)** Wait for an authorised staff member to approve your audio
+**3)** Your audio will be visible here once approved and uploaded!]],
+                            LayoutOrder = 2
+                        })
+                    end, true),
+
+                    Components.FrameHeader("Audio Library", 4, nil, nil, nil),
 
                     New "Frame" { -- Holder
                         AnchorPoint = Vector2.new(0.5, 0),
                         BackgroundTransparency = 1,
                         Position = UDim2.fromScale(0.5, 0),
                         Size = UDim2.fromScale(1, 0.85),
-                        LayoutOrder = 4,
+                        LayoutOrder = 5,
 
                         [Children] = {
                             New "Frame" { -- Status Message
