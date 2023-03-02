@@ -219,7 +219,17 @@ end
 local function getAudioChildren(): {Instance}
     local children = {}
 
-    for index = 1, #CURRENT_AUDIO_DATA:get(), ITEMS_PER_PAGE do 
+    local assets = CURRENT_AUDIO_DATA:get()
+    local totalAssets = #assets
+    local totalPages = math.ceil(totalAssets / ITEMS_PER_PAGE)
+    local assetsRemaining = totalAssets
+
+    for index = 1, totalPages do
+        local pageAssetCount = assetsRemaining > ITEMS_PER_PAGE and ITEMS_PER_PAGE or assetsRemaining
+
+		local startIndex = ((index - 1) * ITEMS_PER_PAGE) + 1
+		local endIndex = (startIndex + pageAssetCount) - 1
+
         table.insert(children, New "Frame" {
             BackgroundTransparency = 1,
             LayoutOrder = index,
@@ -229,10 +239,8 @@ local function getAudioChildren(): {Instance}
                 Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
                 (function()
                     local pageChildren = {}
-                    for count = index, index + (ITEMS_PER_PAGE - 1) do
-                        if CURRENT_AUDIO_DATA:get()[count] then
-                            table.insert(pageChildren, AudioButton(CURRENT_AUDIO_DATA:get()[count]))
-                        end
+                    for count = startIndex, endIndex do
+                        table.insert(pageChildren, AudioButton(assets[count]))
                     end
                     return pageChildren
                 end)()
@@ -240,7 +248,7 @@ local function getAudioChildren(): {Instance}
         })
     end
 
-    TOTAL_PAGE_COUNT:set(#children)
+    TOTAL_PAGE_COUNT:set(totalPages)
     return children
 end
 
