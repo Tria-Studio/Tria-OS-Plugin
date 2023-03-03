@@ -133,6 +133,8 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
                 Image = data.OverlayImage,
                 ImageTransparency = data.OverlayImageTransparency,
                 ScaleType = data.ImageCrop,
+
+                [Children] = Components.Constraints.UICorner(0, 6),
             },
 
             New "TextLabel" {
