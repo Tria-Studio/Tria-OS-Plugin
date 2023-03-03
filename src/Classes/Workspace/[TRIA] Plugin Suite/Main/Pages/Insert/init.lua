@@ -271,11 +271,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                             Position = UDim2.new(0, -4, 0.5, 0),
                                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                                         },
-                                        Components.TooltipImage({
+                                        Components.TooltipImage {
                                             Position = UDim2.new(1, -4, 0, 7),
                                             Header = data.Tooltip.Header,
                                             Tooltip = data.Tooltip.Tooltip,
-                                        })
+                                        }
                                     }
                                 }
                             end, Fusion.cleanup)

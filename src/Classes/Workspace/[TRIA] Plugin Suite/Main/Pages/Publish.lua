@@ -267,7 +267,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Header = "Setup Instructions",
                                 DefaultState = false
                             }, function(visible)
-                                return Components.DropdownTextlabel({
+                                return Components.DropdownTextlabel {
                                     TextXAlignment = Enum.TextXAlignment.Left,
                                     DropdownVisible = visible,
                                     Text = [[
@@ -283,20 +283,20 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 
 <b>4)</b> You're all set!
                                 ]]
-                                })
+                                }
                             end, true),
         
                             Components.Dropdown({
                                 Header = "IMPORTANT NOTICE",
                                 DefaultState = true
                             }, function(visible)
-                                return Components.DropdownTextlabel({
+                                return Components.DropdownTextlabel {
                                     DropdownVisible = visible,
                                     Text = [[Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
 
 <u><b>DO NOT SHARE YOUR CODE WITH ANYONE</b></u>. Sharing your code with other players will allow them to whitelist/publish maps under your account.
                                 ]]
-                                })
+                                }
                             end, true),
                         }
                     },
@@ -349,7 +349,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             end),
                             TextColor3 = springs.whitelistedTextSpring,
 
-                            [Children] = Components.ImageButton({
+                            [Children] = Components.ImageButton {
                                 AnchorPoint = Vector2.new(1, 0.5),
                                 BackgroundTransparency = 1,
                                 Position = UDim2.new(1, -4, 0.5, 0),
@@ -363,7 +363,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     selectedPublishMap:set(nil)
                                     publishButtonText:set("Publish Map")
                                 end,
-                            })
+                            }
                         },
 
                         Components.TextButton {
@@ -420,13 +420,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Header = "How This Works",
                             DefaultState = true
                         }, function(visible)
-                            return Components.DropdownTextlabel({
+                            return Components.DropdownTextlabel {
                                 DropdownVisible = visible,
                                 Text = [[
 To get your TRIA Map Creator Key, follow the steps at the top of this page. This is where you will enter your Map Creator Key.
 
 If you generate a new key, your old key will become invalid and you will need to replace it with the new one.]],
-                            })
+                            }
                         end, true),
 
                         New "TextLabel" { --// Status
@@ -495,7 +495,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                             [Ref] = apiData.apiTextbox.unfiltered
                                         }),
 
-                                        Components.ImageButton({
+                                        Components.ImageButton {
                                             AnchorPoint = Vector2.new(0, 0.5),
                                             BackgroundTransparency = 1,
                                             Position = UDim2.fromScale(1, 0.5),
@@ -510,7 +510,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                             [OnEvent "Activated"] = function()
                                                 apiData.isShowingApiKey:set(not apiData.isShowingApiKey:get(false))
                                             end,
-                                        })
+                                        } 
                                     }
                                 }
                             }

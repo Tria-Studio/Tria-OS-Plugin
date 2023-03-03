@@ -308,13 +308,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         DefaultState = true,
                         LayoutOrder = 1
                     }, function(visible)
-                        return Components.DropdownTextlabel({
+                        return Components.DropdownTextlabel {
                             TextXAlignment = Enum.TextXAlignment.Left,
                             DropdownVisible = visible,
                             Text = [[The audio library allows map creators to find approved music to use in their maps.
 Below you will find a list of audios which have been approved for use by TRIA staff. You can choose to preview the song or automatically set your map's BGM to the selected audio.]],
                             LayoutOrder = 2
-                        })
+                        }
                     end, true),
 
                     Components.Dropdown({
@@ -322,14 +322,14 @@ Below you will find a list of audios which have been approved for use by TRIA st
                         DefaultState = true,
                         LayoutOrder = 3
                     }, function(visible)
-                        return Components.DropdownTextlabel({
+                        return Components.DropdownTextlabel {
                             TextXAlignment = Enum.TextXAlignment.Left,
                             DropdownVisible = visible,
                             Text = [[<b>1)</b> In the TRIA discord server, run the "/submitAudio" command and provide it with the Audio Name, Audio Artist, License, and Audio File
 <b>2)</b> Wait for an authorised staff member to approve your audio
 <b>3)</b> Your audio will be visible here once approved and uploaded!]],
                             LayoutOrder = 2
-                        })
+                        }
                     end, true),
 
                     Components.FrameHeader("Audio Library", 4, nil, nil, nil),
