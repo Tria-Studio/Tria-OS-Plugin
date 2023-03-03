@@ -75,7 +75,6 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         BackgroundTransparency = data.FullSize and 1 or 0,
         LayoutOrder = 2,
         Size = UDim2.new(1, -24, 0, 95),
-        ScaleType = data.ImageCrop,
 
         [OnEvent "MouseButton1Down"] = function()
             if data.FullSize and not Util.interfaceActive:get() then
@@ -133,8 +132,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
                 Size = UDim2.fromScale(data.FullSize and 1 or 0.8, 1),
                 Image = data.OverlayImage,
                 ImageTransparency = data.OverlayImageTransparency,
-
-                [Children] = Components.Constraints.UICorner(0, 6),
+                ScaleType = data.ImageCrop,
             },
 
             New "TextLabel" {
