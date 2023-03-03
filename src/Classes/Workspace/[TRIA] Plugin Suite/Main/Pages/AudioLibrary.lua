@@ -325,9 +325,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         return Components.DropdownTextlabel({
                             TextXAlignment = Enum.TextXAlignment.Left,
                             DropdownVisible = visible,
-                            Text = [[**1)** In the TRIA discord server, run the "/submitAudio" command and provide it with the Audio Name, Audio Artist, License, and Audio File
-**2)** Wait for an authorised staff member to approve your audio
-**3)** Your audio will be visible here once approved and uploaded!]],
+                            Text = [[<b>1)</b> In the TRIA discord server, run the "/submitAudio" command and provide it with the Audio Name, Audio Artist, License, and Audio File
+<b>2)</b> Wait for an authorised staff member to approve your audio
+<b>3)</b> Your audio will be visible here once approved and uploaded!]],
                             LayoutOrder = 2
                         })
                     end, true),
