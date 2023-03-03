@@ -22,6 +22,7 @@ return New "Frame" { --// Message
 	Visible = Computed(function()
 		return Util._Message.Text:get() ~= ""
 	end),
+	Name = "Message",
 	ZIndex = 10,
 
 	[Children] = {
