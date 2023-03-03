@@ -153,12 +153,12 @@ function Util.CloseMessage()
     Util._Message.Option2:set({})
 end
 
-function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
+function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?, removeSecondOption: boolean?)
     self:ToggleInterface(false)
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = "Ok", Callback = Util.CloseMessage})
-    self._Message.Option2:set(option2 or option1 and {Text = "Ok", Callback = Util.CloseMessage} or {})
+    self._Message.Option2:set(if removeSecondOption then {} elseif not option2 then {Text = "Ok", Callback = Util.CloseMessage})
 end
 
 function Util.isPluginFrozen()
