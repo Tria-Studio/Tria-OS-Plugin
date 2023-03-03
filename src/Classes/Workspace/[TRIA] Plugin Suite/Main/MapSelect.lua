@@ -148,6 +148,14 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
         end)
         Util.MapMaid:GiveTask(nameChangedSignal)
+        
+        local map = Util.mapModel:get()
+        task.spawn(function()
+            while map == Util.mapModel:get() do
+                Util.hasSpecialFolder:set(map:FindFirstChild("Special"))
+                task.wait(1)
+            end
+        end)
 
         local ObjectType = {}
 
