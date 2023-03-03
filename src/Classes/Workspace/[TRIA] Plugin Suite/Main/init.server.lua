@@ -176,7 +176,7 @@ local mainFrame = New "Frame" {
 						MapSelect:StartMapSelection()
 					end
 				}),
-				Components.ImageButton({
+				Components.ImageButton {
 					AnchorPoint = Vector2.new(1, 0.5),
 					Size = UDim2.fromOffset(20, 20),
 					Position = UDim2.new(1, -2, 0.5, 0),
@@ -196,7 +196,7 @@ local mainFrame = New "Frame" {
 					[OnEvent "MouseButton2Down"] = function()
 						showDebug()
 					end
-				})
+				}
 			}
 		},
 		Message,

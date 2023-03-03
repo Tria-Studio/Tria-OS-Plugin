@@ -316,7 +316,7 @@ function ColorWheel:GetUI(): Instance
                         [Children] = {
                             Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
                             ForPairs({"R", "G", "B"}, function(index: number, value: string): (number, Instance)
-                                return index, getColorDisplay({
+                                return index, getColorDisplay {
                                     LayoutOrder = index,
                                     Display = value,
                                     Computed = function()
@@ -325,10 +325,10 @@ function ColorWheel:GetUI(): Instance
                                         end
                                         return math.floor(chosenColor:get()[value] * 255 + 0.5)
                                     end
-                                })
+                                }
                             end, Fusion.cleanup),
                             ForPairs({"H", "S", "V"}, function(index: number, value: string): (number, Instance)
-                                return index, getColorDisplay({
+                                return index, getColorDisplay {
                                     LayoutOrder = index,
                                     Display = value,
                                     Computed = function()
@@ -337,7 +337,7 @@ function ColorWheel:GetUI(): Instance
                                         end
                                         return math.floor(({chosenColor:get():ToHSV()})[index] * 255 + 0.5)
                                     end
-                                })
+                                }
                             end, Fusion.cleanup)
                         }
                     },
