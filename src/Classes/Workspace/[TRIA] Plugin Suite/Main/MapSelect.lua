@@ -149,9 +149,9 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         end)
         Util.MapMaid:GiveTask(nameChangedSignal)
 
-        local ObjectType = {}
+        local mapTypes = {}
 
-        function ObjectType.Workspace()
+        function mapTypes.Workspace()
             local workspaceUpdate = false
             Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(function(child)
                 if not workspaceUpdate and (child.Name == "Settings" or child.Name == "MapScript") then
@@ -171,7 +171,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
 
         local parentChanged = false
-        function ObjectType.Model()
+        function mapTypes.Model()
             Util.MapMaid:GiveTask(newMap.AncestryChanged:Connect(function() --// Model was either ungrouped or deleted
 				if not newMap.Parent then
                     parentChanged = true
@@ -209,7 +209,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             Util.MainMaid:GiveTask(newMap.ChildRemoved:Connect(updateSpecial))
         end
 
-        ObjectType[newMap.ClassName]()
+        mapTypes[newMap.ClassName]()
         detectSpecialFolder()
 
         task.wait()
