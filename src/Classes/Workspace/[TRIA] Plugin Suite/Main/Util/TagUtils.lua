@@ -5,7 +5,7 @@
 ]]
 
 local Package = script.Parent.Parent
-local TagData = require(Package.Pages.ObjectTags.tagData)
+local TagData = require(Package.Pages.ObjectTags.TagData)
 local Util = require(script.Parent)
 local PublicTypes = require(Package.PublicTypes)
 

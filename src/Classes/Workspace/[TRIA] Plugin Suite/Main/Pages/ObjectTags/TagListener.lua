@@ -18,7 +18,7 @@ local DropdownComponents = require(UtilModule.Dropdown.DropdownComponents)
 local Colorwheel = require(Package.ColorWheel)
 local PublicTypes = require(Package.PublicTypes)
 
-local TagData = require(script.Parent.tagData)
+local TagData = require(script.Parent.TagData)
 
 local New = Fusion.New
 local Children = Fusion.Children
