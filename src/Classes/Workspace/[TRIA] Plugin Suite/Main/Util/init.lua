@@ -413,10 +413,6 @@ task.defer(schedule, function()
     Util._DEBUG._Uptime:set(Util._DEBUG._Uptime:get(false) + 1)
 end, 1)
 
-Observer(Util.hasSpecialFolder):onChange(function()
-    print("Has special:", Util.hasSpecialFolder:get(false))
-end)
-
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
 Observer(Util.mapModel):onChange(updateButtonsActive)
