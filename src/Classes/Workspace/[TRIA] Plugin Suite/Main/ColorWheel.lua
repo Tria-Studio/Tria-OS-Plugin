@@ -59,6 +59,7 @@ local function getColorDisplay(data: {Display: string, LayoutOrder: number, Comp
 
     return New "Frame" {
         BackgroundTransparency = 1,
+        Name = data.Display,
         LayoutOrder = data.LayoutOrder,
 
         [Children] = {
@@ -148,6 +149,7 @@ function ColorWheel:GetUI(): Instance
         Size = UDim2.new(1, 0, 1, -76),
         Position = UDim2.fromOffset(0, 52),
         Visible = visible,
+        Name = "ColorWheel",
     
         [Children] = {
             New "ImageLabel" {
