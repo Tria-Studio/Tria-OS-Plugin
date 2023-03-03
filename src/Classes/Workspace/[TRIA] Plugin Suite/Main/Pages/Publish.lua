@@ -247,14 +247,22 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local newFrame = New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
-        Visible = false, --data.Visible,
+        Visible = data.Visible,
         Name = "Publish",
 
         [Children] = {
             Components.PageHeader("Map Whitelisting & Publishing"),
+            New "Frame" {
+                Size = UDim2.fromScale(1, 1),
+                ZIndex = 2,
+                BackgroundColor3 = Color3.new(),
+                BackgroundTransparency = 0.1
+            },
             Components.ScrollingFrame({
+                Active = Util.interfaceActive,
                 Size = UDim2.fromScale(1, 1),
                 BackgroundColor3 = Theme.MainBackground.Default,
+                Visible = true,
 
                 [Children] = {
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 12)),
