@@ -614,12 +614,17 @@ If you generate a new key, your old key will become invalid and you will need to
     return newFrame
 end
 
+local function leavePage()
+    Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
+end
+
 function frame.OnOpen()
     Util:ShowMessage(Util._Headers.WIP_HEADER, "This page is a work in progress and is currently unavailable until a future update, don't worry, we're working hard behind the scenes to get it done as quick as possible!", {
         Text = "Go Back",
-        Callback = function()
-            Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
-        end
+        Callback = leavePage
+    }, {
+        Text = "Ok",
+        Callback = leavePage
     })
 end
 
