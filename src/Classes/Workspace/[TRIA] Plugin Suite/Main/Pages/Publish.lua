@@ -627,4 +627,8 @@ function frame.OnOpen()
     }, nil, true)
 end
 
+function frame.OnClose()
+    Util:CloseMessage()
+end
+
 return frame
