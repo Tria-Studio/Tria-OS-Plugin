@@ -148,14 +148,6 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
         end)
         Util.MapMaid:GiveTask(nameChangedSignal)
-        
-        local map = Util.mapModel:get()
-        task.spawn(function()
-            while map == Util.mapModel:get() do
-                Util.hasSpecialFolder:set(map:FindFirstChild("Special"))
-                task.wait(1)
-            end
-        end)
 
         local ObjectType = {}
 
@@ -207,10 +199,18 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             end))
         end
 
-        ObjectType[newMap.ClassName]()
+        local function updateSpecial()
+            Util.hasSpecialFolder:set(newMap:FindFirstChild("Special"))
+        end
 
-        local optimizedStructure = newMap:FindFirstChild("Special")
-        Util.hasSpecialFolder:set(optimizedStructure and optimizedStructure:IsA("Folder"))
+        function detectSpecialFolder()
+            updateSpecial()
+            Util.MainMaid:GiveTask(newMap.ChildAdded:Connect(updateSpecial))
+            Util.MainMaid:GiveTask(newMap.ChildRemoved:Connect(updateSpecial))
+        end
+
+        ObjectType[newMap.ClassName]()
+        detectSpecialFolder()
 
         task.wait()
         if not Util.hasSpecialFolder:get(false) then
