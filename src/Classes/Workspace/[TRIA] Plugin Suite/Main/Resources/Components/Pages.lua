@@ -11,6 +11,7 @@ local PageHandler = {
         pages = {},
         bypassedPages = {"Insert", "Publish"},
         currentPage = Value(nil),
+        previousPage = Value(nil),
     },
     _currentPageNum = Value(0),
     _PageOrder = {
@@ -40,6 +41,8 @@ function PageHandler:ChangePage(newPage: string)
     PageHandler.pageChanged:Fire()
     self.pageData.pages[currentPage].Visible:set(false)
     self.pageData.pages[newPage].Visible:set(true)
+
+    self.pageData.previousPage:set(currentPage)
     self.pageData.currentPage:set(newPage)
     updatePageNum(newPage)
 

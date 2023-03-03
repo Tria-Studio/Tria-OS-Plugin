@@ -11,6 +11,7 @@ local Resources = Package.Resources
 local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
+local Pages = require(Resources.Components.Pages)
 
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
@@ -598,6 +599,15 @@ If you generate a new key, your old key will become invalid and you will need to
 
     apiData.apiTextbox.unfiltered:get(false).Text = apiData.apiKey.unfiltered:get(false)
     return newFrame
+end
+
+function frame.OnOpen()
+    Util:ShowMessage(Util._Headers.WIP_HEADER, "This page is a work in progress and is currently unavailable until a future update, don't worry, we're working hard behind the scenes to get it done as quick as possible!", {
+        Text = "Go Back",
+        Callback = function()
+            Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
+        end
+    })
 end
 
 return frame
