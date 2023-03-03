@@ -312,7 +312,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             TextXAlignment = Enum.TextXAlignment.Left,
                             DropdownVisible = visible,
                             Text = [[The audio library allows map creators to find approved music to use in their maps.
-                            Below you will find a list of audios which have been approved for use by TRIA staff. You can choose to preview the song or automatically set your map's BGM to the selected audio.]],
+Below you will find a list of audios which have been approved for use by TRIA staff. You can choose to preview the song or automatically set your map's BGM to the selected audio.]],
                             LayoutOrder = 2
                         })
                     end, true),
