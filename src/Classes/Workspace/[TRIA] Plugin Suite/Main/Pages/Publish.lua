@@ -323,6 +323,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         Components.TextButton {
                             AnchorPoint = Vector2.new(0.5, 0.5),
+                            Active = Util.interfaceActive,
                             BorderSizePixel = 2,
                             LayoutOrder = 3,
                             Position = UDim2.new(0.5, 0, 0.45, 0),
@@ -361,6 +362,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                             [Children] = Components.ImageButton {
                                 AnchorPoint = Vector2.new(1, 0.5),
+                                Active = Util.interfaceActive,
                                 BackgroundTransparency = 1,
                                 Position = UDim2.new(1, -4, 0.5, 0),
                                 Size = UDim2.new(0, 18, 1, 0),
@@ -378,6 +380,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         Components.TextButton {
                             AnchorPoint = Vector2.new(0.5, 0.5),
+                            Active = Util.interfaceActive,
                             BorderSizePixel = 2,
                             LayoutOrder = 5,
                             Position = UDim2.fromScale(0.5, 0.45),
@@ -463,6 +466,7 @@ If you generate a new key, your old key will become invalid and you will need to
                             [Children] = {
                                 New "TextButton" { --// Filtered text box
                                     AnchorPoint = Vector2.new(0.5, 0.5),
+                                    Active = Util.interfaceActive,
                                     BackgroundTransparency = 1,
                                     Position = UDim2.fromScale(0.5, 0.5),
                                     Size = UDim2.fromScale(1, 1),
@@ -483,7 +487,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                     [Children] = {
                                         Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 22)),
                                        
-                                        Components.TextBox({ --// Hidden text box
+                                        Components.TextBox { --// Hidden text box
                                             AnchorPoint = Vector2.new(0.5, 0.5),
                                             BackgroundTransparency = 1,
                                             ClipsDescendants = true,
@@ -503,10 +507,11 @@ If you generate a new key, your old key will become invalid and you will need to
                                             end,
 
                                             [Ref] = apiData.apiTextbox.unfiltered
-                                        }),
+                                        },
 
                                         Components.ImageButton {
                                             AnchorPoint = Vector2.new(0, 0.5),
+                                            Active = Util.interfaceActive,
                                             BackgroundTransparency = 1,
                                             Position = UDim2.fromScale(1, 0.5),
                                             Size = UDim2.new(0, 18, 1, 0),
