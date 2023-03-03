@@ -158,7 +158,7 @@ function Util:ShowMessage(header: string, text: string, option1: any?, option2: 
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = "Ok", Callback = Util.CloseMessage})
-    self._Message.Option2:set(if removeSecondOption then {} elseif not option2 then {Text = "Ok", Callback = Util.CloseMessage})
+    self._Message.Option2:set(if removeSecondOption then {} elseif not option2 then {Text = "Ok", Callback = Util.CloseMessage} else option2)
 end
 
 function Util.isPluginFrozen()
