@@ -22,7 +22,6 @@ local ForValues = Fusion.ForValues
 
 local frame = {}
 
-
 local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
     local MAX_ATTEMPTS = 5
 
