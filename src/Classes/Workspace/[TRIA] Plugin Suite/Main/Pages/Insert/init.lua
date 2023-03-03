@@ -196,7 +196,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         OverlayImageTransparency = 0.5,
                         Name = "Official TRIA.OS Map Kit",
                         Creator = "TRIA",
-                        ImageCrop = Enum.ScaleType.Crop,
+                        ImageCrop = Enum.ScaleType.Fit,
                         Tooltip = {}
                     },
 
