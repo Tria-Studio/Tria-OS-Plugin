@@ -423,7 +423,9 @@ function Components.DropdownTextlabel(data: PublicTypes.Dictionary): Instance
         AutomaticSize = Computed(function()
            return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
         end),
-        Visible = data.DropdownVisible
+        Visible = data.DropdownVisible,
+
+        [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 2), UDim.new(0, 2))
    }
 end
 
