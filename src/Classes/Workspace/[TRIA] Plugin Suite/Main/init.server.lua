@@ -232,7 +232,7 @@ openButton.Click:Connect(function()
 end)
 
 if not MapSelect:AutoSelect() then
-	PageHandler:ChangePage("Publish")
+	PageHandler:ChangePage("Insert")
 end
 
 plugin.Unloading:Connect(function()
