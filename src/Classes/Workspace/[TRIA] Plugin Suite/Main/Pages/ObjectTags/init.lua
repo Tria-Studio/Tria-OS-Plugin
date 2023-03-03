@@ -29,7 +29,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         [Children] = {
             Components.PageHeader("Object Tags"),
-            Components.ScrollingFrame({
+            Components.ScrollingFrame {
                 Size = UDim2.fromScale(1, 1),
                 CanvasSize = UDim2.fromOffset(0, 180),
                 BackgroundColor3 = Theme.MainBackground.Default,
@@ -71,7 +71,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         },
                     }
                 }
-            })
+            }
         }
     }
 end

@@ -276,14 +276,14 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
                                                 function types.dropdown(): Instance --// LiquidType, Difficulty, Locator Image, Zipline Material
                                                     return types.number(22, {
-                                                        DropdownComponents.DropdownButton({
+                                                        DropdownComponents.DropdownButton {
                                                             Position = UDim2.fromOffset(-8, -1),
                                                             Size = UDim2.fromOffset(18, 18),
                                                             Options = metadataType.data.dropdownType,
                                                             OnToggle = function(newData)
                                                                 updateData(newData)
                                                             end
-                                                        })
+                                                        }
                                                     }, dataValue)
                                                 end
 

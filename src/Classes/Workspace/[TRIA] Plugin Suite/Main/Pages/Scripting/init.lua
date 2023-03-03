@@ -86,11 +86,11 @@ function OptionFrame(props: PublicTypes.Dictionary): Instance
                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
                         }
                     },
-                    Components.TooltipImage({
+                    Components.TooltipImage {
                         Position = UDim2.new(1, -4, 0, 2),
                         Header = props.Tooltip.Header,
                         Tooltip = props.Tooltip.Tooltip
-                    })
+                    }
                 }
             }
         }
