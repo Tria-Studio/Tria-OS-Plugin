@@ -7,7 +7,7 @@ local Components = require(Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
 
 local TagListener = require(script.TagListener)
-local TagData = require(script.tagData)
+local TagData = require(script.TagData)
 
 local New = Fusion.New
 local ForPairs = Fusion.ForPairs
