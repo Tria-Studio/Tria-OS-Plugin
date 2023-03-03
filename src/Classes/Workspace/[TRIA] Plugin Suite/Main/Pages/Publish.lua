@@ -247,7 +247,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local newFrame = New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
-        Visible = data.Visible,
+        Visible = false, --data.Visible,
         Name = "Publish",
 
         [Children] = {
