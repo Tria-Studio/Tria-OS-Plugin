@@ -247,6 +247,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
+        Name = "Publish",
 
         [Children] = {
             Components.PageHeader("Map Whitelisting & Publishing"),
