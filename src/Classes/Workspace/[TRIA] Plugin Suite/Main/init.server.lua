@@ -1,3 +1,4 @@
+local ContentProvider = game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -212,6 +213,19 @@ local mainFrame = New "Frame" {
 		}
 	}
 }
+
+task.spawn(function()
+	local images = {}
+	for _, obj in ipairs(mainFrame:GetDescendants()) do
+		if not obj:IsA("ImageLabel") then
+			continue
+		end
+
+		table.insert(images, obj)
+	end
+
+	ContentProvider:PreloadAsync(images)
+end)
 
 openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
