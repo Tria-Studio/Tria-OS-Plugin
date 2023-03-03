@@ -214,19 +214,6 @@ local mainFrame = New "Frame" {
 	}
 }
 
-local clickSound = PluginSoundManager:QueueSound(876939830)
-clickSound.Volume = 0.5
-
-for _, object in ipairs(mainFrame:GetDescendants()) do
-	if not object:IsA("GuiButton") then
-		continue
-	end
-
-	object.MouseButton1Down:Connect(function()
-		clickSound:Play()
-	end)
-end
-
 openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
 end)
