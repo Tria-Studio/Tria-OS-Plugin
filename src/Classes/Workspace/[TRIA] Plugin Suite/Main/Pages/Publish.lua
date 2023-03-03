@@ -259,7 +259,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 BackgroundTransparency = 0.1
             },
             Components.ScrollingFrame({
-                Active = Util.interfaceActive,
+                ScrollingEnabled = Util.interfaceActive,
                 Size = UDim2.fromScale(1, 1),
                 BackgroundColor3 = Theme.MainBackground.Default,
                 Visible = true,
