@@ -252,12 +252,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         [Children] = {
             Components.PageHeader("Map Whitelisting & Publishing"),
-            New "Frame" {
-                Size = UDim2.fromScale(1, 1),
-                ZIndex = 2,
-                BackgroundColor3 = Color3.new(),
-                BackgroundTransparency = 0.1
-            },
+            -- UNCOMMENT THIS WHEN RELEASE OCCURS
+            -- New "Frame" {
+            --     Size = UDim2.fromScale(1, 1),
+            --     ZIndex = 2,
+            --     BackgroundColor3 = Color3.new(),
+            --     BackgroundTransparency = 0.1
+            -- },
             Components.ScrollingFrame({
                 ScrollingEnabled = Util.interfaceActive,
                 Size = UDim2.fromScale(1, 1),
