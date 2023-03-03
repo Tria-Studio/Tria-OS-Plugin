@@ -11,7 +11,7 @@ local Components = require(Resources.Components)
 
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
-local PlguinSoundManager = require(Package.PluginSoundManager)
+local PlguinSoundManager = require(Package.Util.PluginSoundManager)
 local GitUtil = require(Package.GitUtil)
 
 local New = Fusion.New

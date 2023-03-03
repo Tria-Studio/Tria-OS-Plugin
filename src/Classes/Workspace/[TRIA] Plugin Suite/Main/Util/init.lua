@@ -31,19 +31,17 @@ local Util = {
     MainMaid = Maid.new(),
     MapMaid = Maid.new(),
 
-    ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>",
-    WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>",
-    DEBUG_HEADER = "<font color='rgb(100, 100, 100)'>Plugin Debug Menu</font>",
-    HTTP_ERROR = "<font color='rgb(180, 180, 180)'>HTTP Error</font>",
-    SCRIPT_INSERT_ERROR = "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.",
-    AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
-
     _pageChanged = Signal.new(),
     _currentPageNum = Value(1),
     _manualActive = Value(true),
     interfaceActive = Value(false),
     dropdownActive = Value(false),
 
+    _Addons = {
+        hasAddonsWithObjectTags = Value(false),
+        hasWaterjet = Value(false),
+        hasEasyTP = Value(false)
+    },
     _Slider = {
         isUsingSlider = Value(false),
         currentSlider = Value(nil)
@@ -99,6 +97,16 @@ local Util = {
         }
     }, 
 
+    _Headers = {
+        ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>",
+        WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>",
+        DEBUG_HEADER = "<font color='rgb(100, 100, 100)'>Plugin Debug Menu</font>",
+    },
+    _Errors = {
+        HTTP_ERROR = "<font color='rgb(180, 180, 180)'>HTTP Error</font>",
+        SCRIPT_INSERT_ERROR = "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.",
+        AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
+    },
     _DEBUG = {
         _HttpPing = Value("Pinging..."),
         _Fps = Value(0),
@@ -291,7 +299,7 @@ end
 function Util.failedScriptInjection(errorMessage: string): boolean
     Util.attemptScriptInjection()
     if not plugin:GetSetting("TRIA_ScriptInjectionEnabled") then
-        Util:ShowMessage(Util.ERROR_HEADER, errorMessage)
+        Util:ShowMessage(Util._Headers.ERROR_HEADER, errorMessage)
         return true
     end
     return false
@@ -378,7 +386,7 @@ task.defer(schedule, function()
         table.insert(httpTimes, (os.clock() - start) * 1000)
         Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
     else
-        Util._DEBUG._HttpPing:set(Util.HTTP_ERROR)
+        Util._DEBUG._HttpPing:set(Util._Errors.HTTP_ERROR)
     end
 end, 10)
 
@@ -397,7 +405,7 @@ task.defer(schedule, function()
             Util._DEBUG._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
         end
     else
-        Util._DEBUG._GitStatus:set(Util.HTTP_ERROR)
+        Util._DEBUG._GitStatus:set(Util._Errors.HTTP_ERROR)
     end
 end, 10)
 

@@ -5,6 +5,7 @@ local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
+local Util = require(Package.Util)
 
 local TagListener = require(script.TagListener)
 local TagData = require(script.TagData)
@@ -20,6 +21,7 @@ local frame = {}
  
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local objectFrameSize = Value()
+    local addonFrameSize = Value()
     local buttonFrameSize = Value()
 
     return New "Frame" {
@@ -69,6 +71,35 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 return tagName, TagListener(tagName, data)
                             end, Fusion.cleanup)
                         },
+                    },
+                    New "Frame" {
+                        BackgroundTransparency = 1,
+                        Size = UDim2.new(1, 0, 0, 0),
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        Visible = true,-- Util.hasAddonsWithObjectTags,
+                        LayoutOrder = 5,
+
+                        [Children] = {
+                            Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
+                            Components.FrameHeader("Map Addon Tags", 1, nil, nil, "This map has featured map addons in it that support object tags. The instances for those addons can be edited below."),
+                            New "Frame" {
+                                [Out "AbsoluteSize"] = addonFrameSize,
+
+                                BackgroundTransparency = 1,
+                                AutomaticSize = Enum.AutomaticSize.Y,
+                                Size = Computed(function()
+                                    return UDim2.new(1, 0, 0, addonFrameSize:get() and addonFrameSize:get().Y or 0)
+                                end),
+                                LayoutOrder = 2,
+
+                                [Children] = {
+                                    Components.Constraints.UIListLayout(),
+                                    ForPairs(TagData.dataTypes.addonTags, function(tagName: string, data: PublicTypes.Dictionary): (string, Instance)
+                                        return tagName, TagListener(tagName, data)
+                                    end, Fusion.cleanup)
+                                },
+                            },
+                        }
                     }
                 }
             }

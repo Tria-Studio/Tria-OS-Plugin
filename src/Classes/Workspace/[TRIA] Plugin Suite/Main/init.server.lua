@@ -32,7 +32,6 @@ local Util = require(script.Util)
 local ColorWheel = require(script.ColorWheel)
 local Message = require(script.Message)
 local MenuData = require(script.MenuData)
-local PluginSoundManager = require(script.PluginSoundManager)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -55,7 +54,7 @@ local function showDebug()
 	local selectedAction = debugMenu:ShowAsync()
 	if selectedAction then
 		if selectedAction.ActionId:find("ShowDebug") then
-			Util:ShowMessage(Util.DEBUG_HEADER, Computed(function()
+			Util:ShowMessage(Util._Headers.DEBUG_HEADER, Computed(function()
 				return ([[<font color='rgb(120, 120, 120)'><b>Debug Information</b></font>
 <b>Version</b>: 0.5-dev
 <b>Release</b>: false

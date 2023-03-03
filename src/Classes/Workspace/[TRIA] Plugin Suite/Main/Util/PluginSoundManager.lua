@@ -1,11 +1,5 @@
 local PluginSoundManager = {}
 
-local SoundService = game:GetService("SoundService")
-local TweenService = game:GetService("TweenService")
-
-local Package = script.Parent
-local PublicTypes = require(Package.PublicTypes)
-
 local plugin = plugin or script:FindFirstAncestorWhichIsA("Plugin")
 local widget = plugin:CreateDockWidgetPluginGui("SoundPlayer", DockWidgetPluginGuiInfo.new(
 	Enum.InitialDockState.Float,

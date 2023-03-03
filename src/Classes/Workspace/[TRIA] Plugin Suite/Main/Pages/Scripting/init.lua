@@ -127,7 +127,7 @@ local function GetScriptButton(state, scriptName: string, layoutOrder: number): 
         [OnEvent "Activated"] = function()
             ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
 
-            if not Util.failedScriptInjection(Util.SCRIPT_INSERT_ERROR) then
+            if not Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                 return;
             end
 
@@ -206,7 +206,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 
                                 Validate = function(newState)
                                     if newState:get(false) == true then
-                                        return not Util.failedScriptInjection(Util.AUTOCOMPLETE_ERROR)
+                                        return not Util.failedScriptInjection(Util._Errors.AUTOCOMPLETE_ERROR)
                                     end
                                     return true
                                 end,

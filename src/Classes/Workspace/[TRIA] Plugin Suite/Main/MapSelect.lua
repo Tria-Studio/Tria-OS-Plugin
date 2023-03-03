@@ -128,7 +128,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         local success, message = self:IsTriaMap(newMap)
 
         if not success then
-            Util:ShowMessage(Util.ERROR_HEADER, tostring(message), {Text = "Get Mapkit", Callback = function()
+            Util:ShowMessage(Util._Headers.ERROR_HEADER, tostring(message), {Text = "Get Mapkit", Callback = function()
                 Pages:ChangePage("Insert")
             end})
             self:ResetSelection()
@@ -214,7 +214,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         task.wait()
         if not Util.hasSpecialFolder:get(false) then
-            Util:ShowMessage(Util.WARNING_HEADER, "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
+            Util:ShowMessage(Util._Headers.WARNING_HEADER, "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
         end
     else
         self:ResetSelection()

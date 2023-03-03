@@ -94,7 +94,7 @@ return {
             },
     
             InsertFunction = function()
-                if Util.failedScriptInjection(Util.SCRIPT_INSERT_ERROR) then
+                if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                     return
                 end
 
@@ -127,7 +127,7 @@ end)                ]], line + 1)
                     Util.debugWarn("Successfully inserted TUNE!")
                     ChangeHistoryService:SetWaypoint("Inserted tune")
                 else
-                    Util:ShowMessage(Util.ERROR_HEADER, "Failed to install TUNE, this could be because the MapScript is setup incorrectly. Please make sure you have the following line at the top of your MapScript:\n\n<b>local MapLib = game.GetMapLib:Invoke()()</b>")
+                    Util:ShowMessage(Util._Headers.ERROR_HEADER, "Failed to install TUNE, this could be because the MapScript is setup incorrectly. Please make sure you have the following line at the top of your MapScript:\n\n<b>local MapLib = game.GetMapLib:Invoke()()</b>")
                 end
                 ChangeHistoryService:SetWaypoint("Inserted TUNE")
 
@@ -172,7 +172,7 @@ end)                ]], line + 1)
             },
     
             InsertFunction = function()
-                if Util.failedScriptInjection(Util.SCRIPT_INSERT_ERROR) then
+                if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                     return
                 end
 

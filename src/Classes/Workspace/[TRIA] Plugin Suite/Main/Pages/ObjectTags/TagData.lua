@@ -400,7 +400,7 @@ Metadata:
         _WallRun = {
             DisplayText = "WallRun",
             ActionText = "WallRun",
-            DisplayIcon = "rbxassetid://9468872087",
+            DisplayIcon = "rbxassetid://6026568215",
             LayoutOrder = 2,
             metadata = {
                 {
@@ -733,6 +733,48 @@ Metadata:
                     
 Metadata:
     <b>JumpPower: </b>The power the players JumpPower will be set to.]]
+            },
+        },
+    },
+    addonTags = {
+        _Teleporter = {
+            DisplayText = "_Teleporter",
+            ActionText = "_Teleporter",
+            DisplayIcon = "rbxassetid://6031082527",
+            LayoutOrder = 1,
+            metadata = {
+
+            },
+            ApplyMethod = "Name",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "Teleporter",
+                Text = [[A custom teleporter object from EasyTP that allows for the easy teleport of players inside a round.
+
+Metadata:
+    <b>update me: </b>i dont wanna write this rn.]]
+            },
+        },
+        _Waterjet = {
+            DisplayText = "_Waterjet",
+            ActionText = "_Waterjet",
+            DisplayIcon = "rbxassetid://6022668890",
+            LayoutOrder = 1,
+            metadata = {
+
+            },
+            ApplyMethod = "Name",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "Teleporter",
+                Text = [[A custom teleporter object from the Waterjets added that allows for custom jetstream currents inside of liquids.
+
+Metadata:
+    <b>update me: </b>i dont wanna write this rn.]]
             },
         },
     }
