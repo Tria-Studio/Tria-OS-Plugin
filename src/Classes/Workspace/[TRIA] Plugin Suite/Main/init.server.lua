@@ -220,10 +220,8 @@ task.spawn(function()
 		if not obj:IsA("ImageLabel") then
 			continue
 		end
-
 		table.insert(images, obj)
 	end
-
 	ContentProvider:PreloadAsync(images)
 end)
 
