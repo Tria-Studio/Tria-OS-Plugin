@@ -15,7 +15,7 @@ local TagUtils = require(UtilModule.TagUtils)
 local Dropdown = require(UtilModule.Dropdown)
 local DropdownComponents = require(UtilModule.Dropdown.DropdownComponents)
 
-local Colorwheel = require(Package.Colorwheel)
+local Colorwheel = require(Package.ColorWheel)
 local PublicTypes = require(Package.PublicTypes)
 
 local TagData = require(script.Parent.tagData)

@@ -8,7 +8,7 @@ local Components = require(Resources.Components)
 local Theme = require(Resources.Themes)
 
 local Util = require(Package.Util)
-local ColorWheel = require(Package.Colorwheel)
+local ColorWheel = require(Package.ColorWheel)
 local Dropdown = require(Package.Util.Dropdown)
 local DropdownComponents = require(Package.Util.Dropdown.DropdownComponents)
 

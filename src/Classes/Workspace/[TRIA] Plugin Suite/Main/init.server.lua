@@ -29,7 +29,7 @@ local SettingsUtil = require(Pages.Settings.SettingsUtil)
 
 local MapSelect = require(script.MapSelect)
 local Util = require(script.Util)
-local ColorWheel = require(script.Colorwheel)
+local ColorWheel = require(script.ColorWheel)
 local Message = require(script.Message)
 local MenuData = require(script.MenuData)
 local PluginSoundManager = require(script.PluginSoundManager)
