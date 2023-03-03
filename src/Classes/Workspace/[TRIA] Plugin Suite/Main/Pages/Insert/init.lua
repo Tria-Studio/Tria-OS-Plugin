@@ -237,7 +237,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                             end,
                                             LayoutOrder = data.LayoutOrder,
                                         }
-                                    end, Fusion.Cleanup)
+                                    end, Fusion.cleanup)
                                 },
                             },
                             Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
@@ -278,7 +278,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         })
                                     }
                                 }
-                            end, Fusion.Cleanup)
+                            end, Fusion.cleanup)
                         }
                     }
                 }
