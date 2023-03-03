@@ -618,17 +618,19 @@ local function leavePage()
     Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
 end
 
-function frame.OnOpen()
-    Util:ShowMessage(Util._Headers.WIP_HEADER, "This page is a work in progress and is currently unavailable until a future update, don't worry, we're working hard behind the scenes to get it done as quick as possible!", {
-        Text = "Go Back",
-        Callback = function()
-            Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
-        end
-    }, nil, true)
-end
+-- UNCOMMENT THIS WHEN RELEASE OCCURS
 
-function frame.OnClose()
-    Util:CloseMessage()
-end
+-- function frame.OnOpen()
+--     Util:ShowMessage(Util._Headers.WIP_HEADER, "This page is a work in progress and is currently unavailable until a future update, don't worry, we're working hard behind the scenes to get it done as quick as possible!", {
+--         Text = "Go Back",
+--         Callback = function()
+--             Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
+--         end
+--     }, nil, true)
+-- end
+
+-- function frame.OnClose()
+--     Util:CloseMessage()
+-- end
 
 return frame
