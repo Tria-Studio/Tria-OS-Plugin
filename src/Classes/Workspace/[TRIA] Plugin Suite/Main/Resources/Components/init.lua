@@ -193,7 +193,7 @@ function Components.MiniTopbar(data: PublicTypes.Dictionary): Instance
         Size = UDim2.new(1, 0, 0, 24),
     
         [Children] = {
-            Components.ImageButton({
+            Components.ImageButton{
                 ZIndex = data.ZIndex or 4,
                 AnchorPoint = Vector2.new(1, 0),
                 Size = UDim2.fromOffset(24, 24),
@@ -223,7 +223,7 @@ function Components.MiniTopbar(data: PublicTypes.Dictionary): Instance
 end
 
 function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): Instance
-    return Components.TextButton({
+    return Components.TextButton {
         LayoutOrder = 1,
         ZIndex = zIndex,
         BackgroundColor3 = data.BackgroundColor3:get(),

@@ -165,7 +165,7 @@ local mainFrame = New "Frame" {
 					Text = "Selected Map:",
 					TextColor3 = Theme.TitlebarText.Default,
 				},
-				Components.TextButton({
+				Components.TextButton {
 					Size = UDim2.new(1, -100, 1, -6),
 					Position = UDim2.fromOffset(76, 3),
 					Text = MapSelect.selectTextState,
