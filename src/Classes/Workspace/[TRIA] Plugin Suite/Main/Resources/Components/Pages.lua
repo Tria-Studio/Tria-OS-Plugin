@@ -48,6 +48,7 @@ function PageHandler:ChangePage(newPage: string)
 
     PageHandler.pageChanged:Fire()
     mainPageData.currentPage:set(newPage)
+    self.pageLayout:get():JumpToIndex(newPageData.PageIndex)
     updatePageNum(newPage)
 
     if newPageData.onOpen then
@@ -55,17 +56,17 @@ function PageHandler:ChangePage(newPage: string)
     end
 end
 
-function PageHandler:NewPage(data: PublicTypes.Dictionary, layoutOrder: number): Instance
+function PageHandler:NewPage(data: PublicTypes.Dictionary, index: number): Instance
     local newPageData = {
         Name = data.Name,
         Frame = nil,
         Visible = true,
-        LayoutOrder = layoutOrder
+        PageIndex = index
     }
 
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
-    newPageData.Frame.LayoutOrder = layoutOrder
+    newPageData.Frame.LayoutOrder = index
     newPageData.onClose = newPage.OnClose
     newPageData.onOpen = newPage.OnOpen
 
