@@ -161,7 +161,6 @@ data.metadataTypes = {
         default = 100,
     },
 
-
     ZiplineColor = {
         _referenceName = "ZiplineColor",
         type = "ConfigAttribute",
@@ -218,6 +217,60 @@ data.metadataTypes = {
         dataName = "Width",
         displayName = "Wire Thickness",
         default = 0.25,
+    },
+
+    DoFlash = {
+        _referenceName = "DoFlash",
+        type = "Attribute",
+        dataType = "boolean",
+        dataName = "DoFlash",
+        displayName = "Do Flash",
+        default = true,
+        _onlyShow = {
+            Attribute = "TeleportType",
+            value = "start"
+        }
+    },
+    FlashColor = {
+        _referenceName = "FlashColor",
+        type = "Attribute",
+        dataType = "color",
+        dataName = "FlashColor",
+        displayName = "Flash Color",
+        default = Color3.new(),
+        _onlyShow = {
+            Attribute = "TeleportType",
+            value = "start"
+        }
+    },
+    FlashDuration = {
+        _referenceName = "FlashDuration",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "FlashDuration",
+        displayName = "Flash Duration",
+        default = 0.75,
+        _onlyShow = {
+            Attribute = "TeleportType",
+            value = "start"
+        }
+    },
+    TeleportType = {
+        _referenceName = "TeleportType",
+        type = "Attribute",
+        dataType = "dropdown",
+        dropdownType = "TeleportType",
+        dataName = "TeleportType",
+        displayName = "Teleport Type",
+        default = "start",
+    },
+    TeleportNumber = {
+        _referenceName = "TeleportNumber",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "TeleportNumber",
+        displayName = "Teleport Number",
+        default = 0,
     },
 }
 
@@ -743,7 +796,27 @@ Metadata:
             DisplayIcon = "rbxassetid://6031082527",
             LayoutOrder = 1,
             metadata = {
-
+                {
+                    data = data.metadataTypes.TeleportNumber,
+                    location = 1,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.TeleportType,
+                    location = 3,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.DoFlash,
+                    location = 5,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.FlashColor,
+                    location = 7,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.FlashDuration,
+                    location = 8,
+                    isFullSize = false,
+                },
             },
             ApplyMethod = "Name",
             IsTagApplicable = true,

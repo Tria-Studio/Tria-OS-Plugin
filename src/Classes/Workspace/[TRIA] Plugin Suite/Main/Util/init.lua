@@ -39,11 +39,7 @@ Util = {
     dropdownActive = Value(false),
 
     _Addons = {
-        hasAddonsWithObjectTags = Computed(function()
-            local waterJet = Util._Addons.hasWaterjet:get()
-            local easyTP = Util._Addons.hasEasyTP:get()
-            return waterJet or easyTP
-        end),
+        hasAddonsWithObjectTags = Value(false),
         hasWaterjet = Value(false),
         hasEasyTP = Value(false)
     },

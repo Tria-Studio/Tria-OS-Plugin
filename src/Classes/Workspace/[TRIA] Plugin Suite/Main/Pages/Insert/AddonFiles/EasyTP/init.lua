@@ -7,6 +7,8 @@
 	DoFlash: bolean
 	FlashColor: Color3
 	FlashDuration: number
+	TeleportType: string
+	TeleportNumber: number
 ]]
 
 local Players = game:GetService("Players")
@@ -56,10 +58,10 @@ end
 
 local FolderToCheck = Map:FindFirstChild("Special") or Map
 for _, Part: Instance in pairs(FolderToCheck:GetDescendants()) do
-	local teleportNumber = tonumber(Part.Name:sub(15))
-	local isStart = Part.Name:find("_TeleportStart", 1, true)
+	local teleportNumber = Part:GetAttribute("TeleportNumber")
+	local isStart = Part:GetAttribute("TeleportType")
 
-	if Part.Name:find("_TeleportStart", 1, true) or Part.Name:find("_TeleportEnd", 1, true) and teleportNumber then
+	if Part.Name == "_Teleporter" then
 		teleportParts[teleportNumber][isStart and "Start" or "End"] = Part
 	end
 end

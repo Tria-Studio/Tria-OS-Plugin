@@ -197,8 +197,9 @@ end)                ]], line + 1)
 
                 local demo = addonFiles.EasyTPDemo:Clone()
                 positionModel(demo)
-                demo._TeleportStart1.Parent = currentMap.Special.Teleports
-                demo._TeleportEnd1.Parent = currentMap.Special.Teleports
+                for  i, Part: Part in pairs(demo:GetChildren()) do
+                    Part.Parent = currentMap.Special.Teleports
+                end
                 demo:Destroy()
                 Util.debugWarn("Successfully inserted EasyTP!")
                 ChangeHistoryService:SetWaypoint("Inserted EasyTP")

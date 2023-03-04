@@ -45,13 +45,14 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
     Observer(metaDataVisible):onChange(function()
         dataVisible:set(metaDataVisible:get())
     end)
-    
+
     return New "Frame" {
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = Theme.Dropdown.Default,
         LayoutOrder = data.LayoutOrder,
         Size = UDim2.new(1, 0, 0, 4),
         Name = name,
+        Visible = if name == "_Teleporter" then Util._Addons.hasEasyTP elseif name == "_Waterjet" then Util._Addons.hasWaterjet else true,
 
         [Children] = New "Frame" {
             BackgroundColor3 = Theme.Button.Default,    
@@ -168,6 +169,18 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                 [Children] = ForValues(data.metadata, function(metadataType: PublicTypes.Dictionary): Instance
                                     local textBounds = Value(Vector2.new())
                                     local frameSize = Value(Vector2.new())
+                                    local onlyShow = Value()
+
+                                    Observer(onlyShow):onChange(function()
+                                        local value = true
+                                        for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
+                                            if part:GetAttribute(metadataType.data._onlyShow.Attribute) ~= metadataType.data._onlyShow.Value then
+                                                value = false
+                                                break
+                                            end
+                                        end
+                                        onlyShow:set(value)
+                                    end)
 
                                     return New "TextLabel" {
                                         [Out "AbsoluteSize"] = frameSize,
@@ -175,6 +188,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         BackgroundColor3 = Theme.ScrollBarBackground.Default,
                                         BorderColor3 = Theme.Border.Default,
                                         BorderSizePixel = 1,
+                                        Visible = metadataType.data._onlyShow and onlyShow,
                                         Size = UDim2.new(metadataType.isFullSize and 1 or 0.5, 0, 0, 22),
                                         Position = UDim2.new(metadataType.location % 2 == 1 and 0 or 0.5, 0, 0, (math.ceil(metadataType.location / 2) - 1) * 22),
                                         Text = metadataType.data.displayName .. ":",
@@ -274,7 +288,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                     end))
                                                 end
 
-                                                function types.dropdown(): Instance --// LiquidType, Difficulty, Locator Image, Zipline Material
+                                                function types.dropdown(): Instance
                                                     return types.number(22, {
                                                         DropdownComponents.DropdownButton {
                                                             Position = UDim2.fromOffset(-8, -1),

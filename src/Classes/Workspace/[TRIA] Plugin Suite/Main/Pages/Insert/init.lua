@@ -21,7 +21,6 @@ local Computed = Fusion.Computed
 local ForValues = Fusion.ForValues
 local Observer = Fusion.Observer
 
-local mapScriptChildren = Value({})
 local frame = {}
 
 local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
@@ -229,7 +228,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 AutomaticSize = Enum.AutomaticSize.Y,
                                 LayoutOrder = -1,
                                 BackgroundTransparency = 1,
-
+                                
                                 [Children] = {
                                     Components.Constraints.UIGridLayout(UDim2.new(0, 140, 0, 79), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
                                     Components.Constraints.UIPadding(UDim.new(0, 6), UDim.new(0, 6)),
@@ -300,34 +299,43 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-Observer(mapScriptChildren):onChange(function(children)
-    for i, thing: Instance in pairs(children) do
+function UpdateMapScriptChildren()
+    local newValues = {
+        EasyTP = false,
+        Waterjets = false,
+    }
+    for i, thing: Instance in pairs(Util.mapModel:get() and Util.mapModel:get().MapScript:GetChildren() or {}) do
         if thing:IsA("ModuleScript") then
             local Addons = {}
 
             function Addons.EasyTP()
-                return thing.Name == "EasyTP" and require(thing).Teleport
+                return thing.Name == "EasyTP" and require(thing).Teleport ~= nil
             end
             function Addons.Waterjets()
-                return thing.Name == "Waterjets" and require(thing).ToggleJet
+                return thing.Name == "Waterjets" and require(thing).ToggleJet ~= nil
             end
 
-            if Addons[thing.Name] and Addons[thing.Name]() then
-                Util._Addons["has" .. thing.Name]:set(true)
+            if Addons[thing.Name] then
+                newValues[thing.Name] = Addons[thing.Name]()
             end
         end
     end
-end)
-
-function UpdateMapScriptChildren()
-    mapScriptChildren:set(Util.mapModel:get() and Util.mapModel:get().MapScript:GetChildren() or {})
+    Util._Addons.hasEasyTP:set(newValues.EasyTP)
+    Util._Addons.hasWaterjet:set(newValues.Waterjets)
+    Util._Addons.hasAddonsWithObjectTags:set(newValues.Waterjets or newValues.EasyTP)
 end
 
 function frame.OnClose()
     UpdateMapScriptChildren()
 end
 
-Util.mapModel:get().MapScript.ChildAdded:Connect(UpdateMapScriptChildren)
-Util.mapModel:get().MapScript.CHildRemoved:Connect(UpdateMapScriptChildren)
+Util.MapChanged:Connect(function()
+    if Util.mapModel:get() then
+        task.wait()
+        Util.MapMaid:GiveTask(Util.mapModel:get().MapScript.ChildAdded:Connect(UpdateMapScriptChildren))
+        Util.MapMaid:GiveTask(Util.mapModel:get().MapScript.ChildRemoved:Connect(UpdateMapScriptChildren))
+        UpdateMapScriptChildren()
+    end
+end)
 
 return frame
