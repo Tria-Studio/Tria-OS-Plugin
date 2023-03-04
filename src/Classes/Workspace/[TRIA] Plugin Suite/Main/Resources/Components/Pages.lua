@@ -71,9 +71,6 @@ function PageHandler:NewPage(data: PublicTypes.Dictionary, index: number): Insta
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
     newPageData.Frame.LayoutOrder = index
-
-    print(data.Name, index)
-
     newPageData.onClose = newPage.OnClose
     newPageData.onOpen = newPage.OnOpen
 
