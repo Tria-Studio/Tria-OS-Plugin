@@ -1,3 +1,7 @@
+local Package = script.Parent.Parent.Parent
+local Resources = Package.Resources
+local Theme = require(Resources.Themes)
+
 return {
 	TextButton = {
         AutoButtonColor = true,
