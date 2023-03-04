@@ -76,7 +76,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         BackgroundTransparency = 1,
                         Size = UDim2.new(1, 0, 0, 0),
                         AutomaticSize = Enum.AutomaticSize.Y,
-                        Visible = true,-- Util.hasAddonsWithObjectTags,
+                        Visible = Util._Addons.hasAddonsWithObjectTags,
                         LayoutOrder = 5,
 
                         [Children] = {

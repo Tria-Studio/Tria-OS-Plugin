@@ -14,11 +14,13 @@ local Signal = require(script.Signal)
 
 local Value = Fusion.Value
 local Observer = Fusion.Observer
+local Computed = Fusion.Computed
 
 local selectionMaid = Maid.new()
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
-local Util = {
+local Util
+Util = {
     Signal = Signal,
     Maid = Maid,
 
@@ -37,7 +39,11 @@ local Util = {
     dropdownActive = Value(false),
 
     _Addons = {
-        hasAddonsWithObjectTags = Value(false),
+        hasAddonsWithObjectTags = Computed(function()
+            local waterJet = Util._Addons.hasWaterjet:get()
+            local easyTP = Util._Addons.hasEasyTP:get()
+            return waterJet or easyTP
+        end),
         hasWaterjet = Value(false),
         hasEasyTP = Value(false)
     },

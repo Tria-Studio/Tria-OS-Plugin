@@ -19,7 +19,9 @@ local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Computed = Fusion.Computed
 local ForValues = Fusion.ForValues
+local Observer = Fusion.Observer
 
+local mapScriptChildren = Value({})
 local frame = {}
 
 local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
@@ -297,5 +299,35 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         }
     }
 end
+
+Observer(mapScriptChildren):onChange(function(children)
+    for i, thing: Instance in pairs(children) do
+        if thing:IsA("ModuleScript") then
+            local Addons = {}
+
+            function Addons.EasyTP()
+                return thing.Name == "EasyTP" and require(thing).Teleport
+            end
+            function Addons.Waterjets()
+                return thing.Name == "Waterjets" and require(thing).ToggleJet
+            end
+
+            if Addons[thing.Name] and Addons[thing.Name]() then
+                Util._Addons["has" .. thing.Name]:set(true)
+            end
+        end
+    end
+end)
+
+function UpdateMapScriptChildren()
+    mapScriptChildren:set(Util.mapModel:get() and Util.mapModel:get().MapScript:GetChildren() or {})
+end
+
+function frame.OnClose()
+    UpdateMapScriptChildren()
+end
+
+Util.mapModel:get().MapScript.ChildAdded:Connect(UpdateMapScriptChildren)
+Util.mapModel:get().MapScript.CHildRemoved:Connect(UpdateMapScriptChildren)
 
 return frame
