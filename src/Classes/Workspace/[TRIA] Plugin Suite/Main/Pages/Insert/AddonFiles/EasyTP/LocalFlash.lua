@@ -7,17 +7,17 @@
 local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
 
-local ColorCorrection: ColorCorrectionEffect = Lighting:FindFirstChild("_qwertyuiopasdfghjklzxcvbnm")
-ColorCorrection.Enabled = true
-ColorCorrection.TintColor = script:GetAttribute("FlashColor")
+local colorCorrection = Lighting:FindFirstChild("_qwertyuiopasdfghjklzxcvbnm")
+colorCorrection.Enabled = true
+colorCorrection.TintColor = script:GetAttribute("FlashColor")
 
-local Tween = TweenService:Create(ColorCorrection, TweenInfo.new(.075), {Brightness = .75, Saturation = -1})
-Tween:Play()
-Tween.Completed:Wait()
+local tween = TweenService:Create(colorCorrection, TweenInfo.new(.075), {Brightness = .75, Saturation = -1})
+tween:Play()
+tween.Completed:Wait()
 
-local Tween = TweenService:Create(ColorCorrection, TweenInfo.new(script:GetAttribute("FlashDuration") or 0.75), {Brightness = 0, Saturation = -0})
-Tween:Play()
-Tween.Completed:Wait()
+local tween = TweenService:Create(colorCorrection, TweenInfo.new(script:GetAttribute("FlashDuration") or 0.75), {Brightness = 0, Saturation = -0})
+tween:Play()
+tween.Completed:Wait()
 
-ColorCorrection.Enabled = false
+colorCorrection.Enabled = false
 script:Destroy()
