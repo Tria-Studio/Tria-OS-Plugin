@@ -35,20 +35,20 @@ function EasyTP.Teleport(teleportNumber: number)
 	local playersToTeleport = {}
 
 	overlapParams.FilterDescendantsInstances = workspace:FindFirstChild("Characters")
-	for _, part: BasePart in pairs(workspace:GetPartsInPart(currentTeleportParts.Start, overlapParams)) do
+	for _, part in ipairs(workspace:GetPartsInPart(currentTeleportParts.Start, overlapParams)) do
 		local player = Players:GetPlayerFromCharacter(part)
 		if part.Name == "HumanoidRootPart" and player and not table.find(playersToTeleport, player) then
 			table.insert(playersToTeleport, player)
 		end
 	end
 
-	for _, player in pairs(playersToTeleport) do
+	for _, player in ipairs(playersToTeleport) do
 		local endPart = currentTeleportParts.End
 		player.Character.HumanoidRootPart.CFrame = endPart.CFrame * CFrame.new(0, -endPart.Size.Z / 2 + player.Character.Humanoid.HipHeight, 0)
 	end
 
 	if currentTeleportParts.Start:GetAttribute("DoFlash") then
-		for _, player in pairs(playersToTeleport) do
+		for _, player in ipairs(playersToTeleport) do
 			local localFlashScript = script.LocalFlash:Clone()
 			localFlashScript:SetAttribute("FlashColor", currentTeleportParts.Start:GetAttribute("FlashColor") or Color3.new(1, 1, 1))
 			localFlashScript:SetAttribute("FlashDuration", currentTeleportParts.Start:GetAttribute("FlashDuration"))
@@ -62,7 +62,7 @@ if RunService:IsStudio() then
 end
 
 local folder = currentMap:FindFirstChild("Special") or currentMap
-for _, part in pairs(folder:GetDescendants()) do
+for _, part in ipairs(folder:GetDescendants()) do
 	local teleportNumber = part:GetAttribute("TeleportNumber")
 	local isStart = part:GetAttribute("TeleportType")
 
