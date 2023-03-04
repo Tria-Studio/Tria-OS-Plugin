@@ -37,7 +37,9 @@ function DropdownComponents.DropdownButton(props: PublicTypes.Dictionary): Insta
                 Rotation = Spring(Computed(function()
                     return dropdownVisible:get() and 0 or 180
                 end), 20),
-                ZIndex = 8,
+                ZIndex = Computed(function()
+                    return Util._showArrows:get() and 8 or 1
+                end),
             }
         },
 

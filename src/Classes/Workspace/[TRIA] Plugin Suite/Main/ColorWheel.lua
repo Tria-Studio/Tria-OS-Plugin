@@ -260,7 +260,10 @@ function ColorWheel:GetUI(): Instance
                         [Out "AbsoluteSize"] = sliderData.Size,
 
                         [Children] = {
-                            Components.Constraints.UIGradient(ColorSequence.new(Color3.new(0, 0, 0), Color3.new(1, 1, 1)), nil, 270),
+                            Components.Constraints.UIGradient(Computed(function()
+                                local H, S, V = (chosenColor:get() or Color3.new()):ToHSV()
+                                return ColorSequence.new(Color3.new(0, 0, 0), Color3.fromHSV(H, S, 1))
+                            end), nil, 270),
                             New "Frame" {
                                 BackgroundColor3 = Color3.fromRGB(255, 230, 40),
                                 BorderColor3 = Color3.fromRGB(179, 162, 28),
@@ -319,7 +322,7 @@ function ColorWheel:GetUI(): Instance
                             Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
                             ForPairs({"R", "G", "B"}, function(index: number, value: string): (number, Instance)
                                 return index, getColorDisplay {
-                                    LayoutOrder = index,
+                                    LayoutOrder = value == "R" and 1 or value == "G" and 2 or 3,
                                     Display = value,
                                     Computed = function()
                                         if not chosenColor:get() then
@@ -331,7 +334,7 @@ function ColorWheel:GetUI(): Instance
                             end, Fusion.cleanup),
                             ForPairs({"H", "S", "V"}, function(index: number, value: string): (number, Instance)
                                 return index, getColorDisplay {
-                                    LayoutOrder = index,
+                                    LayoutOrder = value == "H" and 4 or value == "S" and 5 or 6,
                                     Display = value,
                                     Computed = function()
                                         if not chosenColor:get() then
@@ -392,12 +395,15 @@ function ColorWheel:GetUI(): Instance
     }
 end
 
-function ColorWheel:GetColor(): Color3
+function ColorWheel:GetColor(startingColor: Color3?): Color3
     local Maid = Util.Maid.new()
+    Util._showArrows:set(false)
     Util._Topbar.FreezeFrame:set(true)
     Util:ToggleInterface(false)
     Util._manualActive:set(false)
     visible:set(true)
+    chosenColor:set(startingColor)
+    updateColor()
     colorChosen:Wait()
 
     local newColor = chosenColor:get(false)
@@ -408,6 +414,7 @@ function ColorWheel:GetColor(): Color3
     chosenColor:set(Color3.new(1, 1, 1))
     positions.circle:set(UDim2.fromScale(0.5, 0.5))
     positions.slider:set(UDim2.fromScale(0.5, 0))
+    Util._showArrows:set(true)
     Maid:DoCleaning()
 
     return newColor

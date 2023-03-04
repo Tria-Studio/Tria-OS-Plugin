@@ -211,7 +211,7 @@ function SettingTypes.Color(data: PublicTypes.Dictionary): Instance
                     currentEditing:set(baseButton)
                     backgroundColor:set(Theme.CurrentMarker.Default:get(false))
 
-                    local chosenColor = ColorWheel:GetColor()
+                    local chosenColor = ColorWheel:GetColor(data.Value:get())
 
                     if not buttonInside:get(false) then
                         backgroundColor:set(Theme.MainBackground.Default:get(false))

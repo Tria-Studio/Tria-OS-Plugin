@@ -194,12 +194,13 @@ function Components.MiniTopbar(data: PublicTypes.Dictionary): Instance
     
         [Children] = {
             Components.ImageButton({
-                ZIndex = data.ZIndex or 2,
+                ZIndex = data.ZIndex or 4,
                 AnchorPoint = Vector2.new(1, 0),
                 Size = UDim2.fromOffset(24, 24),
                 Position = UDim2.fromScale(1, 0),
                 Image = "rbxassetid://6031094678",
                 ImageColor3 = Theme.ErrorText.Default,
+                BorderColor3 = Theme.Border.Default,
                 BorderMode = Enum.BorderMode.Outline,
                 
                 [OnEvent "Activated"] = data.Callback
@@ -278,7 +279,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         [Children] = tooltip and Components.TooltipImage ({
             Header = text,
             Tooltip = tooltip,
-            Position = UDim2.new(1, -12, 0, 5),
+            Position = UDim2.new(1, -5, 0, 5),
             ZIndex = ZIndex
         }) or nil
     }

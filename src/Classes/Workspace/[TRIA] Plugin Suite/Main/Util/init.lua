@@ -113,7 +113,8 @@ local Util = {
         _SuggesterResponse = Value("Waiting..."),
         _Uptime = Value(0),
         _GitStatus = Value("Pinging...")
-    }
+    },
+    _showArrows = Value(true),
 }
 
 function getSettingsDirFolder(directory: string)

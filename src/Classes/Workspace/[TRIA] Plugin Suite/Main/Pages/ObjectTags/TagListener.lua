@@ -267,7 +267,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         end),
 
                                                         [OnEvent "Activated"] = function()
-                                                            updateData(Colorwheel:GetColor() or dataValue:get())
+                                                            updateData(Colorwheel:GetColor(dataValue:get()) or dataValue:get())
                                                         end
                                                     }}, Computed(function()
                                                             return dataValue:get() == "" and "" or Util.parseTextColor3(dataValue:get())
