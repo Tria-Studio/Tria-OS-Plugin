@@ -99,7 +99,7 @@ local mainFrame = New "Frame" {
 					Size = UDim2.fromScale(1, 1),
 
 					[Children] = {
-						Hydrate(Components.Constraints.UIPageLayout(0.75, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 2), true)) {
+						Hydrate(Components.Constraints.UIPageLayout(0.75, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 2), true, Enum.SortOrder.LayoutOrder)) {
 							[Ref] = PageHandler.pageLayout
 						},
 

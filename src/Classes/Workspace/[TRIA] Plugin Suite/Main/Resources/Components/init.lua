@@ -53,13 +53,13 @@ function Components.TextBox(data: PublicTypes.Dictionary): Instance
 end
 
 function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): Instance
-    data.Visible = Pages.pageData.pages[data.Name].Visible
+    data.Active = Pages.pageData.pages[data.Name].Active
 
     local startColor = Color3.fromRGB(245, 158, 29)
     local endColor = Color3.fromRGB(247, 0, 255)
 
     local transparencySpring = Spring(Computed(function()
-        return data.Visible:get() and 0 or 1
+        return data.Active:get() and 0 or 1
     end), 20)
 
     local pageActive = Computed(function()
@@ -82,7 +82,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
         BackgroundColor3 = Spring(Computed(function()
             local hoverColor = Theme.RibbonButton.Hover:get()
             local titlebarColor = Theme.RibbonButton.Default:get()
-            return if data.Visible:get() then hoverColor else titlebarColor
+            return if data.Active:get() then hoverColor else titlebarColor
         end), 20),
         
         [OnEvent "Activated"] = function()
@@ -125,7 +125,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
                 Size = UDim2.fromScale(1, 1),
                 BackgroundTransparency = 1,
                 Visible = Computed(function()
-                    return not data.Visible:get()
+                    return not data.Active:get()
                 end),
 
                 [Children] =  New "Frame" {

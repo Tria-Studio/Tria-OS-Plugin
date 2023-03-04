@@ -42,13 +42,15 @@ function PageHandler:ChangePage(newPage: string)
     local currentPageData = mainPageData.pages[currentPage]
     local newPageData = mainPageData.pages[newPage]
 
+    currentPageData.Active:set(false)
+    newPageData.Active:set(true)
+
     if currentPageData.onClose then
         task.spawn(currentPageData.onClose)
     end
 
     PageHandler.pageChanged:Fire()
     mainPageData.currentPage:set(newPage)
-    self.pageLayout:get():JumpToIndex(newPageData.PageIndex)
     updatePageNum(newPage)
 
     if newPageData.onOpen then
@@ -60,18 +62,21 @@ function PageHandler:NewPage(data: PublicTypes.Dictionary, index: number): Insta
     local newPageData = {
         Name = data.Name,
         Frame = nil,
-        Visible = true,
+        Active = Value(data.Default),
         PageIndex = index
     }
 
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
     newPageData.Frame.LayoutOrder = index
+
     newPageData.onClose = newPage.OnClose
     newPageData.onOpen = newPage.OnOpen
 
     self.pageData.pages[data.Name] = newPageData
-    if data.Default then
+    if newPageData.Active:get(false) then
+        self.pageData.currentPage:set(data.Name)
+        task.wait()
         self:ChangePage(data.Name)
     end
 

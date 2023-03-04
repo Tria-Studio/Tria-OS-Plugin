@@ -71,14 +71,15 @@ function Constraints.UIGridLayout(cellSize: UDim2, cellPadding: UDim2, fillDirec
 	}
 end
 
-function Constraints.UIPageLayout(tweenTime: number, easingStyle: Enum.EasingStyle?, easingDirection: Enum.EasingDirection?, padding: UDim?, circular: boolean?): Instance
+function Constraints.UIPageLayout(tweenTime: number, easingStyle: Enum.EasingStyle?, easingDirection: Enum.EasingDirection?, padding: UDim?, circular: boolean?, sortOrder: Enum.SortOrder?): Instance
     return New "UIPageLayout" {
         TweenTime = tweenTime,
         EasingStyle = easingStyle,
         EasingDirection = easingDirection,
         Circular = circular,
         Padding = padding,
-        ScrollWheelInputEnabled = false
+        ScrollWheelInputEnabled = false,
+        SortOrder = sortOrder
     }
 end
 
