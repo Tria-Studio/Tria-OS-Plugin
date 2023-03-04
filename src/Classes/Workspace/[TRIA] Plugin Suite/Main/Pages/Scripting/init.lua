@@ -185,20 +185,20 @@ All maps must have a MapScript in order to be loaded and ran, however not all of
                     Components.BasicTextLabel([[The LocalMapScript is a client-sided script which runs when players load into the game.
 
 You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]], 7, Theme.TableItem.Default),
-                    Components.Spacer(false, 8, 12, nil),
+                    Components.Spacer(false, 8, 9, nil),
 
                     GetScriptButton(hasScripts.LocalMapScript, "LocalMapScript", 9),
-                    Components.Spacer(false, 10, 6, nil),
+                    Components.Spacer(false, 10, 3, nil),
 
                     Components.FrameHeader("About EffectScript", 11, nil, nil, nil),
                     Components.Spacer(false, 12, 6, nil),
                     Components.BasicTextLabel([[The EffectScript is a localscript which allows your code to be replicated to other spectators.
 
 The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]], 13, Theme.TableItem.Default),
-                    Components.Spacer(false, 14, 12, nil),
+                    Components.Spacer(false, 14, 9, nil),
 
                     GetScriptButton(hasScripts.EffectScript, "EffectScript", 15),
-                    Components.Spacer(false, 16, 6, nil),
+                    Components.Spacer(false, 16, 3, nil),
 
                     Components.FrameHeader("Script Autocomplete Settings", 17, nil, nil, [[Here you can customise how the script autocompleter works.
 
