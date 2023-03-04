@@ -71,7 +71,7 @@ function PageHandler:NewPage(data: PublicTypes.Dictionary, index: number): Insta
     newPageData.onOpen = newPage.OnOpen
 
     self.pageData.pages[data.Name] = newPageData
-    if data.Default:get(false) then
+    if data.Default then
         self:ChangePage(data.Name)
     end
 
