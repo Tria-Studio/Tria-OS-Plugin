@@ -32,7 +32,7 @@ export type Response = {
 			tags: {Enum.CompletionItemTag}?,
 			detail: string?,
 			documentation: {
-			value: string,
+				value: string,
 			}?,
 			overloads: number?,
 			learnMoreLink: string?,
