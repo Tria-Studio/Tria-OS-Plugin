@@ -29,7 +29,6 @@ return {
     },
 
 	ScrollingFrame = {
-        ScrollingEnabled = bypassRestriction or Util.interfaceActive,
         BorderColor3 = Theme.Border.Default,
         CanvasSize = UDim2.fromScale(0, 0),
         BorderSizePixel = 1,

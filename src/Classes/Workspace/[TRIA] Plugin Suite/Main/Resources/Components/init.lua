@@ -38,11 +38,11 @@ function Components.TextButton(data: PublicTypes.Dictionary): Instance
 end
 
 function Components.ImageButton(data: PublicTypes.Dictionary): Instance
-    return Hydrate(New "ImageButton" {})(data)
+    return Hydrate(getInstanceWithStrippedProperties("ImageButton", data))(data)
 end
 
 function Components.TextBox(data: PublicTypes.Dictionary): Instance
-    return Hydrate(New "TextBox" {})(data)
+    return Hydrate(getInstanceWithStrippedProperties("TextBox", data))(data)
 end
 
 function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): Instance
@@ -279,7 +279,8 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
 end
 
 function Components.ScrollingFrame(data: PublicTypes.Dictionary, bypassRestriction: boolean?): Instance
-    return Hydrate(New "ScrollingFrame" {})(data)
+    data.ScrollingEnabled = bypassRestriction or Util.interfaceActive
+    return Hydrate(getInstanceWithStrippedProperties("ScrollingFrame", data))(data)
 end
 
 function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (boolean) -> Instance | {Instance}, bypassRestriction: boolean?): Instance
