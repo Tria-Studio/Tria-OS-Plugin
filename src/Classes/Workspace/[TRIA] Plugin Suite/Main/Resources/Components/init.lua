@@ -6,6 +6,7 @@ local lerpType = require(Resources.Fusion.Animation.lerpType)
 local PublicTypes = require(Resources.Parent.PublicTypes)
 
 local Pages = require(script.Pages)
+local DefaultComponentProps = require(script.DefaultComponentProps)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -20,9 +21,13 @@ local Components = {
     Constraints = require(script.Constraints),
     Slider = require(script.Slider)
 }
+
+local function getInstanceWithStrippedProperties(className: string, data: PublicTypes.Dictionary): Instance
+     
+end
  
 function Components.TextButton(data: PublicTypes.Dictionary): Instance
-    return Hydrate(New "TextButton" {})(data)
+    return Hydrate(getInstanceWithStrippedProperties("TextButton", data))(data)
 end
 
 function Components.ImageButton(data: PublicTypes.Dictionary): Instance
