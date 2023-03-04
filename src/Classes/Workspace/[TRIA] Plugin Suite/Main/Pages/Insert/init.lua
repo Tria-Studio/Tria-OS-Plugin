@@ -311,16 +311,16 @@ function UpdateMapScriptChildren()
             function Addons.EasyTP()
                 local module
                 local success = pcall(function()
-                    module = require(thing)
+                    module = thing.Name == "EasyTP" and require(thing)
                 end)
-                return thing.Name == "EasyTP" and module and module.Teleport == 0 and thing:FindFirstChild("LocalFlash")
+                return module and module.Teleport == 0 and thing:FindFirstChild("LocalFlash")
             end
             function Addons.Waterjets()
                 local module
                 local success = pcall(function()
-                    module = require(thing)
+                    module = thing.Name == "Waterjets" and require(thing)
                 end)
-                return thing.Name == "Waterjets" and module and module.ToggleJet ~= nil
+                return module and module.ToggleJet == 0
             end
 
             if Addons[thing.Name] then
