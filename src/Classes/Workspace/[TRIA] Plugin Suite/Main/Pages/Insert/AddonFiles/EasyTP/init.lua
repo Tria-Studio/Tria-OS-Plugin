@@ -15,45 +15,44 @@ local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 
-local Map = script:FindFirstAncestorOfClass("Model")
-local Overlap = OverlapParams.new()
-local ColorCorrection = Instance.new("ColorCorrectionEffect")
-
-local plugin = script:FindFirstAncestorWhichIsA("Plugin")
-local module = {}
+local currentMap = script:FindFirstAncestorOfClass("Model")
 local teleportParts = {}
 
-Overlap.FilterType = Enum.RaycastFilterType.Whitelist
-ColorCorrection.Name = "EasyTPColorCorrection"
-ColorCorrection.Parent = Lighting
+local overlapParams = OverlapParams.new()
+overlapParams.FilterType = Enum.RaycastFilterType.Whitelist
 
+local colorCorrection = Instance.new("ColorCorrectionEffect")
+colorCorrection.Name = "EasyTPColorCorrection"
+colorCorrection.Parent = Lighting
 
-function module.Teleport(TeleportNumber: number)
-	assert(teleportParts[TeleportNumber].Start, "[EasyTP] Starting part for teleport number {TeleportNumber} does not exist.")
-	assert(teleportParts[TeleportNumber].End, "[EasyTP] End part for teleport number {TeleportNumber} does not exist.")
+local EasyTP = {}
+
+function EasyTP.Teleport(teleportNumber: number)
+	assert(teleportParts[teleportNumber].Start, `[EasyTP] Starting part for teleport number {teleportNumber} does not exist.`)
+	assert(teleportParts[teleportNumber].End, `[EasyTP] End part for teleport number {teleportNumber} does not exist.`)
 	
-	local TPParts = teleportParts[TeleportNumber]
-	local PlayersToTP: {[number]: Player} = {}
+	local currentTeleportParts = teleportParts[teleportNumber]
+	local playersToTeleport = {}
 
-	Overlap.FilterDescendantsInstances = workspace:FindFirstChild("Characters")
-	for _, Part: BasePart in pairs(workspace:GetPartsInPart(TPParts.Start, Overlap)) do
-		local Player = Players:GetPlayerFromCharacter(Part)
-		if Part.Name == "HumanoidRootPart" and Player and not table.find(PlayersToTP, Player) then
-			table.insert(PlayersToTP, Player)
+	overlapParams.FilterDescendantsInstances = workspace:FindFirstChild("Characters")
+	for _, part: BasePart in pairs(workspace:GetPartsInPart(currentTeleportParts.Start, overlapParams)) do
+		local player = Players:GetPlayerFromCharacter(part)
+		if part.Name == "HumanoidRootPart" and player and not table.find(playersToTeleport, player) then
+			table.insert(playersToTeleport, player)
 		end
 	end
 
-	for _, Player in pairs(PlayersToTP) do
-		local EndPart = TPParts.End
-		Player.Character.HumanoidRootPart.CFrame = EndPart.CFrame * CFrame.new(0, -EndPart.Size.Z / 2 + Player.Character.Humanoid.HipHeight, 0)
+	for _, player in pairs(playersToTeleport) do
+		local endPart = currentTeleportParts.End
+		player.Character.HumanoidRootPart.CFrame = endPart.CFrame * CFrame.new(0, -endPart.Size.Z / 2 + player.Character.Humanoid.HipHeight, 0)
 	end
 
-	if TPParts.Start:GetAttribute("DoFlash") then
-		for _, Player in pairs(PlayersToTP) do
-			local LocalScript = script.LocalFlash:Clone()
-			LocalScript:SetAttribute("FlashColor", TPParts.Start:GetAttribute("FlashColor") or Color3.new(1, 1, 1))
-			LocalScript:SetAttribute("FlashDuration", TPParts.Start:GetAttribute("FlashDuration"))
-			LocalScript.Parent = Player.PlayerGui
+	if currentTeleportParts.Start:GetAttribute("DoFlash") then
+		for _, player in pairs(playersToTeleport) do
+			local localFlashScript = script.LocalFlash:Clone()
+			localFlashScript:SetAttribute("FlashColor", currentTeleportParts.Start:GetAttribute("FlashColor") or Color3.new(1, 1, 1))
+			localFlashScript:SetAttribute("FlashDuration", currentTeleportParts.Start:GetAttribute("FlashDuration"))
+			localFlashScript.Parent = player.PlayerGui
 		end
 	end
 end
@@ -61,14 +60,15 @@ end
 if RunService:IsStudio() then
 	return {Teleport = 0}
 end
-local FolderToCheck = Map:FindFirstChild("Special") or Map
-for _, Part: Instance in pairs(FolderToCheck:GetDescendants()) do
-	local teleportNumber = Part:GetAttribute("TeleportNumber")
-	local isStart = Part:GetAttribute("TeleportType")
 
-	if Part.Name == "_Teleporter" then
-		teleportParts[teleportNumber][isStart and "Start" or "End"] = Part
+local folder = currentMap:FindFirstChild("Special") or currentMap
+for _, part in pairs(folder:GetDescendants()) do
+	local teleportNumber = part:GetAttribute("TeleportNumber")
+	local isStart = part:GetAttribute("TeleportType")
+
+	if part.Name == "_Teleporter" then
+		teleportParts[teleportNumber][isStart and "Start" or "End"] = part
 	end
 end
 
-return module
+return EasyTP
