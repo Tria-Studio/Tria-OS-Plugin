@@ -1,9 +1,8 @@
 --[[ 
 	Leave this script parented to the MapScript otherwise it may break. 
-	Edit the script at your own risk of breaking it.
+	Edit this script at your own risk of breaking it.
 
 	Lighting effects are not applied to spectators.
-	
 	
 	DoFlash: bolean
 	FlashColor: Color3
