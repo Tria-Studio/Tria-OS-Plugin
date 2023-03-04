@@ -107,7 +107,7 @@ local mainFrame = New "Frame" {
 							return PageHandler:NewPage(data)
 						end, Fusion.cleanup),	
 					}
-				}
+				},
 
 				New "TextLabel" {
 					Active = Computed(Util.isPluginFrozen),
