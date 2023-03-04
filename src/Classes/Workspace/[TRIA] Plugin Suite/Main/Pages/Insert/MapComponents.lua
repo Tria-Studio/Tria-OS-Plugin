@@ -34,28 +34,6 @@ local function getInsertFolder(specialChildName: string): Instance
         or currentMap
 end
 
-function areStringsSimilar(...): (boolean, string)
-    local strings = {...}
-    local similar = true
-   
-    if #strings == 0 then
-        return false, nil
-    end
-
-    if #strings < 2 then
-        return true, strings[1]
-    end
-
-    for i = 2, #strings do
-        if strings[1] ~= strings[i] then
-            similar = false
-            break
-        end 
-    end
-
-    return similar, if similar then strings[1] else nil
-end
-
 local function mergeSources(sourceA: string, sourceB: string, line: number): string
 	local lines = sourceA:split("\n");
 	local newLines = sourceB:split("\n");
