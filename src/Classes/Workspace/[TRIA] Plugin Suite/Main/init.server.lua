@@ -32,6 +32,7 @@ local Util = require(script.Util)
 local ColorWheel = require(script.ColorWheel)
 local Message = require(script.Message)
 local MenuData = require(script.MenuData)
+local PublicTypes = require(script.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -91,9 +92,17 @@ local mainFrame = New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				ForValues(MenuData.Pages, function(data)
-					return PageHandler:NewPage(data)
-				end, Fusion.cleanup),
+				New "Frame" {
+					BackgroundTransparency = 1,
+					Size = UDim2.fromScale(1, 1),
+
+					[Children] = {
+						Components.Constraints.UIPageLayout(0.75, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 2), true),
+						ForValues(MenuData.Pages, function(data: PublicTypes.Dictionary): Instance
+							return PageHandler:NewPage(data)
+						end, Fusion.cleanup),	
+					}
+				}
 
 				New "TextLabel" {
 					Active = Computed(Util.isPluginFrozen),
@@ -126,6 +135,7 @@ local mainFrame = New "Frame" {
 				}
 			}
 		},
+
 		New "Frame" { -- Topbar
 			Name = "Topbar",
 			Size = UDim2.new(1, 0, 0, 36),
@@ -142,11 +152,12 @@ local mainFrame = New "Frame" {
 			end,
 			[Children] = {
 				Components.Constraints.UIGridLayout(UDim2.fromScale(1 / #MenuData.Buttons, 1), UDim2.new(), Enum.FillDirection.Horizontal),
-				ForPairs(MenuData.Buttons, function(index, data)
+				ForPairs(MenuData.Buttons, function(index: number, data: PublicTypes.Dictionary): (number, Instance)
 					return index, Components.TopbarButton(index, data)
 				end, Fusion.cleanup)
 			},
 		},
+
 		New "Frame" { -- Bottom bar
 			AnchorPoint = Vector2.new(0, 1),
 			Position = UDim2.fromScale(0, 1),
@@ -199,6 +210,7 @@ local mainFrame = New "Frame" {
 				}
 			}
 		},
+
 		Message,
 		ColorWheel:GetUI(),
 
