@@ -178,12 +178,13 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         BorderSizePixel = 1,
                                         Visible = Computed(function()
                                             TagUtils.OnlyShowUpdate:get()
-                                            for _, part: Instance in pairs(metadataType.data._onlyShow and Util._Selection.selectedParts:get() or {}) do
-                                                if part:GetAttribute(metadataType.data._onlyShow.Attribute) ~= metadataType.data._onlyShow.Value then
-                                                    print(metadataType.data._onlyShow.Value, part:GetAttribute(metadataType.data._onlyShow.Attribute))
-                                                    return false
+                                                for _, part: Instance in pairs(metadataType.data._onlyShow and Util._Selection.selectedParts:get() or {}) do
+                                                    for _, data in pairs(metadataType.data._onlyShow) do
+                                                        if part:GetAttribute(data.Attribute) ~= data.Value then
+                                                            return false
+                                                        end
+                                                    end
                                                 end
-                                            end
                                             return true
                                         end),
                                         Size = UDim2.new(metadataType.isFullSize and 1 or 0.5, 0, 0, 22),

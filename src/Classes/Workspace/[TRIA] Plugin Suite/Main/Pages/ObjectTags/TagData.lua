@@ -227,8 +227,10 @@ data.metadataTypes = {
         displayName = "Do Flash",
         default = true,
         _onlyShow = {
-            Attribute = "TeleportType",
-            Value = "start"
+            {
+                Attribute = "TeleportType",
+                Value = "start"
+            }
         }
     },
     FlashColor = {
@@ -239,8 +241,13 @@ data.metadataTypes = {
         displayName = "Flash Color",
         default = Color3.new(),
         _onlyShow = {
-            Attribute = "TeleportType",
-            Value = "start"
+            {
+                Attribute = "TeleportType",
+                Value = "start"
+            }, {
+                Attribute = "DoFlash",
+                Value = true
+            }
         }
     },
     FlashDuration = {
@@ -251,8 +258,13 @@ data.metadataTypes = {
         displayName = "Flash Duration",
         default = 0.75,
         _onlyShow = {
-            Attribute = "TeleportType",
-            Value = "start"
+            {
+                Attribute = "TeleportType",
+                Value = "start"
+            }, {
+                Attribute = "DoFlash",
+                Value = true
+            }
         }
     },
     TeleportType = {
@@ -810,12 +822,12 @@ Metadata:
                     isFullSize = true,
                 }, {
                     data = data.metadataTypes.FlashColor,
-                    location = 7,
-                    isFullSize = false,
+                    location = 9,
+                    isFullSize = true,
                 }, {
                     data = data.metadataTypes.FlashDuration,
-                    location = 8,
-                    isFullSize = false,
+                    location = 7,
+                    isFullSize = true,
                 },
             },
             ApplyMethod = "Name",
