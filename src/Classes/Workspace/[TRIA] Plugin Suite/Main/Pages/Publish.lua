@@ -253,7 +253,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "Publish",
 
         [Children] = {
-            Components.PageHeader("Map Whitelisting & Publishing"),
+            Components.PageHeader("Whitelisting & Publishing"),
             
             -- UNCOMMENT THIS WHEN RELEASE OCCURS
             -- New "Frame" {

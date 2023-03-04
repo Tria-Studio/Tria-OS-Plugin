@@ -190,7 +190,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "Insert",
 
         [Children] = {
-            Components.PageHeader("Map Addons, Kits, & Components"),
+            Components.PageHeader("Map Resources"),
             Components.ScrollingFrame ({
                 BackgroundColor3 = Theme.MainBackground.Default,
                 BackgroundTransparency = 0,
