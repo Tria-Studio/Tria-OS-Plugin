@@ -22,34 +22,15 @@ local Components = {
 }
  
 function Components.TextButton(data: PublicTypes.Dictionary): Instance
-    return Hydrate(New "TextButton" {
-        AutoButtonColor = true,
-        BackgroundColor3 = Theme.Button.Default,
-        BorderColor3 = Theme.Border.Default,
-        BorderSizePixel = 1,
-        TextColor3 = Theme.MainText.Default,
-        BorderMode = Enum.BorderMode.Inset
-    })(data)
+    return Hydrate(New "TextButton" {})(data)
 end
 
 function Components.ImageButton(data: PublicTypes.Dictionary): Instance
-    return Hydrate(New "ImageButton" {
-        BackgroundColor3 = Theme.Button.Default,
-        BorderSizePixel = 1,
-        ImageColor3 = Theme.MainText.Default,
-        BorderMode = Enum.BorderMode.Inset,
-        AutoButtonColor = true
-    })(data)
+    return Hydrate(New "ImageButton" {})(data)
 end
 
 function Components.TextBox(data: PublicTypes.Dictionary): Instance
-    return Hydrate(New "TextBox" {
-        PlaceholderColor3 = Theme.DimmedText.Default,
-        BackgroundColor3 = Theme.InputFieldBackground.Default,
-        BorderColor3 = Theme.InputFieldBorder.Default,
-        BorderSizePixel = 1,
-        TextColor3 = Theme.SubText.Default,
-    })(data)
+    return Hydrate(New "TextBox" {})(data)
 end
 
 function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): Instance
@@ -286,18 +267,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
 end
 
 function Components.ScrollingFrame(data: PublicTypes.Dictionary, bypassRestriction: boolean?): Instance
-    return Hydrate(New "ScrollingFrame" {
-        ScrollingEnabled = bypassRestriction or Util.interfaceActive,
-        BorderColor3 = Theme.Border.Default,
-        CanvasSize = UDim2.fromScale(0, 0),
-        BorderSizePixel = 1,
-        VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
-        BackgroundColor3 = Theme.ScrollBarBackground.Default,
-        AutomaticCanvasSize = Enum.AutomaticSize.Y,
-        ScrollBarImageColor3 = Theme.CurrentMarker.Default,
-        BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-        TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-    })(data)
+    return Hydrate(New "ScrollingFrame" {})(data)
 end
 
 function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (boolean) -> Instance | {Instance}, bypassRestriction: boolean?): Instance
