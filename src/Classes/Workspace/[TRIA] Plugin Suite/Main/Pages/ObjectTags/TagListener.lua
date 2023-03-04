@@ -36,11 +36,12 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
     local checkState = Value(Enum.TriStateBoolean.False)
 
     local metaDataVisible = Computed(function()
-        Util._Selection.selectedUpdate:get() --// update it when a part changes idk lol
+        Util._Selection.selectedUpdate:get()
         local value = #Util._Selection.selectedParts:get() == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(Util._Selection.selectedParts:get(), name)
         checkState:set(#Util._Selection.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
         return #Util._Selection.selectedParts:get() > 0 and value == Enum.TriStateBoolean.True
     end)
+
     Observer(metaDataVisible):onChange(function()
         dataVisible:set(metaDataVisible:get())
     end)
@@ -225,7 +226,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                 end
 
                                                 function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?): Instance
-                                                    local Text = Value()
+                                                    local textValue = Value()
                                                     local children = extraChild or {}
                                                     table.insert(children, Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4)))
 
@@ -236,16 +237,18 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         TextXAlignment = Enum.TextXAlignment.Left,
                                                         Text = textOverride and textOverride or dataValue:get(),
 
-                                                        [Ref] = Text,
+                                                        [Ref] = textValue,
                                                         [OnEvent "FocusLost"] = function()
-                                                            local isTextColor, color = Util.parseColor3Text(Text:get().Text)
+                                                            local currentTextbox = textValue:get(false)
+                                                            local isTextColor, color = Util.parseColor3Text(currentTextbox.Text)
+                                                            
                                                             local newText = if metadataType.data.dataType == "number"
-                                                                then tonumber(Text:get().Text) and tonumber(Text:get().Text) or 0
-                                                                elseif isTextColor then Text:get().Text
-                                                                else Text:get().Text
+                                                                then tonumber(currentTextbox.Text) and tonumber(currentTextbox.Text) or 0
+                                                                elseif isTextColor then currentTextbox.Text
+                                                                else currentTextbox.Text
 
                                                             if color ~= dataVisible:get() or metadataType.data.dataType ~= "color" then
-                                                                Text:get().Text = newText
+                                                                currentTextbox.Text = newText
                                                                 updateData(if metadataType.data.dataType == "color" then color else newText)
                                                             end
                                                         end,
