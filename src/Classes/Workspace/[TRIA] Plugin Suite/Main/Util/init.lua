@@ -2,7 +2,6 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local Selection = game:GetService("Selection")
-local TextService = game:GetService("TextService")
 
 local Package = script.Parent
 local Resources = Package.Resources

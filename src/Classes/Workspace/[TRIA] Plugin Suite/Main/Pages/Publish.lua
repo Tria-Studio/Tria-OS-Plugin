@@ -1,22 +1,12 @@
---[[
-    Issues:
-     - [ ] Api key remove button is clickable when no map is selected
-]]
-local ContentProvider = game:GetService("ContentProvider")
-local TextService = game:GetService("TextService")
-
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
 local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
-local Pages = require(Resources.Components.Pages)
 
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
-
-local IS_PAGE_ENABLED = false
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -84,7 +74,7 @@ local springs = {
     end), 20),
 
     ["whitelistedTextSpring"] = Spring(Computed(function()
-        return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
+        return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.DimmedText.Default:get()
     end), 20)
 }
  
@@ -108,12 +98,13 @@ local function GetInfoFrame(name: string, frames: {Instance}, doBorder: boolean?
     }
 end
 
-local function Spacer(Visible: boolean?, LayoutOrder: number?, size: number?)
+local function Spacer(Visible: boolean?, LayoutOrder: number?, size: number?, ZIndex: number?)
     return New "Frame" {
         LayoutOrder = LayoutOrder,
         BackgroundColor3 = Theme.TableItem.Default,
         Size = UDim2.new(1, 0, 0, size or 12),
-        Visible = not Visible
+        Visible = not Visible,
+        ZIndex = ZIndex,
     }
 end
 
@@ -349,8 +340,10 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Components.TextBox { --// Insert Whitelist ID
                             LayoutOrder = 2,
                             Size = UDim2.new(1, 0, 0, 32),
+                            Font = Enum.Font.SourceSansSemibold,
                             TextSize = 16,
                             PlaceholderText = "Insert map model ID",
+                            TextColor3 = Theme.MainText.Default,
 
                             [Out "Text"] = whitelistMapId
                         },
@@ -390,7 +383,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             BorderColor3 = Theme.InputFieldBorder.Default,
                             BorderSizePixel = 1,
                             LayoutOrder = 5,
-                            Font = Enum.Font.SourceSansBold,
+                            Font = Enum.Font.SourceSansSemibold,
                             TextSize = 16,
                             Size = UDim2.new(1, 0, 0, 32),
                             Text = Computed(function()
@@ -464,7 +457,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             }
                         },
                     }),
-                    Spacer(),
+                    Spacer(nil, nil, nil, 2),
 
                     GetInfoFrame("TRIA Map Creator Key", { --// API Key
                     Components.Dropdown({
@@ -493,8 +486,8 @@ If you generate a new key, your old key will become invalid and you will need to
                             BackgroundTransparency = 1,
                             Text = Computed(function()
                                 return if apiData.submittedApiKey:get()
-                                    then '<u>Status:</u> <font color="rgb(25,255,0)"> Submitted</font>' 
-                                    else '<u>Status:</u> <font color="rgb(255,75,0)"> Not Submitted</font>'
+                                    then '<u>Status:</u> <font color="rgb(25,255,0)"><b> Submitted</b></font>' 
+                                    else '<u>Status:</u> <font color="rgb(255,75,0)"><b> Not Submitted</b></font>'
                             end)
                         },
 
@@ -513,7 +506,8 @@ If you generate a new key, your old key will become invalid and you will need to
                                     Position = UDim2.fromScale(0.5, 0.5),
                                     Size = UDim2.fromScale(1, 1),
 
-                                    TextSize = 16,
+                                    Font = Enum.Font.SourceSansSemibold,
+                                    TextSize = 18,
                                     TextTransparency = 0,
                                     TextColor3 = Theme.BrightText.Default,
                                     Text = Computed(function()
@@ -536,6 +530,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                             ClearTextOnFocus = false,
                                             Position = UDim2.fromScale(0.5, 0.5),
 
+                                            Font = Enum.Font.SourceSansSemibold,
                                             PlaceholderText = "Insert TRIA Map Creator Key",
                                             TextTransparency = apiData.apiTextbox.placeholderTransparency,
 
