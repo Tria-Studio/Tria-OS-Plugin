@@ -34,7 +34,15 @@ local hasScripts = {
 }
 
 local frame = {}
- 
+
+function Spacer(size: number, LayoutOrder: number)
+    return New "Frame" {
+        Size = UDim2.new(1, 0, 0, size),
+        LayoutOrder = LayoutOrder,
+        BackgroundColor3 = Theme.TableItem.Default
+    }
+end
+
 function OptionFrame(props: PublicTypes.Dictionary): Instance
     local enabled = Value(props.Enabled)
     if props.OnToggle then
@@ -42,8 +50,9 @@ function OptionFrame(props: PublicTypes.Dictionary): Instance
     end
 
     return New "Frame" {
-        BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 0.125),
+        BackgroundTransparency = 0,
+        BackgroundColor3 = Theme.TableItem.Default,
+        Size = UDim2.new(1, 0, 0, 20),
         LayoutOrder = props.LayoutOrder,
 
         [Children] = {
@@ -101,51 +110,59 @@ local function GetScriptButton(state, scriptName: string, layoutOrder: number): 
     local activeState = Computed(function()
         return not state:get() and Util.interfaceActive:get()
     end)
-    return Components.TextButton {
-        Active = activeState,
-        AutoButtonColor = activeState,
-        Text = Computed(function()
-            return state:get() 
-                and string.format("%s already inserted!", scriptName)
-                or string.format("Insert %s", scriptName)
-        end),
-        BackgroundColor3 = Computed(function()
-            return state:get() 
-                and Theme.CurrentMarker.Selected:get()
-                or Theme.MainButton.Default:get()
-        end),
-        TextColor3 = Computed(function()
-            return state:get() 
-                and Theme.MainText.Default:get()
-                or Theme.BrightText.Default:get()
-        end),
-        Font = Enum.Font.SourceSansSemibold,
-        Size = UDim2.new(0, 0, 0, 24),
-        AutomaticSize = Enum.AutomaticSize.X,
+    return New "Frame" {
+        BackgroundColor3 = Theme.TableItem.Default,
+        Size = UDim2.new(1, 0, 0, 0),
+        AutomaticSize = Enum.AutomaticSize.Y,
         LayoutOrder = layoutOrder,
 
-        [OnEvent "Activated"] = function()
-            ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
-
-            if not Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
-                return;
-            end
-
-            local currentMap = Util.mapModel:get(false)
-
-            local newScript = Instance.new("LocalScript")
-            newScript.Name = scriptName
-            newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
-            newScript.Enabled = false
-            newScript.Parent = currentMap
-
-            plugin:OpenScript(newScript)
-            ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
-        end,
-        [Children] = {
-            Components.Constraints.UICorner(0, 6),
-            Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), UDim.new(0, 6))
-        },
+        [Children] = Components.TextButton {
+            Active = activeState,
+            AutoButtonColor = activeState,
+            Text = Computed(function()
+                return state:get() 
+                    and string.format("%s already inserted!", scriptName)
+                    or string.format("Insert %s", scriptName)
+            end),
+            BackgroundColor3 = Computed(function()
+                return state:get() 
+                    and Theme.CurrentMarker.Selected:get()
+                    or Theme.MainButton.Default:get()
+            end),
+            TextColor3 = Computed(function()
+                return state:get() 
+                    and Theme.MainText.Default:get()
+                    or Theme.BrightText.Default:get()
+            end),
+            Font = Enum.Font.SourceSansSemibold,
+            Size = UDim2.new(0, 0, 0, 24),
+            AnchorPoint = Vector2.new(.5, .5),
+            Position = UDim2.new(.5, 0, .5, 0),
+            AutomaticSize = Enum.AutomaticSize.X,
+    
+            [OnEvent "Activated"] = function()
+                ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
+    
+                if not Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
+                    return;
+                end
+    
+                local currentMap = Util.mapModel:get(false)
+    
+                local newScript = Instance.new("LocalScript")
+                newScript.Name = scriptName
+                newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
+                newScript.Enabled = false
+                newScript.Parent = currentMap
+    
+                plugin:OpenScript(newScript)
+                ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
+            end,
+            [Children] = {
+                Components.Constraints.UICorner(0, 6),
+                Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), UDim.new(0, 6))
+            },
+        }
     }
 end
 
@@ -160,42 +177,51 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             Components.PageHeader("Scripting"),
             Components.ScrollingFrame {
                 BackgroundColor3 = Theme.MainBackground.Default,
-                BackgroundTransparency = 1,
-                Size=  UDim2.fromScale(1, 1),
+                Size = UDim2.fromScale(1, 1),
 
                 [Children] = {
-                    Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 6)),
+                    Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center),
                     Components.FrameHeader("About MapScript", 1, nil, nil, nil),
+                    Spacer(6, 2),
                     Components.BasicTextLabel([[The MapScript is the main script in which most of a maps scripting takes place. 
                         
-All maps must have a MapScript in order to be loaded and ran, however not all of a maps scripting needs to be done in the MapScript.]], 2),
+All maps must have a MapScript in order to be loaded and ran, however not all of a maps scripting needs to be done in the MapScript.]], 3, Theme.TableItem.Default),
+                    Spacer(6, 4),
 
-                    Components.FrameHeader("About LocalMapScript", 4, nil, nil, nil),
+                    Components.FrameHeader("About LocalMapScript", 5, nil, nil, nil),
+                    Spacer(6, 6),
                     Components.BasicTextLabel([[The LocalMapScript is a client-sided script which runs when players load into the game.
 
-You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]], 5),
-                    
-                    GetScriptButton(hasScripts.LocalMapScript, "LocalMapScript", 6),
+You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]], 7, Theme.TableItem.Default),
+                    Spacer(6, 8),
+                    Spacer(6, 8),
 
-                    Components.FrameHeader("About EffectScript", 7, nil, nil, nil),
+                    GetScriptButton(hasScripts.LocalMapScript, "LocalMapScript", 9),
+                    Spacer(6, 10),
+
+                    Components.FrameHeader("About EffectScript", 11, nil, nil, nil),
+                    Spacer(6, 12),
                     Components.BasicTextLabel([[The EffectScript is a localscript which allows your code to be replicated to other spectators.
 
-The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]], 8),
+The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]], 13, Theme.TableItem.Default),
+                    Spacer(6, 14),
+                    Spacer(6, 14),
 
-                    GetScriptButton(hasScripts.EffectScript, "EffectScript", 9),
+                    GetScriptButton(hasScripts.EffectScript, "EffectScript", 15),
+                    Spacer(6, 16),
 
-                    Components.FrameHeader("Script Autocomplete Settings", 10, nil, nil, [[Here you can customise how the script autocompleter works.
+                    Components.FrameHeader("Script Autocomplete Settings", 17, nil, nil, [[Here you can customise how the script autocompleter works.
 
 TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scripting autocomplete menu. Complete with descriptions, code samples, and function arguments.]]),
                     
+                    Spacer(6, 18),
                     New "Frame" {
-                        AutomaticSize = Enum.AutomaticSize.Y,
                         BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(1, 0),
-                        LayoutOrder = 11,
+                        Size = UDim2.new(1, 0, 0, 52),
+                        LayoutOrder = 19,
 
                         [Children] = {
-                            Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
+                            Components.Constraints.UIListLayout(),
                             OptionFrame {
                                 Text = "Enable Autocomplete",
                                 LayoutOrder = 1,
@@ -224,9 +250,10 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 }
 
                             },
+                            Spacer(6, 2),
                             OptionFrame {
                                 Text = "Run autocomplete globally",
-                                LayoutOrder = 1,
+                                LayoutOrder = 3,
                                 Enabled = 
                                     if plugin:GetSetting(GLOBAL_ENABLE_VAR) 
                                     then plugin:GetSetting(GLOBAL_ENABLE_VAR) 
@@ -241,8 +268,14 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     Header = "Global Autocomplelte",
                                     Tooltip = "Determines whether or not Autocomplete will happen in TRIA scripts (MapScript, LocalMapScript, EffectScript) or any script in your map."
                                 }
-                            }
+                            },
+                            Spacer(6, 4)
                         }
+                    },
+                    New "Frame" {
+                        LayoutOrder = 20,
+                        Size = UDim2.new(1, 0, 0, 1),
+                        BackgroundColor3 = Theme.Border.Default
                     }
                 }
             }

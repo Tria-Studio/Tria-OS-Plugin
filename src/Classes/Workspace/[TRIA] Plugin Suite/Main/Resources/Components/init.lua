@@ -272,7 +272,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         Size = UDim2.new(1, 0, 0, size or 30),
         Font = Enum.Font.SourceSansBold,
         Text = text,
-        TextColor3 = Theme.MainText.Default,
+        TextColor3 = Theme.BrightText.Default,
         ZIndex = ZIndex,
 
         [Children] = tooltip and Components.TooltipImage ({
@@ -415,6 +415,7 @@ function Components.DropdownTextlabel(data: PublicTypes.Dictionary): Instance
         BackgroundColor3 = Theme.Notification.Default,
         TextColor3 = Theme.MainText.Default,
         Size = UDim2.fromScale(1, 0),
+        TextSize = 15,
         Position = UDim2.fromOffset(0, 24),
         Text = data.Text,
         RichText = true,
@@ -491,18 +492,19 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
     }
 end
 
-function Components.BasicTextLabel(text: string, layoutOrder: number): Instance
+function Components.BasicTextLabel(text: string, layoutOrder: number, backgroundColor): Instance
     return New "TextLabel" {
         AutomaticSize = Enum.AutomaticSize.Y,
-        BackgroundTransparency = 1,
+        BackgroundTransparency = backgroundColor and 0 or 1,
+        BackgroundColor3 = backgroundColor,
         LayoutOrder = layoutOrder,
         Size = UDim2.fromScale(1, 0),
         RichText = true,
         Text = text,
-        TextColor3 = Theme.SubText.Default,
+        TextColor3 = Theme.MainText.Default,
         TextXAlignment = Enum.TextXAlignment.Left,
         TextWrapped = true,
-        TextSize = 16,
+        TextSize = 15,
 
         [Children] = {
             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
