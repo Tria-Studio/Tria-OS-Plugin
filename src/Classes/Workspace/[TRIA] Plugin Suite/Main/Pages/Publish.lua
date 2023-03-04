@@ -642,8 +642,4 @@ If you generate a new key, your old key will become invalid and you will need to
     return newFrame
 end
 
-local function leavePage()
-    Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
-end
-
 return frame
