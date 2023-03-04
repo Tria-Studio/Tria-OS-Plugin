@@ -27,7 +27,7 @@ export type Request = {
 export type Response = {
 	items: {
 		{
-			label: string, -- The label
+			label: string,
 			kind: Enum.CompletionItemKind?,
 			tags: {Enum.CompletionItemTag}?,
 			detail: string?,
