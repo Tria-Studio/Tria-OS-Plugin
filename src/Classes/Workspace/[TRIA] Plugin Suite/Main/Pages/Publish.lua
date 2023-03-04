@@ -223,9 +223,14 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
     end
 end
 
+function frame.OnOpen()
+    Util:ToggleInterface(false)
+end
+
 function frame.OnClose()
     publishButtonText:set("Publish Map")
     selectedPublishMap:set(nil)
+    Util:ToggleInterface(true)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
