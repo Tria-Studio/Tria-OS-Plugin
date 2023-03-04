@@ -19,8 +19,7 @@ local Computed = Fusion.Computed
 local selectionMaid = Maid.new()
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
-local Util
-Util = {
+local Util; Util = {
     Signal = Signal,
     Maid = Maid,
 
