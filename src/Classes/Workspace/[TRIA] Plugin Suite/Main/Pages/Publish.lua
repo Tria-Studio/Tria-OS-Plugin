@@ -90,12 +90,13 @@ local springs = {
  
 local frame = {}
 
-local function GetInfoFrame(name: string, frames: {Instance}): Instance
+local function GetInfoFrame(name: string, frames: {Instance}, doBorder: boolean?): Instance
     return New "Frame" {
         BackgroundColor3 = Theme.TableItem.Default,
         AutomaticSize = Enum.AutomaticSize.Y,
         BorderColor3 = Theme.Border.Default,
         Size = UDim2.fromScale(1, 0),
+        BorderSizePixel = doBorder and 1,
         
         [Children] = {
             Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 4)),
@@ -107,10 +108,11 @@ local function GetInfoFrame(name: string, frames: {Instance}): Instance
     }
 end
 
-local function Spacer(Visible)
+local function Spacer(Visible: boolean?, LayoutOrder: number?, size: number?)
     return New "Frame" {
+        LayoutOrder = LayoutOrder,
         BackgroundColor3 = Theme.TableItem.Default,
-        Size = UDim2.new(1, 0, 0, 12),
+        Size = UDim2.new(1, 0, 0, size or 12),
         Visible = not Visible
     }
 end
@@ -382,11 +384,12 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     GetInfoFrame("Map Publishing", { --// Publishing
                         InfoTextLabel("Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame.\n ", 2),
                         
+                        Spacer(nil, 4, 5),
                         New "TextLabel" {
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                             BorderColor3 = Theme.InputFieldBorder.Default,
                             BorderSizePixel = 1,
-                            LayoutOrder = 4,
+                            LayoutOrder = 5,
                             Font = Enum.Font.SourceSansBold,
                             TextSize = 16,
                             Size = UDim2.new(1, 0, 0, 32),
@@ -416,7 +419,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Components.TextButton {
                             AnchorPoint = Vector2.new(0.5, 0.5),
                             BorderSizePixel = 2,
-                            LayoutOrder = 5,
+                            LayoutOrder = 6,
                             Position = UDim2.fromScale(0.5, 0.45),
                             Size = UDim2.new(0.4, 0, 0, 24),
                             Text = publishButtonText,
@@ -637,7 +640,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                 },
                             }
                         },
-                    }),
+                    }, true),
                     
                     New "Frame" {
                         BackgroundTransparency = 1,
