@@ -52,6 +52,8 @@ function PageHandler:ChangePage(newPage: string)
     PageHandler.pageChanged:Fire()
     mainPageData.currentPage:set(newPage)
 
+    self.pageLayout:get():JumpToIndex(newPageData.PageIndex - 1)
+
     updatePageNum(newPage)
     if newPageData.onOpen then
         task.spawn(newPageData.onOpen)
@@ -69,6 +71,8 @@ function PageHandler:NewPage(data: PublicTypes.Dictionary, index: number): Insta
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
     newPageData.Frame.LayoutOrder = index
+
+    print(data.Name, index)
 
     newPageData.onClose = newPage.OnClose
     newPageData.onOpen = newPage.OnOpen
