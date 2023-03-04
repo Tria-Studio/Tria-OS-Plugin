@@ -71,9 +71,11 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
     local imageColor = Value(Color3.new(1, 1, 1))
 
     return Components.ImageButton {
+        AnchorPoint = Vector2.new(.5, 0),
+        Position = UDim2.new(.5, 0, 0, 0),
         BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
         BackgroundTransparency = data.FullSize and 1 or 0,
-        LayoutOrder = 2,
+        LayoutOrder = data.LayoutOrder or 2,
         Size = UDim2.new(1, -24, 0, 95),
 
         [OnEvent "MouseButton1Down"] = function()
@@ -172,6 +174,14 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
     }
 end
 
+function Spacer(size: number, LayoutOrder: number)
+    return New "Frame" {
+        Size = UDim2.new(1, 0, 0, size),
+        LayoutOrder = LayoutOrder,
+        BackgroundColor3 = Theme.TableItem.Default
+    }
+end
+
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -188,25 +198,34 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Size = UDim2.fromScale(1, 1),
 
                 [Children] = {
-                    Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 6), Enum.VerticalAlignment.Top),
+                    Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, nil, Enum.VerticalAlignment.Top),
                     Components.FrameHeader("Map Kits", 1, nil, nil, "Here you can insert Map kits which can help you get started on making a map!"),
+                    Spacer(6, 1),
 
-                    GetAssetButton {
-                        ModelId = 6404661021,
-                        BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
-                        OverlayImage = "rbxassetid://12537133710",
-                        OverlayImageTransparency = 0.5,
-                        Name = "Official TRIA.OS Map Kit",
-                        Creator = "TRIA",
-                        ImageCrop = Enum.ScaleType.Fit,
-                        Tooltip = {}
+                    New "Frame" {
+                        LayoutOrder = 2,
+                        Size = UDim2.new(1, 0, 0, 0),
+                        AutomaticSize = Enum.AutomaticSize.Y,
+                        BackgroundColor3 = Theme.TableItem.Default,
+
+                        [Children] = GetAssetButton {
+                            ModelId = 6404661021,
+                            BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
+                            OverlayImage = "rbxassetid://12537133710",
+                            OverlayImageTransparency = 0.5,
+                            Name = "Official TRIA.OS Map Kit",
+                            Creator = "TRIA",
+                            ImageCrop = Enum.ScaleType.Fit,
+                            Tooltip = {}
+                        }
                     },
 
+                    Spacer(6, 3),
                     New "Frame" {
                         LayoutOrder = 7,
                         AutomaticSize = Enum.AutomaticSize.Y,
                         Size = UDim2.new(1, 0, 0, 0),
-                        BackgroundTransparency = 1,
+                        BackgroundColor3 = Theme.TableItem.Default,
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
