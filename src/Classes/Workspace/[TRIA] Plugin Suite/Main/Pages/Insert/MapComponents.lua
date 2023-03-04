@@ -191,14 +191,14 @@ end)                ]], line + 1)
 
                 if Util.hasSpecialFolder:get(false) and not currentMap.Special:FindFirstChild("Teleports") then
                     local teleportsFolder = Instance.new("Folder")
-                    teleportsFolder.Name = "Teleports"
+                    teleportsFolder.Name = "Teleporters"
                     teleportsFolder.Parent = currentMap.Special
                 end
 
                 local demo = addonFiles.EasyTPDemo:Clone()
                 positionModel(demo)
                 for  i, Part: Part in pairs(demo:GetChildren()) do
-                    Part.Parent = currentMap.Special.Teleports
+                    Part.Parent = currentMap.Special.Teleporters
                 end
                 demo:Destroy()
                 Util.debugWarn("Successfully inserted EasyTP!")

@@ -29,9 +29,8 @@ local Observer = Fusion.Observer
 local Out = Fusion.Out
 local OnChange = Fusion.OnChange
 local Ref = Fusion.Ref
-local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
- 
+
 return function(name: string, data: PublicTypes.Dictionary): Instance
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
@@ -79,7 +78,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                         local partError = false
 
                         if #Util._Selection.selectedParts:get() > 0 then
-                            local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name]
+                            local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name] or TagData.dataTypes.addonTags[name]
                             if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
                                 Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br />See the Insert page to add these map components to your map.", name), {
                                     Text = "Show me",
@@ -169,18 +168,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                 [Children] = ForValues(data.metadata, function(metadataType: PublicTypes.Dictionary): Instance
                                     local textBounds = Value(Vector2.new())
                                     local frameSize = Value(Vector2.new())
-                                    local onlyShow = Value()
-
-                                    Observer(onlyShow):onChange(function()
-                                        local value = true
-                                        for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
-                                            if part:GetAttribute(metadataType.data._onlyShow.Attribute) ~= metadataType.data._onlyShow.Value then
-                                                value = false
-                                                break
-                                            end
-                                        end
-                                        onlyShow:set(value)
-                                    end)
+                                    local onlyShow = Value(true)
 
                                     return New "TextLabel" {
                                         [Out "AbsoluteSize"] = frameSize,
@@ -188,7 +176,16 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         BackgroundColor3 = Theme.ScrollBarBackground.Default,
                                         BorderColor3 = Theme.Border.Default,
                                         BorderSizePixel = 1,
-                                        Visible = metadataType.data._onlyShow and onlyShow,
+                                        Visible = Computed(function()
+                                            TagUtils.OnlyShowUpdate:get()
+                                            for _, part: Instance in pairs(metadataType.data._onlyShow and Util._Selection.selectedParts:get() or {}) do
+                                                if part:GetAttribute(metadataType.data._onlyShow.Attribute) ~= metadataType.data._onlyShow.Value then
+                                                    print(metadataType.data._onlyShow.Value, part:GetAttribute(metadataType.data._onlyShow.Attribute))
+                                                    return false
+                                                end
+                                            end
+                                            return true
+                                        end),
                                         Size = UDim2.new(metadataType.isFullSize and 1 or 0.5, 0, 0, 22),
                                         Position = UDim2.new(metadataType.location % 2 == 1 and 0 or 0.5, 0, 0, (math.ceil(metadataType.location / 2) - 1) * 22),
                                         Text = metadataType.data.displayName .. ":",
@@ -301,7 +298,8 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                     }, dataValue)
                                                 end
 
-                                                return types[metadataType.data.dataType]()
+                                                local value = types[metadataType.data.dataType]()
+                                                return value
                                             end)()
                                         }
                                     }

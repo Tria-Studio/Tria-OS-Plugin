@@ -5,11 +5,17 @@
 ]]
 
 local Package = script.Parent.Parent
+
+local Fusion = require(Package.Resources.Fusion)
 local TagData = require(Package.Pages.ObjectTags.TagData)
 local Util = require(script.Parent)
 local PublicTypes = require(Package.PublicTypes)
 
-local tagUtils = {}
+local Value = Fusion.Value
+
+local tagUtils = {
+    OnlyShowUpdate = Value(0)
+}
 local tagTypes = {
     ButtonTags = { --// Child named tag but button
         "_Show",
@@ -29,6 +35,10 @@ local tagTypes = {
             _Liquid = "_Liquid%d",
             _Gas = "_Gas%d",
         }
+    },
+    AddonTags = {
+        "_Teleporter",
+        "_Waterjet"
     },
     ActionTags = { --// _action attribute
         "_WallRun",
@@ -142,7 +152,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
             local tagInstance = getTagInstance(part, tag)
 
             if tagInstance then
-                tagInstance.Name = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag])._nameStub .. newValue or 0
+                tagInstance.Name = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag] or TagData.dataTypes.addonTags[tag])._nameStub .. newValue or 0
             end
         end
     else --// Clear
@@ -171,6 +181,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
     end
 
     types[metadata.data.type]()
+    tagUtils.OnlyShowUpdate:set(tagUtils.OnlyShowUpdate:get() + 1)
 end
 
 function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
@@ -179,7 +190,7 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
     end
 
     local data = TagData.metadataTypes[tag]
-    local mainData = TagData.dataTypes.buttonTags[name] or TagData.dataTypes.objectTags[name]
+    local mainData = TagData.dataTypes.buttonTags[name] or TagData.dataTypes.objectTags[name] or TagData.dataTypes.addonTags[name]
     local types = {}
 
     function types.Attribute()
@@ -245,7 +256,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string)
     end
 
     local isOptimized = currentMap:FindFirstChild("Special")
-    local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag]
+    local tagData = TagData.dataTypes.objectTags[newTag or oldTag] or TagData.dataTypes.buttonTags[newTag or oldTag] or TagData.dataTypes.addonTags[newTag or oldTag]
     local methods = {}
 
     if not newTag then --// Clear tag
@@ -285,7 +296,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string)
             part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
         end
 
-        local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag]
+        local tagData = TagData.dataTypes.buttonTags[oldTag] or TagData.dataTypes.objectTags[oldTag] or TagData.dataTypes.addonTags[oldTag]
         for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, oldTag, metaData, nil)
         end
@@ -298,6 +309,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string)
         local newParent = 
             if isOptimized and table.find(tagTypes.ButtonTags, newTag) and isOptimized:FindFirstChild("Button") then isOptimized.Button
             elseif newTag == "_Liquid" or newTag == "_Gas" and isOptimized:FindFirstChild("Fluid") then isOptimized.Fluid
+            elseif newTag == "_Teleporter" and isOptimized:FindFirstChild("Teleporters") then isOptimized.Teleporters 
             elseif isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable
             else part.Parent
 
@@ -328,7 +340,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string)
             part.Parent = newParent
         end
 
-        local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag]
+        local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag] or TagData.dataTypes.addonTags[newTag]
         for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
         end
@@ -353,6 +365,10 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
             return true
         end
+    end
+
+    function types.AddonTags()
+        return part.Name == "_Teleporter" or part.Name == "_Waterjet"
     end
 
     function types.ActionTags()

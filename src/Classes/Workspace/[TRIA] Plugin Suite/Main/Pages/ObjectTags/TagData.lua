@@ -228,7 +228,7 @@ data.metadataTypes = {
         default = true,
         _onlyShow = {
             Attribute = "TeleportType",
-            value = "start"
+            Value = "start"
         }
     },
     FlashColor = {
@@ -240,7 +240,7 @@ data.metadataTypes = {
         default = Color3.new(),
         _onlyShow = {
             Attribute = "TeleportType",
-            value = "start"
+            Value = "start"
         }
     },
     FlashDuration = {
@@ -252,7 +252,7 @@ data.metadataTypes = {
         default = 0.75,
         _onlyShow = {
             Attribute = "TeleportType",
-            value = "start"
+            Value = "start"
         }
     },
     TeleportType = {
