@@ -1,6 +1,5 @@
 local ContentProvider = game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
-local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 if not RunService:IsEdit() then
@@ -133,7 +132,7 @@ local mainFrame = New "Frame" {
 			BackgroundColor3 = Theme.Titlebar.Default,
 
 			[OnEvent "InputChanged"] = function(InputObject: InputObject)
-				if InputObject.UserInputType == Enum.UserInputType.MouseWheel then
+				if InputObject.UserInputType == Enum.UserInputType.MouseWheel and not Util._Topbar.FreezeFrame:get(false) then
 					local newPage = PageHandler._currentPageNum:get(false) - InputObject.Position.Z
 					newPage = if newPage < 1 then #PageHandler._PageOrder elseif newPage > #PageHandler._PageOrder then 1 else newPage
 
