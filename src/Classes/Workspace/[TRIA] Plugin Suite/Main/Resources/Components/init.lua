@@ -204,7 +204,7 @@ function Components.MiniTopbar(data: PublicTypes.Dictionary): Instance
                 BorderMode = Enum.BorderMode.Outline,
                 
                 [OnEvent "Activated"] = data.Callback
-            }),
+            },
             New "TextLabel" {
                 ZIndex = data.ZIndex or 2,
                 BackgroundTransparency = 1,
@@ -242,7 +242,7 @@ function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): In
         end),
         [OnEvent "Activated"] = data.Callback,
         [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 2), UDim.new(0, 2))
-    })
+    }
 end
 
 function Components.TwoOptions(option1Data: PublicTypes.Dictionary, option2Data: PublicTypes.Dictionary, zIndex: number): Instance
