@@ -55,11 +55,11 @@ return New "Frame" { --// Message
 			ZIndex = 10,
 
 			[Children] = {
-				Components.MiniTopbar({
+				Components.MiniTopbar {
 					ZIndex = 10,
 					Text = Util._Message.Header,
 					Callback = Util.CloseMessage,
-				}),
+				},
 
 				New "TextLabel" { --// Body
 					AutomaticSize = Enum.AutomaticSize.Y,

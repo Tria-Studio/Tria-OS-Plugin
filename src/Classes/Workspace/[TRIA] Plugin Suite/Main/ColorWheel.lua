@@ -242,13 +242,13 @@ function ColorWheel:GetUI(): Instance
                             }
                         }
                     },
-                    Components.MiniTopbar({ --// Top bar
+                    Components.MiniTopbar { --// Top bar
                         Text = "Select Color",
                         Callback = function()
                             chosenColor:set(nil)
                             colorChosen:Fire()
                         end,
-                    }),
+                    },
                     New "Frame" { --// Slider
                         AnchorPoint = Vector2.new(0, 0.5),
                         BorderColor3 = Theme.Border.Default,
