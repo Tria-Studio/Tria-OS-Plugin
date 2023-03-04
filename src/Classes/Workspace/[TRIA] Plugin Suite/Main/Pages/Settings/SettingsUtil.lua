@@ -6,7 +6,6 @@ local Components = require(Resources.Components)
 
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
-
 local SettingTypes = require(script.Parent:WaitForChild("SettingTypes"))
 
 local Value = Fusion.Value

@@ -9,20 +9,16 @@ local Theme = require(Resources.Themes)
 
 local Util = require(Package.Util)
 local ColorWheel = require(Package.ColorWheel)
-local Dropdown = require(Package.Util.Dropdown)
 local DropdownComponents = require(Package.Util.Dropdown.DropdownComponents)
-
 local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Hydrate = Fusion.Hydrate
-local Observer = Fusion.Observer
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Ref = Fusion.Ref
 local Value = Fusion.Value
-local Spring = Fusion.Spring
 
 local currentEditing = Value(nil)
 

@@ -152,7 +152,7 @@ function Util.CloseMessage()
     Util._Message.Option2:set({})
 end
 
-function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?, removeSecondOption: boolean?)
+function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
     self:ToggleInterface(false)
     self._Message.Text:set(text)
     self._Message.Header:set(header)

@@ -4,7 +4,6 @@ local Resources = Package.Resources
 local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
-
 local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New

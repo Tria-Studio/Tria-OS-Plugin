@@ -1,5 +1,4 @@
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 
 local Package = script.Parent
 local Resources = Package.Resources
@@ -203,7 +202,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             Util.hasSpecialFolder:set(newMap:FindFirstChild("Special"))
         end
 
-        function detectSpecialFolder()
+        local function detectSpecialFolder()
             local specialFolder = newMap:FindFirstChild("Special")
 
             updateSpecial()
