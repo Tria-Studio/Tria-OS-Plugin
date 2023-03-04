@@ -98,16 +98,6 @@ local function GetInfoFrame(name: string, frames: {Instance}, doBorder: boolean?
     }
 end
 
-local function Spacer(Visible: boolean?, LayoutOrder: number?, size: number?, ZIndex: number?)
-    return New "Frame" {
-        LayoutOrder = LayoutOrder,
-        BackgroundColor3 = Theme.TableItem.Default,
-        Size = UDim2.new(1, 0, 0, size or 12),
-        Visible = not Visible,
-        ZIndex = ZIndex,
-    }
-end
-
 local function InfoTextLabel(text: string, layoutOrder: number): Instance
     return New "TextLabel" {
         RichText = true,
@@ -334,7 +324,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             end, true),
                         }
                     },
-                    Spacer(true),
+                    Components.Spacer(true),
 
                     GetInfoFrame("Map Whitelisting", { --// Whitelisting
                         Components.TextBox { --// Insert Whitelist ID
@@ -372,12 +362,12 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             [Children] = Components.Constraints.UICorner(0, 6),
                         }
                     }),
-                    Spacer(),
+                    Components.Spacer(),
 
                     GetInfoFrame("Map Publishing", { --// Publishing
                         InfoTextLabel("Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame.\n ", 2),
                         
-                        Spacer(nil, 4, 5),
+                        Components.Spacer(nil, 4, 5),
                         New "TextLabel" {
                             BackgroundColor3 = Theme.InputFieldBackground.Default,
                             BorderColor3 = Theme.InputFieldBorder.Default,
@@ -457,7 +447,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             }
                         },
                     }),
-                    Spacer(nil, nil, nil, 2),
+                    Components.Spacer(nil, nil, nil, 2),
 
                     GetInfoFrame("TRIA Map Creator Key", { --// API Key
                     Components.Dropdown({

@@ -35,14 +35,6 @@ local hasScripts = {
 
 local frame = {}
 
-function Spacer(size: number, LayoutOrder: number)
-    return New "Frame" {
-        Size = UDim2.new(1, 0, 0, size),
-        LayoutOrder = LayoutOrder,
-        BackgroundColor3 = Theme.TableItem.Default
-    }
-end
-
 function OptionFrame(props: PublicTypes.Dictionary): Instance
     local enabled = Value(props.Enabled)
     if props.OnToggle then
@@ -182,39 +174,39 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 [Children] = {
                     Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center),
                     Components.FrameHeader("About MapScript", 1, nil, nil, nil),
-                    Spacer(6, 2),
+                    Components.Spacer(true, 2, 6, nil),
                     Components.BasicTextLabel([[The MapScript is the main script in which most of a maps scripting takes place. 
                         
 All maps must have a MapScript in order to be loaded and ran, however not all of a maps scripting needs to be done in the MapScript.]], 3, Theme.TableItem.Default),
-                    Spacer(6, 4),
+                    Components.Spacer(true, 4, 6, nil),
 
                     Components.FrameHeader("About LocalMapScript", 5, nil, nil, nil),
-                    Spacer(6, 6),
+                    Components.Spacer(true, 6, 6, nil),
                     Components.BasicTextLabel([[The LocalMapScript is a client-sided script which runs when players load into the game.
 
 You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]], 7, Theme.TableItem.Default),
-                    Spacer(6, 8),
-                    Spacer(6, 8),
+                    Components.Spacer(true, 8, 6, nil),
+                    Components.Spacer(true, 8, 6, nil),
 
                     GetScriptButton(hasScripts.LocalMapScript, "LocalMapScript", 9),
-                    Spacer(6, 10),
+                    Components.Spacer(true, 10, 6, nil),
 
                     Components.FrameHeader("About EffectScript", 11, nil, nil, nil),
-                    Spacer(6, 12),
+                    Components.Spacer(true, 12, 6, nil),
                     Components.BasicTextLabel([[The EffectScript is a localscript which allows your code to be replicated to other spectators.
 
 The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]], 13, Theme.TableItem.Default),
-                    Spacer(6, 14),
-                    Spacer(6, 14),
+                    Components.Spacer(true, 14, 6, nil),
+                    Components.Spacer(true, 14, 6, nil),
 
                     GetScriptButton(hasScripts.EffectScript, "EffectScript", 15),
-                    Spacer(6, 16),
+                    Components.Spacer(true, 16, 6, nil),
 
                     Components.FrameHeader("Script Autocomplete Settings", 17, nil, nil, [[Here you can customise how the script autocompleter works.
 
 TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scripting autocomplete menu. Complete with descriptions, code samples, and function arguments.]]),
                     
-                    Spacer(6, 18),
+                    Components.Spacer(true, 18, 6, nil),
                     New "Frame" {
                         BackgroundTransparency = 1,
                         Size = UDim2.new(1, 0, 0, 52),
@@ -250,7 +242,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 }
 
                             },
-                            Spacer(6, 2),
+                            Components.Spacer(true, 2, 6, nil),
                             OptionFrame {
                                 Text = "Run autocomplete globally",
                                 LayoutOrder = 3,
@@ -269,7 +261,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     Tooltip = "Determines whether or not Autocomplete will happen in TRIA scripts (MapScript, LocalMapScript, EffectScript) or any script in your map."
                                 }
                             },
-                            Spacer(6, 4)
+                            Components.Spacer(true, 4, 6, nil)
                         }
                     },
                     New "Frame" {

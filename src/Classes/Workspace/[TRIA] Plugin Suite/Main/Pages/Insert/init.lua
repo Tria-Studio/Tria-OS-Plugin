@@ -174,14 +174,6 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
     }
 end
 
-function Spacer(size: number, LayoutOrder: number)
-    return New "Frame" {
-        Size = UDim2.new(1, 0, 0, size),
-        LayoutOrder = LayoutOrder,
-        BackgroundColor3 = Theme.TableItem.Default
-    }
-end
-
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -200,7 +192,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, nil, Enum.VerticalAlignment.Top),
                     Components.FrameHeader("Map Kits", 1, nil, nil, "Here you can insert Map kits which can help you get started on making a map!"),
-                    Spacer(6, 1),
+                    Components.Spacer(true, 1, 6, nil),
 
                     New "Frame" {
                         LayoutOrder = 2,
@@ -220,7 +212,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         }
                     },
 
-                    Spacer(6, 3),
+                    Components.Spacer(true, 3, 6, nil),
                     New "Frame" {
                         LayoutOrder = 7,
                         AutomaticSize = Enum.AutomaticSize.Y,
