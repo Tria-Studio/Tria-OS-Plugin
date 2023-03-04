@@ -822,11 +822,11 @@ Metadata:
                     isFullSize = true,
                 }, {
                     data = data.metadataTypes.FlashColor,
-                    location = 9,
+                    location = 7,
                     isFullSize = true,
                 }, {
                     data = data.metadataTypes.FlashDuration,
-                    location = 7,
+                    location = 9,
                     isFullSize = true,
                 },
             },

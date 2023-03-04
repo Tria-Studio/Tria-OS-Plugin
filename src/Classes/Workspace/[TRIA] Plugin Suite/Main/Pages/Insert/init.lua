@@ -313,7 +313,7 @@ function UpdateMapScriptChildren()
                 local success = pcall(function()
                     module = require(thing)
                 end)
-                return thing.Name == "EasyTP" and module and module.Teleport ~= nil
+                return thing.Name == "EasyTP" and module and module.Teleport == 0 and thing:FindFirstChild("LocalFlash")
             end
             function Addons.Waterjets()
                 local module
