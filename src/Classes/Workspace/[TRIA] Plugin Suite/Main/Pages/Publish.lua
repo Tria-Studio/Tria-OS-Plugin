@@ -95,7 +95,6 @@ local function GetInfoFrame(name: string, frames: {Instance}): Instance
         BackgroundColor3 = Theme.TableItem.Default,
         AutomaticSize = Enum.AutomaticSize.Y,
         BorderColor3 = Theme.Border.Default,
-        BorderSizePixel = 1,
         Size = UDim2.fromScale(1, 0),
         
         [Children] = {
@@ -103,8 +102,16 @@ local function GetInfoFrame(name: string, frames: {Instance}): Instance
             Components.FrameHeader(name, 1),
             ForValues(frames, function(frame)
                 return frame
-            end, Fusion.cleanup)
+            end, Fusion.cleanup),
         }
+    }
+end
+
+local function Spacer(Visible)
+    return New "Frame" {
+        BackgroundColor3 = Theme.TableItem.Default,
+        Size = UDim2.new(1, 0, 0, 12),
+        Visible = not Visible
     }
 end
 
@@ -260,7 +267,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             --     Size = UDim2.fromScale(1, 1),
             --     ZIndex = 2,
             --     BackgroundColor3 = Color3.new(),
-            --     BackgroundTransparency = 0.4,
+            --     BackgroundTransparency = 0.5,
 
             --     [Children] = New "TextLabel" {
 			-- 		Active = Computed(Util.isPluginFrozen),
@@ -289,7 +296,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Visible = true,
 
                 [Children] = {
-                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 12)),
+                    Components.Constraints.UIListLayout(),
                     New "Frame" {
                         AutomaticSize = Enum.AutomaticSize.Y,
                         Size = UDim2.new(1, 0, 0, 0),
@@ -334,6 +341,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             end, true),
                         }
                     },
+                    Spacer(true),
 
                     GetInfoFrame("Map Whitelisting", { --// Whitelisting
                         Components.TextBox { --// Insert Whitelist ID
@@ -369,6 +377,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             [Children] = Components.Constraints.UICorner(0, 6),
                         }
                     }),
+                    Spacer(),
 
                     GetInfoFrame("Map Publishing", { --// Publishing
                         InfoTextLabel("Only <b>COMPLETED</b> maps should be published. Publishing sends your map to the map list ingame.\n ", 2),
@@ -393,7 +402,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Position = UDim2.new(1, -4, 0.5, 0),
                                 Size = UDim2.new(0, 18, 1, 0),
                                 ScaleType = Enum.ScaleType.Fit,
-
+                                LayoutOrder = 5,
                                 ImageColor3 = Theme.SubText.Default,
                                 Image = "rbxassetid://6022668885",
 
@@ -432,7 +441,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             BackgroundColor3 = Theme.Item.Default,
                             BorderColor3 = Theme.Border.Default,
                             BorderSizePixel = 1,
-                            LayoutOrder = 6,
+                            LayoutOrder = 3,
                             AutomaticSize = Enum.AutomaticSize.Y,
                             Size = UDim2.fromScale(1, 0),
 
@@ -452,23 +461,25 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             }
                         },
                     }),
+                    Spacer(),
 
                     GetInfoFrame("TRIA Map Creator Key", { --// API Key
-                        InfoTextLabel("Your TRIA Map Creator Key is required to publish maps. This allows the game to authenticate you.\n", 1),
-                        
-                        Components.Dropdown({
-                            LayoutOrder = 2,
-                            Header = "How This Works",
-                            DefaultState = true
-                        }, function(visible)
-                            return Components.DropdownTextlabel {
-                                DropdownVisible = visible,
-                                Text = [[
+                    Components.Dropdown({
+                        LayoutOrder = 1,
+                        Header = "How This Works",
+                        DefaultState = true
+                    }, function(visible)
+                        return Components.DropdownTextlabel {
+                            DropdownVisible = visible,
+                            Text = [[
 To get your TRIA Map Creator Key, follow the steps at the top of this page. This is where you will enter your Map Creator Key.
 
-If you generate a new key, your old key will become invalid and you will need to replace it with the new one.]],
-                            }
-                        end, true),
+If you generate a new key, your old key will become invalid and you will need to replace it with the new one.
+]],
+                        }
+                    end, true),
+
+                        InfoTextLabel("Your TRIA Map Creator Key is required to publish maps. This allows the game to authenticate you.", 2),
 
                         New "TextLabel" { --// Status
                             RichText = true,
