@@ -250,9 +250,9 @@ end
 
 function Util.updateSelectedParts()
     local newTable = {}
-    for _, Thing: Instance in ipairs(Selection:Get()) do
-        if Thing:IsDescendantOf(Util.mapModel:get(false)) then
-            table.insert(newTable, Thing)
+    for _, thing: Instance in ipairs(Selection:Get()) do
+        if thing:IsDescendantOf(Util.mapModel:get(false)) then
+            table.insert(newTable, thing)
         end
     end
 
@@ -260,26 +260,26 @@ function Util.updateSelectedParts()
         selectionMaid:DoCleaning()
         Util._Selection.selectedParts:set(newTable)
         
-        for _, Thing: Instance in ipairs(Selection:Get()) do
+        for _, thing: Instance in ipairs(Selection:Get()) do
             local function update()
                 Util._Selection.selectedUpdate:set(Util._Selection.selectedUpdate:get(false) + 1)
             end
-            selectionMaid:GiveTask(Thing:GetPropertyChangedSignal("Name"):Connect(update))
-            selectionMaid:GiveTask(Thing:GetAttributeChangedSignal("_action"):Connect(update))
-            selectionMaid:GiveTask(Thing.Destroying:Connect(update))
-            selectionMaid:GiveTask(Thing.ChildRemoved:Connect(update))
-            selectionMaid:GiveTask(Thing.AncestryChanged:Connect(update))
+            selectionMaid:GiveTask(thing:GetPropertyChangedSignal("Name"):Connect(update))
+            selectionMaid:GiveTask(thing:GetAttributeChangedSignal("_action"):Connect(update))
+            selectionMaid:GiveTask(thing.Destroying:Connect(update))
+            selectionMaid:GiveTask(thing.ChildRemoved:Connect(update))
+            selectionMaid:GiveTask(thing.AncestryChanged:Connect(update))
 
-            selectionMaid:GiveTask(Thing.ChildAdded:Connect(function(newThing)
+            selectionMaid:GiveTask(thing.ChildAdded:Connect(function(newThing)
                 if newThing:IsA("ValueBase") then
                     update()
                 end
                 selectionMaid:GiveTask(newThing.Changed:Connect(update))
             end))
 
-            for _, Child in ipairs(Thing:GetChildren()) do
-                if Child:IsA("ValueBase") then
-                    selectionMaid:GiveTask(Thing.ChildRemoved:Connect(update))
+            for _, child in ipairs(thing:GetChildren()) do
+                if child:IsA("ValueBase") then
+                    selectionMaid:GiveTask(thing.ChildRemoved:Connect(update))
                 end
             end
         end
