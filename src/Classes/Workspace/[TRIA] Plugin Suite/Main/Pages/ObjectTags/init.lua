@@ -100,7 +100,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 },
                             },
                         }
-                    }
+                    },
+                    Components.Spacer(false, 6, 24, 1, Theme.MainBackground.Default)
                 }
             }
         }
