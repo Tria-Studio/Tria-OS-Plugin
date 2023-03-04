@@ -1,18 +1,20 @@
 local Resources = script.Parent.Parent
-local Fusion = require(Resources.Fusion)
 local Pages = Resources.Parent.Pages
-local Signal = require(script.Parent.Parent.Parent.Util.Signal)
+
+local Fusion = require(Resources.Fusion)
+local Signal = require(Resources.Parent.Util.Signal)
+local PublicTypes = require(Resources.Parent.PublicTypes)
 
 local Value = Fusion.Value
 
 local PageHandler = {
+    pageLayout = Value(),
     pageChanged = Signal.new(),
     pageData = {
         pages = {},
         disabledPages = {"Publish"},
         bypassedPages = {"Insert", "Publish"},
         currentPage = Value(nil),
-        previousPage = Value(nil),
     },
     _currentPageNum = Value(0),
     _PageOrder = {
@@ -31,46 +33,45 @@ function updatePageNum(pageName: string)
 end
 
 function PageHandler:ChangePage(newPage: string)
-    local currentPage = self.pageData.currentPage:get()
+    local mainPageData = self.pageData
+    local currentPage = mainPageData.currentPage:get()
     if currentPage == newPage then
         return
     end
-    if self.pageData.pages[currentPage].onClose then
-        task.spawn(self.pageData.pages[currentPage].onClose)
+
+    local currentPageData = mainPageData.pages[currentPage]
+    local newPageData = mainPageData.pages[newPage]
+
+    if currentPageData.onClose then
+        task.spawn(currentPageData.onClose)
     end
 
     PageHandler.pageChanged:Fire()
-    self.pageData.pages[currentPage].Visible:set(false)
-    self.pageData.pages[newPage].Visible:set(true)
-
-    self.pageData.previousPage:set(currentPage)
-    self.pageData.currentPage:set(newPage)
+    mainPageData.currentPage:set(newPage)
     updatePageNum(newPage)
 
-    if self.pageData.pages[newPage].onOpen then
-        self.pageData.pages[newPage].onOpen()
+    if newPageData.onOpen then
+        task.spawn(newPageData.onOpen)
     end
 end
 
-function PageHandler:NewPage(data: {[string]: any}): Instance
+function PageHandler:NewPage(data: PublicTypes.Dictionary, layoutOrder: number): Instance
     local newPageData = {
         Name = data.Name,
         Frame = nil,
-        Visible = Value(data.Default),
+        Visible = true,
+        LayoutOrder = layoutOrder
     }
 
     local newPage = require(Pages:FindFirstChild(newPageData.Name))
     newPageData.Frame = newPage:GetFrame(newPageData)
+    newPageData.Frame.LayoutOrder = layoutOrder
     newPageData.onClose = newPage.OnClose
     newPageData.onOpen = newPage.OnOpen
-    self.pageData.pages[data.Name] = newPageData
 
-    if newPageData.Visible:get(false) then
-        self.pageData.currentPage:set(newPageData.Name)
-        updatePageNum(data.Name)
-        if newPageData.onOpen then
-            task.spawn(newPageData.onOpen)
-        end
+    self.pageData.pages[data.Name] = newPageData
+    if data.Default:get(false) then
+        self:ChangePage(data.Name)
     end
 
     return newPageData.Frame

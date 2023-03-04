@@ -42,6 +42,8 @@ local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
 local Value = Fusion.Value
+local Hydrate = Fusion.Hydrate
+local Ref = Fusion.Ref
 
 widget.Title = "TRIA.os Mapmaker"
 Util.Widget = widget
@@ -97,7 +99,10 @@ local mainFrame = New "Frame" {
 					Size = UDim2.fromScale(1, 1),
 
 					[Children] = {
-						Components.Constraints.UIPageLayout(0.75, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 2), true),
+						Hydrate(Components.Constraints.UIPageLayout(0.75, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 2), true)) {
+							[Ref] = PageHandler.pageLayout
+						},
+
 						ForValues(MenuData.Pages, function(data: PublicTypes.Dictionary): Instance
 							return PageHandler:NewPage(data)
 						end, Fusion.cleanup),	
