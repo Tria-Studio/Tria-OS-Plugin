@@ -13,11 +13,13 @@
 
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
 
 local Map = script:FindFirstAncestorOfClass("Model")
 local Overlap = OverlapParams.new()
 local ColorCorrection = Instance.new("ColorCorrectionEffect")
 
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local module = {}
 local teleportParts = {}
 
@@ -56,6 +58,9 @@ function module.Teleport(TeleportNumber: number)
 	end
 end
 
+if RunService:IsStudio() then
+	return {Teleport = 0}
+end
 local FolderToCheck = Map:FindFirstChild("Special") or Map
 for _, Part: Instance in pairs(FolderToCheck:GetDescendants()) do
 	local teleportNumber = Part:GetAttribute("TeleportNumber")

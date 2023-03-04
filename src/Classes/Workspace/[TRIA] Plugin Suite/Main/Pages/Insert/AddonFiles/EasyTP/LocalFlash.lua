@@ -1,3 +1,4 @@
+-- if game:GetService("RunService"):IsStudio() then return end
 --[[ 
 	Leave this script parented to the EasyTP ModuleScript otherwise it may break. 
 	Edit the script at your own risk of breaking it.

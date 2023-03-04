@@ -309,10 +309,18 @@ function UpdateMapScriptChildren()
             local Addons = {}
 
             function Addons.EasyTP()
-                return thing.Name == "EasyTP" and require(thing).Teleport ~= nil
+                local module
+                local success = pcall(function()
+                    module = require(thing)
+                end)
+                return thing.Name == "EasyTP" and module and module.Teleport ~= nil
             end
             function Addons.Waterjets()
-                return thing.Name == "Waterjets" and require(thing).ToggleJet ~= nil
+                local module
+                local success = pcall(function()
+                    module = require(thing)
+                end)
+                return thing.Name == "Waterjets" and module and module.ToggleJet ~= nil
             end
 
             if Addons[thing.Name] then
