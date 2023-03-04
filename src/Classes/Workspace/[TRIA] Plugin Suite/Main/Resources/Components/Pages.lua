@@ -34,7 +34,7 @@ end
 
 function PageHandler:ChangePage(newPage: string)
     local mainPageData = self.pageData
-    local currentPage = mainPageData.currentPage:get()
+    local currentPage = mainPageData.currentPage:get(false)
     if currentPage == newPage then
         return
     end
@@ -51,8 +51,8 @@ function PageHandler:ChangePage(newPage: string)
 
     PageHandler.pageChanged:Fire()
     mainPageData.currentPage:set(newPage)
-    updatePageNum(newPage)
 
+    updatePageNum(newPage)
     if newPageData.onOpen then
         task.spawn(newPageData.onOpen)
     end
@@ -75,9 +75,11 @@ function PageHandler:NewPage(data: PublicTypes.Dictionary, index: number): Insta
 
     self.pageData.pages[data.Name] = newPageData
     if newPageData.Active:get(false) then
-        self.pageData.currentPage:set(data.Name)
-        task.wait()
-        self:ChangePage(data.Name)
+        self.pageData.currentPage:set(newPageData.Name)
+        updatePageNum(data.Name)
+        if newPageData.onOpen then
+            task.spawn(newPageData.onOpen)
+        end
     end
 
     return newPageData.Frame
