@@ -9,6 +9,7 @@ local PageHandler = {
     pageChanged = Signal.new(),
     pageData = {
         pages = {},
+        disabledPages = {"Publish"},
         bypassedPages = {"Insert", "Publish"},
         currentPage = Value(nil),
         previousPage = Value(nil),

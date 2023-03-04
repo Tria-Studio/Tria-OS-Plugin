@@ -104,6 +104,7 @@ local mainFrame = New "Frame" {
 					end), 18),
 					BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 
+					ZIndex = 5,
 					Font = Enum.Font.SourceSansBold,
 					Position = UDim2.fromScale(0.5, 0.5),
 					Size = UDim2.fromScale(1, 1),

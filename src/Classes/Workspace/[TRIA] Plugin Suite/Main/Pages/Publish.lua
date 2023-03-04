@@ -16,6 +16,8 @@ local Pages = require(Resources.Components.Pages)
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
 
+local IS_PAGE_ENABLED = false
+
 local New = Fusion.New
 local Children = Fusion.Children
 local ForValues = Fusion.ForValues
@@ -252,13 +254,34 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         [Children] = {
             Components.PageHeader("Map Whitelisting & Publishing"),
+            
             -- UNCOMMENT THIS WHEN RELEASE OCCURS
             -- New "Frame" {
             --     Size = UDim2.fromScale(1, 1),
             --     ZIndex = 2,
             --     BackgroundColor3 = Color3.new(),
-            --     BackgroundTransparency = 0.1
+            --     BackgroundTransparency = 0.4,
+
+            --     [Children] = New "TextLabel" {
+			-- 		Active = Computed(Util.isPluginFrozen),
+			-- 		AnchorPoint = Vector2.new(0.5, 0.5),
+			-- 		BackgroundTransparency = 0.5,
+			-- 		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+			-- 		ZIndex = 5,
+			-- 		Font = Enum.Font.SourceSansBold,
+			-- 		Position = UDim2.fromScale(0.5, 0.5),
+			-- 		Size = UDim2.fromScale(1, 1),
+			-- 		Text = "Coming soon...",
+			-- 		TextColor3 = Theme.BrightText.Default,
+			-- 		TextSize = 28,
+
+			-- 		[Children] = {
+			-- 			Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
+			-- 			Components.Constraints.UIStroke(nil, Color3.new(), nil, 0),
+			-- 		}
+			-- 	}
             -- },
+
             Components.ScrollingFrame({
                 ScrollingEnabled = Util.interfaceActive,
                 Size = UDim2.fromScale(1, 1),
@@ -324,14 +347,16 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         Components.TextButton {
                             AnchorPoint = Vector2.new(0.5, 0.5),
-                            Active = Util.interfaceActive,
                             BorderSizePixel = 2,
                             LayoutOrder = 3,
                             Position = UDim2.new(0.5, 0, 0.45, 0),
                             Size = UDim2.new(0.4, 0, 0, 24),
                             Text = "Whitelist Map",
 
-                            Active = whitelistIdIsEmpty,
+                            Active = Computed(function()
+                                local mapExists = whitelistIdIsEmpty:get()
+                                return Util.interfaceActive:get() and mapExists
+                            end),
                             AutoButtonColor = whitelistIdIsEmpty,
 
                             TextColor3 = springs.whitelistIdSpring,
@@ -381,14 +406,16 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         Components.TextButton {
                             AnchorPoint = Vector2.new(0.5, 0.5),
-                            Active = Util.interfaceActive,
                             BorderSizePixel = 2,
                             LayoutOrder = 5,
                             Position = UDim2.fromScale(0.5, 0.45),
                             Size = UDim2.new(0.4, 0, 0, 24),
                             Text = publishButtonText,
 
-                            Active = selectedMapToPublishExists,
+                            Active = Computed(function()
+                                local mapExists = selectedMapToPublishExists:get()
+                                return Util.interfaceActive:get() and mapExists
+                            end),
                             AutoButtonColor = selectedMapToPublishExists,
 
                             TextColor3 = springs.publishButtonSpring,
@@ -618,20 +645,5 @@ end
 local function leavePage()
     Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
 end
-
--- UNCOMMENT THIS WHEN RELEASE OCCURS
-
--- function frame.OnOpen()
---     Util:ShowMessage(Util._Headers.WIP_HEADER, "This page is a work in progress and is currently unavailable until a future update, don't worry, we're working hard behind the scenes to get it done as quick as possible!", {
---         Text = "Go Back",
---         Callback = function()
---             Pages:ChangePage(Pages.pageData.previousPage:get(false) or "ObjectTags")
---         end
---     }, nil, true)
--- end
-
--- function frame.OnClose()
---     Util:CloseMessage()
--- end
 
 return frame

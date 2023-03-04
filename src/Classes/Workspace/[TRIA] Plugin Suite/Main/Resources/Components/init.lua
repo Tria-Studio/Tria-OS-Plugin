@@ -63,7 +63,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
     end), 20)
 
     local pageActive = Computed(function()
-        return Util.mapModel:get() ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
+        return if table.find(Pages.pageData.disabledPages, data.Name) then false else Util.mapModel:get() ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
     end)
     local pageRatio = Computed(function()
         return Pages._currentPageNum:get() / #Pages._PageOrder
