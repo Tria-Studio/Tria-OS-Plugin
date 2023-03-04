@@ -103,8 +103,8 @@ local mainFrame = New "Frame" {
 							[Ref] = PageHandler.pageLayout
 						},
 
-						ForValues(MenuData.Pages, function(data: PublicTypes.Dictionary): Instance
-							return PageHandler:NewPage(data)
+						ForPairs(MenuData.Pages, function(index: number, data: PublicTypes.Dictionary): (number, Instance)
+							return index, PageHandler:NewPage(data, index)
 						end, Fusion.cleanup),	
 					}
 				},
