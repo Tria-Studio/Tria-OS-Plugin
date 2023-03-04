@@ -299,50 +299,53 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-function UpdateMapScriptChildren()
+function updateMapScriptChildren()
     local newValues = {
         EasyTP = false,
         Waterjets = false,
     }
-    for i, thing: Instance in pairs(Util.mapModel:get() and Util.mapModel:get().MapScript:GetChildren() or {}) do
-        if thing:IsA("ModuleScript") then
-            local Addons = {}
 
-            function Addons.EasyTP()
-                local module
-                local success = pcall(function()
-                    module = thing.Name == "EasyTP" and require(thing)
+    local currentMap = Util.mapModel:get(false)
+    for i, thing in pairs(currentMap and currentMap.MapScript:GetChildren() or {}) do
+        if thing:IsA("ModuleScript") then
+            local addons = {}
+
+            function addons.EasyTP()
+                local success, module = pcall(function()
+                    return thing.Name == "EasyTP" and require(thing)
                 end)
                 return module and module.Teleport == 0 and thing:FindFirstChild("LocalFlash")
             end
-            function Addons.Waterjets()
-                local module
-                local success = pcall(function()
-                    module = thing.Name == "Waterjets" and require(thing)
+
+            function addons.Waterjets()
+                local success, module = pcall(function()
+                    return thing.Name == "Waterjets" and require(thing)
                 end)
                 return module and module.ToggleJet == 0
             end
 
-            if Addons[thing.Name] then
-                newValues[thing.Name] = Addons[thing.Name]()
+            if addons[thing.Name] then
+                newValues[thing.Name] = addons[thing.Name]()
             end
         end
     end
+
     Util._Addons.hasEasyTP:set(newValues.EasyTP)
     Util._Addons.hasWaterjet:set(newValues.Waterjets)
     Util._Addons.hasAddonsWithObjectTags:set(newValues.Waterjets or newValues.EasyTP)
 end
 
 function frame.OnClose()
-    UpdateMapScriptChildren()
+    updateMapScriptChildren()
 end
 
 Util.MapChanged:Connect(function()
-    if Util.mapModel:get() then
+    local currentMap = Util.mapModel:get(false)
+    if currentMap then
         task.wait()
-        Util.MapMaid:GiveTask(Util.mapModel:get().MapScript.ChildAdded:Connect(UpdateMapScriptChildren))
-        Util.MapMaid:GiveTask(Util.mapModel:get().MapScript.ChildRemoved:Connect(UpdateMapScriptChildren))
-        UpdateMapScriptChildren()
+        Util.MapMaid:GiveTask(currentMap.MapScript.ChildAdded:Connect(updateMapScriptChildren))
+        Util.MapMaid:GiveTask(currentMap.MapScript.ChildRemoved:Connect(updateMapScriptChildren))
+        updateMapScriptChildren()
     end
 end)
 
