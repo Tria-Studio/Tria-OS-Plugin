@@ -224,12 +224,12 @@ end)                ]], line + 1)
             },
     
             InsertFunction = function()
-                local map = Util.mapModel:get(false)
+                local currentMap = Util.mapModel:get(false)
     
                 local newParent = if Util.hasSpecialFolder:get(false) and map.Special:FindFirstChild("Button")
-                    then map.Special.Button
-                    elseif map:FindFirstChild("Geometry") then map.Geometry
-                    else map
+                    then currentMap.Special.Button
+                    elseif currentMap:FindFirstChild("Geometry") then currentMap.Geometry
+                    else currentMap
     
                 local highestButton = Util.getObjectCountWithNameMatch("_Button")
                 local model = insertModel("_Button0", newParent)
