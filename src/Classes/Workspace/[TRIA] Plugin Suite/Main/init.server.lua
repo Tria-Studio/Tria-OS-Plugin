@@ -185,6 +185,7 @@ local mainFrame = New "Frame" {
 					ImageColor3 = MapSelect.selectCancelColor,
 					BorderSizePixel = 1,
 					BorderColor3 = Theme.Border.Default,
+					BackgroundTransparency = 1,
 
 					[OnEvent "Activated"] = function()
 						if MapSelect.selectingMap:get(false) then
