@@ -23,10 +23,10 @@ local Components = {
 }
 
 local function getInstanceWithStrippedProperties(className: string, data: PublicTypes.Dictionary): Instance
-    local props = DefaultComponentProps[className]
-    for key, value in pairs(data) do
-        if props[key] ~= nil then
-            props[key] = nil
+    local props = {}
+    for key, value in pairs(DefaultComponentProps[className]) do
+        if data[key] == nil then
+            props[key] = value
         end
     end
     return New(className)(props)

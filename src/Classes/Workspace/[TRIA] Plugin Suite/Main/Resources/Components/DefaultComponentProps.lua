@@ -15,6 +15,7 @@ return {
 	ImageButton = {
         BackgroundColor3 = Theme.Button.Default,
         BorderSizePixel = 1,
+        BackgroundTransparency = 1,
         ImageColor3 = Theme.MainText.Default,
         BorderMode = Enum.BorderMode.Inset,
         AutoButtonColor = true

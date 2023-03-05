@@ -78,9 +78,16 @@ local function showDebug()
 	end
 end
 
+if game.StarterGui:FindFirstChild("PLUGIN") then
+	game.StarterGui.PLUGIN:Destroy()
+end
+
+local gui = Instance.new("ScreenGui", game.StarterGui)
+gui.Name = "PLUGIN"
+
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
-	Parent = widget,
+	Parent = gui,
 	Size = UDim2.fromScale(1, 1),
 	BackgroundColor3 = Theme.MainBackground.Default,
 
@@ -185,7 +192,6 @@ local mainFrame = New "Frame" {
 					ImageColor3 = MapSelect.selectCancelColor,
 					BorderSizePixel = 1,
 					BorderColor3 = Theme.Border.Default,
-					BackgroundTransparency = 1,
 
 					[OnEvent "Activated"] = function()
 						if MapSelect.selectingMap:get(false) then
