@@ -62,7 +62,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
     end)
    
     local colorSpring = Spring(Computed(function()
-        local multiplier = pageActive:get() and 1 or .6
+        local multiplier = pageActive:get() and 1 or 0.6
         local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
         local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
         return lerpType(newStartColor, newEndColor, pageRatio:get())
@@ -138,7 +138,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
                 [Children] = {
                     Components.Constraints.UIAspectRatio(1),
                     Components.Constraints.UIGradient(Spring(Computed((function()
-                        local multiplier = pageActive:get() and 1 or .6 
+                        local multiplier = pageActive:get() and 1 or 0.6 
                         local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
                         local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
                         local ratio = (index - 1) / #Pages._PageOrder

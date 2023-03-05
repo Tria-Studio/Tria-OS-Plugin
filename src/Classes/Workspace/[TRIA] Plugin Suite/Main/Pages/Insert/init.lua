@@ -72,8 +72,8 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
     local imageColor = Value(Color3.new(1, 1, 1))
 
     return Components.ImageButton {
-        AnchorPoint = Vector2.new(.5, 0),
-        Position = UDim2.new(.5, 0, 0, 0),
+        AnchorPoint = Vector2.new(0.5, 0),
+        Position = UDim2.new(0.5, 0, 0, 0),
         BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
         BackgroundTransparency = data.FullSize and 1 or 0,
         LayoutOrder = data.LayoutOrder or 2,

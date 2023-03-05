@@ -11,7 +11,7 @@ local colorCorrection = Lighting:FindFirstChild("_qwertyuiopasdfghjklzxcvbnm")
 colorCorrection.Enabled = true
 colorCorrection.TintColor = script:GetAttribute("FlashColor")
 
-local tween = TweenService:Create(colorCorrection, TweenInfo.new(.075), {Brightness = .75, Saturation = -1})
+local tween = TweenService:Create(colorCorrection, TweenInfo.new(0.075), {Brightness = 0.75, Saturation = -1})
 tween:Play()
 tween.Completed:Wait()
 
