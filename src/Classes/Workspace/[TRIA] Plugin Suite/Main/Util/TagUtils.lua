@@ -193,28 +193,28 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
     local mainData = TagData.dataTypes.buttonTags[name] or TagData.dataTypes.objectTags[name] or TagData.dataTypes.addonTags[name]
     local types = {}
 
-    function types.Attribute()
+    function types.Attribute(): any
         return part:GetAttribute(data.dataName) or defaultMetadataTypes[data.dataType]
     end
 
-    function types.ConfigAttribute()
+    function types.ConfigAttribute(): any
         local customization = part:FindFirstChild("Customization")
         return customization and customization:GetAttribute(data.dataName)
     end
 
-    function types.ChildInstanceValue()
+    function types.ChildInstanceValue(): any
         local child = getTagInstance(part, name)
         if child then 
             return child:FindFirstChild("_Delay") and child._Delay.Value
         end
     end
 
-    function types.Property()
+    function types.Property(): any
         local sound = part:FindFirstChildOfClass("Sound") or part.Parent:FindFirstChildOfClass("Sound")
         return sound and sound[data._propertyName]
     end
 
-    function types.EndOfName() 
+    function types.EndOfName() : string
         local tagInstance = getTagInstance(part, name)
         return tagInstance
             and string.sub(tagInstance.Name, #mainData._nameStub + 1)
@@ -352,33 +352,33 @@ end
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local types = {}
 
-    function types.ButtonTags()
+    function types.ButtonTags(): boolean?
         for _, child in ipairs(part:GetChildren()) do
             if string.find(child.Name, tag.."%d") then
                 return true
             end
-         end
+        end
     end
 
-    function types.ObjectTags()
+    function types.ObjectTags(): boolean?
         local secondary = tagTypes.ObjectTags._convert[tag]
         if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
             return true
         end
     end
 
-    function types.AddonTags()
+    function types.AddonTags(): boolean?
         return part.Name == "_Teleporter" or part.Name == "_Waterjet"
     end
 
-    function types.ActionTags()
+    function types.ActionTags(): boolean?
         local secondary = tagTypes.ActionTags._convert[tag]
         if part:GetAttribute("_action") == tag or part:GetAttribute("_action") == secondary or part:GetAttribute("_action") == TagData.dataTypes.objectTags[tag].ActionText then
             return true
         end
     end
 
-    function types.ModelTags()
+    function types.ModelTags(): boolean?
         local secondary = tagTypes.ModelTags._convert[tag]
         local model = if part:IsA("Model") then part
             elseif part.Parent and part.Parent:IsA("Model") then part.Parent
@@ -389,7 +389,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         end
     end
 
-    function types.DetailTag()
+    function types.DetailTag(): boolean?
         local currentMap = Util.mapModel:get(false)
         local detailFolder = currentMap and currentMap:FindFirstChild("Detail")
         return detailFolder and part:IsDescendantOf(detailFolder)
