@@ -48,8 +48,10 @@ local currentAudio = Value(nil)
 local currentAudioVolume = Value(plugin:GetSetting("TRIA_AudioLibraryVolume") or 1)
 
 local lastFetchTime = 0
-
 local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+
+local oldUniverseId = game.GameId
+local oldPlaceId = game.PlaceId
 
 Observer(currentAudioVolume):onChange(function()
     if currentAudio:get(false) then
@@ -57,7 +59,12 @@ Observer(currentAudioVolume):onChange(function()
     end
 end)
 
-function fade(sound: Sound, direction: string)
+local function toggleAudioPerms(enabled: boolean)
+    game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
+    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
+end
+
+local function fade(sound: Sound, direction: string)
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and currentAudioVolume:get(false) or 0)})
     tween:Play()
 
@@ -572,7 +579,6 @@ function frame.OnClose()
     currentAudio:set(nil)
 end
 
-game:SetUniverseId(2330396164) 
-game:SetPlaceId(6311279644)
+task.spawn(toggleAudioPerms, true)
 task.spawn(fetchApi)
 return frame
