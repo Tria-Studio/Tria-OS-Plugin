@@ -339,4 +339,5 @@ Util.MapChanged:Connect(function()
     Util.MapMaid:GiveTask(newMap.ChildAdded:Connect(updateChildren))
     Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(updateChildren))
 end)
+
 return frame
