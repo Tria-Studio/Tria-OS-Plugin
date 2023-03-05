@@ -10,7 +10,7 @@ local widget = plugin:CreateDockWidgetPluginGui("SoundPlayer", DockWidgetPluginG
 widget.Name = "PluginSoundManager"
 widget.Title = "PluginSoundManager"
 
-function PluginSoundManager:QueueSound(soundId: number)
+function PluginSoundManager:QueueSound(soundId: number): Sound
 	local newSound = Instance.new("Sound")
 	newSound.SoundId = "rbxassetid://" .. soundId
 	newSound.Looped = false
