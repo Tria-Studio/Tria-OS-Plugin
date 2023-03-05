@@ -24,6 +24,11 @@ local Components = {
 
 local function getInstanceWithStrippedProperties(className: string, data: PublicTypes.Dictionary): Instance
     local props = DefaultComponentProps[className]
+    for key, value in pairs(data) do
+        if props[key] ~= nil then
+            props[key] = nil
+        end
+    end
     return New(className)(props)
 end
  
