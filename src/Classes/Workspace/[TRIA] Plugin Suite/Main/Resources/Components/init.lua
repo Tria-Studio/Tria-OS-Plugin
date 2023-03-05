@@ -29,7 +29,6 @@ local function getInstanceWithStrippedProperties(className: string, data: Public
             props[key] = nil
         end
     end
-    print("Creating", className, "with", props)
     return New(className)(props)
 end
  
