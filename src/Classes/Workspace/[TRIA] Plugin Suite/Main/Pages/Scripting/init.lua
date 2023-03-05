@@ -35,7 +35,7 @@ local hasScripts = {
 
 local frame = {}
 
-function OptionFrame(props: PublicTypes.Dictionary): Instance
+local function OptionFrame(props: PublicTypes.Dictionary): Instance
     local enabled = Value(props.Enabled)
     if props.OnToggle then
         props.OnToggle(props.Enabled)

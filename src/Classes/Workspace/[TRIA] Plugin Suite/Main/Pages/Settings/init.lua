@@ -37,7 +37,7 @@ end
 
 local LightingExport = require(script:WaitForChild("LightingExport"))
 
-function onMapChanged()
+local function onMapChanged()
     -- Disconnect old connections
     SettingsUtil.SettingMaid:DoCleaning()
     
@@ -66,7 +66,7 @@ function onMapChanged()
     end
 end
 
-function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictionary, visible): Instance
+local function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictionary, visible): Instance
     return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {

@@ -26,7 +26,7 @@ local PageHandler = {
     }
 }
 
-function updatePageNum(pageName: string)
+local function updatePageNum(pageName: string)
     PageHandler._currentPageNum:set(table.find(PageHandler._PageOrder, pageName))
 end
 

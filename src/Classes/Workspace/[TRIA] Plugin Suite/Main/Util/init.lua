@@ -118,7 +118,7 @@ local Util = {
     _showArrows = Value(true),
 }
 
-function getSettingsDirFolder(directory: string): Instance?
+local function getSettingsDirFolder(directory: string): Instance?
     local currentMap = Util.mapModel:get(false)
     if currentMap == nil then
         return nil
@@ -243,7 +243,7 @@ function Util.parseTimeString(str: string): (boolean, string | nil)
     return true, table.concat(split, ":")
 end
 
-function updateButtonsActive()
+local function updateButtonsActive()
     Util.interfaceActive:set(Util.mapModel:get(false) and Util._manualActive:get(false))
 end
 

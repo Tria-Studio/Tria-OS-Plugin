@@ -44,7 +44,7 @@ local function attemptTask(service: Instance, functionName: string, ...): (boole
     return success, result
 end
 
-function attemptToInsertModel(assetID: number)
+local function attemptToInsertModel(assetID: number)
     if assetID == 0 then
         return
     end
@@ -299,7 +299,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-function updateMapScriptChildren()
+local function updateMapScriptChildren()
     local newValues = {
         EasyTP = false,
         Waterjets = false,

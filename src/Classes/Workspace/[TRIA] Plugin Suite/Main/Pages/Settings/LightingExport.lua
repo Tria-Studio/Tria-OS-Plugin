@@ -20,7 +20,7 @@ local Hydrate = Fusion.Hydrate
 
 local directories = SettingsUtil.Directories
  
-function ExportButton(props: PublicTypes.Dictionary): Instance
+local function ExportButton(props: PublicTypes.Dictionary): Instance
     return Hydrate(Components.TextButton {
         Active = Util.interfaceActive,
         AutoButtonColor = Util.interfaceActive,
@@ -38,7 +38,7 @@ function ExportButton(props: PublicTypes.Dictionary): Instance
     })(props)
 end
 
-function exportLighting()
+local function exportLighting()
 	ChangeHistoryService:SetWaypoint("Exporting lighting from map to Lighting")
     for _, item in ipairs(directories.Lighting.Items:get(false)) do
         local settingToChange = if item.ExportAttribute then item.ExportAttribute else item.Attribute
@@ -55,7 +55,7 @@ function exportLighting()
 	ChangeHistoryService:SetWaypoint("Exported lighting from map to Lighting")
 end
 
-function importLighting()
+local function importLighting()
 	ChangeHistoryService:SetWaypoint("Importing lighting from Lighting to map")
     for _, item in ipairs(directories.Lighting.Items:get(false)) do
         local settingToRetrieve = if item.ExportAttribute then item.ExportAttribute else item.Attribute

@@ -23,7 +23,7 @@ local Data = {
 local directories = SettingsUtil.Directories
 local idToConfig = {}
 
-function addLiquidToItems(liquid: Configuration)
+functlocal functionion addLiquidToItems(liquid: Configuration)
     local liquidData = {
         {
             Text = "Color", 
@@ -78,7 +78,7 @@ function addLiquidToItems(liquid: Configuration)
     update()
 end
 
-function insertLiquids()
+local function insertLiquids()
 	local liquidFolder = Util.getDirFolder("Liquids")
     if not liquidFolder then
         return
@@ -90,7 +90,7 @@ function insertLiquids()
     end
 end
 
-function addLiquid()
+local function addLiquid()
     ChangeHistoryService:SetWaypoint("Creating custom liqud")
     local liquidFolder = Util.getDirFolder("Liquids")
     if not liquidFolder then
@@ -106,7 +106,7 @@ function addLiquid()
     ChangeHistoryService:SetWaypoint("Created custom liquid")
 end
 
-function removeLiquid(id: string)
+local function removeLiquid(id: string)
     if idToConfig[id] then
         idToConfig[id].Parent = nil
     end

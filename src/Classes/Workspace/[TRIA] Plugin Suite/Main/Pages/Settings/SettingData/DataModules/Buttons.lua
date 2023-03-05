@@ -21,7 +21,7 @@ local Data = {
 local directories = SettingsUtil.Directories
 local buttonTypes = {"Default", "Group"}
 
-function setupButtonFolder(folder: Instance)
+local function setupButtonFolder(folder: Instance)
 	local buttonProperties = {
 		{
 			Text = "Activated Color",
@@ -116,7 +116,7 @@ function setupButtonFolder(folder: Instance)
     update()
 end
 
-function insertButtonFolders()
+local function insertButtonFolders()
 	local buttonFolder = Util.getDirFolder("Button")
     if not buttonFolder then
         return
