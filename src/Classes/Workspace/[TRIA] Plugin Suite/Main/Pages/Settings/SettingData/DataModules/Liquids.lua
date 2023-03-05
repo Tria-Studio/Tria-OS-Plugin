@@ -23,7 +23,7 @@ local Data = {
 local directories = SettingsUtil.Directories
 local idToConfig = {}
 
-functlocal functionion addLiquidToItems(liquid: Configuration)
+local function addLiquidToItems(liquid: Configuration)
     local liquidData = {
         {
             Text = "Color", 
