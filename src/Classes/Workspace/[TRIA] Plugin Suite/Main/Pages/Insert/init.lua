@@ -80,7 +80,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         Size = UDim2.new(1, -24, 0, 95),
 
         [OnEvent "MouseButton1Down"] = function()
-            if data.FullSize and not Util.interfaceActive:get() then
+            if data.FullSize and not Util.interfaceActive:get(false) then
                 return
             end
             if imageColor:get(false) == Color3.new(0.8, 0.8, 0.8) then
@@ -88,7 +88,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
             end
         end,
         [OnEvent "MouseButton1Up"] = function()
-            if data.FullSize and not Util.interfaceActive:get() then
+            if data.FullSize and not Util.interfaceActive:get(false) then
                 return
             end
             if imageColor:get(false) ~= Color3.new(1, 1, 1) then
@@ -110,7 +110,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
 
             New "ImageLabel" {
                 [OnEvent "MouseEnter"] = function()
-                    if data.FullSize and not Util.interfaceActive:get() then
+                    if data.FullSize and not Util.interfaceActive:get(false) then
                         return
                     end
                     if imageColor:get(false) == Color3.new(1, 1, 1) then
@@ -118,7 +118,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
                     end
                 end,
                 [OnEvent "MouseLeave"] = function()
-                    if data.FullSize and not Util.interfaceActive:get() then
+                    if data.FullSize and not Util.interfaceActive:get(false) then
                         return
                     end
                     if imageColor:get(false) ~= Color3.new(1, 1, 1) then

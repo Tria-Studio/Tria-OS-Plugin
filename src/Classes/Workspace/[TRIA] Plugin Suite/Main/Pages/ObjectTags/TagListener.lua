@@ -78,7 +78,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                     [OnEvent "Activated"] = function()
                         local partError = false
 
-                        if #Util._Selection.selectedParts:get() > 0 then
+                        if #Util._Selection.selectedParts:get(false) > 0 then
                             local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name] or TagData.dataTypes.addonTags[name]
                             if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
                                 Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br />See the Insert page to add these map components to your map.", name), {
@@ -199,12 +199,12 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
                                             (function()
-                                                if not dataVisible:get() then
+                                                if not dataVisible:get(false) then
                                                     return
                                                 end
 
                                                 local dataValue = Value(TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName) or "")
-                                                if dataValue:get() == Enum.TriStateBoolean.False then
+                                                if dataValue:get(false) == Enum.TriStateBoolean.False then
                                                     dataValue:set(false)
                                                 end
 
@@ -217,12 +217,12 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         and Util.parseTextColor3(dataValue:get())
                                                         or dataValue:get()
 
-                                                    ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
+                                                    ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(false), #Util._Selection.selectedParts:get(false) == 1 and "" or "s", tostring(stringTagValue)))
                                                     dataValue:set(value)
                                                     for _, selected: Instance in ipairs(Util._Selection.selectedParts:get()) do 
                                                         TagUtils:SetPartMetaData(selected, name, metadataType, value)
                                                     end
-                                                    ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(), #Util._Selection.selectedParts:get() == 1 and "" or "s", tostring(stringTagValue)))
+                                                    ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(false), #Util._Selection.selectedParts:get(false) == 1 and "" or "s", tostring(stringTagValue)))
                                                 end
 
                                                 function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?): Instance
@@ -247,7 +247,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                                 elseif isTextColor then currentTextbox.Text
                                                                 else currentTextbox.Text
 
-                                                            if color ~= dataVisible:get() or metadataType.data.dataType ~= "color" then
+                                                            if color ~= dataVisible:get(false) or metadataType.data.dataType ~= "color" then
                                                                 currentTextbox.Text = newText
                                                                 updateData(if metadataType.data.dataType == "color" then color else newText)
                                                             end

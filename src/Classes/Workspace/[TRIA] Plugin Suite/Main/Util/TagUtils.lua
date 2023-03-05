@@ -181,7 +181,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
     end
 
     types[metadata.data.type]()
-    tagUtils.OnlyShowUpdate:set(tagUtils.OnlyShowUpdate:get() + 1)
+    tagUtils.OnlyShowUpdate:set(tagUtils.OnlyShowUpdate:get(false) + 1)
 end
 
 function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any

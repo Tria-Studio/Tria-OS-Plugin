@@ -36,7 +36,7 @@ function Dropdown:GetValue(dataArray, uiParent)
     local textTruncated = Value(Enum.TextTruncate.None)
 
     Maid:GiveTask(Pages.pageChanged:Connect(function()
-        if Util.dropdownActive:get() then
+        if Util.dropdownActive:get(false) then
             Dropdown:Cancel()
         end
     end))
