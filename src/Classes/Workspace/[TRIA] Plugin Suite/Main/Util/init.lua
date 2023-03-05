@@ -118,7 +118,7 @@ local Util = {
     _showArrows = Value(true),
 }
 
-function getSettingsDirFolder(directory: string)
+function getSettingsDirFolder(directory: string): Instance?
     local currentMap = Util.mapModel:get(false)
     if currentMap == nil then
         return nil
@@ -162,7 +162,7 @@ function Util:ShowMessage(header: string, text: string, option1: any?, option2: 
     self._Message.Option2:set(option1 and not option2 and {Text = "Ok", Callback = Util.CloseMessage} or option2 or {})
 end
 
-function Util.isPluginFrozen()
+function Util.isPluginFrozen(): boolean
 	return Util.mapModel:get() == nil and not table.find(Pages.pageData.bypassedPages, Pages.pageData.currentPage:get())
 end
 
@@ -183,7 +183,7 @@ function Util.debugWarn(...)
     warn("[TRIA.os Map Plugin]:", ...)
 end
 
-function Util.getDirFolder(directory: string)
+function Util.getDirFolder(directory: string): Instance?
     return getSettingsDirFolder(directory)
 end
 
