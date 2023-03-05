@@ -400,7 +400,6 @@ function ColorWheel:GetColor(startingColor: Color3?): Color3
     Util._showArrows:set(false)
     Util._Topbar.FreezeFrame:set(true)
     Util:ToggleInterface(false)
-    Util._manualActive:set(false)
     visible:set(true)
     chosenColor:set(startingColor)
     updateColor()
