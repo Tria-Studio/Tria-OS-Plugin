@@ -245,32 +245,31 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         [Children] = {
             Components.PageHeader("Whitelisting & Publishing"),
             
-            -- UNCOMMENT THIS WHEN RELEASE OCCURS
-            -- New "Frame" {
-            --     Size = UDim2.fromScale(1, 1),
-            --     ZIndex = 2,
-            --     BackgroundColor3 = Color3.new(),
-            --     BackgroundTransparency = 0.5,
+            New "Frame" {
+                Size = UDim2.fromScale(1, 1),
+                ZIndex = 2,
+                BackgroundColor3 = Color3.new(),
+                BackgroundTransparency = 0.5,
 
-            --     [Children] = New "TextLabel" {
-			-- 		Active = Computed(Util.isPluginFrozen),
-			-- 		AnchorPoint = Vector2.new(0.5, 0.5),
-			-- 		BackgroundTransparency = 0.5,
-			-- 		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-			-- 		ZIndex = 5,
-			-- 		Font = Enum.Font.SourceSansBold,
-			-- 		Position = UDim2.fromScale(0.5, 0.5),
-			-- 		Size = UDim2.fromScale(1, 1),
-			-- 		Text = "Coming soon...",
-			-- 		TextColor3 = Theme.BrightText.Default,
-			-- 		TextSize = 28,
+                [Children] = New "TextLabel" {
+					Active = Computed(Util.isPluginFrozen),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundTransparency = 0.5,
+					BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+					ZIndex = 5,
+					Font = Enum.Font.SourceSansBold,
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromScale(1, 1),
+					Text = "Coming soon...",
+					TextColor3 = Theme.BrightText.Default,
+					TextSize = 28,
 
-			-- 		[Children] = {
-			-- 			Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
-			-- 			Components.Constraints.UIStroke(nil, Color3.new(), nil, 0),
-			-- 		}
-			-- 	}
-            -- },
+					[Children] = {
+						Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
+						Components.Constraints.UIStroke(nil, Color3.new(), nil, 0),
+					}
+				}
+            },
 
             Components.ScrollingFrame({
                 ScrollingEnabled = Util.interfaceActive,
