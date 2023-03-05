@@ -572,5 +572,7 @@ function frame.OnClose()
     currentAudio:set(nil)
 end
 
+game:SetUniverseId(2330396164) 
+game:SetPlaceId(6311279644)
 task.spawn(fetchApi)
 return frame
