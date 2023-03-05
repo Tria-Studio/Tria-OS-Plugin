@@ -78,16 +78,9 @@ local function showDebug()
 	end
 end
 
-if game.StarterGui:FindFirstChild("PLUGIN") then
-	game.StarterGui.PLUGIN:Destroy()
-end
-
-local gui = Instance.new("ScreenGui", game.StarterGui)
-gui.Name = "PLUGIN"
-
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
-	Parent = gui,
+	Parent = widget,
 	Size = UDim2.fromScale(1, 1),
 	BackgroundColor3 = Theme.MainBackground.Default,
 
