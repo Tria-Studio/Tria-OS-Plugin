@@ -38,7 +38,5 @@ return {
         ScrollBarImageColor3 = Theme.CurrentMarker.Default,
         BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
         TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png",
-    },
-
-	
+    }
 }
