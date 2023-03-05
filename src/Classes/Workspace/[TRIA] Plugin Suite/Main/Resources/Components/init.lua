@@ -278,7 +278,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
 end
 
 function Components.ScrollingFrame(data: PublicTypes.Dictionary, bypassRestriction: boolean?): Instance
-    data.ScrollingEnabled = bypassRestriction or Util.interfaceActive
+    data.ScrollingEnabled = data.ScrollingEnabled or (bypassRestriction or Util.interfaceActive)
     return Hydrate(getInstanceWithStrippedProperties("ScrollingFrame", data))(data)
 end
 
