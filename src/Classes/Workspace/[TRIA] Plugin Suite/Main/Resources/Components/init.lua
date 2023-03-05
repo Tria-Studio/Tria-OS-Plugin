@@ -305,15 +305,15 @@ function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (b
             headerColor:set(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
             headerPos = true
         end,
-        [OnEvent "MouseMoved"] = function(_, Ypos)
+        [OnEvent "MouseMoved"] = function(_, yPosition)
             if Util.isPluginFrozen() then
                 return
             end
-            Ypos -= frame:get().AbsolutePosition.Y
-            if Ypos <= 24 and headerPos then
+            yPosition -= frame:get().AbsolutePosition.Y
+            if yPosition <= 24 and headerPos then
                 headerPos = false
                 headerColor:set(data.IsHeader and Theme.CurrentMarker.Default or Theme.Button.Hover)
-            elseif Ypos > 24 and not headerPos then
+            elseif yPosition > 24 and not headerPos then
                 headerPos = true
                 headerColor:set(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
             end
@@ -456,7 +456,7 @@ function Components.TooltipImage(data: PublicTypes.Dictionary): Instance
 end
 
 function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2?, checkState): Instance
-     return New "ImageLabel" { --// Checkbox
+     return New "ImageLabel" {
         BackgroundTransparency = 0.25,
         BackgroundColor3 = Theme.CheckedFieldBackground.Default,
         BorderColor3 = Theme.CheckedFieldBorder.Default,
