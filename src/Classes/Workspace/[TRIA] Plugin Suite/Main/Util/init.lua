@@ -39,7 +39,6 @@ local Util = {
 
     _Addons = {
         hasAddonsWithObjectTags = Value(false),
-        hasWaterjet = Value(false),
         hasEasyTP = Value(false)
     },
     _Slider = {
