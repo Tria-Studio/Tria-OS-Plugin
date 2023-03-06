@@ -38,7 +38,6 @@ local tagTypes = {
     },
     AddonTags = {
         "_Teleporter",
-        "_Waterjet"
     },
     ActionTags = { --// _action attribute
         "_WallRun",
@@ -368,7 +367,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     function types.AddonTags(): boolean?
-        return part.Name == "_Teleporter" or part.Name == "_Waterjet"
+        return part.Name == "_Teleporter"
     end
 
     function types.ActionTags(): boolean?

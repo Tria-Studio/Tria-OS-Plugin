@@ -302,7 +302,6 @@ end
 local function updateMapScriptChildren()
     local newValues = {
         EasyTP = false,
-        Waterjets = false,
     }
 
     local currentMap = Util.mapModel:get(false)
@@ -317,13 +316,6 @@ local function updateMapScriptChildren()
                 return module and module.Teleport == 0 and thing:FindFirstChild("LocalFlash")
             end
 
-            function addons.Waterjets()
-                local success, module = pcall(function()
-                    return thing.Name == "Waterjets" and require(thing)
-                end)
-                return module and module.ToggleJet == 0
-            end
-
             if addons[thing.Name] then
                 newValues[thing.Name] = addons[thing.Name]()
             end
@@ -331,8 +323,7 @@ local function updateMapScriptChildren()
     end
 
     Util._Addons.hasEasyTP:set(newValues.EasyTP)
-    Util._Addons.hasWaterjet:set(newValues.Waterjets)
-    Util._Addons.hasAddonsWithObjectTags:set(newValues.Waterjets or newValues.EasyTP)
+    Util._Addons.hasAddonsWithObjectTags:set(newValues.EasyTP)
 end
 
 function frame.OnClose()
