@@ -45,19 +45,12 @@ local STATUS_ERRORS = {
 }
 
 local currentAudio = Value(nil)
-local currentAudioVolume = Value(plugin:GetSetting("TRIA_AudioLibraryVolume") or 1)
 
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
 local oldUniverseId = game.GameId
 local oldPlaceId = game.PlaceId
-
-Observer(currentAudioVolume):onChange(function()
-    if currentAudio:get(false) then
-        currentAudio:get(false).Volume = currentAudioVolume:get(false)
-    end
-end)
 
 local function toggleAudioPerms(enabled: boolean)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
