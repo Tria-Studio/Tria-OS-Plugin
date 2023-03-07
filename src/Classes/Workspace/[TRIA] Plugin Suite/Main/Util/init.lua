@@ -388,7 +388,6 @@ task.defer(schedule, function()
     local fired, result = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
     if fired then
         table.insert(httpTimes, (os.clock() - start) * 1000)
-        print("Getting http ping")
         Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
     else
         Util._DEBUG._HttpPing:set(Util._Errors.HTTP_ERROR)
