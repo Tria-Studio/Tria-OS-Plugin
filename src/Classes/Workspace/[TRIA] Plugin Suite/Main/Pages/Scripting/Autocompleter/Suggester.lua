@@ -32,9 +32,6 @@ local INLINE_FUNCTION = `function%({ANY_CHAR}%)?%s*$`
 
 local MAPLIB_IDEN = `local {ARGS_MATCH} = game.GetMapLib:Invoke%(%)%(%)`
 local CALLBACK_NAME = "__MapLibCompletion"
-
-local defaultMethods = AutocompleteUtil.deepCopy(AutocompleteData.Methods)
-local defaultProperties = AutocompleteUtil.deepCopy(AutocompleteData.Properties)
  
 local function stringToTreeIndex(input: string): string
 	return input == ":" and "Methods" or "Properties"
@@ -104,8 +101,8 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		end
 	end
 
-	AutocompleteData.Methods = defaultMethods
-	AutocompleteData.Properties = defaultProperties
+	AutocompleteData.Methods = AutocompleteUtil.deepCopy(AutocompleteData.Methods)
+	AutocompleteData.Properties = AutocompleteUtil.deepCopy(AutocompleteData.Properties)
 	
 	local function insertCustomFunction(funcName: string, funcArgs: string, index: string, isFunction: boolean?)
 		local newArgs = {}
