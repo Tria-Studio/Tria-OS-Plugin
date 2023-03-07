@@ -186,7 +186,7 @@ end)                ]], line + 1)
             end
         },  {
             Name = "",
-            Creator = "@grif_0",
+            Creator = "@grif_0 + Kris",
             Icon = "rbxassetid://12710132659",
             LayoutOrder = 2,
             Tooltip = {
