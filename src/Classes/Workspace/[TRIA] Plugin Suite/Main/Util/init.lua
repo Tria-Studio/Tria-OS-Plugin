@@ -351,10 +351,10 @@ end
 
 function Util.getRollingAverage(data: {number}, backCount: number): number
     local newData = {}
-    if #data + 1 > backCount then
-        for i = #data - backCount, #data do
-            table.insert(newData, data[i])
-        end
+    local startIndex = if #data + 1 > backCount then #data - backCount else 1
+
+    for i = startIndex, #data do
+        table.insert(newData, data[i])
     end
 
     local sum = 0
@@ -388,6 +388,7 @@ task.defer(schedule, function()
     local fired, result = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
     if fired then
         table.insert(httpTimes, (os.clock() - start) * 1000)
+        print("Getting http ping")
         Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
     else
         Util._DEBUG._HttpPing:set(Util._Errors.HTTP_ERROR)
