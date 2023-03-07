@@ -1,9 +1,3 @@
---[[
-    TODO
-     - [ ] bug where liquids get parented to the Interactables folder instead of the liquids folder
-     - [ ] make selecting the data tag object count as selecting the part/model
-]]
-
 local Package = script.Parent.Parent
 
 local Fusion = require(Package.Resources.Fusion)
