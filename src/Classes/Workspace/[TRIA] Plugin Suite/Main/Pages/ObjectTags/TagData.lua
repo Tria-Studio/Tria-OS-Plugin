@@ -842,6 +842,26 @@ Metadata:
     <b>update me: </b>i dont wanna write this rn.]]
             },
         },
+        _Waterjet = {
+            DisplayText = "_Waterjet",
+            ActionText = "_Waterjet",
+            DisplayIcon = "rbxassetid://6022668890",
+            LayoutOrder = 1,
+            metadata = {
+
+            },
+            ApplyMethod = "Name",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "Teleporter",
+                Text = [[A custom teleporter object from the Waterjets added that allows for custom jetstream currents inside of liquids.
+
+Metadata:
+    <b>update me: </b>i dont wanna write this rn.]]
+            },
+        },
     }
 }
 
