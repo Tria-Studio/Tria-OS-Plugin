@@ -352,8 +352,8 @@ end
 function Util.getRollingAverage(data: {number}, backCount: number): number
     local newData = {}
     if #data + 1 > backCount then
-        for i = 1, #data - backCount do
-            table.remove(data, 1)
+        for i = #data - backCount, #data do
+            table.insert(newData, data[i])
         end
     end
 
