@@ -74,5 +74,26 @@ return {
             {Value = "start"},
             {Value = "end"},
         }
+    end,
+    NormalId = function()
+        return {
+            {Value = "front"},
+            {Value = "back"},
+            {Value = "top"},
+            {Value = "bottom"},
+            {Value = "left"},
+            {Value = "right"}
+        }
+    end,
+    BubbleParticle = function()
+        return {
+            {Value = "default"}
+        }
+    end,
+    FanShape = function()
+        return {
+            {Value = "square"},
+            {Value = "circle"}
+        }
     end
 }

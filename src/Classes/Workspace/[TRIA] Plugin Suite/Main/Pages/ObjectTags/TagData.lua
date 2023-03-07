@@ -284,6 +284,74 @@ data.metadataTypes = {
         displayName = "Teleport Number",
         default = 0,
     },
+
+    FanNumber = {
+        _referenceName = "FanNumber",
+        type = "EndOfName",
+        dataType = "number",
+        dataName = "FanNumber",
+        displayName = "Fan #",
+        default = 0,
+    },
+    FanSpeed = {
+        _referenceName = "FanSpeed",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "FanSpeed",
+        displayName = "Fan Speed",
+        default = 32,
+    },
+    Distance = {
+        _referenceName = "Distance",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "Distance",
+        displayName = "Jet Distance",
+        default = 24,
+    },
+    LinearMovement = {
+        _referenceName = "LinearMovement",
+        type = "Attribute",
+        dataType = "boolean",
+        dataName = "LinearMovement",
+        displayName = "Linear Movement",
+        default = false,
+    },
+    Enabled = {
+        _referenceName = "Enabled",
+        type = "Attribute",
+        dataType = "boolean",
+        dataName = "Enabled",
+        displayName = "Enabled",
+        default = true,
+    },
+    EmissionFace = {
+        _referenceName = "EmissionFace",
+        type = "Attribute",
+        dataType = "dropdown",
+        dropdownType = "NormalId",
+        dataName = "EmissionFace",
+        displayName = "Emission Face",
+        default = "front",
+    },
+    FanShape = {
+        _referenceName = "FanShape",
+        type = "Attribute",
+        dataType = "dropdown",
+        dropdownType = "FanShape",
+        dataName = "FanShape",
+        displayName = "Fan Shape",
+        default = "square",
+    },
+    BubbleParticle = {
+        _referenceName = "BubbleParticle",
+        type = "Attribute",
+        dataType = "dropdown",
+        dropdownType = "BubbleParticle",
+        dataName = "BubbleParticle",
+        displayName = "Bubble Particle",
+        default = "default",
+    },
 }
 
 data.dataTypes = {
@@ -848,15 +916,47 @@ Metadata:
             DisplayIcon = "rbxassetid://6022668890",
             LayoutOrder = 1,
             metadata = {
-
+                {
+                    data = data.metadataTypes.FanNumber,
+                    location = 1,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.FanSpeed,
+                    location = 3,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.Distance,
+                    location = 4,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.LinearMovement,
+                    location = 5,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.EmissionFace,
+                    location = 7,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.FanShape,
+                    location = 9,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.Enabled,
+                    location = 11,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.BubbleParticle,
+                    location = 13,
+                    isFullSize = true,
+                },
             },
             ApplyMethod = "Name",
             IsTagApplicable = true,
             OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "Teleporter",
-                Text = [[A custom teleporter object from the Waterjets added that allows for custom jetstream currents inside of liquids.
+                Header = "Waterjets",
+                Text = [[A custom jetstream object from the Waterjets Addon that allows for custom underwater jetstream currents.
 
 Metadata:
     <b>update me: </b>i dont wanna write this rn.]]

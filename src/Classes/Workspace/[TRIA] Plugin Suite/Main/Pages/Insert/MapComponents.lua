@@ -184,7 +184,34 @@ end)                ]], line + 1)
 
                 return true
             end
-        }, 
+        },  {
+            Name = "",
+            Creator = "@grif_0",
+            Icon = "rbxassetid://12710132659",
+            LayoutOrder = 2,
+            Tooltip = {
+                Header = "Waterjets",
+                Tooltip = "This addon allows for enhanced underwater gameplay with new liquid jetstreams! \n\nThis addon is integrated with Object Tag selection and View Mode selection."
+            },
+    
+            InsertFunction = function()
+                if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
+                    return
+                end
+
+                local currentMap = Util.mapModel:get(false)
+                if currentMap.MapScript:FindFirstChild("Waterjets") and currentMap.MapScript.EasyTP:FindFirstChild("LocalWaterjet") then
+                    Util:ShowMessage("Cannot Insert Addon", "This addon already exists in your map! To update the addon, delete it from your map and retry.")
+                    return
+                end
+
+                -- ChangeHistoryService:SetWaypoint("Inserting EasyTP")
+
+                -- ChangeHistoryService:SetWaypoint("Inserted EasyTP")
+
+                return true
+            end
+        },
     },
     Components = {
         {
