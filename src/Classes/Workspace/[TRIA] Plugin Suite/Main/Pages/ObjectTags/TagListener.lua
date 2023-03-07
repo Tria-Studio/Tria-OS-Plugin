@@ -43,7 +43,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
     end)
 
     Observer(metaDataVisible):onChange(function()
-        dataVisible:set(metaDataVisible:get(false))
+        dataVisible:set(metaDataVisible:get())
     end)
 
     return New "Frame" {
