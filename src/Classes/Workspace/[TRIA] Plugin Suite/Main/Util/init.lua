@@ -350,17 +350,18 @@ function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
 end
 
 function Util.getRollingAverage(data: {number}, backCount: number): number
+    local newData = {}
     if #data + 1 > backCount then
-        for i = 1, #data - backCount do
-            table.remove(data, 1)
+        for i = #data - backCount, #data do
+            table.insert(newData, data[i])
         end
     end
 
     local sum = 0
-    for i = 1, #data do
-        sum += data[i]
+    for i = 1, #newData do
+        sum += newData[i]
     end
-    return sum / #data
+    return sum / #newData
 end
 
 local function schedule(task: () -> (), interval: number)
@@ -380,10 +381,11 @@ task.defer(schedule, function(deltaTime: number)
     Util._DEBUG._Fps:set(math.floor(Util.getRollingAverage(fpsTimes, 30)))
 end, 0.05)
 
+local githubUrl = "https://www.githubstatus.com/api/v2/status.json"
 local httpTimes = {}
 task.defer(schedule, function()
     local start = os.clock()
-    local fired, result = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
+    local fired, result = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
     if fired then
         table.insert(httpTimes, (os.clock() - start) * 1000)
         Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
@@ -393,7 +395,7 @@ task.defer(schedule, function()
 end, 10)
 
 task.defer(schedule, function()
-    local fired, response = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
+    local fired, response = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
     local colorMap = {
         ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
         ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",

@@ -197,7 +197,7 @@ end)                ]], line + 1)
             end
         },  {
             Name = "",
-            Creator = "@grif_0",
+            Creator = "@grif_0 + Kris",
             Icon = "rbxassetid://12710132659",
             LayoutOrder = 2,
             Tooltip = {
@@ -211,7 +211,7 @@ end)                ]], line + 1)
                 end
 
                 local currentMap = Util.mapModel:get(false)
-                if currentMap.MapScript:FindFirstChild("Waterjets") and currentMap.MapScript.EasyTP:FindFirstChild("LocalWaterjet") then
+                if currentMap.MapScript:FindFirstChild("Waterjets") and currentMap.MapScript.Waterjets:FindFirstChild("WaterjetClient") then
                     Util:ShowMessage("Cannot Insert Addon", "This addon already exists in your map! To update the addon, delete it from your map and retry.")
                     return
                 end
