@@ -230,13 +230,15 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
-                                    -- Components.GradientTextLabel {
-                                    --     AnchorPoint = Vector2.new(0.5, 0.5),
-                                    --     Position = UDim2.fromScale(0.5, 0.5),
-                                    --     Size = UDim2.fromScale(0.5, 0.5),
-                                    --     Text = "Select Map.",
-                                    --     ZIndex = 5,
-                                    -- },
+                                    Components.GradientTextLabel(Computed(function()
+                                        return Util.mapModel:get() == nil
+                                    end), {
+                                        AnchorPoint = Vector2.new(0.5, 0.5),
+                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        Size = UDim2.fromScale(1, 1),
+                                        Text = "Select a map to continue.",
+                                        ZIndex = 5,
+                                    }),
 
                                     New "Frame" {
                                         Size = UDim2.fromScale(1, 1),
@@ -268,44 +270,71 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 },
                             },
                             Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
-                            ForValues(MapComponents.Components, function(data: PublicTypes.Dictionary): Instance
-                                return Components.TextButton {
-                                    Active = Util.interfaceActive,
-                                    AutoButtonColor = Util.interfaceActive,
-                                    Size = UDim2.new(1, 0, 0, 30),
-                                    LayoutOrder = data.LayoutOrder,
-                                    Text = " " .. data.Name,
-                                    TextSize = 17,
-                                    BorderSizePixel = 0,
-                                    TextColor3 = Theme.BrightText.Default,
-                                    Font = Enum.Font.SourceSansSemibold,
-                                    TextXAlignment = Enum.TextXAlignment.Left,
-        
-                                    [OnEvent "Activated"] = function()
-                                        if Util.mapModel:get(false) then
-                                            data.InsertFunction()
-                                        else
-                                            Util:ShowMessage("Cannot insert map components", "Please select a map to continue inserting map components. \n\nHowever, you can insert a map kit whenever!")
-                                        end
-                                    end,
+                            New "Frame" {
+                                Size = UDim2.new(1, 0, 0, 0),
+                                AutomaticSize = Enum.AutomaticSize.Y,
+                                LayoutOrder = 1,
+                                BackgroundTransparency = 1,
+                                
+                                [Children] = {
+                                    Components.GradientTextLabel(Computed(function()
+                                        return Util.mapModel:get() == nil
+                                    end), {
+                                        AnchorPoint = Vector2.new(0.5, 0.5),
+                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        Size = UDim2.fromScale(1, 1),
+                                        Text = "Select a map to continue.",
+                                        ZIndex = 5,
+                                    }),
 
-                                    [Children] = {
-                                        Components.Constraints.UIPadding(nil, nil, UDim.new(0, 34)),
-                                        New "ImageLabel" {
-                                            Image = data.Icon,
-                                            Size = UDim2.new(0, 26, 0, 26),
-                                            AnchorPoint = Vector2.new(1, 0.5),
-                                            Position = UDim2.new(0, -4, 0.5, 0),
-                                            BackgroundColor3 = Theme.InputFieldBackground.Default,
-                                        },
-                                        Components.TooltipImage {
-                                            Position = UDim2.new(1, -4, 0, 7),
-                                            Header = data.Tooltip.Header,
-                                            Tooltip = data.Tooltip.Tooltip,
+                                    New "Frame" {
+                                        Size = UDim2.fromScale(1, 1),
+                                        BackgroundTransparency = 1,
+
+                                        [Children] = {
+                                            Components.Constraints.UIListLayout(),
+                                            ForValues(MapComponents.Components, function(data: PublicTypes.Dictionary): Instance
+                                                return Components.TextButton {
+                                                    Active = Util.interfaceActive,
+                                                    AutoButtonColor = Util.interfaceActive,
+                                                    Size = UDim2.new(1, 0, 0, 30),
+                                                    LayoutOrder = data.LayoutOrder,
+                                                    Text = " " .. data.Name,
+                                                    TextSize = 17,
+                                                    BorderSizePixel = 0,
+                                                    TextColor3 = Theme.BrightText.Default,
+                                                    Font = Enum.Font.SourceSansSemibold,
+                                                    TextXAlignment = Enum.TextXAlignment.Left,
+                        
+                                                    [OnEvent "Activated"] = function()
+                                                        if Util.mapModel:get(false) then
+                                                            data.InsertFunction()
+                                                        else
+                                                            Util:ShowMessage("Cannot insert map components", "Please select a map to continue inserting map components. \n\nHowever, you can insert a map kit whenever!")
+                                                        end
+                                                    end,
+                
+                                                    [Children] = {
+                                                        Components.Constraints.UIPadding(nil, nil, UDim.new(0, 34)),
+                                                        New "ImageLabel" {
+                                                            Image = data.Icon,
+                                                            Size = UDim2.new(0, 26, 0, 26),
+                                                            AnchorPoint = Vector2.new(1, 0.5),
+                                                            Position = UDim2.new(0, -4, 0.5, 0),
+                                                            BackgroundColor3 = Theme.InputFieldBackground.Default,
+                                                        },
+                                                        Components.TooltipImage {
+                                                            Position = UDim2.new(1, -4, 0, 7),
+                                                            Header = data.Tooltip.Header,
+                                                            Tooltip = data.Tooltip.Tooltip,
+                                                        }
+                                                    }
+                                                }
+                                            end, Fusion.cleanup)
                                         }
                                     }
-                                }
-                            end, Fusion.cleanup)
+                                },
+                            },
                         }
                     },
                     Components.Spacer(false, 10, 45, nil, Theme.MainBackground.Default)
