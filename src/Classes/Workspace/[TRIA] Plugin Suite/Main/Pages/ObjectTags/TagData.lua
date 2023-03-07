@@ -933,20 +933,16 @@ Metadata:
                     location = 5,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.EmissionFace,
+                    data = data.metadataTypes.FanShape,
                     location = 7,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.FanShape,
+                    data = data.metadataTypes.Enabled,
                     location = 9,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.Enabled,
-                    location = 11,
-                    isFullSize = true,
-                }, {
                     data = data.metadataTypes.BubbleParticle,
-                    location = 13,
+                    location = 11,
                     isFullSize = true,
                 },
             },
