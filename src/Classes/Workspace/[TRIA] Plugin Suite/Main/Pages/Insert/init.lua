@@ -230,9 +230,12 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
-                                    New "TextLabel" {
-
+                                    Components.GradientTextLabel {
+                                        AnchorPoint = Vector2.new(0.5, 0.5),
+                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        Size = UDim2.fromScale(1, 1),
                                     },
+
                                     New "Frame" {
                                         Size = UDim2.fromScale(1, 1),
                                         BackgroundTransparency = 1,

@@ -508,7 +508,7 @@ end
 function Components.GradientTextLabel(data: PublicTypes.Dictionary): Instance
     return New "TextLabel" {
         Active = Computed(Util.isPluginFrozen),
-        AnchorPoint = Vector2.new(0.5, 0.5),
+        AnchorPoint = data.AnchorPoint,
         BackgroundTransparency = Spring(Computed(function()
             return Util.isPluginFrozen() and 0.5 or 1
         end), 18),
