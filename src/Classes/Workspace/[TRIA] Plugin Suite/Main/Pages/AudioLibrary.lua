@@ -395,7 +395,7 @@ Below you will find a list of audios which have been approved for use by TRIA st
 
                             New "Frame" { -- Audio Library
                                 BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(1, 0.95),
+                                Size = UDim2.fromScale(1, 1),
                                 Visible = Computed(function()
                                     return CURRENT_FETCH_STATUS:get() == "Success"
                                 end),
