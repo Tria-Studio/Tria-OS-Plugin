@@ -311,7 +311,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         return Components.DropdownTextlabel {
                             TextXAlignment = Enum.TextXAlignment.Left,
                             DropdownVisible = visible,
-                            Text = [[The audio library allows map creators to find approved music submitted by creators for use in their maps. This list automatically updates with the latest audio.strictReadError
+                            Text = [[The audio library allows map creators to find approved music submitted by creators for use in their maps. This list automatically updates with the latest audio.
                             
 Below you can search, preview, and select audios to use for your map.]],
                             LayoutOrder = 2
