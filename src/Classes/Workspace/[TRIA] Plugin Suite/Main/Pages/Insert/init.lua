@@ -193,7 +193,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, nil, Enum.VerticalAlignment.Top),
                     Components.FrameHeader("Map Kits", 1, nil, nil, "Here you can insert Map kits which can help you get started on making a map!"),
-                    Components.Spacer(true, 1, 6, nil),
+                    Components.Spacer(false, 1, 6, nil),
 
                     New "Frame" {
                         LayoutOrder = 2,
@@ -213,7 +213,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         }
                     },
 
-                    Components.Spacer(true, 3, 6, nil),
+                    Components.Spacer(false, 3, 6, nil),
                     New "Frame" {
                         LayoutOrder = 7,
                         AutomaticSize = Enum.AutomaticSize.Y,
@@ -292,7 +292,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 }
                             end, Fusion.cleanup)
                         }
-                    }
+                    },
+                    Components.Spacer(false, 10, 45, nil, Theme.MainBackground.Default)
                 }
             }, true)
         }
