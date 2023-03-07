@@ -13,17 +13,10 @@ local TagData = require(script.TagData)
 local New = Fusion.New
 local ForPairs = Fusion.ForPairs
 local Children = Fusion.Children
-local Computed = Fusion.Computed
-local Out = Fusion.Out
-local Value = Fusion.Value
 
 local frame = {}
  
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
-    local objectFrameSize = Value()
-    local addonFrameSize = Value()
-    local buttonFrameSize = Value()
-
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         Visible = data.Visible,
@@ -40,8 +33,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
                     Components.FrameHeader("Button Event Tags", 1),
                     New "Frame" {
-                        [Out "AbsoluteSize"] = buttonFrameSize,
-
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
                         Size = UDim2.new(1, 0, 0, 0),
@@ -56,13 +47,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     },
                     Components.FrameHeader("Object Tags", 3),
                     New "Frame" {
-                        [Out "AbsoluteSize"] = objectFrameSize,
-
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,
-                        Size = Computed(function()
-                            return UDim2.new(1, 0, 0, objectFrameSize:get() and objectFrameSize:get().Y or 0)
-                        end),
+                        Size = UDim2.new(1, 0, 0, 0),
                         LayoutOrder = 4,
 
                         [Children] = {
@@ -83,13 +70,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
                             Components.FrameHeader("Map Addon Tags", 1, nil, nil, "This map has featured map addons in it that support object tags. The instances for those addons can be edited below."),
                             New "Frame" {
-                                [Out "AbsoluteSize"] = addonFrameSize,
-
                                 BackgroundTransparency = 1,
                                 AutomaticSize = Enum.AutomaticSize.Y,
-                                Size = Computed(function()
-                                    return UDim2.new(1, 0, 0, addonFrameSize:get() and addonFrameSize:get().Y or 0)
-                                end),
+                                Size = UDim2.new(1, 0, 0, 0),
                                 LayoutOrder = 2,
 
                                 [Children] = {
