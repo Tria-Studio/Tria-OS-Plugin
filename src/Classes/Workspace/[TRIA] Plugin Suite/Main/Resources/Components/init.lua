@@ -505,4 +505,36 @@ function Components.Spacer(hidden: boolean?, layoutOrder: number?, size: number?
     }
 end
 
+function Components.GradientTextLabel(data: PublicTypes.Dictionary): Instance
+    return New "TextLabel" {
+        Active = Computed(Util.isPluginFrozen),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundTransparency = Spring(Computed(function()
+            return Util.isPluginFrozen() and 0.5 or 1
+        end), 18),
+        BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+
+        ZIndex = data.ZIndex,
+        Font = Enum.Font.SourceSansBold,
+        Position = data.Position,
+        Size = data.Size,
+
+        Text = data.Text,
+        TextColor3 = Theme.BrightText.Default,
+        TextSize = Spring(Computed(function()
+            return 28 * (Util.isPluginFrozen() and 1 or 2)
+        end), 18),
+        TextTransparency = Spring(Computed(function()
+            return Util.isPluginFrozen() and 0 or 1
+        end), 18),
+
+        [Children] = {
+            Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
+            Components.Constraints.UIStroke(nil, Color3.new(), nil, Spring(Computed(function()
+                return Util.isPluginFrozen() and 0 or 1
+            end), 18))
+        }
+    }
+end
+
 return Components
