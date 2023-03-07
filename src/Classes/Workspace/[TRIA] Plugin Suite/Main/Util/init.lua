@@ -350,6 +350,10 @@ function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
 end
 
 function Util.getRollingAverage(data: {number}, backCount: number): number
+    if #data < 1 then
+        return 0
+    end
+    
     local newData = {}
     local startIndex = if #data + 1 > backCount then #data - backCount else 1
 
