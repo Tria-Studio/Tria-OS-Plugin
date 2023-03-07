@@ -208,7 +208,10 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             updateSpecial()
             Util.MapMaid:GiveTask(newMap.ChildAdded:Connect(updateSpecial))
             Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(updateSpecial))
-            Util.MapMaid:GiveTask(specialFolder:GetPropertyChangedSignal("Name"):Connect(updateSpecial))
+
+            if specialFolder then
+                Util.MapMaid:GiveTask(specialFolder:GetPropertyChangedSignal("Name"):Connect(updateSpecial))
+            end
         end
 
         mapTypes[newMap.ClassName]()

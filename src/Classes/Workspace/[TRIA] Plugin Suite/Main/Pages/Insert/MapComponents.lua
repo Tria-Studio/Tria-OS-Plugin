@@ -3,6 +3,7 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
+local Pages = require(Package.Resources.Components.Pages)
 
 local componentFiles = script.Parent.ComponentFiles
 local addonFiles = script.Parent.AddonFiles
@@ -157,6 +158,16 @@ end)                ]], line + 1)
                 local currentMap = Util.mapModel:get(false)
                 if currentMap.MapScript:FindFirstChild("EasyTP") and currentMap.MapScript.EasyTP:FindFirstChild("LocalFlash") then
                     Util:ShowMessage("Cannot Insert Addon", "This addon already exists in your map! To update the addon, delete it from your map and retry.")
+                    return
+                end
+
+                if not Util.hasSpecialFolder:get(false) then
+                    Util:ShowMessage("Cannot Insert Addon", "This addon requires your map to support the Optimized Structure (Folder named 'Special'). You can add the special folder under the 'Insert' tab.", {
+                        Text = "Show me",
+                        Callback = function()
+                            Pages:ChangePage("Insert")
+                        end
+                    })
                     return
                 end
 

@@ -49,7 +49,7 @@ Util.attemptScriptInjection()
 
 local debugMenu = plugin:CreatePluginMenu(math.random(), "Debug Menu")
 debugMenu.Name = "Debug Menu"
-debugMenu:AddNewAction("ShowDebug", "Show Debug Menu", "rbxasset://textures/loading/robloxTilt.png")
+debugMenu:AddNewAction("ShowDebug", "Show Debug Menu", "rbxassetid://6022668961")
 
 local function showDebug()
 	local selectedAction = debugMenu:ShowAsync()

@@ -582,7 +582,7 @@ Metadata:
         },
         _Liquid = {
             _nameStub = "_Liquid",
-            DisplayText = "_Liquid",
+            DisplayText = "_Liquid#",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6026568295",
             LayoutOrder = 4,
@@ -624,7 +624,7 @@ Metadata:
         },
         _Gas = {
             _nameStub = "_Gas",
-            DisplayText = "_Gas",
+            DisplayText = "_Gas#",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6026568295",
             LayoutOrder = 5,
@@ -660,7 +660,7 @@ Metadata:
         },
         _Button = {
             _nameStub = "_Button",
-            DisplayText = "_Button",
+            DisplayText = "_Button#",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6026647916",
             LayoutOrder = 3,
@@ -911,6 +911,7 @@ Metadata:
             },
         },
         _Waterjet = {
+            _nameStub = "_Waterjet",
             DisplayText = "_Waterjet",
             ActionText = "_Waterjet",
             DisplayIcon = "rbxassetid://6022668890",
