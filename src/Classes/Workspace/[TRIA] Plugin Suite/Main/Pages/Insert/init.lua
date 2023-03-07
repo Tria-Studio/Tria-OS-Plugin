@@ -230,26 +230,36 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
-                                    Components.Constraints.UIGridLayout(UDim2.new(0, 140, 0, 79), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
-                                    Components.Constraints.UIPadding(UDim.new(0, 6), UDim.new(0, 6)),
-                                    ForValues(MapComponents.Addons, function(data: PublicTypes.Dictionary): Instance
-                                        return GetAssetButton {
-                                            OverlayImage = data.Icon,
-                                            OverlayImageTransparency = 0,
-                                            Name = data.Name,
-                                            Creator = data.Creator,
-                                            FullSize = true,
-                                            Tooltip = data.Tooltip,
-                                            ActivatedFunction = function()
-                                                if Util.mapModel:get(false) then
-                                                    data.InsertFunction()
-                                                else
-                                                    Util:ShowMessage("Cannot insert map addons", "Please select a map to continue inserting map addons. \n\nHowever, you can insert a map kit whenever!")
-                                                end
-                                            end,
-                                            LayoutOrder = data.LayoutOrder,
+                                    New "TextLabel" {
+
+                                    },
+                                    New "Frame" {
+                                        Size = UDim2.fromScale(1, 1),
+                                        BackgroundTransparency = 1,
+
+                                        [Children] = {
+                                            Components.Constraints.UIGridLayout(UDim2.new(0, 140, 0, 79), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
+                                            Components.Constraints.UIPadding(UDim.new(0, 6), UDim.new(0, 6)),
+                                            ForValues(MapComponents.Addons, function(data: PublicTypes.Dictionary): Instance
+                                                return GetAssetButton {
+                                                    OverlayImage = data.Icon,
+                                                    OverlayImageTransparency = 0,
+                                                    Name = data.Name,
+                                                    Creator = data.Creator,
+                                                    FullSize = true,
+                                                    Tooltip = data.Tooltip,
+                                                    ActivatedFunction = function()
+                                                        if Util.mapModel:get(false) then
+                                                            data.InsertFunction()
+                                                        else
+                                                            Util:ShowMessage("Cannot insert map addons", "Please select a map to continue inserting map addons. \n\nHowever, you can insert a map kit whenever!")
+                                                        end
+                                                    end,
+                                                    LayoutOrder = data.LayoutOrder,
+                                                }
+                                            end, Fusion.cleanup)
                                         }
-                                    end, Fusion.cleanup)
+                                    }
                                 },
                             },
                             Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
