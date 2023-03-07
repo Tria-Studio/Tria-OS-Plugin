@@ -381,10 +381,11 @@ task.defer(schedule, function(deltaTime: number)
     Util._DEBUG._Fps:set(math.floor(Util.getRollingAverage(fpsTimes, 30)))
 end, 0.05)
 
+local githubUrl = "https://www.githubstatus.com/api/v2/status.json"
 local httpTimes = {}
 task.defer(schedule, function()
     local start = os.clock()
-    local fired, result = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
+    local fired, result = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
     if fired then
         table.insert(httpTimes, (os.clock() - start) * 1000)
         Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
@@ -394,7 +395,7 @@ task.defer(schedule, function()
 end, 10)
 
 task.defer(schedule, function()
-    local fired, response = pcall(HttpService.GetAsync, HttpService, "https://www.githubstatus.com/api/v2/status.json", true)
+    local fired, response = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
     local colorMap = {
         ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
         ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",
