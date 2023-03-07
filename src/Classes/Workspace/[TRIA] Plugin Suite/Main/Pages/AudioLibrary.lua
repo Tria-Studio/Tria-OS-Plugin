@@ -311,10 +311,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         return Components.DropdownTextlabel {
                             TextXAlignment = Enum.TextXAlignment.Left,
                             DropdownVisible = visible,
-                            Text = [[The audio library allows map creators to find approved music to use in their maps.
-
-Below you will find a list of audios which have been approved for use by TRIA staff. You can choose to preview the song or automatically set your map's BGM to the selected audio.
-]],
+                            Text = [[The audio library allows map creators to find approved music submitted by creators for use in their maps. This list automatically updates with the latest audio.strictReadError
+                            
+Below you can search, preview, and select audios to use for your map.]],
                             LayoutOrder = 2
                         }
                     end, true),

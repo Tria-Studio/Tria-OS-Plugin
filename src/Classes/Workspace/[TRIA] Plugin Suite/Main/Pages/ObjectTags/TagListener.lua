@@ -199,10 +199,6 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
                                             (function()
-                                                if not dataVisible:get(false) then
-                                                    return
-                                                end
-
                                                 local dataValue = Value(TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName) or "")
                                                 if dataValue:get(false) == Enum.TriStateBoolean.False then
                                                     dataValue:set(false)
