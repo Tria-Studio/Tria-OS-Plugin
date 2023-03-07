@@ -350,6 +350,7 @@ function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
 end
 
 function Util.getRollingAverage(data: {number}, backCount: number): number
+    local newData = {}
     if #data + 1 > backCount then
         for i = 1, #data - backCount do
             table.remove(data, 1)
@@ -357,10 +358,10 @@ function Util.getRollingAverage(data: {number}, backCount: number): number
     end
 
     local sum = 0
-    for i = 1, #data do
-        sum += data[i]
+    for i = 1, #newData do
+        sum += newData[i]
     end
-    return sum / #data
+    return sum / #newData
 end
 
 local function schedule(task: () -> (), interval: number)
