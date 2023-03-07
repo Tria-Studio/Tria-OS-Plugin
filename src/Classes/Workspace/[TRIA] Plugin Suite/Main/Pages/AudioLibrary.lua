@@ -58,7 +58,7 @@ local function toggleAudioPerms(enabled: boolean)
 end
 
 local function fade(sound: Sound, direction: string)
-    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and currentAudioVolume:get(false) or 0)})
+    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
 
     if direction == "Out" then
@@ -515,43 +515,6 @@ Below you will find a list of audios which have been approved for use by TRIA st
                                         Position = UDim2.new(0, 0, 1, -2),
                                         Size = UDim2.new(1, 0, 0, 2)
                                     },
-                                }
-                            },
-
-                            New "Frame" { -- Refresh time
-                                BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(1, 0.05),
-                                Position = UDim2.fromScale(0, 0.95),
-
-                                [Children] = {
-                                    New "TextLabel" {
-                                        BackgroundTransparency = 1,
-                                        Position = UDim2.fromScale(0.265, 0),
-                                        Size = UDim2.fromScale(0.5, 1),
-                                        Text = Computed(function()
-                                            return ("Volume: %.2f"):format(currentAudioVolume:get())
-                                        end),
-                                        TextColor3 = Theme.SubText.Default,
-                                        TextXAlignment = Enum.TextXAlignment.Left,
-                                        Visible = Computed(function()
-                                            return CURRENT_FETCH_STATUS:get() == "Success"
-                                        end),
-                                    },
-
-                                    Components.Slider {
-                                        Value = currentAudioVolume,
-                                        Min = Value(0),
-                                        Max = Value(1),
-                                        Position = UDim2.fromScale(0.125, 0.55),
-                                        Size = UDim2.fromScale(0.2, 0.35),
-                                        Increment = 0.01,
-                                        Visible = Computed(function()
-                                            return CURRENT_FETCH_STATUS:get() == "Success"
-                                        end),
-                                        OnChange = function(newValue)
-                                            plugin:SetSetting("TRIA_AudioLibraryVolume", newValue)
-                                        end
-                                    }
                                 }
                             }
                         }
