@@ -302,6 +302,14 @@ local function fetchApi()
             })
         end
 
+        table.sort(newData, function(a, b)
+            if a.Artist:lower() == b.Artist:lower() then
+                return a.Name:lower() < b.Name:lower()
+            else
+                return a.Artist:lower() < b.Artist:lower()
+            end
+        end)
+
         CURRENT_PAGE_COUNT:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
         CURRENT_AUDIO_DATA:set(newData)
