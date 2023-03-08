@@ -222,11 +222,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
-                            Components.FrameHeader("Featured Map Addons", -2, nil, nil, "Featured assets created by the community for use in mapmaking.", 2),
+                            Components.FrameHeader("Featured Map Addons", 1, nil, nil, "Featured assets created by the community for use in mapmaking.", 2),
                             New "Frame" {
                                 Size = UDim2.new(1, 0, 0, 0),
                                 AutomaticSize = Enum.AutomaticSize.Y,
-                                LayoutOrder = -1,
+                                LayoutOrder = 2,
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
@@ -243,6 +243,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     New "Frame" {
                                         Size = UDim2.fromScale(1, 1),
                                         BackgroundTransparency = 1,
+                                        AutomaticSize = Enum.AutomaticSize.Y,
 
                                         [Children] = {
                                             Components.Constraints.UIGridLayout(UDim2.new(0, 140, 0, 79), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
@@ -269,11 +270,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     }
                                 },
                             },
-                            Components.FrameHeader("Map Components", 0, nil, nil, "These are common map components which can be found in most maps.", 2),
+                            Components.FrameHeader("Map Components", 3, nil, nil, "These are common map components which can be found in most maps.", 2),
                             New "Frame" {
                                 Size = UDim2.new(1, 0, 0, 0),
                                 AutomaticSize = Enum.AutomaticSize.Y,
-                                LayoutOrder = 1,
+                                LayoutOrder = 4,
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
@@ -290,6 +291,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     New "Frame" {
                                         Size = UDim2.fromScale(1, 1),
                                         BackgroundTransparency = 1,
+                                        AutomaticSize = Enum.AutomaticSize.Y,
 
                                         [Children] = {
                                             Components.Constraints.UIListLayout(),
