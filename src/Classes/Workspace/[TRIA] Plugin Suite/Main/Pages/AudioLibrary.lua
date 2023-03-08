@@ -61,6 +61,7 @@ local function toggleAudioPerms(enabled: boolean)
 end
 
 local function fade(sound: Sound, direction: string)
+    print("Fading", sound.Name, direction)
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
 
@@ -76,6 +77,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
 
     local previewSound = PlguinSoundManager:QueueSound(data.ID)
     previewSound.Volume = 0
+    previewSound.Name = data.Name
 
     local soundLength = Value(1)
     local isPlaying = false
