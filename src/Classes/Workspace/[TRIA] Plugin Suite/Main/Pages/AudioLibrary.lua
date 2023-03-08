@@ -451,17 +451,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Size = UDim2.fromScale(0.75, 0),
                                 Text = Computed(function()
                                     local fetchStatus = CURRENT_FETCH_STATUS:get()
-                                    local errorDetails = CURRENT_FETCH_ERR:get(false)
-                                    
-                                    local statusText
-
-                                    if STATUS_ERRORS[fetchStatus] then
-                                        statusText = STATUS_ERRORS[fetchStatus]
-                                        if fetchStatus == "JSONDecodeError" then
-                                            statusText ..= "\n" .. errorDetails
-                                        end
-                                    end
-                                    return statusText or "N/A"
+                                    return STATUS_ERRORS[fetchStatus] or "N/A"
                                 end),
                                 TextSize = 18,
                                 TextWrapped = true,
