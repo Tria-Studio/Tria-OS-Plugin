@@ -25,12 +25,12 @@ return {
 	},
 
 	Pages = {
-		{Name = "ObjectTags", Default = true},
+		{Name = "ObjectTags"},
 		{Name = "ViewModes"},
 		{Name = "Settings"},
 		{Name = "Scripting"},
 		{Name = "Publish"},
 		{Name = "Insert"},
-		{Name = "AudioLibrary"}
+		{Name = "AudioLibrary", Default = true}
 	}
 }

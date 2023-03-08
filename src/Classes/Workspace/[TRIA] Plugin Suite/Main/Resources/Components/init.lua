@@ -255,7 +255,7 @@ function Components.TwoOptions(option1Data: PublicTypes.Dictionary, option2Data:
     }
 end
 
-function Components.FrameHeader(text: string, layoutOrder: number, color: any?, size: number?, tooltip: any?, ZIndex: number?): Instance
+function Components.FrameHeader(text: string, layoutOrder: number, color: any?, size: number?, tooltip: any?, ZIndex: number?, position: UDim2?): Instance
     return New "TextLabel" {
         BackgroundColor3 = color or Theme.HeaderSection.Default,
         BorderColor3 = Theme.Border.Default,
@@ -264,6 +264,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
         BorderMode = Enum.BorderMode.Middle,
         Size = UDim2.new(1, 0, 0, size or 30),
         Font = Enum.Font.SourceSansBold,
+        Position = position,
         Text = text,
         TextColor3 = Theme.BrightText.Default,
         ZIndex = ZIndex,

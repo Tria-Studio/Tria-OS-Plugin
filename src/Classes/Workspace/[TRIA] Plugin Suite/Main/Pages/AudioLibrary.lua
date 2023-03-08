@@ -296,230 +296,193 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         [Children] = {
             Components.PageHeader("Audio Library"),
-            Components.ScrollingFrame {
-                BackgroundColor3 = Theme.MainBackground.Default,
-                BackgroundTransparency = 1,
-                Size=  UDim2.fromScale(1, 1),
+            New "Frame" { -- Page Cycler
+                BackgroundColor3 = Theme.InputFieldBackground.Default,
+                AnchorPoint = Vector2.new(0, 1),
+                Size = UDim2.new(1, 0, 0, 36),
+                Position = UDim2.fromScale(0, 1),
 
                 [Children] = {
-                    Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 2)),
-                    Components.Dropdown({
-                        Header = "About the Audio Library",
-                        DefaultState = true,
-                        LayoutOrder = 1
-                    }, function(visible)
-                        return Components.DropdownTextlabel {
-                            TextXAlignment = Enum.TextXAlignment.Left,
-                            DropdownVisible = visible,
-                            Text = [[The audio library allows map creators to find approved music submitted by creators for use in their maps. This list automatically updates with the latest audio.
-                            
-Below you can search, preview, and select audios to use for your map.]],
-                            LayoutOrder = 2
-                        }
-                    end, true),
-
-                    Components.Dropdown({
-                        Header = "How to submit Audios",
-                        DefaultState = false,
-                        LayoutOrder = 3
-                    }, function(visible)
-                        return Components.DropdownTextlabel {
-                            TextXAlignment = Enum.TextXAlignment.Left,
-                            DropdownVisible = visible,
-                            Text = [[<b>1)</b> In the TRIA discord server, run the "/submitAudio" command and provide it with the Audio Name, Audio Artist, License, and Audio File
-
-<b>2)</b> Wait for an authorised staff member to approve your audio
-
-<b>3)</b> Your audio will be visible here once approved and uploaded!]],
-                            LayoutOrder = 2
-                        }
-                    end, true),
-
-                    Components.FrameHeader("Audio Library", 4, nil, nil, nil),
-
-                    New "Frame" { -- Holder
-                        AnchorPoint = Vector2.new(0.5, 0),
+                    Components.ImageButton { -- Skip to first page
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        Active = Util.interfaceActive,
                         BackgroundTransparency = 1,
-                        Position = UDim2.fromScale(0.5, 0),
-                        Size = UDim2.fromScale(1, 0.85),
+                        LayoutOrder = 1,
+                        ImageColor3 = Theme.SubText.Default,
+                        Image = "rbxassetid://4458877936",
+                        Rotation = 180,
+                        Position = UDim2.fromScale(0.1, 0.5),
+                        Size = UDim2.new(0.2, -5, 1, -5),
+                        
+                        [Children] = Components.Constraints.UIAspectRatio(1),
+                        [OnEvent "Activated"] = function()
+                            pageLayout:get(false):JumpToIndex(0)
+                            CURRENT_PAGE_COUNT:set(1)
+                        end
+                    },
+                    
+                    Components.ImageButton { -- Skip one page left
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        Active = Util.interfaceActive,
+                        BackgroundTransparency = 1,
+                        Image = "rbxassetid://6031094687",
+                        LayoutOrder = 2,
+                        Rotation = 90,
+                        ImageColor3 = Theme.SubText.Default,
+                        Position = UDim2.fromScale(0.3, 0.5),
+                        Size = UDim2.new(0.2, -5, 1, -5),
+
+                        [Children] = Components.Constraints.UIAspectRatio(1),
+                        [OnEvent "Activated"] = function()
+                            pageLayout:get(false):Previous()
+
+                            local currentPage = CURRENT_PAGE_COUNT:get(false)
+                            CURRENT_PAGE_COUNT:set((currentPage - 1 < 1 and TOTAL_PAGE_COUNT:get(false) or currentPage - 1))
+                        end
+                    },
+                    
+                    New "TextLabel" {
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        BackgroundTransparency = 1,
+                        LayoutOrder = 3,
+                        Text = Computed(function()
+                            return ("Page %d/%d"):format(CURRENT_PAGE_COUNT:get(), TOTAL_PAGE_COUNT:get())
+                        end),
+                        TextColor3 = Theme.MainText.Default,
+                        TextXAlignment = Enum.TextXAlignment.Center,
+                        TextSize = 16,
+                        Font = Enum.Font.SourceSansSemibold,
+                        Position = UDim2.fromScale(0.5, 0.5),
+                        Size = UDim2.new(0.2, -5, 1, -5),
+                    },
+
+                    Components.ImageButton { -- Skip one page right
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        Active = Util.interfaceActive,
+                        BackgroundTransparency = 1,
+                        LayoutOrder = 4,
+                        Image = "rbxassetid://6031094687",
+                        ImageColor3 = Theme.SubText.Default,
+                        Rotation = -90,
+                        Position = UDim2.fromScale(0.7, 0.5),
+                        Size = UDim2.new(0.2, -5, 1, -5),
+
+                        [Children] = Components.Constraints.UIAspectRatio(1),
+                        [OnEvent "Activated"] = function()
+                            pageLayout:get(false):Next()
+
+                            local currentPage = CURRENT_PAGE_COUNT:get(false)
+                            CURRENT_PAGE_COUNT:set((currentPage + 1 > TOTAL_PAGE_COUNT:get(false) and 1 or currentPage + 1))
+                        end
+                    },
+
+                    Components.ImageButton { -- Skip to end page
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        Active = Util.interfaceActive,
+                        BackgroundTransparency = 1,
                         LayoutOrder = 5,
+                        Image = "rbxassetid://4458877936",
+                        Position = UDim2.fromScale(0.9, 0.5),
+                        ImageColor3 = Theme.SubText.Default,
+                        Size = UDim2.new(0.2, -5, 1, -5),
+
+                        [Children] = Components.Constraints.UIAspectRatio(1),
+                        [OnEvent "Activated"] = function()
+                            pageLayout:get(false):JumpToIndex(TOTAL_PAGE_COUNT:get(false) - 1)
+                            CURRENT_PAGE_COUNT:set(TOTAL_PAGE_COUNT:get(false))
+                        end
+                    },
+
+                    New "Frame" { -- Line
+                        BackgroundColor3 = Theme.Border.Default,
+                        Position = UDim2.new(0, 0, 0, -2),
+                        Size = UDim2.new(1, 0, 0, 2)
+                    },
+                }
+            },
+
+
+            New "Frame" { -- Holder
+                AnchorPoint = Vector2.new(0.5, 0),
+                BackgroundTransparency = 1,
+                Position = UDim2.fromScale(0.5, 0),
+                Size = UDim2.fromScale(1, 0.85),
+                LayoutOrder = 5,
+
+                [Children] = {
+                    New "Frame" { -- Status Message
+                        BackgroundTransparency = 1,
+                        Size = UDim2.fromScale(1, 0.95),
+                        Visible = Computed(function()
+                            return CURRENT_FETCH_STATUS:get() ~= "Success"
+                        end),
 
                         [Children] = {
-                            New "Frame" { -- Status Message
+                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 2), Enum.VerticalAlignment.Center),
+                            New "ImageLabel" {
                                 BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(1, 0.95),
-                                Visible = Computed(function()
-                                    return CURRENT_FETCH_STATUS:get() ~= "Success"
-                                end),
-
-                                [Children] = {
-                                    Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 2), Enum.VerticalAlignment.Center),
-                                    New "ImageLabel" {
-                                        BackgroundTransparency = 1,
-                                        Size = UDim2.fromOffset(24, 24),
-                                        Image = "rbxasset://textures/ui/ErrorIcon.png",
-                                    },
-                                    New "TextLabel" {
-                                        AutomaticSize = Enum.AutomaticSize.Y,
-                                        BackgroundTransparency = 1,
-                                        Size = UDim2.fromScale(0.75, 0),
-                                        Text = Computed(function()
-                                            return STATUS_ERRORS[CURRENT_FETCH_STATUS:get()] or "N/A"
-                                        end),
-                                        TextSize = 18,
-                                        TextWrapped = true,
-                                        TextColor3 = Theme.SubText.Default,
-                                        TextXAlignment = Enum.TextXAlignment.Center,
-                                        TextYAlignment = Enum.TextYAlignment.Top
-                                    },
-                                    Components.TextButton {
-                                        Active = Util.interfaceActive,
-                                        Size = UDim2.fromScale(0.5, 0.05),
-                                        BackgroundColor3 = Theme.Button.Default,
-                                        Text = "Retry",
-
-                                        [Children] = {
-                                            Components.Constraints.UICorner(0, 8),
-                                            Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
-                                        },
-
-                                        [OnEvent "Activated"] = function()
-                                            if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) then
-                                                task.spawn(fetchApi)
-                                            end
-                                        end
-                                    }
-                                }
+                                Size = UDim2.fromOffset(24, 24),
+                                Image = "rbxasset://textures/ui/ErrorIcon.png",
                             },
-
-                            New "Frame" { -- Audio Library
+                            New "TextLabel" {
+                                AutomaticSize = Enum.AutomaticSize.Y,
                                 BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(1, 1),
-                                Visible = Computed(function()
-                                    return CURRENT_FETCH_STATUS:get() == "Success"
+                                Size = UDim2.fromScale(0.75, 0),
+                                Text = Computed(function()
+                                    return STATUS_ERRORS[CURRENT_FETCH_STATUS:get()] or "N/A"
                                 end),
+                                TextSize = 18,
+                                TextWrapped = true,
+                                TextColor3 = Theme.SubText.Default,
+                                TextXAlignment = Enum.TextXAlignment.Center,
+                                TextYAlignment = Enum.TextYAlignment.Top
+                            },
+                            Components.TextButton {
+                                Active = Util.interfaceActive,
+                                Size = UDim2.fromScale(0.5, 0.05),
+                                BackgroundColor3 = Theme.Button.Default,
+                                Text = "Retry",
 
                                 [Children] = {
-                                    New "Frame" { -- Main
-                                        BackgroundTransparency = 1,
-                                        Size = UDim2.fromScale(1, 0.925),
+                                    Components.Constraints.UICorner(0, 8),
+                                    Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
+                                },
 
-                                        [Children] = {
-                                            Hydrate(Components.Constraints.UIPageLayout(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
-                                                return TOTAL_PAGE_COUNT:get() > 1
-                                            end))) {
-                                                [Ref] = pageLayout
-                                            },
-
-                                            Computed(getAudioChildren)
-                                        }
-                                    },
-
-                                    New "Frame" { -- Page Cycler
-                                        BackgroundColor3 = Color3.new(),
-                                        BackgroundTransparency = 0.25,
-                                        Size = UDim2.fromScale(1, 0.075),
-                                        Position = UDim2.fromScale(0, 0.925),
-
-                                        [Children] = {
-                                            Components.ImageButton { -- Skip to first page
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                                Active = Util.interfaceActive,
-                                                BackgroundTransparency = 1,
-                                                LayoutOrder = 1,
-                                                Image = "rbxassetid://4458877936",
-                                                Rotation = 180,
-                                                Position = UDim2.fromScale(0.1, 0.5),
-                                                Size = UDim2.new(0.2, -5, 1, -5),
-                                                
-                                                [Children] = Components.Constraints.UIAspectRatio(1),
-                                                [OnEvent "Activated"] = function()
-                                                    pageLayout:get(false):JumpToIndex(0)
-                                                    CURRENT_PAGE_COUNT:set(1)
-                                                end
-                                            },
-                                            
-                                            Components.ImageButton { -- Skip one page left
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                                Active = Util.interfaceActive,
-                                                BackgroundTransparency = 1,
-                                                Image = "rbxassetid://6031094687",
-                                                LayoutOrder = 2,
-                                                Rotation = 90,
-                                                Position = UDim2.fromScale(0.3, 0.5),
-                                                Size = UDim2.new(0.2, -5, 1, -5),
-                                
-                                                [Children] = Components.Constraints.UIAspectRatio(1),
-                                                [OnEvent "Activated"] = function()
-                                                    pageLayout:get(false):Previous()
-
-                                                    local currentPage = CURRENT_PAGE_COUNT:get(false)
-                                                    CURRENT_PAGE_COUNT:set((currentPage - 1 < 1 and TOTAL_PAGE_COUNT:get(false) or currentPage - 1))
-                                                end
-                                            },
-                                            
-                                            New "TextLabel" {
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                                BackgroundTransparency = 1,
-                                                LayoutOrder = 3,
-                                                Text = Computed(function()
-                                                    return ("Page %d/%d"):format(CURRENT_PAGE_COUNT:get(), TOTAL_PAGE_COUNT:get())
-                                                end),
-                                                TextColor3 = Theme.TitlebarText.Default,
-                                                TextXAlignment = Enum.TextXAlignment.Center,
-                                                TextSize = 16,
-                                                Position = UDim2.fromScale(0.5, 0.5),
-                                                Size = UDim2.new(0.2, -5, 1, -5),
-                                            },
-
-                                            Components.ImageButton { -- Skip one page right
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                                Active = Util.interfaceActive,
-                                                BackgroundTransparency = 1,
-                                                LayoutOrder = 4,
-                                                Image = "rbxassetid://6031094687",
-                                                Rotation = -90,
-                                                Position = UDim2.fromScale(0.7, 0.5),
-                                                Size = UDim2.new(0.2, -5, 1, -5),
-
-                                                [Children] = Components.Constraints.UIAspectRatio(1),
-                                                [OnEvent "Activated"] = function()
-                                                    pageLayout:get(false):Next()
-
-                                                    local currentPage = CURRENT_PAGE_COUNT:get(false)
-                                                    CURRENT_PAGE_COUNT:set((currentPage + 1 > TOTAL_PAGE_COUNT:get(false) and 1 or currentPage + 1))
-                                                end
-                                            },
-
-                                            Components.ImageButton { -- Skip to end page
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                                Active = Util.interfaceActive,
-                                                BackgroundTransparency = 1,
-                                                LayoutOrder = 5,
-                                                Image = "rbxassetid://4458877936",
-                                                Position = UDim2.fromScale(0.9, 0.5),
-                                                Size = UDim2.new(0.2, -5, 1, -5),
-
-                                                [Children] = Components.Constraints.UIAspectRatio(1),
-                                                [OnEvent "Activated"] = function()
-                                                    pageLayout:get(false):JumpToIndex(TOTAL_PAGE_COUNT:get(false) - 1)
-                                                    CURRENT_PAGE_COUNT:set(TOTAL_PAGE_COUNT:get(false))
-                                                end
-                                            }
-                                        }
-                                    },
-
-                                    New "Frame" { -- Line
-                                        BackgroundColor3 = Theme.Border.Default,
-                                        Position = UDim2.new(0, 0, 1, -2),
-                                        Size = UDim2.new(1, 0, 0, 2)
-                                    },
-                                }
+                                [OnEvent "Activated"] = function()
+                                    if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) then
+                                        task.spawn(fetchApi)
+                                    end
+                                end
                             }
                         }
                     },
+
+                    New "Frame" { -- Audio Library
+                        BackgroundTransparency = 1,
+                        Size = UDim2.fromScale(1, 1),
+                        Visible = Computed(function()
+                            return CURRENT_FETCH_STATUS:get() == "Success"
+                        end),
+
+                        [Children] = {
+                            New "Frame" { -- Main
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(1, 0.925),
+
+                                [Children] = {
+                                    Hydrate(Components.Constraints.UIPageLayout(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                        return TOTAL_PAGE_COUNT:get() > 1
+                                    end))) {
+                                        [Ref] = pageLayout
+                                    },
+
+                                    Computed(getAudioChildren)
+                                }
+                            },
+                        }
+                    }
                 }
-            }
+            },
         }
     }
 end
