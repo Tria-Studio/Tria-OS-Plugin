@@ -30,7 +30,7 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
     end)
 
     local backFrameSize = Computed(function()
-        return UDim2.fromScale(data.Value:get() / max:get(), 1)
+        return UDim2.fromScale(data.Value:get() / max:get(), 0.8)
     end)
 
     local function updateSliderValue(mousePos: Vector2)
@@ -51,7 +51,7 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = data.Position,
         Size = data.Size,
-        BackgroundColor3 = Theme.SubText.Default,
+        BackgroundColor3 = Theme.Mid.Default,
         ImageTransparency = 1,
         Visible = if data.Visible then data.Visible else true,
 
@@ -76,18 +76,19 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
             New "ImageButton" {
                 ImageTransparency = 1,
                 AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundColor3 = Color3.fromRGB(200, 200, 200),
+                BackgroundColor3 = Theme.DimmedText.Default,
                 Position = sliderPosition,
 
-                Size = UDim2.fromScale(1.6, 1.6),
+                Size = UDim2.fromScale(1.8, 1.8),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
+                AutoButtonColor = true,
 
                 [Ref] = sliderButton,
 
                 [Children] = {
                     Constraints.UICorner(1, 0),
-                    Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
+                    Constraints.UIStroke(1, Theme.Border.Default, Enum.ApplyStrokeMode.Border)
                 },
 
                 [OnEvent "MouseButton1Up"] = function()
@@ -102,7 +103,7 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
             },
 
             New "Frame" {
-                BackgroundColor3 = Color3.fromRGB(255, 180, 0),
+                BackgroundColor3 = Theme.MainButton.Default,
                 Size = backFrameSize,
 
                 [Children] = Constraints.UICorner(0, 8)

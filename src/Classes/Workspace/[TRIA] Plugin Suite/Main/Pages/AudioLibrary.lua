@@ -29,7 +29,7 @@ local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
-local ITEMS_PER_PAGE = 8
+local ITEMS_PER_PAGE = 12
 local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
 local CURRENT_FETCH_STATUS = Value("Fetching")
@@ -114,17 +114,18 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     end)
 
     return New "Frame" {
-        BackgroundColor3 = Color3.new(),
-        BackgroundTransparency = 0.8,
-        Size = UDim2.new(1, 0, 1 / ITEMS_PER_PAGE, -4),
+        BackgroundColor3 = Theme.CategoryItem.Default,
+        Size = UDim2.new(1, 0, 1 / ITEMS_PER_PAGE, -2),
         
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
                 Size = UDim2.fromScale(0.4, 1),
-                Position = UDim2.fromScale(0, 0),
-                Text = ("%s - %s"):format(data.Artist, data.Name),
-                TextColor3 = Theme.SubText.Default,
+                Position = UDim2.fromScale(.005, 0),
+                Text = ("<b>%s</b>\n%s"):format(data.Artist, data.Name),
+                TextColor3 = Theme.MainText.Default,
+                LineHeight = 1.1,
+                RichText = true,
                 TextTruncate = Enum.TextTruncate.AtEnd,
                 TextSize = 15,
                 TextXAlignment = Enum.TextXAlignment.Left,
@@ -133,14 +134,17 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
             },
 
             Components.TextButton {
-                Size = UDim2.fromScale(0.1, 0.9),
-                Position = UDim2.new(0.875, 0, 0.05, 0),
-                Text = "Set Map BGM",
+                Size = UDim2.new(0, 32, 0.6, 0),
+                Position = UDim2.new(1, -8, 0.5, 0),
+                AnchorPoint = Vector2.new(1, .5),
+                Text = "Use",
+                Font = Enum.Font.SourceSansBold,
+                BackgroundColor3 = Theme.MainButton.Default,
                 TextSize = 15,
-                TextScaled = true,
+                TextColor3 = Theme.BrightText.Default,
 
                 [Children] = {
-                    Components.Constraints.UICorner(0, 8),
+                    Components.Constraints.UICorner(0, 6),
                     Components.Constraints.UIPadding(UDim.new(0, 2), UDim.new(0, 2), UDim.new(0, 2), UDim.new(0, 2))
                 },
 
@@ -160,36 +164,43 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 AnchorPoint = Vector2.new(0.5, 0),
                 BackgroundTransparency = 1,
                 Size = UDim2.fromScale(0.425, 0.8),
-                Position = UDim2.new(0.675, 0, 0.2, 0),
+                Position = UDim2.new(0.7, 0, 0.2, 0),
 
                 [Children] = {
                     Components.Slider {
                         Value = timePosition,
                         Min = Value(0),
                         Max = soundLength,
-                        Position = UDim2.fromScale(0.5, 0.4),
+                        Position = UDim2.fromScale(0.5, 0.225),
                         Size = UDim2.fromScale(0.7, 0.25),
                         Increment = 1,
                     },
 
                     New "TextLabel" {
                         BackgroundTransparency = 1,
-                        Position = UDim2.new(0.15, 0, 0.7, -1),
+                        Position = UDim2.new(0.15, 0, 0.5, 1),
                         Size = UDim2.fromScale(0.7, 0.25),
+                        TextSize = 14,
                         Text = Computed(function()
                             return Util.secondsToTime(timePosition:get()) .. "/" .. Util.secondsToTime(soundLength:get())
                         end),
-                        TextColor3 = Theme.SubText.Default,
+                        TextColor3 = Theme.MainText.Default,
                     },
 
                     New "ImageButton" {
                         Image = Computed(function()
-                            return "rbxasset://textures/StudioToolbox/AudioPreview/" .. (currentAudio:get() == previewSound and "Pause" or "Play") .. ".png"
+                            return currentAudio:get() == previewSound and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                        end),
+                        HoverImage = Computed(function()
+                            return currentAudio:get() == previewSound and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
                         BackgroundTransparency = 1,
+                        ImageColor3 = Computed(function()
+                            return currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                        end),
                         AnchorPoint = Vector2.new(0.5, 0.5),
-                        Position = UDim2.fromScale(0, 0.4),
-                        Size = UDim2.fromScale(0.6, 0.6),
+                        Position = UDim2.fromScale(-.01, 0.175),
+                        Size = UDim2.fromScale(0.7, 0.7),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         
                         [Children] = Components.Constraints.UICorner(1, 0),
@@ -297,7 +308,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         [Children] = {
             Components.PageHeader("Audio Library"),
             New "Frame" { -- Page Cycler
-                BackgroundColor3 = Theme.InputFieldBackground.Default,
+                BackgroundColor3 = Theme.RibbonTab.Default,
                 AnchorPoint = Vector2.new(0, 1),
                 Size = UDim2.new(1, 0, 0, 36),
                 Position = UDim2.fromScale(0, 1),
@@ -401,13 +412,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 }
             },
 
-
             New "Frame" { -- Holder
-                AnchorPoint = Vector2.new(0.5, 0),
-                BackgroundTransparency = 1,
-                Position = UDim2.fromScale(0.5, 0),
-                Size = UDim2.fromScale(1, 0.85),
-                LayoutOrder = 5,
+                BackgroundColor3 = Theme.TableItem.Default,
+                Position = UDim2.new(0, 0, 0, 30),
+                Size = UDim2.new(1, 0, 1, -68),
+                LayoutOrder = 2,
 
                 [Children] = {
                     New "Frame" { -- Status Message
@@ -470,7 +479,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Size = UDim2.fromScale(1, 0.925),
 
                                 [Children] = {
-                                    Hydrate(Components.Constraints.UIPageLayout(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
                                         return TOTAL_PAGE_COUNT:get() > 1
                                     end))) {
                                         [Ref] = pageLayout

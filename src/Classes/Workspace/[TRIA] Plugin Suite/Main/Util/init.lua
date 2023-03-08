@@ -338,7 +338,7 @@ function Util.secondsToTime(t: number): string
     
     for i = 1, #formatters do
         if math.floor(formatters[i]) > 0 or i > 1 then
-            timeStr ..= ("%02i%s"):format(formatters[i], i == #formatters and "" or ":")
+            timeStr ..= (i == 2 and "%01i%s" or "%02i%s"):format(formatters[i], i == #formatters and "" or ":")
         end
     end
 

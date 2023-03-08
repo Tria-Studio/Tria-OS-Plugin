@@ -114,6 +114,9 @@ local themes = {
     Mid = {
         Default = Value(StudioTheme:GetColor(GuideColor.Mid)),
     },
+    RibbonTab = {
+        Default = Value(StudioTheme:GetColor(GuideColor.RibbonTab)),
+    },
 }
 
 settings().Studio.ThemeChanged:Connect(function()
