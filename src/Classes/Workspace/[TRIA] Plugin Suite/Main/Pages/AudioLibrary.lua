@@ -216,6 +216,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                 if playing then
                                     fade(playing, "Out")
                                 end
+
                                 previewSound.Volume = 0
                                 previewSound.TimePosition = timePosition:get(false)
                                 previewSound:Resume()
