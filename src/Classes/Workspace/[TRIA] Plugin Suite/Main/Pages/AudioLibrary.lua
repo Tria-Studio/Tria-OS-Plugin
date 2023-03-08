@@ -29,8 +29,9 @@ local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
+local AbsSize = Value()
 local ITEMS_PER_PAGE = Computed(function()
-    return 12 -- Change this to some calculation
+    return AbsSize:get() and math.floor((AbsSize:get().Y + 32) / 40) or 12
 end)
 local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
@@ -119,8 +120,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = Computed(function()
-            -- Todo: make this offset
-            return UDim2.new(1, 0, 1 / ITEMS_PER_PAGE:get(), -2)
+            return UDim2.new(1, 0, 0, 36)
         end),
         
         [Children] = {
@@ -496,6 +496,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [Children] = {
                             New "Frame" { -- Main
+                                [Fusion.Out "AbsoluteSize"] = AbsSize, 
+
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(1, 0.925),
 
