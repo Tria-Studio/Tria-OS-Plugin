@@ -50,7 +50,7 @@ local STATUS_ERRORS = {
 local currentAudio = Value(nil)
 
 local lastFetchTime = 0
-local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
 local oldUniverseId = game.GameId
 local oldPlaceId = game.PlaceId
@@ -61,7 +61,6 @@ local function toggleAudioPerms(enabled: boolean)
 end
 
 local function fade(sound: Sound, direction: string)
-    print("Fading", sound.Name, direction)
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
 
@@ -76,7 +75,6 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     local timePosition = Value(0)
 
     local previewSound = PlguinSoundManager:QueueSound(data.ID)
-    previewSound.Volume = 0
     previewSound.Name = data.Name
 
     local soundLength = Value(1)
@@ -218,6 +216,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                 if playing then
                                     fade(playing, "Out")
                                 end
+                                previewSound.Volume = 0
                                 previewSound.TimePosition = timePosition:get(false)
                                 previewSound:Resume()
                                 currentAudio:set(previewSound)
