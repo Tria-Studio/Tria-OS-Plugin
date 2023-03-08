@@ -327,6 +327,29 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         [Children] = {
             Components.PageHeader("Audio Library"),
+            New "TextBox" {
+                Size = UDim2.new(1, 0, 0, 30),
+                TextColor3 = Theme.MainText.Default,
+                Font = Enum.Font.SourceSansSemibold,
+                PlaceholderColor3 = Theme.DimmedText.Default,
+                PlaceholderText = "Search Artist & Titles",
+                BackgroundColor3 = Theme.InputFieldBackground.Default,
+                BorderColor3 = Theme.InputFieldBorder.Default,
+                BorderMode = Enum.BorderMode.Inset,
+                BorderSizePixel = 2,
+
+                [Children] = {
+                    Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 30)),
+                    New "ImageButton" {
+                        Image = "rbxassetid://6031154871",
+                        BackgroundTransparency = 1,
+                        ImageColor3 = Theme.SubText.Default,
+                        ZIndex = 2,
+                        Size = UDim2.fromOffset(30, 30),
+                        Position = UDim2.new(1, 0, 0, 0)
+                    }
+                }
+            },
             New "Frame" { -- Page Cycler
                 BackgroundColor3 = Theme.RibbonTab.Default,
                 AnchorPoint = Vector2.new(0, 1),
