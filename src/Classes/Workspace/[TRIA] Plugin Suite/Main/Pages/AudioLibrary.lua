@@ -36,7 +36,6 @@ local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
 
 local CURRENT_FETCH_STATUS = Value("Fetching")
-local CURRENT_FETCH_ERR = Value("")
 
 local FETCHED_AUDIO_DATA = Value({})
 local CURRENT_AUDIO_DATA = Value({})
@@ -289,7 +288,6 @@ local function fetchApi()
     local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
     
     CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
-    CURRENT_FETCH_ERR:set(if not fired then errorDetails else "")
     
     if fired then
         local newData = {}
