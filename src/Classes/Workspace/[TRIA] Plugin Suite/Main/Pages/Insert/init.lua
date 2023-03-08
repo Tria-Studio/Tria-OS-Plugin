@@ -339,7 +339,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             },
                         }
                     },
-                    Components.Spacer(false, 10, 45, nil, Theme.MainBackground.Default)
                 }
             }, true)
         }
