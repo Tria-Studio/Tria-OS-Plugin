@@ -29,7 +29,9 @@ local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
-local ITEMS_PER_PAGE = 12
+local ITEMS_PER_PAGE = Computed(function()
+    return 12 -- Change this to some calculation
+end)
 local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
 local CURRENT_FETCH_STATUS = Value("Fetching")
@@ -115,7 +117,10 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
-        Size = UDim2.new(1, 0, 1 / ITEMS_PER_PAGE, -2),
+        Size = Computed(function()
+            -- Todo: make this offset
+            return UDim2.new(1, 0, 1 / ITEMS_PER_PAGE:get(), -2)
+        end),
         
         [Children] = {
             New "TextLabel" {
@@ -233,14 +238,17 @@ local function getAudioChildren(): {Instance}
     local children = {}
 
     local assets = CURRENT_AUDIO_DATA:get()
+    local itemsPerPage = ITEMS_PER_PAGE:get()
+
     local totalAssets = #assets
-    local totalPages = math.ceil(totalAssets / ITEMS_PER_PAGE)
+    local totalPages = math.ceil(totalAssets / itemsPerPage)
+
     local assetsRemaining = totalAssets
 
     for index = 1, totalPages do
-        local pageAssetCount = assetsRemaining > ITEMS_PER_PAGE and ITEMS_PER_PAGE or assetsRemaining
+        local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
 
-		local startIndex = ((index - 1) * ITEMS_PER_PAGE) + 1
+		local startIndex = ((index - 1) * itemsPerPage) + 1
 		local endIndex = (startIndex + pageAssetCount) - 1
 
         table.insert(children, New "Frame" {
@@ -260,7 +268,7 @@ local function getAudioChildren(): {Instance}
             }
         })
 
-        assetsRemaining -= ITEMS_PER_PAGE
+        assetsRemaining -= itemsPerPage
     end
 
     TOTAL_PAGE_COUNT:set(totalPages)
