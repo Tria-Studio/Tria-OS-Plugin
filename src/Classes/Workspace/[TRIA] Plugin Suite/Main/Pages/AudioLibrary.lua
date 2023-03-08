@@ -497,7 +497,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 function frame.OnClose()
-    fetchApi()
+    task.spawn(fetchApi)
     local playing = currentAudio:get(false)
     if not playing then
         return
