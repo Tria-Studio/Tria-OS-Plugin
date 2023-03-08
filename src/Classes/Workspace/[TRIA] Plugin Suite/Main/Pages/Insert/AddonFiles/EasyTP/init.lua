@@ -21,9 +21,7 @@ local teleportParts = {}
 local overlapParams = OverlapParams.new()
 overlapParams.FilterType = Enum.RaycastFilterType.Whitelist
 
-local colorCorrection = Instance.new("ColorCorrectionEffect")
-colorCorrection.Name = "EasyTPColorCorrection"
-colorCorrection.Parent = Lighting
+local colorCorrection
 
 local EasyTP = {}
 
@@ -60,6 +58,10 @@ end
 if RunService:IsStudio() then
 	return {Teleport = 0}
 end
+
+colorCorrection = Instance.new("ColorCorrectionEffect")
+colorCorrection.Name = "EasyTPColorCorrection"
+colorCorrection.Parent = Lighting
 
 local folder = currentMap:FindFirstChild("Special") or currentMap
 for _, part in ipairs(folder:GetDescendants()) do
