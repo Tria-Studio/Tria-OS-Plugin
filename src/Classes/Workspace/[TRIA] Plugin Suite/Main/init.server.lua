@@ -176,6 +176,7 @@ local mainFrame = New "Frame" {
 				}
 			}
 		},
+		
 		Message,
 		ColorWheel:GetUI(),
 
