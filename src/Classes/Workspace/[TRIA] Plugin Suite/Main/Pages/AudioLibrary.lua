@@ -382,12 +382,14 @@ local function SearchBox(data: PublicTypes.Dictionary): Instance
 end
 
 local function jumpToPage(pageNumber: number)
-    pageLayout:get(false):JumpToIndex(pageNumber - 1)
-    pageData.current:set(math.clamp(pageNumber, 1, pageData.total:get(false)))
+    local newPage = math.clamp(pageNumber, 1, pageData.total:get(false))
+
+    pageLayout:get(false):JumpToIndex(newPage - 1)
+    pageData.current:set(newPage)
 end
 
 local function incrementPage(increment: number)
-    jumpToPage(math.clamp(pageData.current:get(false) + increment, 1, pageData.total:get(false)))
+    jumpToPage(pageData.current:get(false) + increment)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
