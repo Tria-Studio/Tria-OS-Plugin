@@ -32,16 +32,20 @@ local frame = {}
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local frameAbsoluteSize = Value()
+
 local searchData = {
     name = Value(""),
     artist = Value("")
 }
 
+local pageData = {
+    current = Value(0),
+    total = Value(0)
+}
+
 local ITEMS_PER_PAGE = Computed(function()
     return frameAbsoluteSize:get() and math.floor((frameAbsoluteSize:get().Y + 32) / 40) or 12
 end)
-local CURRENT_PAGE_COUNT = Value(0)
-local TOTAL_PAGE_COUNT = Value(0)
 
 local CURRENT_FETCH_STATUS = Value("Fetching")
 local FETCHED_AUDIO_DATA = Value({})
@@ -306,7 +310,7 @@ local function getAudioChildren(): {Instance}
         assetsRemaining -= itemsPerPage
     end
 
-    TOTAL_PAGE_COUNT:set(totalPages)
+    pageData.total:set(totalPages)
     return children
 end
 
@@ -342,7 +346,7 @@ local function fetchApi()
             end
         end)
 
-        CURRENT_PAGE_COUNT:set(#newData > 0 and 1 or 0)
+        pageData.current:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
     end
 end
@@ -374,6 +378,15 @@ local function SearchBox(data: PublicTypes.Dictionary): Instance
             }
         }
     }
+end
+
+local function jumpToPage(pageNumber: number)
+    pageLayout:get(false):JumpToIndex(pageNumber - 1)
+    pageData.current:set(pageNumber)
+end
+
+local function incrementPage(increment: number)
+    
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -412,7 +425,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         BackgroundTransparency = 1,
                         LayoutOrder = 1,
                         ImageColor3 = Computed(function()
-                            return CURRENT_PAGE_COUNT:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                            return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Image = "rbxassetid://4458877936",
                         Rotation = 180,
@@ -421,8 +434,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
-                            pageLayout:get(false):JumpToIndex(0)
-                            CURRENT_PAGE_COUNT:set(1)
+                            jumpToPage(1)
                         end
                     },
                     
@@ -434,19 +446,14 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         LayoutOrder = 2,
                         Rotation = 90,
                         ImageColor3 = Computed(function()
-                            return CURRENT_PAGE_COUNT:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                            return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Position = UDim2.fromScale(0.3, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
-                            local currentPage = CURRENT_PAGE_COUNT:get(false)
-
-                            if currentPage - 1 >= 1 then
-                                pageLayout:get(false):Previous()
-                                CURRENT_PAGE_COUNT:set((currentPage - 1))
-                            end
+                            incrementPage(-1)
                         end
                     },
                     
@@ -455,7 +462,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         BackgroundTransparency = 1,
                         LayoutOrder = 3,
                         Text = Computed(function()
-                            return ("Page %d/%d"):format(CURRENT_PAGE_COUNT:get(), TOTAL_PAGE_COUNT:get())
+                            return ("Page %d/%d"):format(pageData.current:get(), pageData.total:get())
                         end),
                         TextColor3 = Theme.MainText.Default,
                         TextXAlignment = Enum.TextXAlignment.Center,
@@ -472,7 +479,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         LayoutOrder = 4,
                         Image = "rbxassetid://6031094687",
                         ImageColor3 = Computed(function()
-                            return CURRENT_PAGE_COUNT:get() == TOTAL_PAGE_COUNT:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                            return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Rotation = -90,
                         Position = UDim2.fromScale(0.7, 0.5),
@@ -480,12 +487,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
-                            local currentPage = CURRENT_PAGE_COUNT:get(false)
-
-                            if currentPage + 1 <= TOTAL_PAGE_COUNT:get(false) then
-                                pageLayout:get(false):Next()
-                                CURRENT_PAGE_COUNT:set(currentPage + 1)
-                            end
+                            incrementPage(1)
                         end
                     },
 
@@ -497,14 +499,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Image = "rbxassetid://4458877936",
                         Position = UDim2.fromScale(0.9, 0.5),
                         ImageColor3 = Computed(function()
-                            return CURRENT_PAGE_COUNT:get() == TOTAL_PAGE_COUNT:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                            return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Size = UDim2.new(0.2, -5, 1, -5),
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
-                            pageLayout:get(false):JumpToIndex(TOTAL_PAGE_COUNT:get(false) - 1)
-                            CURRENT_PAGE_COUNT:set(TOTAL_PAGE_COUNT:get(false))
+                            jumpToPage(pageData.total:get(false))
                         end
                     },
 
@@ -587,7 +588,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                                 [Children] = {
                                     Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
-                                        return TOTAL_PAGE_COUNT:get() > 1
+                                        return pageData.total:get() > 1
                                     end))) {
                                         [Ref] = pageLayout
                                     },
