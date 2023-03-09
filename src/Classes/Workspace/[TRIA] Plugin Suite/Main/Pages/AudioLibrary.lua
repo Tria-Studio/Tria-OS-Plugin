@@ -377,7 +377,7 @@ local function SearchBox(data: PublicTypes.Dictionary): Instance
 end
 
 local function jumpToPage(pageNumber: number)
-    print("Jumping", pageNumber)
+    print("Jumping to", math.clamp(pageNumber, 1, pageData.total:get(false)))
     local newPage = math.clamp(pageNumber, 1, pageData.total:get(false))
 
     pageLayout:get(false):JumpToIndex(newPage - 1)
@@ -635,8 +635,8 @@ function frame.OnClose()
 end
 
 Observer(pageData.total):onChange(function()
-    if pageData.total:get(false) < pageData.current:get(false) then
-        jumpToPage(pageData.total:get(false))
+    if pageData.current:get(false) > pageData.total:get(false) then
+        incrementPage(pageData.current:get(false) - pageData.total:get(false))
     end
 end)
 
