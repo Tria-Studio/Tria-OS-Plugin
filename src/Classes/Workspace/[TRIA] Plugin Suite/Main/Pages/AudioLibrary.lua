@@ -633,6 +633,13 @@ function frame.OnClose()
     currentAudio:set(nil)
 end
 
+Observer(pageData.total):onChange(function()
+    if pageData.total:get(false) > pageData.current:get(false) then
+        pageData.current:set(pageData.total:get(false))
+    end
+end)
+
 task.spawn(toggleAudioPerms, true)
 task.spawn(fetchApi)
+
 return frame
