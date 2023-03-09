@@ -394,7 +394,7 @@ local function incrementPage(increment: number)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
-    local pageTextbox = Value()
+    local textboxText = Value()
     
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -476,8 +476,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.fromScale(0.5, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
 
-                        [OnEvent "FocusLost"] = function()
-                            
+                        [Out "Text"] = textboxText,
+
+                        [OnEvent "FocusLost"] = function()    
                         end
                     },
 
