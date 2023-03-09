@@ -49,11 +49,11 @@ local FETCHED_AUDIO_DATA = Value({})
 local CURRENT_AUDIO_DATA = Computed(function()
     local newData = {}
 
+    local searchedArtist = searchData.artist:get()
+    local searchedName = searchData.name:get()
+
     for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
         local matches = true
-        
-        local searchedArtist = searchData.artist:get()
-        local searchedName = searchData.name:get()
 
         if #searchedArtist > 0 and tbl.Artist:lower():find(searchedArtist:lower()) == nil then
             matches = false
@@ -360,6 +360,8 @@ local function SearchBox(data: PublicTypes.Dictionary): Instance
         BorderMode = Enum.BorderMode.Inset,
         BorderSizePixel = 2,
 
+        [Out "Text"] = data.State,
+
         [Children] = {
             Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 30)),
             New "ImageButton" {
@@ -388,12 +390,14 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             SearchBox {
                 Position = UDim2.fromScale(0, 0),
                 Size = UDim2.new(0.5, 0, 0, 30),
-                Placeholder = "Search by Artist"
+                Placeholder = "Search by Artist",
+                State = searchData.artist
             },
             SearchBox {
                 Position = UDim2.fromScale(0.5, 0),
                 Size = UDim2.new(0.5, 0, 0, 30),
-                Placeholder = "Search by Name"
+                Placeholder = "Search by Name",
+                State = searchData.name
             },
             New "Frame" { -- Page Cycler
                 BackgroundColor3 = Theme.RibbonTab.Default,
