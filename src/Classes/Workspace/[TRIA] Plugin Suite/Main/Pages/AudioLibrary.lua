@@ -22,8 +22,7 @@ local Value = Fusion.Value
 local Hydrate = Fusion.Hydrate
 local Ref = Fusion.Ref
 local Observer = Fusion.Observer
-
-local plugin = script:FindFirstAncestorWhichIsA("Plugin")
+local Spring = Fusion.Spring
 
 local frame = {}
 
@@ -319,6 +318,8 @@ end
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local pageLayout = Value()
     
+    local LeftSpring
+    
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
@@ -362,7 +363,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Active = Util.interfaceActive,
                         BackgroundTransparency = 1,
                         LayoutOrder = 1,
-                        ImageColor3 = Theme.SubText.Default,
+                        ImageColor3 = Computed(function()
+                            return CURRENT_PAGE_COUNT:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                        end),
                         Image = "rbxassetid://4458877936",
                         Rotation = 180,
                         Position = UDim2.fromScale(0.1, 0.5),
@@ -382,16 +385,20 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Image = "rbxassetid://6031094687",
                         LayoutOrder = 2,
                         Rotation = 90,
-                        ImageColor3 = Theme.SubText.Default,
+                        ImageColor3 = Computed(function()
+                            return CURRENT_PAGE_COUNT:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                        end),
                         Position = UDim2.fromScale(0.3, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
-                            pageLayout:get(false):Previous()
-
                             local currentPage = CURRENT_PAGE_COUNT:get(false)
-                            CURRENT_PAGE_COUNT:set((currentPage - 1 < 1 and TOTAL_PAGE_COUNT:get(false) or currentPage - 1))
+
+                            if currentPage - 1 >= 1 then
+                                pageLayout:get(false):Previous()
+                                CURRENT_PAGE_COUNT:set((currentPage - 1))
+                            end
                         end
                     },
                     
@@ -416,17 +423,21 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         BackgroundTransparency = 1,
                         LayoutOrder = 4,
                         Image = "rbxassetid://6031094687",
-                        ImageColor3 = Theme.SubText.Default,
+                        ImageColor3 = Computed(function()
+                            return CURRENT_PAGE_COUNT:get() == TOTAL_PAGE_COUNT:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                        end),
                         Rotation = -90,
                         Position = UDim2.fromScale(0.7, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
-                            pageLayout:get(false):Next()
-
                             local currentPage = CURRENT_PAGE_COUNT:get(false)
-                            CURRENT_PAGE_COUNT:set((currentPage + 1 > TOTAL_PAGE_COUNT:get(false) and 1 or currentPage + 1))
+
+                            if currentPage + 1 <= TOTAL_PAGE_COUNT:get(false) then
+                                pageLayout:get(false):Next()
+                                CURRENT_PAGE_COUNT:set(currentPage + 1)
+                            end
                         end
                     },
 
@@ -437,7 +448,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         LayoutOrder = 5,
                         Image = "rbxassetid://4458877936",
                         Position = UDim2.fromScale(0.9, 0.5),
-                        ImageColor3 = Theme.SubText.Default,
+                        ImageColor3 = Computed(function()
+                            return CURRENT_PAGE_COUNT:get() == TOTAL_PAGE_COUNT:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                        end),
                         Size = UDim2.new(0.2, -5, 1, -5),
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
