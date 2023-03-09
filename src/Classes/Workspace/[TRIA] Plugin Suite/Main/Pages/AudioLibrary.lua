@@ -22,6 +22,7 @@ local Value = Fusion.Value
 local Hydrate = Fusion.Hydrate
 local Ref = Fusion.Ref
 local Observer = Fusion.Observer
+local Out = Fusion.Out
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
@@ -29,9 +30,9 @@ local frame = {}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
-local AbsSize = Value()
+local frameAbsoluteSize = Value()
 local ITEMS_PER_PAGE = Computed(function()
-    return AbsSize:get() and math.floor((AbsSize:get().Y + 32) / 40) or 12
+    return frameAbsoluteSize:get() and math.floor((frameAbsoluteSize:get().Y + 32) / 40) or 12
 end)
 local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
@@ -519,7 +520,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [Children] = {
                             New "Frame" { -- Main
-                                [Fusion.Out "AbsoluteSize"] = AbsSize, 
+                                [Out "AbsoluteSize"] = frameAbsoluteSize, 
 
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(1, 0.925),
