@@ -394,6 +394,8 @@ local function incrementPage(increment: number)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
+    local pageTextbox = Value()
+    
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
@@ -459,11 +461,12 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end
                     },
                     
-                    New "TextLabel" {
+                    New "TextBox" {
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         BackgroundTransparency = 1,
                         LayoutOrder = 3,
-                        Text = Computed(function()
+                        PlaceholderColor3 = Color3.fromRGB(120, 120, 120),
+                        PlaceholderText = Computed(function()
                             return ("Page %d/%d"):format(pageData.current:get(), pageData.total:get())
                         end),
                         TextColor3 = Theme.MainText.Default,
@@ -472,6 +475,10 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Font = Enum.Font.SourceSansSemibold,
                         Position = UDim2.fromScale(0.5, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
+
+                        [OnEvent "FocusLost"] = function()
+                            
+                        end
                     },
 
                     Components.ImageButton { -- Skip one page right
