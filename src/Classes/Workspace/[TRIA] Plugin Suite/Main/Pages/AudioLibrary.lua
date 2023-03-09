@@ -57,12 +57,10 @@ local CURRENT_AUDIO_DATA = Computed(function()
 
         if #searchedArtist > 0 and tbl.Artist:lower():find(searchedArtist:lower()) == nil then
             matches = false
-            break
         end
 
         if #searchedName > 0 and tbl.Name:lower():find(searchedName:lower()) == nil then
             matches = false
-            break
         end
 
         if matches then
