@@ -114,7 +114,6 @@ function Maid:DoCleaning()
 	local _task = task
 
 	local index, task = next(tasks)
-	print("Cleaning out")
 	while task ~= nil do
 		tasks[index] = nil
 		if type(task) == "function" then
@@ -127,7 +126,6 @@ function Maid:DoCleaning()
 		index, task = next(tasks)
 		_task.wait()
 	end
-	print("Cleaned")
 end
 
 --- Alias for DoCleaning()
