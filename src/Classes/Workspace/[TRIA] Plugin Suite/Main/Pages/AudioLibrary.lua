@@ -66,15 +66,10 @@ local CURRENT_AUDIO_DATA = Computed(function()
     local searchedName = searchData.name:get() or ""
 
     for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
-        local matches = true
-
-        if #searchedArtist > 0 and tbl.Artist:lower():find(searchedArtist:lower()) == nil then
-            matches = false
-        end
-
-        if #searchedName > 0 and tbl.Name:lower():find(searchedName:lower()) == nil then
-            matches = false
-        end
+        local matches = 
+            if #searchedArtist > 0 then tbl.Artist:lower():find(searchedArtist:lower()) ~= nil
+            elseif #searchedName > 0 and tbl.Name:lower():find(searchedName:lower()) ~= nil
+            else true
 
         if matches then
             table.insert(newData, tbl)
