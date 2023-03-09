@@ -32,6 +32,11 @@ local frame = {}
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local frameAbsoluteSize = Value()
+local searchData = {
+    name = Value(""),
+    artist = Value("")
+}
+
 local ITEMS_PER_PAGE = Computed(function()
     return frameAbsoluteSize:get() and math.floor((frameAbsoluteSize:get().Y + 32) / 40) or 12
 end)
@@ -39,9 +44,34 @@ local CURRENT_PAGE_COUNT = Value(0)
 local TOTAL_PAGE_COUNT = Value(0)
 
 local CURRENT_FETCH_STATUS = Value("Fetching")
-
 local FETCHED_AUDIO_DATA = Value({})
-local CURRENT_AUDIO_DATA = Value({})
+
+local CURRENT_AUDIO_DATA = Computed(function()
+    local newData = {}
+
+    for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
+        local matches = true
+        
+        local searchedArtist = searchData.artist:get()
+        local searchedName = searchData.name:get()
+
+        if #searchedArtist:get() > 0 and tbl.Artist:lower():find(searchedArtist:lower()) == nil then
+            matches = false
+            break
+        end
+
+        if #searchedName:get() > 0 and tbl.Name:lower():find(searchedName:lower()) == nil then
+            matches = false
+            break
+        end
+
+        if matches then
+            table.insert(newData, tbl)
+        end
+    end
+
+    return newData
+end)
 
 local STATUS_ERRORS = {
     ["Fetching"] = "Currently fetching the latest audio...",
