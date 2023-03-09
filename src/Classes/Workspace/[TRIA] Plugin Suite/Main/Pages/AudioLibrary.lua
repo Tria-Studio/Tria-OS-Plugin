@@ -634,7 +634,7 @@ function frame.OnClose()
 end
 
 Observer(pageData.total):onChange(function()
-    if pageData.total:get(false) > pageData.current:get(false) then
+    if pageData.total:get(false) < pageData.current:get(false) then
         pageData.current:set(pageData.total:get(false))
     end
 end)
