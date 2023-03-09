@@ -321,8 +321,6 @@ end
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local pageLayout = Value()
     
-    local LeftSpring
-    
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
