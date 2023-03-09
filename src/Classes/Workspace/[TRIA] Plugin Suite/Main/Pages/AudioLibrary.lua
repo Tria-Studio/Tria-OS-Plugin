@@ -634,7 +634,6 @@ function frame.OnClose()
 end
 
 Observer(pageData.total):onChange(function()
-    print(pageData.total:get(false), pageData.current:get(false))
     if pageData.total:get(false) < pageData.current:get(false) then
         pageData.current:set(pageData.total:get(false))
         task.wait()
