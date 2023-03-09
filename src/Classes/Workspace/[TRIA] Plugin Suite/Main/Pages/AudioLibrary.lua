@@ -334,12 +334,6 @@ local function getAudioChildren(): {Instance}
     end
 
     pageData.total:set(totalPages)
-    print(pageData.current:get(false), totalPages)
-    if pageData.current:get(false) > totalPages then
-        print("Changing page to", totalPages)
-        task.defer(jumpToPage, totalPages)
-    end
-
     return children
 end
 
