@@ -176,6 +176,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 Position = UDim2.new(1, -8, 0.5, 0),
                 AnchorPoint = Vector2.new(1, .5),
                 Text = "Use",
+                ZIndex = 3,
                 Font = Enum.Font.SourceSansBold,
                 BackgroundColor3 = Theme.MainButton.Default,
                 TextSize = 15,
@@ -237,6 +238,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                             return currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         AnchorPoint = Vector2.new(0.5, 0.5),
+                        ZIndex = 3,
                         Position = UDim2.fromScale(-.01, 0.175),
                         Size = UDim2.fromScale(0.7, 0.7),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
@@ -369,8 +371,8 @@ local function SearchBox(data: PublicTypes.Dictionary): Instance
                 BackgroundTransparency = 1,
                 ImageColor3 = Theme.SubText.Default,
                 ZIndex = 2,
-                Size = UDim2.fromOffset(30, 30),
-                Position = UDim2.new(1, 0, 0, 0)
+                Size = UDim2.fromOffset(26, 26),
+                Position = UDim2.new(1, 2, 0, 1)
             }
         }
     }
