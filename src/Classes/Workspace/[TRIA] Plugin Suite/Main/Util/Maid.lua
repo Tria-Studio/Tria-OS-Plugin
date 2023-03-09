@@ -112,6 +112,7 @@ function Maid:DoCleaning()
 
 	-- Clear out tasks table completely, even if clean up tasks add more tasks to the maid
 	local index, task = next(tasks)
+	print("Cleaning out")
 	while task ~= nil do
 		tasks[index] = nil
 		if type(task) == "function" then
@@ -122,7 +123,9 @@ function Maid:DoCleaning()
 			task:Destroy()
 		end
 		index, task = next(tasks)
+		task.wait()
 	end
+	print("Cleaned")
 end
 
 --- Alias for DoCleaning()
