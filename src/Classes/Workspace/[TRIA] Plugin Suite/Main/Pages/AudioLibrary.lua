@@ -32,6 +32,7 @@ local frame = {}
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local frameAbsoluteSize = Value()
+local pageLayout = Value()
 
 local searchData = {
     name = Value(""),
@@ -393,8 +394,6 @@ local function incrementPage(increment: number)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
-    local pageLayout = Value()
-    
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
