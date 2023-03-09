@@ -269,6 +269,20 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     }
 end
 
+local function jumpToPage(pageNumber: number)
+    local newPage = math.clamp(pageNumber, 1, math.max(1, pageData.total:get(false)))
+    local uiLayout = pageLayout:get(false)
+
+    if uiLayout then
+        uiLayout:JumpToIndex(newPage - 1)
+        pageData.current:set(newPage)
+    end
+end
+
+local function incrementPage(increment: number)
+    jumpToPage(pageData.current:get(false) + increment)
+end
+
 local function getAudioChildren(): {Instance}
     local children = {}
 
@@ -292,14 +306,27 @@ local function getAudioChildren(): {Instance}
             Size = UDim2.fromScale(1, 1),
 
             [Children] = {
-                Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
-                (function()
-                    local pageChildren = {}
-                    for count = startIndex, endIndex do
-                        table.insert(pageChildren, AudioButton(assets[count]))
-                    end
-                    return pageChildren
-                end)()
+                New "TextLabel" {
+                    Size = UDim2.fromScale(1, 1),
+                    BackgroundTransparency = 0.8,
+                    Text = "Page" .. index,
+                    ZIndex = 5,
+                },
+                New "Frame" {
+                    BackgroundTransparency = 1,
+                    Size = UDim2.fromScale(1, 1),
+
+                    [Children] = {
+                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
+                        (function()
+                            local pageChildren = {}
+                            for count = startIndex, endIndex do
+                                table.insert(pageChildren, AudioButton(assets[count]))
+                            end
+                            return pageChildren
+                        end)()
+                    } 
+                }
             }
         })
 
@@ -307,6 +334,12 @@ local function getAudioChildren(): {Instance}
     end
 
     pageData.total:set(totalPages)
+    print(pageData.current:get(false), totalPages)
+    if pageData.current:get(false) > totalPages then
+        print("Changing page to", totalPages)
+        task.defer(jumpToPage, totalPages)
+    end
+
     return children
 end
 
@@ -374,17 +407,6 @@ local function SearchBox(data: PublicTypes.Dictionary): Instance
             }
         }
     }
-end
-
-local function jumpToPage(pageNumber: number)
-    local newPage = math.clamp(pageNumber, 1, pageData.total:get(false))
-
-    pageLayout:get(false):JumpToIndex(newPage - 1)
-    pageData.current:set(newPage)
-end
-
-local function incrementPage(increment: number)
-    jumpToPage(pageData.current:get(false) + increment)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -632,12 +654,6 @@ function frame.OnClose()
     fade(playing, "Out")
     currentAudio:set(nil)
 end
-
-Observer(pageData.total):onChange(function()
-    if pageData.current:get(false) > pageData.total:get(false) then
-        jumpToPage(pageData.total:get(false))
-    end
-end)
 
 task.spawn(toggleAudioPerms, true)
 task.spawn(fetchApi)
