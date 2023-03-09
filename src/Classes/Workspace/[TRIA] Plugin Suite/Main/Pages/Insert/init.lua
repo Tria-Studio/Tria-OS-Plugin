@@ -361,14 +361,14 @@ local function updateMapScriptChildren()
                 local success, module = pcall(function()
                     return thing.Name == "EasyTP" and require(thing)
                 end)
-                return module and module.Teleport == 0 and thing:FindFirstChild("LocalFlash")
+                return success and module and module.Teleport == 0 and thing:FindFirstChild("LocalFlash")
             end
 
             function addons.Waterjets()
                 local success, module = pcall(function()
                     return thing.Name == "Waterjets" and require(thing)
                 end)
-                return module and module.ToggleJet == 0
+                return success and module and module.ToggleJet == 0 and thing:FindFirstChild("WaterjetClient")
             end
 
             if addons[thing.Name] then

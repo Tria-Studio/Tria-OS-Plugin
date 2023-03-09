@@ -55,7 +55,7 @@ function EasyTP.Teleport(teleportNumber: number)
 	end
 end
 
-if RunService:IsStudio() then
+if RunService:IsStudio() and not RunService:IsRunning() then
 	return {Teleport = 0}
 end
 
