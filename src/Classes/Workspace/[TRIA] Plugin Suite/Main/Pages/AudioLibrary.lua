@@ -383,14 +383,11 @@ end
 
 local function jumpToPage(pageNumber: number)
     pageLayout:get(false):JumpToIndex(pageNumber - 1)
-    pageData.current:set(pageNumber)
+    pageData.current:set(math.clamp(pageNumber, 1, pageData.total:get(false)))
 end
 
 local function incrementPage(increment: number)
-    local currentPage = pageData.current:get(false)
-    local totalPages = pageData.total:get(false)
-
-    jumpToPage(math.clamp(currentPage + increment, 1, totalPages))
+    jumpToPage(math.clamp(pageData.current:get(false) + increment, 1, pageData.total:get(false)))
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
