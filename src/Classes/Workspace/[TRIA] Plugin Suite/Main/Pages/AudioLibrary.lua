@@ -307,12 +307,6 @@ local function getAudioChildren(): {Instance}
             Size = UDim2.fromScale(1, 1),
 
             [Children] = {
-                New "TextLabel" {
-                    Size = UDim2.fromScale(1, 1),
-                    BackgroundTransparency = 0.8,
-                    Text = "Page" .. index,
-                    ZIndex = 5,
-                },
                 New "Frame" {
                     BackgroundTransparency = 1,
                     Size = UDim2.fromScale(1, 1),
