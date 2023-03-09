@@ -55,12 +55,12 @@ local CURRENT_AUDIO_DATA = Computed(function()
         local searchedArtist = searchData.artist:get()
         local searchedName = searchData.name:get()
 
-        if #searchedArtist:get() > 0 and tbl.Artist:lower():find(searchedArtist:lower()) == nil then
+        if #searchedArtist > 0 and tbl.Artist:lower():find(searchedArtist:lower()) == nil then
             matches = false
             break
         end
 
-        if #searchedName:get() > 0 and tbl.Name:lower():find(searchedName:lower()) == nil then
+        if #searchedName > 0 and tbl.Name:lower():find(searchedName:lower()) == nil then
             matches = false
             break
         end
