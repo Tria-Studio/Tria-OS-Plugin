@@ -172,9 +172,7 @@ local mainFrame = New "Frame" {
 						end
 					end,
 
-					[OnEvent "MouseButton2Down"] = function()
-						showDebug()
-					end
+					[OnEvent "MouseButton2Down"] = showDebug
 				}
 			}
 		},
