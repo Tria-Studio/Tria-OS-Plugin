@@ -390,7 +390,7 @@ local function incrementPage(increment: number)
     local currentPage = pageData.current:get(false)
     local totalPages = pageData.total:get(false)
 
-    jumpToPage(math.clamp(currentPage + increment, 0, totalPages))
+    jumpToPage(math.clamp(currentPage + increment, 1, totalPages))
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
