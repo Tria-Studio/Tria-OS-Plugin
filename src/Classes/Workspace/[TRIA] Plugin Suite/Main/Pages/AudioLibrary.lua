@@ -25,11 +25,11 @@ local Observer = Fusion.Observer
 local Spring = Fusion.Spring
 local Out = Fusion.Out
 
+local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
+
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local frame = {}
-
-local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local frameAbsoluteSize = Value()
 local pageLayout = Value()
@@ -43,6 +43,14 @@ local pageData = {
     current = Value(0),
     total = Value(0)
 }
+
+local currentAudio = Value(nil)
+
+local lastFetchTime = 0
+local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+
+local oldUniverseId = game.GameId
+local oldPlaceId = game.PlaceId
 
 local ITEMS_PER_PAGE = Computed(function()
     return frameAbsoluteSize:get() and math.floor((frameAbsoluteSize:get().Y + 32) / 40) or 12
@@ -82,14 +90,6 @@ local STATUS_ERRORS = {
     ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
 }
-
-local currentAudio = Value(nil)
-
-local lastFetchTime = 0
-local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
-
-local oldUniverseId = game.GameId
-local oldPlaceId = game.PlaceId
 
 local function toggleAudioPerms(enabled: boolean)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
