@@ -161,14 +161,14 @@ end
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
-        BackgroundColor3 = Theme.MainBackground.Default,
+        BackgroundColor3 = Theme.TableItem.Default,
         Visible = data.Visible,
         Name = "Scripting",
 
         [Children] = {
             Components.PageHeader("Scripting"),
             Components.ScrollingFrame {
-                BackgroundColor3 = Theme.MainBackground.Default,
+                BackgroundColor3 = Theme.TableItem.Default,
                 Size = UDim2.fromScale(1, 1),
 
                 [Children] = {
@@ -257,13 +257,8 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     Header = "Global Autocomplelte",
                                     Tooltip = "Determines whether or not Autocomplete will happen in TRIA scripts (MapScript, LocalMapScript, EffectScript) or any script in your map."
                                 }
-                            },
+                            }
                         }
-                    },
-                    New "Frame" {
-                        LayoutOrder = 20,
-                        Size = UDim2.new(1, 0, 0, 1),
-                        BackgroundColor3 = Theme.Border.Default
                     }
                 }
             }
