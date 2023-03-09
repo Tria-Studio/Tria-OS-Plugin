@@ -478,7 +478,17 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [Out "Text"] = textboxText,
 
-                        [OnEvent "FocusLost"] = function()    
+                        [OnEvent "FocusLost"] = function()   
+                            local enteredText = textboxText:get()
+                            if not enteredText then
+                                return
+                            end 
+
+                            local pageNumber = tonumber(enteredText)
+                            if pageNumber then
+                                
+                                jumpToPage(pageNumber)
+                            end
                         end
                     },
 
