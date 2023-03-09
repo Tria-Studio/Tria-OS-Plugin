@@ -394,7 +394,7 @@ local function incrementPage(increment: number)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
-    local textboxText = Value()
+    local textboxObject = Value()
     
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -476,17 +476,22 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.fromScale(0.5, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
 
-                        [Out "Text"] = textboxText,
+                        [Ref] = textboxObject,
 
-                        [OnEvent "FocusLost"] = function()   
-                            local enteredText = textboxText:get()
+                        [OnEvent "FocusLost"] = function() 
+                            local textbox = textboxObject:get(false)
+                            if not textbox then
+                                return
+                            end 
+
+                            local enteredText = textbox.Text
                             if not enteredText then
                                 return
                             end 
 
                             local pageNumber = tonumber(enteredText)
                             if pageNumber then
-                                
+                                textbox.Text = ""
                                 jumpToPage(pageNumber)
                             end
                         end
