@@ -344,7 +344,6 @@ local function fetchApi()
 
         CURRENT_PAGE_COUNT:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
-        CURRENT_AUDIO_DATA:set(newData)
     end
 end
 
