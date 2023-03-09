@@ -56,10 +56,6 @@ local ITEMS_PER_PAGE = Computed(function()
     return frameAbsoluteSize:get() and math.max(1, math.floor((frameAbsoluteSize:get().Y + 32) / 40)) or 12
 end)
 
-Observer(frameAbsoluteSize):onChange(function()
-    print(frameAbsoluteSize:get())
-end)
-
 local CURRENT_FETCH_STATUS = Value("Fetching")
 local FETCHED_AUDIO_DATA = Value({})
 
