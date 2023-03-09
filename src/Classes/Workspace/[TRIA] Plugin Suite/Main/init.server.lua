@@ -2,10 +2,6 @@ local ContentProvider = game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
 local RunService = game:GetService("RunService")
 
-if not RunService:IsEdit() then
-	return
-end
-
 local toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local openButton = toolbar:CreateButton(
 	"TRIA.os Companion Plugin", 
