@@ -68,7 +68,7 @@ local CURRENT_AUDIO_DATA = Computed(function()
     for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
         local matches = 
             if #searchedArtist > 0 then tbl.Artist:lower():find(searchedArtist:lower()) ~= nil
-            elseif #searchedName > 0 and tbl.Name:lower():find(searchedName:lower()) ~= nil
+            elseif #searchedName > 0 then tbl.Name:lower():find(searchedName:lower()) ~= nil
             else true
 
         if matches then
