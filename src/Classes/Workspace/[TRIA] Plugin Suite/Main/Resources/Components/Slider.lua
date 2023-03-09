@@ -88,7 +88,27 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
 
                 [Children] = {
                     Constraints.UICorner(1, 0),
-                    Constraints.UIStroke(1, Theme.Border.Default, Enum.ApplyStrokeMode.Border)
+                    Constraints.UIStroke(1, Theme.Border.Default, Enum.ApplyStrokeMode.Border),
+                    New "ImageButton" {
+                        Size = UDim2.new(100, 0, 100, 0),
+                        AnchorPoint = Vector2.new(.5, .5),
+                        Position = UDim2.new(.5, 0, .5, 0),
+                        BackgroundTransparency = 1,
+
+                        Visible = Util._Slider.isUsingSlider,
+
+                        [OnEvent "MouseButton1Up"] = function()
+                            Util._Slider.isUsingSlider:set(false)
+                            Util._Slider.currentSlider:set(nil)
+                        end,
+
+                        [OnEvent "MouseMoved"] = function()
+                            if Util._Slider.isUsingSlider:get(false) and Util._Slider.currentSlider:get(false) == sliderButton:get(false) then
+                                local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
+                                updateSliderValue(mousePos)
+                            end
+                        end,
+                    }
                 },
 
                 [OnEvent "MouseButton1Up"] = function()
