@@ -320,11 +320,12 @@ end
 
 local function SearchBox(data: PublicTypes.Dictionary): Instance
     return New "TextBox" {
-        Size = UDim2.new(1, 0, 0, 30),
+        Position = data.Position,
+        Size = data.Size,
         TextColor3 = Theme.MainText.Default,
         Font = Enum.Font.SourceSansSemibold,
         PlaceholderColor3 = Theme.DimmedText.Default,
-        PlaceholderText = "Search by Artist",
+        PlaceholderText = data.Placeholder,
         BackgroundColor3 = Theme.InputFieldBackground.Default,
         BorderColor3 = Theme.InputFieldBorder.Default,
         BorderMode = Enum.BorderMode.Inset,
@@ -356,7 +357,14 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         [Children] = {
             Components.PageHeader("Audio Library"),
             SearchBox {
-                
+                Position = UDim2.fromScale(0, 0),
+                Size = UDim2.new(0.5, 0, 0, 30),
+                Placeholder = "Search by Artist"
+            },
+            SearchBox {
+                Position = UDim2.fromScale(0.5, 0),
+                Size = UDim2.new(0.5, 0, 0, 30),
+                Placeholder = "Search by Name"
             },
             New "Frame" { -- Page Cycler
                 BackgroundColor3 = Theme.RibbonTab.Default,
