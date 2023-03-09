@@ -337,6 +337,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     }
                                 },
                             },
+                            Components.Spacer(false, 6, 45, 1)
                         }
                     },
                 }
