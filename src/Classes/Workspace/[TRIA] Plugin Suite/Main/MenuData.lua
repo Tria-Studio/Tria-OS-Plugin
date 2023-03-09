@@ -18,19 +18,19 @@ return {
 		}, {
 			Name = "Insert",
 			Icon = "rbxassetid://6023565892",
-		}, --{
-			--Name = "AudioLibrary",
-			--Icon = "rbxassetid://6026660075",
-		--}
+		}, {
+			Name = "AudioLibrary",
+			Icon = "rbxassetid://6026660075",
+		}
 	},
 
 	Pages = {
-		{Name = "ObjectTags", Default = true},
+		{Name = "ObjectTags"},
 		{Name = "ViewModes"},
 		{Name = "Settings"},
 		{Name = "Scripting"},
 		{Name = "Publish"},
 		{Name = "Insert"},
-		--{Name = "AudioLibrary", Default = true}
+		{Name = "AudioLibrary", Default = true}
 	}
 }
