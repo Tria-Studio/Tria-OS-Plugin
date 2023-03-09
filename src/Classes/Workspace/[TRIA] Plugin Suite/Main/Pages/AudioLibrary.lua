@@ -53,7 +53,7 @@ local oldUniverseId = game.GameId
 local oldPlaceId = game.PlaceId
 
 local ITEMS_PER_PAGE = Computed(function()
-    return 20 --frameAbsoluteSize:get() and math.floor((frameAbsoluteSize:get().Y + 32) / 40) or 12
+    return frameAbsoluteSize:get() and math.floor((frameAbsoluteSize:get().Y + 32) / 40) or 12
 end)
 
 local CURRENT_FETCH_STATUS = Value("Fetching")
