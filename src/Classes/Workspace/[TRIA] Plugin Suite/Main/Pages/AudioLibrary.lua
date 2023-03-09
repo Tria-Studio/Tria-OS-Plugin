@@ -49,8 +49,8 @@ local FETCHED_AUDIO_DATA = Value({})
 local CURRENT_AUDIO_DATA = Computed(function()
     local newData = {}
 
-    local searchedArtist = searchData.artist:get()
-    local searchedName = searchData.name:get()
+    local searchedArtist = searchData.artist:get() or ""
+    local searchedName = searchData.name:get() or ""
 
     for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
         local matches = true
