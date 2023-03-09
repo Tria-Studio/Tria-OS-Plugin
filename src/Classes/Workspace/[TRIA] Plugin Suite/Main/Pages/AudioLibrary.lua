@@ -245,10 +245,10 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         [OnEvent "Activated"] = function()
                             local playing = currentAudio:get(false)
                             if playing ~= previewSound then
+                                toggleAudioPerms(true)
                                 if playing then
                                     fade(playing, "Out")
                                 end
-
                                 previewSound.Volume = 0
                                 previewSound.TimePosition = timePosition:get(false)
                                 previewSound:Resume()
@@ -256,6 +256,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                 fade(previewSound, "In")
                             else
                                 if not playing then
+                                    toggleAudioPerms(false)
                                     return
                                 end
                                 playing:Pause()
@@ -646,6 +647,7 @@ function frame.OnClose()
         return
     end
     fade(playing, "Out")
+    toggleAudioPerms(false)
     currentAudio:set(nil)
 end
 
