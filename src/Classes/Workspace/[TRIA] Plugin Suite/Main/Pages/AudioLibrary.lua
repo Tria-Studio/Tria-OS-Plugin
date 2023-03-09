@@ -334,6 +334,7 @@ local function getAudioChildren(): {Instance}
         assetsRemaining -= itemsPerPage
     end
 
+    jumpToPage(1)
     pageData.total:set(totalPages)
     return children
 end
