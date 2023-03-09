@@ -369,8 +369,8 @@ local function SearchBox(data: PublicTypes.Dictionary): Instance
                 BackgroundTransparency = 1,
                 ImageColor3 = Theme.SubText.Default,
                 ZIndex = 2,
-                Size = UDim2.fromOffset(30, 30),
-                Position = UDim2.new(1, 0, 0, 0)
+                Size = UDim2.fromOffset(26, 26),
+                Position = UDim2.new(1, 2, 0, 1)
             }
         }
     }
