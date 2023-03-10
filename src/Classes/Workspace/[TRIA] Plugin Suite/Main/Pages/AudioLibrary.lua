@@ -536,6 +536,24 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         TextColor3 = Theme.MainText.Default,
                     },
 
+                    SongPlayButton {
+                        Position = UDim2.fromScale(0.9, 0.4),
+                        Size = UDim2.fromScale(0.7, 0.7),
+                        Image = Computed(function()
+                            return currentSongData.currentAudio:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                        end),
+                        ImageColor3 = Computed(function()
+                            return currentSongData.currentAudio:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                        end),
+                        HoverImage = Computed(function()
+                            return currentSongData.currentAudio:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                        end),
+
+                        [OnEvent "Activated"] = function()
+                            
+                        end
+                    },
+
                     New "Frame" { -- Line
                         BackgroundColor3 = Theme.Border.Default,
                         Position = UDim2.new(0, 0, 0, -2),
