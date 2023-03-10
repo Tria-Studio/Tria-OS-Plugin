@@ -95,7 +95,7 @@ local STATUS_ERRORS = {
 }
 
 local function toggleAudioPerms(enabled: boolean)
-    print("P", enabled and 6311279644 or oldPlaceId)
+    print("Toggling", enabled and 6311279644 or oldPlaceId)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
     game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 end
@@ -193,6 +193,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
 
     local isLoaded = Value(false)
     previewSound.Loaded:Connect(function()
+        print("Loaded")
         isLoaded:set(true)
     end)
 
@@ -261,7 +262,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                             return currentAudioMatches(previewSound) and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function()
-                            if not isLoaded:get(false) then
+                            if not isLoaded:get() then
                                 return Theme.ErrorText.Default:get()
                             end
                             return currentAudioMatches(previewSound) and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
@@ -482,7 +483,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     },
 
                                     Computed(getAudioChildren, function()
-                                        PlguinSoundManager:ClearAllSounds()
+                                        --print("Clearing")
+                                        --PlguinSoundManager:ClearAllSounds()
                                     end)
                                 }
                             },
@@ -688,7 +690,7 @@ function frame.OnClose()
 end
 
 task.spawn(fetchApi)
-task.defer(toggleAudioPerms, true)
+toggleAudioPerms(true)
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
