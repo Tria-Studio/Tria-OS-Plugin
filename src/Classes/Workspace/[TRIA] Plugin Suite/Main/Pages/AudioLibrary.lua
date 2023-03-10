@@ -138,23 +138,7 @@ end
 
 local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
     local playing = currentSongData.currentAudio:get(false)
-    if playing ~= newSound then
-        toggleAudioPerms(true)
-       
-        if playing then
-            fadeSound(playing, "Out")
-        end
-
-        newSound.Volume = 0
-        newSound.TimePosition = currentSongData.timePosition:get(false)
-        newSound:Resume()
-
-        fadeSound(newSound, "In")
-        currentSongData.songData:set(soundData)
-        currentSongData.currentAudio:set(newSound)
-    else
-        stopCurrentSong(true)
-    end
+    
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
@@ -505,6 +489,29 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         TextXAlignment = Enum.TextXAlignment.Left,
 
                         [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+                    },
+
+                    Components.Slider {
+                        Value = currentSongData.timePosition,
+                        Min = Value(0),
+                        Max = currentSongData.timeLength,
+                        Position = UDim2.fromScale(0.55, 0.225),
+                        Size = UDim2.fromScale(0.65, 0.25),
+                        Increment = 1,
+                    },
+
+                    New "TextLabel" {
+                        BackgroundTransparency = 1,
+                        Position = UDim2.new(0.15, 0, 0.5, 1),
+                        Size = UDim2.fromScale(0.7, 0.25),
+                        TextSize = 14,
+                        Text = Computed(function()
+                            return ("%s/%s"):format(
+                                Util.secondsToTime(currentSongData.timePosition:get()), 
+                                Util.secondsToTime(currentSongData.timeLength:get())
+                            )
+                        end),
+                        TextColor3 = Theme.MainText.Default,
                     },
 
                     New "Frame" { -- Line
