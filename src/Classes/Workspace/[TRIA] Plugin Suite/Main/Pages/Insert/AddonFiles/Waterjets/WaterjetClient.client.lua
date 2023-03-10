@@ -1,6 +1,5 @@
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-
 if not RunService:IsRunning() then
 	return
 end
