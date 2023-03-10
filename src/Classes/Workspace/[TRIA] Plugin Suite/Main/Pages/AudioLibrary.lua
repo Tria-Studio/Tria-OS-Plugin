@@ -179,17 +179,6 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     --     isPlaying = false
     -- end)
 
-    -- RunService.Heartbeat:Connect(function(deltaTime)
-    --     if 
-    --         isPlaying 
-    --         and previewSound.IsLoaded 
-    --         and previewSound == currentSongData.currentAudio:get(false) 
-    --         and not Util._Slider.isUsingSlider:get(false) 
-    --     then
-    --         timePosition:set(timePosition:get(false) + deltaTime)
-    --     end
-    -- end)
-
     -- Observer(timePosition):onChange(function()
     --     if Util._Slider.isUsingSlider:get(false) then
     --         previewSound.TimePosition = timePosition:get(false)
@@ -671,5 +660,16 @@ end
 
 task.spawn(fetchApi)
 task.spawn(toggleAudioPerms, true)
+
+Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    if 
+        currentlyPlaying ~= nil 
+        and currentlyPlaying.IsLoaded 
+        and not Util._Slider.isUsingSlider:get(false) 
+    then
+        currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
+    end
+end))
 
 return frame
