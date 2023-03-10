@@ -19,12 +19,4 @@ function PluginSoundManager:QueueSound(soundId: number): Sound
 	return newSound
 end
 
-function PluginSoundManager:ClearAllSounds()
-	for _, item in ipairs(widget:GetChildren()) do
-		if item:IsA("Sound") then
-			item:Destroy()
-		end
-	end
-end
-
 return PluginSoundManager
