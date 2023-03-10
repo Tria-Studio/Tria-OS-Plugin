@@ -513,7 +513,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 AnchorPoint = Vector2.new(0, 1),
                 Size = UDim2.new(1, 0, 0, 36),
                 Position = UDim2.fromScale(0, 1),
-                ZIndex = 1,
+                ZIndex = 3,
 
                 [Children] = {
                     Components.ImageButton { -- Skip to first page
@@ -528,6 +528,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Rotation = 180,
                         Position = UDim2.fromScale(0.1, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
+                        ZIndex = 3,
                         
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
@@ -547,6 +548,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
                         Position = UDim2.fromScale(0.3, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
+                        ZIndex = 3,
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
@@ -568,6 +570,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Font = Enum.Font.SourceSansSemibold,
                         Position = UDim2.fromScale(0.5, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
+                        ZIndex = 3,
 
                         [Ref] = textboxObject,
 
@@ -602,6 +605,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Rotation = -90,
                         Position = UDim2.fromScale(0.7, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
+                        ZIndex = 3,
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
@@ -620,6 +624,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Size = UDim2.new(0.2, -5, 1, -5),
+                        ZIndex = 3,
 
                         [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
