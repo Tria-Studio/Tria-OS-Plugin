@@ -164,12 +164,6 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
         isLoaded:set(true)
     end)
 
-    -- Observer(timePosition):onChange(function()
-    --     if Util._Slider.isUsingSlider:get(false) then
-    --         previewSound.TimePosition = timePosition:get(false)
-    --     end
-    -- end)
-
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = Computed(function()
@@ -662,5 +656,14 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
         currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
     end
 end))
+
+Observer(currentSongData.timePosition):onChange(function()
+    if Util._Slider.isUsingSlider:get(false) then
+        local currentlyPlaying = currentSongData.currentAudio:get(false)
+        if currentlyPlaying then
+            currentlyPlaying.TimePosition = currentSongData.timePosition:get(false)
+        end
+    end
+end)
 
 return frame
