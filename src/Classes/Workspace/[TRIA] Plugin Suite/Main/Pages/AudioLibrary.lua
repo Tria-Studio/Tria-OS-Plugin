@@ -181,7 +181,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
             New "TextLabel" {
                 BackgroundTransparency = 1,
                 Size = UDim2.fromScale(0.4, 1),
-                Position = UDim2.fromScale(.005, 0),
+                Position = UDim2.fromScale(0.005, 0),
                 Text = ("<b>%s</b>\n%s"):format(data.Artist, data.Name),
                 TextColor3 = Theme.MainText.Default,
                 LineHeight = 1.1,
@@ -196,7 +196,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
             Components.TextButton {
                 Size = UDim2.new(0, 32, 0.6, 0),
                 Position = UDim2.new(1, -8, 0.5, 0),
-                AnchorPoint = Vector2.new(1, .5),
+                AnchorPoint = Vector2.new(1, 0.5),
                 Text = "Use",
                 ZIndex = 3,
                 Font = Enum.Font.SourceSansBold,
@@ -261,7 +261,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         end),
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         ZIndex = 3,
-                        Position = UDim2.fromScale(-.01, 0.175),
+                        Position = UDim2.fromScale(-0.01, 0.175),
                         Size = UDim2.fromScale(0.7, 0.7),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         
