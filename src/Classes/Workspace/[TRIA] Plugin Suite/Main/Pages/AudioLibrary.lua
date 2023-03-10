@@ -257,9 +257,9 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                 fade(previewSound, "In")
                             else
                                 if not playing then
-                                    toggleAudioPerms(false)
                                     return
                                 end
+                                toggleAudioPerms(false)
                                 playing:Pause()
                                 currentAudio:set(nil)
                             end
