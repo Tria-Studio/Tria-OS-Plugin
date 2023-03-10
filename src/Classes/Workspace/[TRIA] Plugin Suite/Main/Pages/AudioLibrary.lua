@@ -602,16 +602,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Rotation = -90,
                         Position = UDim2.fromScale(0.7, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
-                        
+
                         [OnEvent "Activated"] = function()
                             incrementPage(1)
                         end
                     },
 
-                    Components.ImageButton { -- Skip to end page
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        Active = Util.interfaceActive,
-                        BackgroundTransparency = 1,
+                    PageKey { -- Skip to end page
                         LayoutOrder = 5,
                         Image = "rbxassetid://4458877936",
                         Position = UDim2.fromScale(0.9, 0.5),
@@ -619,9 +616,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Size = UDim2.new(0.2, -5, 1, -5),
-                        ZIndex = 3,
 
-                        [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
                             jumpToPage(pageData.total:get(false))
                         end
