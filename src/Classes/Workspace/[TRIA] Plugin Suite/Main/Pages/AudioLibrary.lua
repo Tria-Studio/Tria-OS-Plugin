@@ -135,6 +135,27 @@ local function stopCurrentSong(fade: boolean)
     currentSongData.currentAudio:set(nil)
 end
 
+local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
+    local playing = currentSongData.currentAudio:get(false)
+    if playing ~= newSound then
+        toggleAudioPerms(true)
+       
+        if playing then
+            fade(playing, "Out")
+        end
+
+        newSound.Volume = 0
+        newSound.TimePosition = currentSongData.timePosition:get(false)
+        newSound:Resume()
+
+        fade(newSound, "In")
+        currentSongData.songData:set(soundData)
+        currentSongData.currentAudio:set(newSound)
+    else
+        stopCurrentSong(false)
+    end
+end
+
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     local previewSound = PlguinSoundManager:QueueSound(data.ID)
     previewSound.Name = data.Name
@@ -254,20 +275,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
         
                         [Children] = Components.Constraints.UICorner(1, 0),
                         [OnEvent "Activated"] = function()
-                            local playing = currentSongData.currentAudio:get(false)
-                            if playing ~= previewSound then
-                                toggleAudioPerms(true)
-                                if playing then
-                                    fade(playing, "Out")
-                                end
-                                previewSound.Volume = 0
-                                previewSound.TimePosition = currentSongData.timePosition:get(false)
-                                previewSound:Resume()
-                                currentSongData.currentAudio:set(previewSound)
-                                fade(previewSound, "In")
-                            else
-                                stopCurrentSong(false)
-                            end
+                            updatePlayingSound(previewSound, data)
                         end
                     },
                 }
