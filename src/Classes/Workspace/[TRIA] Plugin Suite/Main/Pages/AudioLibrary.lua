@@ -148,12 +148,12 @@ end
 local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then -- No song playing
-        playSong(newSound)
+        playSong(newSound, soundData)
     elseif currentlyPlaying == newSound then -- Song being stopped
         stopSong()
     else -- Song switched while playing
         fadeSound(currentlyPlaying, "Out")
-        playSong(newSound)
+        playSong(newSound, soundData)
     end
 end
 
