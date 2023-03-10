@@ -46,6 +46,7 @@ local pageData = {
 
 local currentSongData = {
     currentAudio = Value(nil),
+    songData = Value({Name = "", Artist = ""}),
     timePosition = Value(0),
     timeLength = Value(0)
 }
@@ -260,7 +261,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                     fade(playing, "Out")
                                 end
                                 previewSound.Volume = 0
-                                previewSound.TimePosition = timePosition:get(false)
+                                previewSound.TimePosition = currentSongData.timePosition:get(false)
                                 previewSound:Resume()
                                 currentSongData.currentAudio:set(previewSound)
                                 fade(previewSound, "In")
@@ -393,6 +394,24 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Position = UDim2.new(0, 1, 0, -36),
 
                 [Children] = {
+                    New "TextLabel" {
+                        BackgroundTransparency = 1,
+                        Size = UDim2.fromScale(0.4, 1),
+                        Position = UDim2.fromScale(0.005, 0),
+                        Text = Computed(function()
+                            local currentData = currentSongData.songData:get()
+                            return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
+                        end),
+                        TextColor3 = Theme.MainText.Default,
+                        LineHeight = 1.1,
+                        RichText = true,
+                        TextTruncate = Enum.TextTruncate.AtEnd,
+                        TextSize = 15,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+
+                        [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+                    },
+
                     New "Frame" { -- Line
                         BackgroundColor3 = Theme.Border.Default,
                         Position = UDim2.new(0, 0, 0, -2),
