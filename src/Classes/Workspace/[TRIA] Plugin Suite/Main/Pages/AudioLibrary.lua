@@ -122,7 +122,7 @@ local function incrementPage(increment: number)
     jumpToPage(pageData.current:get(false) + increment)
 end
 
-local function stopCurrentSong(doFade: boolean)
+local function stopSong(doFade: boolean)
     local playing = currentSongData.currentAudio:get(false)
     if not playing then
         return
@@ -136,9 +136,20 @@ local function stopCurrentSong(doFade: boolean)
     currentSongData.currentAudio:set(nil)
 end
 
-local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
-    local playing = currentSongData.currentAudio:get(false)
+local function playSong(newSound: Instance)
     
+end
+
+local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    if not currentlyPlaying then -- No song playing
+        playSong(newSound)
+    elseif currentlyPlaying == newSound then -- Song being stopped
+        stopSong()
+    else -- Song switched while playing
+        fadeSound(currentlyPlaying, "Out")
+        playSong(newSound)
+    end
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
@@ -654,7 +665,7 @@ end
 
 function frame.OnClose()
     task.spawn(fetchApi)
-    stopCurrentSong(true)
+    stopSong(true)
 end
 
 task.spawn(fetchApi)
