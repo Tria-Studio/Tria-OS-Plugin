@@ -92,7 +92,7 @@ local mainFrame = New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				ForValues(MenuData.Pages, function(data)
+				ForValues(MenuData.Pages, function(data: PublicTypes.Dictionary): Instance
 					return PageHandler:NewPage(data)
 				end, Fusion.cleanup),
 
