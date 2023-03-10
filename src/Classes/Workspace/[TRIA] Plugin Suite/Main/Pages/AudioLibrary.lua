@@ -481,15 +481,15 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Value = currentSongData.timePosition,
                         Min = Value(0),
                         Max = currentSongData.timeLength,
-                        Position = UDim2.fromScale(0.575, 0.25),
-                        Size = UDim2.fromScale(0.6, 0.2),
+                        Position = UDim2.fromScale(0.7, 0.25),
+                        Size = UDim2.fromScale(0.5, 0.2),
                         Increment = 1,
                     },
 
                     New "TextLabel" {
                         BackgroundTransparency = 1,
-                        Position = UDim2.new(0.15, 0, 0.5, 1),
-                        Size = UDim2.fromScale(0.7, 0.25),
+                        Position = UDim2.new(0.45, 0, 0.5, 1),
+                        Size = UDim2.fromScale(0.5, 0.25),
                         TextSize = 14,
                         Text = Computed(function()
                             return ("%s/%s"):format(
