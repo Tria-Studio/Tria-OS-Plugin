@@ -45,7 +45,7 @@ local pageData = {
 }
 
 local currentSongData = {
-    currentAudio = Value(nil)
+    currentAudio = Value(nil),
     timePosition = Value(0),
     timeLength = Value(0)
 }
@@ -378,12 +378,25 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Placeholder = "Search by Artist",
                 State = searchData.artist
             },
+
             Components.SearchBox {
                 Position = UDim2.fromScale(0.5, 0),
                 Size = UDim2.new(0.5, 0, 0, 29),
                 Placeholder = "Search by Name",
                 State = searchData.name
             },
+
+            New "Frame" { -- Now playing
+                BackgroundColor3 = Theme.RibbonTab.Default,
+                AnchorPoint = Vector2.new(0, 1),
+                Size = UDim2.new(1, 0, 0, 36),
+                Position = UDim2.new(0, 1, 0, -36),
+
+                [Children] = {
+                    
+                }
+            },
+
             New "Frame" { -- Page Cycler
                 BackgroundColor3 = Theme.RibbonTab.Default,
                 AnchorPoint = Vector2.new(0, 1),
