@@ -370,33 +370,14 @@ local function fetchApi()
     end
 end
 
-local function SearchBox(data: PublicTypes.Dictionary): Instance
-    return New "TextBox" {
-        Position = data.Position,
-        Size = data.Size,
-        TextColor3 = Theme.MainText.Default,
-        Font = Enum.Font.SourceSansSemibold,
-        PlaceholderColor3 = Theme.DimmedText.Default,
-        PlaceholderText = data.Placeholder,
-        BackgroundColor3 = Theme.InputFieldBackground.Default,
-        BorderColor3 = Theme.InputFieldBorder.Default,
-        BorderMode = Enum.BorderMode.Inset,
-        BorderSizePixel = 2,
-
-        [Out "Text"] = data.State,
-
-        [Children] = {
-            Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 30)),
-            New "ImageButton" {
-                Image = "rbxassetid://6031154871",
-                BackgroundTransparency = 1,
-                ImageColor3 = Theme.SubText.Default,
-                ZIndex = 2,
-                Size = UDim2.fromOffset(26, 26),
-                Position = UDim2.new(1, 2, 0, 1)
-            }
-        }
-    }
+local function stopCurrentSong()
+    local playing = currentAudio:get(false)
+    if not playing then
+        return
+    end
+    fade(playing, "Out")
+    toggleAudioPerms(false)
+    currentAudio:set(nil)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -410,13 +391,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         [Children] = {
             Components.PageHeader("Audio Library"),
-            SearchBox {
+            Components.SearchBox {
                 Position = UDim2.fromScale(0, 0),
                 Size = UDim2.new(0.5, 0, 0, 29),
                 Placeholder = "Search by Artist",
                 State = searchData.artist
             },
-            SearchBox {
+            Components.SearchBox {
                 Position = UDim2.fromScale(0.5, 0),
                 Size = UDim2.new(0.5, 0, 0, 29),
                 Placeholder = "Search by Name",
@@ -637,13 +618,7 @@ end
 
 function frame.OnClose()
     task.spawn(fetchApi)
-    local playing = currentAudio:get(false)
-    if not playing then
-        return
-    end
-    fade(playing, "Out")
-    toggleAudioPerms(false)
-    currentAudio:set(nil)
+    stopCurrentSong()
 end
 
 task.spawn(fetchApi)
