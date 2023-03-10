@@ -481,8 +481,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Value = currentSongData.timePosition,
                         Min = Value(0),
                         Max = currentSongData.timeLength,
-                        Position = UDim2.fromScale(0.55, 0.25),
-                        Size = UDim2.fromScale(0.65, 0.2),
+                        Position = UDim2.fromScale(0.575, 0.25),
+                        Size = UDim2.fromScale(0.6, 0.2),
                         Increment = 1,
                     },
 
@@ -509,7 +509,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             },
 
             New "Frame" { -- Page Cycler
-                BackgroundColor3 = Theme.RibbonTab.Default,
+                BackgroundColor3 = Color3.new(1,1,1), --Theme.RibbonTab.Default,
                 AnchorPoint = Vector2.new(0, 1),
                 Size = UDim2.new(1, 0, 0, 36),
                 Position = UDim2.fromScale(0, 1),
