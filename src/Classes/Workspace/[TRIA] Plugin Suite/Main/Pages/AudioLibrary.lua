@@ -335,7 +335,6 @@ local function getAudioChildren(): {Instance}
         assetsRemaining -= itemsPerPage
     end
 
-    toggleAudioPerms(false)
     jumpToPage(1)
     pageData.total:set(totalPages)
     return children
@@ -479,7 +478,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         [Ref] = pageLayout
                                     },
 
-                                    Computed(getAudioChildren)
+                                    Computed(getAudioChildren, function()
+                                        PlguinSoundManager:ClearAllSounds()
+                                    end)
                                 }
                             },
                         }
