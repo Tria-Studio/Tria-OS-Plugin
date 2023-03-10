@@ -46,7 +46,8 @@ local pageData = {
 
 local currentSongData = {
     currentAudio = Value(nil)
-    timePosition = Value(0)
+    timePosition = Value(0),
+    timeLength = Value(0)
 }
 
 local lastFetchTime = 0
@@ -237,13 +238,13 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         Image = Computed(function()
                             return currentSongData.currentAudio:get() == previewSound and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
+                        ImageColor3 = Computed(function()
+                            return currentSongData.currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                        end),
                         HoverImage = Computed(function()
                             return currentSongData.currentAudio:get() == previewSound and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
                         BackgroundTransparency = 1,
-                        ImageColor3 = Computed(function()
-                            return currentSongData.currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
-                        end),
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         ZIndex = 3,
                         Position = UDim2.fromScale(0.9, 0.4),
