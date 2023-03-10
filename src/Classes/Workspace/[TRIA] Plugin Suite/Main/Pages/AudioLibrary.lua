@@ -517,14 +517,14 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Value = currentSongData.timePosition,
                         Min = Value(0),
                         Max = currentSongData.timeLength,
-                        Position = UDim2.fromScale(0.7, 0.25),
+                        Position = UDim2.fromScale(0.7, 0.275),
                         Size = UDim2.fromScale(0.5, 0.2),
                         Increment = 1,
                     },
 
                     New "TextLabel" {
                         BackgroundTransparency = 1,
-                        Position = UDim2.new(0.45, 0, 0.5, 1),
+                        Position = UDim2.new(0.45, 0, 0.5, 2),
                         Size = UDim2.fromScale(0.5, 0.25),
                         TextSize = 14,
                         Text = Computed(function()
@@ -537,8 +537,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     },
 
                     SongPlayButton {
-                        Position = UDim2.fromScale(0.9, 0.4),
-                        Size = UDim2.fromScale(0.7, 0.7),
+                        Position = UDim2.fromScale(0.4, 0.3),
+                        Size = UDim2.fromScale(0.6, 0.6),
                         Image = Computed(function()
                             return currentSongData.currentAudio:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
