@@ -24,6 +24,7 @@ local Ref = Fusion.Ref
 local Observer = Fusion.Observer
 local Spring = Fusion.Spring
 local Out = Fusion.Out
+local Cleanup = Fusion.Cleanup
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
@@ -193,7 +194,6 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
 
     local isLoaded = Value(false)
     previewSound.Loaded:Connect(function()
-        print("Loaded")
         isLoaded:set(true)
     end)
 
@@ -202,6 +202,8 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
         Size = Computed(function()
             return UDim2.new(1, 0, 0, 36)
         end),
+
+        [Cleanup] = previewSound,
         
         [Children] = {
             New "TextLabel" {
@@ -482,10 +484,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         [Ref] = pageLayout
                                     },
 
-                                    Computed(getAudioChildren, function()
-                                        --print("Clearing")
-                                        --PlguinSoundManager:ClearAllSounds()
-                                    end)
+                                    Computed(getAudioChildren, Fusion.cleanup)
                                 }
                             },
                         }
@@ -704,7 +703,6 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
 end))
 
 Util.MainMaid:GiveTask(function()
-    print("Disabling perms")
     toggleAudioPerms(false)
 end)
 
