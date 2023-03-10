@@ -116,12 +116,16 @@ local function incrementPage(increment: number)
     jumpToPage(pageData.current:get(false) + increment)
 end
 
-local function stopCurrentSong()
+local function stopCurrentSong(fade: boolean)
     local playing = currentAudio:get(false)
     if not playing then
         return
     end
-    fade(playing, "Out")
+    if fade then
+        fade(playing, "Out")
+    else
+        playing:Pause()
+    end
     toggleAudioPerms(false)
     currentAudio:set(nil)
 end
@@ -279,14 +283,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                 currentAudio:set(previewSound)
                                 fade(previewSound, "In")
                             else
-                                if not playing then
-                                    return
-                                end
-                                toggleAudioPerms(false)
-                                playing:Pause()
-                                currentAudio:set(nil)
-
-                                stopCurrentSong()
+                                stopCurrentSong(false)
                             end
                         end
                     },
@@ -620,7 +617,7 @@ end
 
 function frame.OnClose()
     task.spawn(fetchApi)
-    stopCurrentSong()
+    stopCurrentSong(true)
 end
 
 task.spawn(fetchApi)
