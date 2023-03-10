@@ -141,7 +141,6 @@ local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
     newSound.Volume = 0
     newSound.TimePosition = 0
     newSound:Resume()
-    print("Fading", newSound)
     fadeSound(newSound, "In")
 
     currentSongData.timePosition:set(0)
