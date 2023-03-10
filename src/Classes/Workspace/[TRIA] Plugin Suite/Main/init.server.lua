@@ -78,9 +78,11 @@ local function showDebug()
 	end
 end
 
+local gui = Instance.new("ScreenGui",game.StarterGui)
+
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
-	Parent = widget,
+	Parent = gui,
 	Size = UDim2.fromScale(1, 1),
 	BackgroundColor3 = Theme.MainBackground.Default,
 
