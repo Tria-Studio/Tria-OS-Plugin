@@ -170,27 +170,19 @@ local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dic
     end
 end
 
+local function currentAudioMatches(sound: Instance): boolean
+    return currentSongData.currentAudio:get() == sound
+end
+
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
     return Hydrate(Components.ImageButton {
-        Image = Computed(function()
-            return currentSongData.currentAudio:get() == previewSound and "rbxassetid://6026663701" or "rbxassetid://6026663726"
-        end),
-        ImageColor3 = Computed(function()
-            if not isLoaded then
-                return Theme.ErrorText.Default:get()
-            end
-            return currentSongData.currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
-        end),
-        HoverImage = Computed(function()
-            return currentSongData.currentAudio:get() == previewSound and "rbxassetid://6026663718" or "rbxassetid://6026663705"
-        end),
         BackgroundTransparency = 1,
         AnchorPoint = Vector2.new(0.5, 0.5),
         ZIndex = 3,
         SizeConstraint = Enum.SizeConstraint.RelativeYY,
 
         [Children] = Components.Constraints.UICorner(1, 0),
-    })(props)
+    })(data)
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
@@ -262,6 +254,18 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                     SongPlayButton {
                         Position = UDim2.fromScale(0.9, 0.4),
                         Size = UDim2.fromScale(0.7, 0.7),
+                        Image = Computed(function()
+                            return currentAudioMatches(previewSound) and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                        end),
+                        ImageColor3 = Computed(function()
+                            if not isLoaded then
+                                return Theme.ErrorText.Default:get()
+                            end
+                            return currentAudioMatches(previewSound) and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                        end),
+                        HoverImage = Computed(function()
+                            return currentAudioMatches(previewSound) and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                        end),
 
                         [OnEvent "Activated"] = function()
                             if not isLoaded:get(false) then
