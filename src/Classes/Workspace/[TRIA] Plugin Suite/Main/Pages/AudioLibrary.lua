@@ -136,8 +136,13 @@ local function stopSong(doFade: boolean)
     currentSongData.currentAudio:set(nil)
 end
 
-local function playSong(newSound: Instance)
-    
+local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
+    newSound.Volume = 0
+    newSound:Resume()
+    fadeSound(newSound, "In")
+
+    currentSongData.songData:set(soundData)
+    currentSongData.currentAudio:set(newSound)
 end
 
 local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
