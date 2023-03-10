@@ -368,7 +368,7 @@ local function updateMapScriptChildren()
                 local success, module = pcall(function()
                     return thing.Name == "Waterjets" and require(thing)
                 end)
-                return success and module and module.ToggleJet == 0 and thing:FindFirstChild("WaterjetClient")
+                return success and module and module.SetFanEnabled == 0 and thing:FindFirstChild("WaterjetClient")
             end
 
             if addons[thing.Name] then

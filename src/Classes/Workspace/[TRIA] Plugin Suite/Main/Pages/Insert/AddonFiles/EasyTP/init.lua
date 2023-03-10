@@ -32,7 +32,7 @@ function EasyTP.Teleport(teleportNumber: number)
 	local currentTeleportParts = teleportParts[teleportNumber]
 	local playersToTeleport = {}
 
-	overlapParams.FilterDescendantsInstances = workspace:FindFirstChild("Characters")
+	overlapParams.FilterDescendantsInstances = {workspace:FindFirstChild("Characters")}
 	for _, part in ipairs(workspace:GetPartsInPart(currentTeleportParts.Start, overlapParams)) do
 		local player = Players:GetPlayerFromCharacter(part)
 		if part.Name == "HumanoidRootPart" and player and not table.find(playersToTeleport, player) then
@@ -66,9 +66,12 @@ colorCorrection.Parent = Lighting
 local folder = currentMap:FindFirstChild("Special") or currentMap
 for _, part in ipairs(folder:GetDescendants()) do
 	local teleportNumber = part:GetAttribute("TeleportNumber")
-	local isStart = part:GetAttribute("TeleportType")
+	local isStart = part:GetAttribute("TeleportType") == "start"
 
 	if part.Name == "_Teleporter" then
+		if not teleportParts[teleportNumber] then
+			teleportParts[teleportNumber] = {}
+		end
 		teleportParts[teleportNumber][isStart and "Start" or "End"] = part
 	end
 end

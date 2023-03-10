@@ -95,7 +95,6 @@ for _, fan in ipairs(fans:GetChildren()) do
 	local distance = fan:GetAttribute("Distance")
 	local particleId = fan:GetAttribute("BubbleParticle")
 	local isEnabled = fan:GetAttribute("Enabled")
-	local emissionFace = fan:GetAttribute("EmissionFace")
 	local fanShape = fan:GetAttribute("FanShape")
 
 	local emitter = Instance.new("ParticleEmitter")
@@ -107,7 +106,7 @@ for _, fan in ipairs(fans:GetChildren()) do
 	emitter.Name = "FanParticleEmitter"
 	emitter.Texture = "rbxassetid://" .. particleId
 	emitter.Shape = Enum.ParticleEmitterShape[fanShape == "Cylinder" and "Disc" or "Box"]
-	emitter.Face = emissionFace
+	emitter.Face = Enum.NormalId.Front
 	emitter.Parent = fan
 end
 

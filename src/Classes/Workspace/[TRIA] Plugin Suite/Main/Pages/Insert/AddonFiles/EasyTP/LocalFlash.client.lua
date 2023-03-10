@@ -7,7 +7,7 @@
 local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
 
-local colorCorrection = Lighting:FindFirstChild("_qwertyuiopasdfghjklzxcvbnm")
+local colorCorrection = Lighting:WaitForChild("EasyTPColorCorrection")
 colorCorrection.Enabled = true
 colorCorrection.TintColor = script:GetAttribute("FlashColor")
 
