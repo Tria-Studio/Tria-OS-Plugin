@@ -71,7 +71,7 @@ local function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictiona
         DropdownVisible = visible,
         Children = {
             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
-            ForValues(dirData.Items, function(data)
+            ForValues(dirData.Items, function(data: PublicTypes.Dictionary): Instance
                 return SettingsUtil.settingOption(data.Type, data)
             end, Fusion.cleanup)
         }

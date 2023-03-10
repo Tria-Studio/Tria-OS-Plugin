@@ -237,8 +237,6 @@ end)                ]], line + 1)
                 demo:Destroy()
                 Util.debugWarn("Successfully inserted Waterjets!")
 
-                ChangeHistoryService:SetWaypoint("Inserted Waterjets")
-
                 return true
             end
         },

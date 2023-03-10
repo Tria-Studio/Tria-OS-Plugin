@@ -16,6 +16,7 @@ local Value = Fusion.Value
 local Hydrate = Fusion.Hydrate
 local Spring = Fusion.Spring
 local Ref = Fusion.Ref
+local Out = Fusion.Out
 
 local Components = {
     Constraints = require(script.Constraints),
@@ -534,6 +535,35 @@ function Components.GradientTextLabel(enabled, data: PublicTypes.Dictionary): In
             Components.Constraints.UIStroke(nil, Color3.new(), nil, Spring(Computed(function()
                 return enabled:get() and 0 or 1
             end), 18))
+        }
+    }
+end
+
+function Components.SearchBox(data: PublicTypes.Dictionary): Instance
+    return New "TextBox" {
+        Position = data.Position,
+        Size = data.Size,
+        TextColor3 = Theme.MainText.Default,
+        Font = Enum.Font.SourceSansSemibold,
+        PlaceholderColor3 = Theme.DimmedText.Default,
+        PlaceholderText = data.Placeholder,
+        BackgroundColor3 = Theme.InputFieldBackground.Default,
+        BorderColor3 = Theme.InputFieldBorder.Default,
+        BorderMode = Enum.BorderMode.Inset,
+        BorderSizePixel = 2,
+
+        [Out "Text"] = data.State,
+
+        [Children] = {
+            Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 30)),
+            New "ImageButton" {
+                Image = "rbxassetid://6031154871",
+                BackgroundTransparency = 1,
+                ImageColor3 = Theme.SubText.Default,
+                ZIndex = 2,
+                Size = UDim2.fromOffset(26, 26),
+                Position = UDim2.new(1, 2, 0, 1)
+            }
         }
     }
 end

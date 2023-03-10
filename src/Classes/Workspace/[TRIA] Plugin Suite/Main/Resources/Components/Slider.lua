@@ -79,7 +79,7 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
                 BackgroundColor3 = Theme.DimmedText.Default,
                 Position = sliderPosition,
 
-                Size = UDim2.fromScale(1.8, 1.8),
+                Size = UDim2.fromScale(1.75, 1.75),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
                 AutoButtonColor = true,
@@ -91,8 +91,8 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
                     Constraints.UIStroke(1, Theme.Border.Default, Enum.ApplyStrokeMode.Border),
                     New "ImageButton" {
                         Size = UDim2.new(100, 0, 100, 0),
-                        AnchorPoint = Vector2.new(.5, .5),
-                        Position = UDim2.new(.5, 0, .5, 0),
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        Position = UDim2.new(0.5, 0, 0.5, 0),
                         BackgroundTransparency = 1,
 
                         Visible = Util._Slider.isUsingSlider,

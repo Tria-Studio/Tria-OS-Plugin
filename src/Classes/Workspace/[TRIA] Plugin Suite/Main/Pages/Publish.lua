@@ -91,7 +91,7 @@ local function GetInfoFrame(name: string, frames: {Instance}, doBorder: boolean?
         [Children] = {
             Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 4)),
             Components.FrameHeader(name, 1),
-            ForValues(frames, function(frame)
+            ForValues(frames, function(frame: Instance): Instance
                 return frame
             end, Fusion.cleanup),
         }
@@ -125,7 +125,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                 Components.Constraints.UISizeConstraint(nil, Vector2.new(math.huge, 256)),
                 Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6)),
                 
-                ForValues(list, function(value)
+                ForValues(list, function(value: any): Instance
                     if value == noMapsFoundText:get() then
                         return New "TextLabel" {
                             Size = UDim2.new(1, 0, 0, 32),

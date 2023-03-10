@@ -2,7 +2,7 @@ local ContentProvider = game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
 local RunService = game:GetService("RunService")
 
-if not RunService:IsEdit() then
+if RunService:IsRunning() then
 	return
 end
 
@@ -92,7 +92,7 @@ local mainFrame = New "Frame" {
 			BackgroundTransparency = 1,
 
 			[Children] = {
-				ForValues(MenuData.Pages, function(data)
+				ForValues(MenuData.Pages, function(data: PublicTypes.Dictionary): Instance
 					return PageHandler:NewPage(data)
 				end, Fusion.cleanup),
 
@@ -176,6 +176,7 @@ local mainFrame = New "Frame" {
 				}
 			}
 		},
+		
 		Message,
 		ColorWheel:GetUI(),
 

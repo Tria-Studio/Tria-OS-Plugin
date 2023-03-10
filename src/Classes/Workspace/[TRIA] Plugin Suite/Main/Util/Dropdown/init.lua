@@ -7,6 +7,7 @@ local Theme = require(Resources.Themes)
 local Pages = require(Resources.Components.Pages)
 
 local Util = require(Package.Util)
+local PublicTypes = require(Package.PublicTypes)
 
 local DropdownData = require(script.DropdownData)
 
@@ -71,7 +72,7 @@ function Dropdown:GetValue(dataArray, uiParent)
 
             [Children] = {
                 Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 1), nil, sortOrder),
-                ForValues(dropdownData, function(data)
+                ForValues(dropdownData, function(data: PublicTypes.Dictionary): Instance
                     if data.Image then
                         textTruncated:set(Enum.TextTruncate.AtEnd)
                     end
