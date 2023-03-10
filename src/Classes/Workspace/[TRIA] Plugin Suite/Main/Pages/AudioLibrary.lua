@@ -550,7 +550,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            
+                            updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
                         end
                     },
 
