@@ -698,6 +698,10 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     end
 end))
 
+Util.MainMaid:GiveTask(function()
+    toggleAudioPerms(false)
+end)
+
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
         local currentlyPlaying = currentSongData.currentAudio:get(false)
