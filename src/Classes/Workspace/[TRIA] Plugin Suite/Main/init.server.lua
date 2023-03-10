@@ -2,7 +2,7 @@ local ContentProvider = game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
 local RunService = game:GetService("RunService")
 
-if not RunService:IsEdit() then
+if RunService:IsRunning() then
 	return
 end
 
