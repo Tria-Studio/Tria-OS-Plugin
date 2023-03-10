@@ -96,7 +96,6 @@ local STATUS_ERRORS = {
 }
 
 local function toggleAudioPerms(enabled: boolean)
-    print("Toggling", enabled and 6311279644 or oldPlaceId)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
     game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 end
