@@ -138,8 +138,6 @@ local function stopSong()
 end
 
 local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
-    toggleAudioPerms(true)
-
     newSound.Volume = 0
     newSound.TimePosition = 0
     newSound:Resume()
