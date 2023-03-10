@@ -44,7 +44,10 @@ local pageData = {
     total = Value(0)
 }
 
-local currentAudio = Value(nil)
+local currentSongData = {
+    currentAudio = Value(nil)
+    timePosition = Value(0)
+}
 
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
@@ -117,7 +120,7 @@ local function incrementPage(increment: number)
 end
 
 local function stopCurrentSong(fade: boolean)
-    local playing = currentAudio:get(false)
+    local playing = currentSongData.currentAudio:get(false)
     if not playing then
         return
     end
@@ -127,7 +130,7 @@ local function stopCurrentSong(fade: boolean)
         playing:Pause()
     end
     toggleAudioPerms(false)
-    currentAudio:set(nil)
+    currentSongData.currentAudio:set(nil)
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
@@ -154,7 +157,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     end)
     previewSound.Ended:Connect(function()
         timePosition:set(0)
-        currentAudio:set(nil)
+        currentSongData.currentAudio:set(nil)
         isPlaying = false
     end)
 
@@ -162,7 +165,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
         if 
             isPlaying 
             and previewSound.IsLoaded 
-            and previewSound == currentAudio:get(false) 
+            and previewSound == currentSongData.currentAudio:get(false) 
             and not Util._Slider.isUsingSlider:get(false) 
         then
             timePosition:set(timePosition:get(false) + deltaTime)
@@ -234,14 +237,14 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 [Children] = {
                     New "ImageButton" {
                         Image = Computed(function()
-                            return currentAudio:get() == previewSound and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return currentSongData.currentAudio:get() == previewSound and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         HoverImage = Computed(function()
-                            return currentAudio:get() == previewSound and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return currentSongData.currentAudio:get() == previewSound and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
                         BackgroundTransparency = 1,
                         ImageColor3 = Computed(function()
-                            return currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return currentSongData.currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         ZIndex = 3,
@@ -251,7 +254,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
         
                         [Children] = Components.Constraints.UICorner(1, 0),
                         [OnEvent "Activated"] = function()
-                            local playing = currentAudio:get(false)
+                            local playing = currentSongData.currentAudio:get(false)
                             if playing ~= previewSound then
                                 toggleAudioPerms(true)
                                 if playing then
@@ -260,7 +263,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                 previewSound.Volume = 0
                                 previewSound.TimePosition = timePosition:get(false)
                                 previewSound:Resume()
-                                currentAudio:set(previewSound)
+                                currentSongData.currentAudio:set(previewSound)
                                 fade(previewSound, "In")
                             else
                                 stopCurrentSong(false)
