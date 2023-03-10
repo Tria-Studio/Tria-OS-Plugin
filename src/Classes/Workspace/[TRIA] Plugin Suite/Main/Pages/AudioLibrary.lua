@@ -138,6 +138,8 @@ local function stopSong()
 end
 
 local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
+    toggleAudioPerms(true)
+
     newSound.Volume = 0
     newSound.TimePosition = 0
     newSound:Resume()
@@ -252,7 +254,8 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
 
                 [Children] = {
                     SongPlayButton {
-                        Position = UDim2.fromScale(0.9, 0.4),
+                        AnchorPoint = Vector2.new(1, 0.5),
+                        Position = UDim2.new(1, -10, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function()
                             return currentAudioMatches(previewSound) and "rbxassetid://6026663701" or "rbxassetid://6026663726"
@@ -685,7 +688,6 @@ function frame.OnClose()
 end
 
 task.spawn(fetchApi)
-task.spawn(toggleAudioPerms, true)
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
