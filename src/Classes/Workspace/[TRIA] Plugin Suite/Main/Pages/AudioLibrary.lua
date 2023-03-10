@@ -47,6 +47,7 @@ local pageData = {
 local currentSongData = {
     currentAudio = Value(nil),
     songData = Value({Name = "", Artist = ""}),
+
     timePosition = Value(0),
     timeLength = Value(0)
 }
@@ -129,7 +130,7 @@ local function stopCurrentSong(fade: boolean)
     if fade then
         fade(playing, "Out")
     else
-        playing:Pause()
+        playing:Stop()
     end
     toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
@@ -395,17 +396,103 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 State = searchData.name
             },
 
+            New "Frame" { -- Holder
+                BackgroundColor3 = Theme.TableItem.Default,
+                Position = UDim2.new(0, 0, 0, 30),
+                Size = UDim2.new(1, 0, 1, -100),
+                LayoutOrder = 2,
+
+                [Children] = {
+                    New "Frame" { -- Status Message
+                        BackgroundTransparency = 1,
+                        Size = UDim2.fromScale(1, 0.95),
+                        Visible = Computed(function()
+                            return CURRENT_FETCH_STATUS:get() ~= "Success"
+                        end),
+
+                        [Children] = {
+                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 2), Enum.VerticalAlignment.Center),
+                            New "ImageLabel" {
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromOffset(24, 24),
+                                Image = "rbxasset://textures/ui/ErrorIcon.png",
+                            },
+                            New "TextLabel" {
+                                AutomaticSize = Enum.AutomaticSize.Y,
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(0.75, 0),
+                                Text = Computed(function()
+                                    local fetchStatus = CURRENT_FETCH_STATUS:get()
+                                    return STATUS_ERRORS[fetchStatus] or "N/A"
+                                end),
+                                TextSize = 18,
+                                TextWrapped = true,
+                                TextColor3 = Theme.SubText.Default,
+                                TextXAlignment = Enum.TextXAlignment.Center,
+                                TextYAlignment = Enum.TextYAlignment.Top
+                            },
+                            Components.TextButton {
+                                Active = Util.interfaceActive,
+                                Size = UDim2.fromScale(0.5, 0.05),
+                                BackgroundColor3 = Theme.Button.Default,
+                                Text = "Retry",
+
+                                [Children] = {
+                                    Components.Constraints.UICorner(0, 8),
+                                    Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
+                                },
+
+                                [OnEvent "Activated"] = function()
+                                    if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) then
+                                        task.spawn(fetchApi)
+                                    end
+                                end
+                            }
+                        }
+                    },
+
+                    New "Frame" { -- Audio Library
+                        BackgroundTransparency = 1,
+                        Size = UDim2.fromScale(1, 1),
+                        Visible = Computed(function()
+                            return CURRENT_FETCH_STATUS:get() == "Success"
+                        end),
+
+                        [Children] = {
+                            New "Frame" { -- Main
+                                [Out "AbsoluteSize"] = frameAbsoluteSize, 
+
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(1, 0.925),
+
+                                [Children] = {
+                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                        return pageData.total:get() > 1
+                                    end))) {
+                                        [Ref] = pageLayout
+                                    },
+
+                                    Computed(getAudioChildren)
+                                }
+                            },
+                        }
+                    }
+                }
+            },
+
             New "Frame" { -- Now playing
                 BackgroundColor3 = Theme.RibbonTab.Default,
                 AnchorPoint = Vector2.new(0, 1),
                 Size = UDim2.new(1, 0, 0, 36),
-                Position = UDim2.new(0, 1, 0, -36),
+                Position = Spring(Computed(function()
+                    return UDim2.new(0, 0, 1, if currentSongData.)
+                end), 20),
 
                 [Children] = {
                     New "TextLabel" {
                         BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(0.4, 1),
-                        Position = UDim2.fromScale(0.005, 0),
+                        Size = UDim2.fromScale(1, 1),
+                        Position = UDim2.fromScale(0.0, 0),
                         Text = Computed(function()
                             local currentData = currentSongData.songData:get()
                             return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
@@ -554,89 +641,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 }
             },
 
-            New "Frame" { -- Holder
-                BackgroundColor3 = Theme.TableItem.Default,
-                Position = UDim2.new(0, 0, 0, 30),
-                Size = UDim2.new(1, 0, 1, -100),
-                LayoutOrder = 2,
-
-                [Children] = {
-                    New "Frame" { -- Status Message
-                        BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(1, 0.95),
-                        Visible = Computed(function()
-                            return CURRENT_FETCH_STATUS:get() ~= "Success"
-                        end),
-
-                        [Children] = {
-                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 2), Enum.VerticalAlignment.Center),
-                            New "ImageLabel" {
-                                BackgroundTransparency = 1,
-                                Size = UDim2.fromOffset(24, 24),
-                                Image = "rbxasset://textures/ui/ErrorIcon.png",
-                            },
-                            New "TextLabel" {
-                                AutomaticSize = Enum.AutomaticSize.Y,
-                                BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(0.75, 0),
-                                Text = Computed(function()
-                                    local fetchStatus = CURRENT_FETCH_STATUS:get()
-                                    return STATUS_ERRORS[fetchStatus] or "N/A"
-                                end),
-                                TextSize = 18,
-                                TextWrapped = true,
-                                TextColor3 = Theme.SubText.Default,
-                                TextXAlignment = Enum.TextXAlignment.Center,
-                                TextYAlignment = Enum.TextYAlignment.Top
-                            },
-                            Components.TextButton {
-                                Active = Util.interfaceActive,
-                                Size = UDim2.fromScale(0.5, 0.05),
-                                BackgroundColor3 = Theme.Button.Default,
-                                Text = "Retry",
-
-                                [Children] = {
-                                    Components.Constraints.UICorner(0, 8),
-                                    Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
-                                },
-
-                                [OnEvent "Activated"] = function()
-                                    if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) then
-                                        task.spawn(fetchApi)
-                                    end
-                                end
-                            }
-                        }
-                    },
-
-                    New "Frame" { -- Audio Library
-                        BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(1, 1),
-                        Visible = Computed(function()
-                            return CURRENT_FETCH_STATUS:get() == "Success"
-                        end),
-
-                        [Children] = {
-                            New "Frame" { -- Main
-                                [Out "AbsoluteSize"] = frameAbsoluteSize, 
-
-                                BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(1, 0.925),
-
-                                [Children] = {
-                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
-                                        return pageData.total:get() > 1
-                                    end))) {
-                                        [Ref] = pageLayout
-                                    },
-
-                                    Computed(getAudioChildren)
-                                }
-                            },
-                        }
-                    }
-                }
-            },
         }
     }
 end
