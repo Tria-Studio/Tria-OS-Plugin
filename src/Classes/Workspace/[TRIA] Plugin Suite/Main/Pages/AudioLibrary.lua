@@ -232,26 +232,6 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                 Position = UDim2.new(0.7, 0, 0.2, 0),
 
                 [Children] = {
-                    Components.Slider {
-                        Value = timePosition,
-                        Min = Value(0),
-                        Max = soundLength,
-                        Position = UDim2.fromScale(0.5, 0.225),
-                        Size = UDim2.fromScale(0.7, 0.25),
-                        Increment = 1,
-                    },
-
-                    New "TextLabel" {
-                        BackgroundTransparency = 1,
-                        Position = UDim2.new(0.15, 0, 0.5, 1),
-                        Size = UDim2.fromScale(0.7, 0.25),
-                        TextSize = 14,
-                        Text = Computed(function()
-                            return ("%s/%s"):format(Util.secondsToTime(timePosition:get()), Util.secondsToTime(soundLength:get()))
-                        end),
-                        TextColor3 = Theme.MainText.Default,
-                    },
-
                     New "ImageButton" {
                         Image = Computed(function()
                             return currentAudio:get() == previewSound and "rbxassetid://6026663701" or "rbxassetid://6026663726"
@@ -265,7 +245,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         end),
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         ZIndex = 3,
-                        Position = UDim2.fromScale(-0.01, 0.175),
+                        Position = UDim2.fromScale(0.9, 0.4),
                         Size = UDim2.fromScale(0.7, 0.7),
                         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         
