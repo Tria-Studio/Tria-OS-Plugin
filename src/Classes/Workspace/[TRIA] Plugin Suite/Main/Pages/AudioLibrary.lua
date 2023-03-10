@@ -157,27 +157,10 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     local previewSound = PlguinSoundManager:QueueSound(data.ID)
     previewSound.Name = data.Name
 
-    -- local soundLength = Value(1)
-    -- local isPlaying = false
-
-    -- previewSound.Loaded:Connect(function()
-    --     soundLength:set(previewSound.TimeLength)
-    -- end)
-    -- previewSound.Resumed:Connect(function()
-    --     isPlaying = true
-    -- end)
-    -- previewSound.Paused:Connect(function()
-    --     isPlaying = false
-    -- end)
-    -- previewSound.Stopped:Connect(function()
-    --     timePosition:set(0)
-    --     isPlaying = false
-    -- end)
-    -- previewSound.Ended:Connect(function()
-    --     timePosition:set(0)
-    --     currentSongData.currentAudio:set(nil)
-    --     isPlaying = false
-    -- end)
+    local isLoaded = Value(false)
+    previewSound.Loaded:Connect(function()
+        isLoaded:set(true)
+    end)
 
     -- Observer(timePosition):onChange(function()
     --     if Util._Slider.isUsingSlider:get(false) then
@@ -247,6 +230,9 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                             return currentSongData.currentAudio:get() == previewSound and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function()
+                            if not isLoaded then
+                                return Theme.ErrorText.Default:get()
+                            end
                             return currentSongData.currentAudio:get() == previewSound and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function()
@@ -261,7 +247,10 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
         
                         [Children] = Components.Constraints.UICorner(1, 0),
                         [OnEvent "Activated"] = function()
-                            updatePlayingSound(previewSound, data)
+                            if not isLoaded:get(false) then
+                                return
+                            end
+                            updatePlayingSound(previewSound, data, songLength)
                         end
                     },
                 }
