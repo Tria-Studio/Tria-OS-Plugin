@@ -137,8 +137,10 @@ local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
     newSound:Resume()
     fadeSound(newSound, "In")
 
+    currentSongData.timePosition:set(0)
     currentSongData.songData:set(soundData)
     currentSongData.currentAudio:set(newSound)
+    currentSongData.timeLength:set(newSound.TimeLength)
 end
 
 local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
@@ -250,7 +252,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                             if not isLoaded:get(false) then
                                 return
                             end
-                            updatePlayingSound(previewSound, data, songLength)
+                            updatePlayingSound(previewSound, data)
                         end
                     },
                 }
