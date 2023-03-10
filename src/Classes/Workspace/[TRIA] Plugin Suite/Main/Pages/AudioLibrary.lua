@@ -122,16 +122,12 @@ local function incrementPage(increment: number)
     jumpToPage(pageData.current:get(false) + increment)
 end
 
-local function stopSong(doFade: boolean)
-    local playing = currentSongData.currentAudio:get(false)
-    if not playing then
+local function stopSong()
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    if not currentlyPlaying then
         return
     end
-    if doFade then
-        fadeSound(playing, "Out")
-    else
-        playing:Stop()
-    end
+    fadeSound(currentlyPlaying, "Out")
     toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
 end
@@ -670,7 +666,7 @@ end
 
 function frame.OnClose()
     task.spawn(fetchApi)
-    stopSong(true)
+    stopSong()
 end
 
 task.spawn(fetchApi)
