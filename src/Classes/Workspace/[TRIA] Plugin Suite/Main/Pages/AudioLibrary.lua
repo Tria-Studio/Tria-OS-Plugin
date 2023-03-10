@@ -97,7 +97,7 @@ local function toggleAudioPerms(enabled: boolean)
     game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 end
 
-local function fade(sound: Sound, direction: string)
+local function fadeSound(sound: Sound, direction: string)
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
 
@@ -122,13 +122,13 @@ local function incrementPage(increment: number)
     jumpToPage(pageData.current:get(false) + increment)
 end
 
-local function stopCurrentSong(fade: boolean)
+local function stopCurrentSong(doFade: boolean)
     local playing = currentSongData.currentAudio:get(false)
     if not playing then
         return
     end
-    if fade then
-        fade(playing, "Out")
+    if doFade then
+        fadeSound(playing, "Out")
     else
         playing:Stop()
     end
@@ -142,18 +142,18 @@ local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dic
         toggleAudioPerms(true)
        
         if playing then
-            fade(playing, "Out")
+            fadeSound(playing, "Out")
         end
 
         newSound.Volume = 0
         newSound.TimePosition = currentSongData.timePosition:get(false)
         newSound:Resume()
 
-        fade(newSound, "In")
+        fadeSound(newSound, "In")
         currentSongData.songData:set(soundData)
         currentSongData.currentAudio:set(newSound)
     else
-        stopCurrentSong(false)
+        stopCurrentSong(true)
     end
 end
 
