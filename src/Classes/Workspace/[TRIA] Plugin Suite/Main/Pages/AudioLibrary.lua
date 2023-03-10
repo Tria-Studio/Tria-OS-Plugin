@@ -96,6 +96,7 @@ local STATUS_ERRORS = {
 }
 
 local function toggleAudioPerms(enabled: boolean)
+    print("Toggling", enabled and 6311279644 or oldPlaceId)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
     game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 end
@@ -682,13 +683,19 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
+function frame.OnOpen()
+    warn("Enabling")
+    toggleAudioPerms(true)
+end
+
 function frame.OnClose()
     task.spawn(fetchApi)
+    warn("Disabling")
+    toggleAudioPerms(false)
     stopSong()
 end
 
 task.spawn(fetchApi)
-toggleAudioPerms(true)
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
@@ -702,6 +709,7 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
 end))
 
 Util.MainMaid:GiveTask(function()
+    warn("Disabling due to unload")
     toggleAudioPerms(false)
 end)
 
