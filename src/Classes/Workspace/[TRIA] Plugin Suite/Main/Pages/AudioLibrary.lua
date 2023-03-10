@@ -487,8 +487,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Value = currentSongData.timePosition,
                         Min = Value(0),
                         Max = currentSongData.timeLength,
-                        Position = UDim2.fromScale(0.55, 0.225),
-                        Size = UDim2.fromScale(0.65, 0.25),
+                        Position = UDim2.fromScale(0.55, 0.25),
+                        Size = UDim2.fromScale(0.65, 0.2),
                         Increment = 1,
                     },
 

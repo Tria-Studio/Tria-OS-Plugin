@@ -79,7 +79,7 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
                 BackgroundColor3 = Theme.DimmedText.Default,
                 Position = sliderPosition,
 
-                Size = UDim2.fromScale(1.8, 1.8),
+                Size = UDim2.fromScale(1.75, 1.75),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
                 AutoButtonColor = true,
