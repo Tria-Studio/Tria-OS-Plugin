@@ -258,7 +258,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                             return currentAudioMatches(previewSound) and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function()
-                            if not isLoaded then
+                            if not isLoaded:get(false) then
                                 return Theme.ErrorText.Default:get()
                             end
                             return currentAudioMatches(previewSound) and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
