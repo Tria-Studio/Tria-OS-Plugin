@@ -102,6 +102,30 @@ local function fade(sound: Sound, direction: string)
     end
 end
 
+local function jumpToPage(pageNumber: number)
+    local newPage = math.clamp(pageNumber, 1, math.max(1, pageData.total:get(false)))
+    local uiLayout = pageLayout:get(false)
+
+    if uiLayout then
+        uiLayout:JumpToIndex(newPage - 1)
+        pageData.current:set(newPage)
+    end
+end
+
+local function incrementPage(increment: number)
+    jumpToPage(pageData.current:get(false) + increment)
+end
+
+local function stopCurrentSong()
+    local playing = currentAudio:get(false)
+    if not playing then
+        return
+    end
+    fade(playing, "Out")
+    toggleAudioPerms(false)
+    currentAudio:set(nil)
+end
+
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     local timePosition = Value(0)
 
@@ -219,7 +243,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         Size = UDim2.fromScale(0.7, 0.25),
                         TextSize = 14,
                         Text = Computed(function()
-                            return Util.secondsToTime(timePosition:get()) .. "/" .. Util.secondsToTime(soundLength:get())
+                            return ("%s/%s"):format(Util.secondsToTime(timePosition:get()), Util.secondsToTime(soundLength:get()))
                         end),
                         TextColor3 = Theme.MainText.Default,
                     },
@@ -261,6 +285,8 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                                 toggleAudioPerms(false)
                                 playing:Pause()
                                 currentAudio:set(nil)
+
+                                stopCurrentSong()
                             end
                         end
                     },
@@ -268,20 +294,6 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
             }
         }
     }
-end
-
-local function jumpToPage(pageNumber: number)
-    local newPage = math.clamp(pageNumber, 1, math.max(1, pageData.total:get(false)))
-    local uiLayout = pageLayout:get(false)
-
-    if uiLayout then
-        uiLayout:JumpToIndex(newPage - 1)
-        pageData.current:set(newPage)
-    end
-end
-
-local function incrementPage(increment: number)
-    jumpToPage(pageData.current:get(false) + increment)
 end
 
 local function getAudioChildren(): {Instance}
@@ -368,16 +380,6 @@ local function fetchApi()
         pageData.current:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
     end
-end
-
-local function stopCurrentSong()
-    local playing = currentAudio:get(false)
-    if not playing then
-        return
-    end
-    fade(playing, "Out")
-    toggleAudioPerms(false)
-    currentAudio:set(nil)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
