@@ -236,6 +236,8 @@ function MapSelect:StartMapSelection()
 
     local currentTarget, lastTarget
 
+    local humanoid = Instance.new("Humanoid")
+
     local mapHighlight = Instance.new("Highlight", workspace.CurrentCamera)
     local mouse = plugin:GetMouse()
 
@@ -244,6 +246,7 @@ function MapSelect:StartMapSelection()
     self.selectTextState:set("Click to select")
     self.selectTextColor:set(Theme.SubText.Default:get(false))
     self._Maid:GiveTask(mapHighlight)
+    self._Maid:GiveTask(humanoid)
     self.selectingMap:set(true)
     plugin:Activate(true)
 
@@ -261,12 +264,15 @@ function MapSelect:StartMapSelection()
             end
 
             if target then
+                humanoid.Parent = target
+
                 local isMap, text = self:IsTriaMap(target)
                 mapHighlight.FillColor = isMap and Color3.fromRGB(168, 229, 153) or Color3.fromRGB(245, 130, 130)
                 mapHighlight.Adornee = target
                 currentTarget = target
             else
                 mapHighlight.Adornee = nil
+                humanoid.Parent = nil
                 currentTarget = nil
             end 
         end
