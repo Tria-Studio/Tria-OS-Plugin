@@ -46,6 +46,8 @@ local pageData = {
 
 local currentSongData = {
     currentAudio = Value(nil),
+    currentTween = Value(nil),
+
     songData = Value({Name = "", Artist = ""}),
 
     timePosition = Value(0),
@@ -100,10 +102,13 @@ end
 local function fadeSound(sound: Sound, direction: string)
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
+    currentSongData.currentTween:set(tween)
 
     if direction == "Out" then
         tween.Completed:Connect(function()
-            sound:Stop()
+            if tween.PlaybackState ~= Enum.PlaybackState.Cancelled then
+                sound:Stop()
+            end
         end)
     end
 end
@@ -134,7 +139,9 @@ end
 
 local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
     newSound.Volume = 0
+    newSound.TimePosition = 0
     newSound:Resume()
+    print("Fading", newSound)
     fadeSound(newSound, "In")
 
     currentSongData.timePosition:set(0)
@@ -143,9 +150,18 @@ local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
     currentSongData.timeLength:set(newSound.TimeLength)
 end
 
+local function stopCurrentTween()
+    local tween = currentSongData.currentTween:get(false)
+    if tween then
+        tween:Cancel()
+        currentSongData.currentTween:set(nil)
+    end
+end
+
 local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then -- No song playing
+        stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentlyPlaying == newSound then -- Song being stopped
         stopSong()
