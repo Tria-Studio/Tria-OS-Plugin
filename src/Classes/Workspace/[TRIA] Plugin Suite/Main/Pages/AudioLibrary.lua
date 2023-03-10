@@ -134,49 +134,47 @@ local function stopCurrentSong(fade: boolean)
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
-    local timePosition = Value(0)
-
     local previewSound = PlguinSoundManager:QueueSound(data.ID)
     previewSound.Name = data.Name
 
-    local soundLength = Value(1)
-    local isPlaying = false
+    -- local soundLength = Value(1)
+    -- local isPlaying = false
 
-    previewSound.Loaded:Connect(function()
-        soundLength:set(previewSound.TimeLength)
-    end)
-    previewSound.Resumed:Connect(function()
-        isPlaying = true
-    end)
-    previewSound.Paused:Connect(function()
-        isPlaying = false
-    end)
-    previewSound.Stopped:Connect(function()
-        timePosition:set(0)
-        isPlaying = false
-    end)
-    previewSound.Ended:Connect(function()
-        timePosition:set(0)
-        currentSongData.currentAudio:set(nil)
-        isPlaying = false
-    end)
+    -- previewSound.Loaded:Connect(function()
+    --     soundLength:set(previewSound.TimeLength)
+    -- end)
+    -- previewSound.Resumed:Connect(function()
+    --     isPlaying = true
+    -- end)
+    -- previewSound.Paused:Connect(function()
+    --     isPlaying = false
+    -- end)
+    -- previewSound.Stopped:Connect(function()
+    --     timePosition:set(0)
+    --     isPlaying = false
+    -- end)
+    -- previewSound.Ended:Connect(function()
+    --     timePosition:set(0)
+    --     currentSongData.currentAudio:set(nil)
+    --     isPlaying = false
+    -- end)
 
-    RunService.Heartbeat:Connect(function(deltaTime)
-        if 
-            isPlaying 
-            and previewSound.IsLoaded 
-            and previewSound == currentSongData.currentAudio:get(false) 
-            and not Util._Slider.isUsingSlider:get(false) 
-        then
-            timePosition:set(timePosition:get(false) + deltaTime)
-        end
-    end)
+    -- RunService.Heartbeat:Connect(function(deltaTime)
+    --     if 
+    --         isPlaying 
+    --         and previewSound.IsLoaded 
+    --         and previewSound == currentSongData.currentAudio:get(false) 
+    --         and not Util._Slider.isUsingSlider:get(false) 
+    --     then
+    --         timePosition:set(timePosition:get(false) + deltaTime)
+    --     end
+    -- end)
 
-    Observer(timePosition):onChange(function()
-        if Util._Slider.isUsingSlider:get(false) then
-            previewSound.TimePosition = timePosition:get(false)
-        end
-    end)
+    -- Observer(timePosition):onChange(function()
+    --     if Util._Slider.isUsingSlider:get(false) then
+    --         previewSound.TimePosition = timePosition:get(false)
+    --     end
+    -- end)
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
