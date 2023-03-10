@@ -255,6 +255,17 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
     }
 end
 
+local function PageKey(data: PublicTypes.Dictionary): Instance
+    return Hydrate(Components.ImageButton {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Active = Util.interfaceActive,
+        BackgroundTransparency = 1,
+        ZIndex = 3,
+        [Children] = Components.Constraints.UIAspectRatio(1),
+    })(data)
+
+end
+
 local function getAudioChildren(): {Instance}
     local children = {}
 
@@ -516,10 +527,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 ZIndex = 3,
 
                 [Children] = {
-                    Components.ImageButton { -- Skip to first page
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        Active = Util.interfaceActive,
-                        BackgroundTransparency = 1,
+                    PageKey { -- Skip to first page
                         LayoutOrder = 1,
                         ImageColor3 = Computed(function()
                             return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
@@ -528,18 +536,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Rotation = 180,
                         Position = UDim2.fromScale(0.1, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
-                        ZIndex = 3,
                         
-                        [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
                             jumpToPage(1)
                         end
                     },
                     
-                    Components.ImageButton { -- Skip one page left
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        Active = Util.interfaceActive,
-                        BackgroundTransparency = 1,
+                    PageKey { -- Skip one page left
                         Image = "rbxassetid://6031094687",
                         LayoutOrder = 2,
                         Rotation = 90,
@@ -548,9 +551,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
                         Position = UDim2.fromScale(0.3, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
-                        ZIndex = 3,
-
-                        [Children] = Components.Constraints.UIAspectRatio(1),
                         [OnEvent "Activated"] = function()
                             incrementPage(-1)
                         end
@@ -593,10 +593,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end
                     },
 
-                    Components.ImageButton { -- Skip one page right
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        Active = Util.interfaceActive,
-                        BackgroundTransparency = 1,
+                    PageKey { -- Skip one page right
                         LayoutOrder = 4,
                         Image = "rbxassetid://6031094687",
                         ImageColor3 = Computed(function()
@@ -605,9 +602,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Rotation = -90,
                         Position = UDim2.fromScale(0.7, 0.5),
                         Size = UDim2.new(0.2, -5, 1, -5),
-                        ZIndex = 3,
-
-                        [Children] = Components.Constraints.UIAspectRatio(1),
+                        
                         [OnEvent "Activated"] = function()
                             incrementPage(1)
                         end
