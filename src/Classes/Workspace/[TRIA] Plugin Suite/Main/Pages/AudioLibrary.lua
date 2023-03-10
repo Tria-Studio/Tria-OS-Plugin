@@ -302,9 +302,6 @@ local function getAudioChildren(): {Instance}
 
     local assetsRemaining = totalAssets
 
-    print("Updating")
-    toggleAudioPerms(true)
-
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
 
