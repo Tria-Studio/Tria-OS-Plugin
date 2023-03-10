@@ -133,7 +133,6 @@ local function stopSong()
         return
     end
     fadeSound(currentlyPlaying, "Out")
-    toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
 end
 
@@ -680,8 +679,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
+function frame.OnOpen()
+    toggleAudioPerms(true)
+end
+
 function frame.OnClose()
     task.spawn(fetchApi)
+    toggleAudioPerms(false)
     stopSong()
 end
 
