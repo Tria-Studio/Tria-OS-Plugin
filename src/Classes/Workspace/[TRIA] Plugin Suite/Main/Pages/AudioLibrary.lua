@@ -485,7 +485,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 AnchorPoint = Vector2.new(0, 1),
                 Size = UDim2.new(1, 0, 0, 36),
                 Position = Spring(Computed(function()
-                    return UDim2.new(0, 0, 1, if currentSongData.)
+                    return UDim2.new(0, 0, 1, if currentSongData.currentAudio:get() then -38 else 0)
                 end), 20),
 
                 [Children] = {
