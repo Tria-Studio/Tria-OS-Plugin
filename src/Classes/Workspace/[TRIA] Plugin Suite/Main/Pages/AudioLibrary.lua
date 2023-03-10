@@ -301,6 +301,8 @@ local function getAudioChildren(): {Instance}
     local totalPages = math.ceil(totalAssets / itemsPerPage)
 
     local assetsRemaining = totalAssets
+    
+    toggleAudioPerms(true)
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -478,7 +480,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         [Ref] = pageLayout
                                     },
 
-                                    Computed(getAudioChildren)
+                                    Computed(getAudioChildren, function()
+                                        PlguinSoundManager:ClearAllSounds()
+                                    end)
                                 }
                             },
                         }
