@@ -379,47 +379,56 @@ local function schedule(task: () -> (), interval: number)
     end))
 end
 
-local fpsTimes = {}
-task.defer(schedule, function(deltaTime: number)
-    table.insert(fpsTimes, 1 / math.clamp(deltaTime, 1/1000, deltaTime + 0.1))
-    Util._DEBUG._Fps:set(math.floor(Util.getRollingAverage(fpsTimes, 30)))
-end, 0.05)
+do
+    local fpsTimes = {}
+    task.defer(schedule, function(deltaTime: number)
+        table.insert(fpsTimes, 1 / math.clamp(deltaTime, 1/1000, deltaTime + 0.1))
+        Util._DEBUG._Fps:set(math.floor(Util.getRollingAverage(fpsTimes, 30)))
+    end, 0.05)
+end
 
 local githubUrl = "https://www.githubstatus.com/api/v2/status.json"
-local httpTimes = {}
-task.defer(schedule, function()
-    local start = os.clock()
-    local fired, result = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
-    if fired then
-        table.insert(httpTimes, (os.clock() - start) * 1000)
-        Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
-    else
-        Util._DEBUG._HttpPing:set(Util._Errors.HTTP_ERROR)
-    end
-end, 10)
 
-task.defer(schedule, function()
-    local fired, response = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
-    local colorMap = {
-        ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
-        ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",
-        ["major"] = "<font color='rgb(235, 140, 68)'>%s</font>",
-        ["critical"] = "<font color='rgb(209, 66, 59)'>%s</font>"
-    }
-
-    if fired then
-        response = HttpService:JSONDecode(response)
-        if colorMap[response.status.indicator] then
-            Util._DEBUG._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
+do
+    local httpTimes = {}
+    task.defer(schedule, function()
+        local start = os.clock()
+        local fired, result = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
+        if fired then
+            table.insert(httpTimes, (os.clock() - start) * 1000)
+            Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
+        else
+            Util._DEBUG._HttpPing:set(Util._Errors.HTTP_ERROR)
         end
-    else
-        Util._DEBUG._GitStatus:set(Util._Errors.HTTP_ERROR)
-    end
-end, 10)
+    end, 10)
+end
 
-task.defer(schedule, function()
-    Util._DEBUG._Uptime:set(Util._DEBUG._Uptime:get(false) + 1)
-end, 1)
+do
+    task.defer(schedule, function()
+        local fired, response = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
+        local colorMap = {
+            ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
+            ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",
+            ["major"] = "<font color='rgb(235, 140, 68)'>%s</font>",
+            ["critical"] = "<font color='rgb(209, 66, 59)'>%s</font>"
+        }
+    
+        if fired then
+            response = HttpService:JSONDecode(response)
+            if colorMap[response.status.indicator] then
+                Util._DEBUG._GitStatus:set(colorMap[response.status.indicator]:format(response.status.description))
+            end
+        else
+            Util._DEBUG._GitStatus:set(Util._Errors.HTTP_ERROR)
+        end
+    end, 10)
+end
+
+do
+    task.defer(schedule, function()
+        Util._DEBUG._Uptime:set(Util._DEBUG._Uptime:get(false) + 1)
+    end, 1)
+end
 
 updateButtonsActive()
 Observer(Util._Message.Text):onChange(updateButtonsActive)
