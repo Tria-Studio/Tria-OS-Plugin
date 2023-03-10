@@ -393,7 +393,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Position = UDim2.new(0, 1, 0, -36),
 
                 [Children] = {
-                    
+                    New "Frame" { -- Line
+                        BackgroundColor3 = Theme.Border.Default,
+                        Position = UDim2.new(0, 0, 0, -2),
+                        Size = UDim2.new(1, 0, 0, 2)
+                    },
                 }
             },
 
@@ -526,7 +530,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             New "Frame" { -- Holder
                 BackgroundColor3 = Theme.TableItem.Default,
                 Position = UDim2.new(0, 0, 0, 30),
-                Size = UDim2.new(1, 0, 1, -68),
+                Size = UDim2.new(1, 0, 1, -100),
                 LayoutOrder = 2,
 
                 [Children] = {
