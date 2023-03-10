@@ -647,5 +647,6 @@ function frame.OnClose()
 end
 
 task.spawn(fetchApi)
+task.spawn(toggleAudioPerms, true)
 
 return frame
