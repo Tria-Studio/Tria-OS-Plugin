@@ -373,12 +373,10 @@ local function getAudioChildren(): {Instance}
 end
 
 local function fetchApi()
-    print(os.clock() - lastFetchTime)
     if os.clock() - lastFetchTime < 120 and CURRENT_FETCH_STATUS:get(false) == "Success" then
         return;
     end
     
-    warn("Fetching")
     lastFetchTime = os.clock()
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(0.5)
@@ -734,7 +732,6 @@ Util.MainMaid:GiveTask(function()
 end)
 
 local function updateOnAllSongsLoaded()
-    warn("Need to update:", permissionsNeedUpdating:get())
     Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
 end
 
