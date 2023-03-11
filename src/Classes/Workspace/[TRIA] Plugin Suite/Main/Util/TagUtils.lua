@@ -240,7 +240,7 @@ function tagUtils:GetSelectedMetadataValue(name: string, tag: string): any
         else metaDataData.hideWhenNil and "" or defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
 end
 
-function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string)
+function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
     local currentMap = Util.mapModel:get(false)
     local function verifyFolder(folderName: string?)
         if not currentMap:FindFirstChild(folderName or "Geometry") then

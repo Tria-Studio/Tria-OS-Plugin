@@ -17,7 +17,7 @@ local function positionModel(model: Model)
     Selection:Set({model})
 end
 
-local function insertModel(modelName: string, parent: Instance): Instance
+local function insertModel(modelName: string, parent: Instance?): Instance
     ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", modelName))
     local newModel = (componentFiles:FindFirstChild(modelName) or addonFiles:FindFirstChild(modelName)):Clone()
     newModel.Parent = parent
@@ -273,7 +273,7 @@ end)                ]], line + 1)
             InsertFunction = function()
                 local currentMap = Util.mapModel:get(false)
     
-                local newParent = if Util.hasSpecialFolder:get(false) and map.Special:FindFirstChild("Button")
+                local newParent = if Util.hasSpecialFolder:get(false) and currentMap.Special:FindFirstChild("Button")
                     then currentMap.Special.Button
                     elseif currentMap:FindFirstChild("Geometry") then currentMap.Geometry
                     else currentMap

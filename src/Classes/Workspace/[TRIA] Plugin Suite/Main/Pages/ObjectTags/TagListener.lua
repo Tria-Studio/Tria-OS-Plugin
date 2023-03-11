@@ -124,7 +124,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                     Tooltip = data.Tooltip.Text,
                     Position = UDim2.new(1, -4, 0, 4)
                 },
-                (function(): Instance
+                (function(): Instance?
                     if #data.metadata == 0 then
                         return
                     end
