@@ -225,10 +225,8 @@ end)                ]], line + 1)
 
                 local demo = addonFiles.WaterjetDemo:Clone()
                 positionModel(demo)
-                for  i, part in pairs(demo:GetChildren()) do
-                    part.Parent = currentMap.Special.Waterjets
-                end
-                demo:Destroy()
+                demo.Parent = currentMap.Special.Waterjets
+
                 Util.debugWarn("Successfully inserted Waterjets!")
             end
         },
