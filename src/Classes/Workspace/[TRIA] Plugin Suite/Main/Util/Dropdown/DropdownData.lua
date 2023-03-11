@@ -1,5 +1,6 @@
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
+local PublicTypes = require(Package.PublicTypes)
 
 local DEFAULT_LIQUIDS = {
     {
@@ -15,7 +16,7 @@ local DEFAULT_LIQUIDS = {
 }
 
 return {
-    Difficulty = function()
+    Difficulty = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         local data = {}
         for i = 1, 8 do
             local tbl = Util.Difficulty[i - 1]
@@ -27,7 +28,7 @@ return {
         end
         return data, Enum.SortOrder.LayoutOrder
     end,
-    LiquidType = function()
+    LiquidType = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         local data = table.clone(DEFAULT_LIQUIDS)
         for i, child in ipairs(Util.mapModel:get(false).Settings.Liquids:GetChildren()) do
             data[3 + i] = {
@@ -37,10 +38,10 @@ return {
         end
         return data, Enum.SortOrder.LayoutOrder
     end,
-    Liquids = function()
+    Liquids = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         return table.clone(DEFAULT_LIQUIDS), Enum.SortOrder.LayoutOrder
     end,
-    Materials = function()
+    Materials = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         local data = {}
         for i, material in ipairs(Enum.Material:GetEnumItems()) do
             if material.Name == "Air" or material.Name == "Water" then
@@ -52,7 +53,7 @@ return {
         end
         return data, Enum.SortOrder.Name
     end,
-    Locators = function()
+    Locators = function(): {PublicTypes.Dictionary}
         return {
             {
                 Value = "default",
@@ -69,18 +70,18 @@ return {
             },
         }
     end,
-    TeleportType = function()
+    TeleportType = function(): {PublicTypes.Dictionary}
         return {
             {Value = "start"},
             {Value = "end"},
         }
     end,
-    BubbleParticle = function()
+    BubbleParticle = function(): {PublicTypes.Dictionary}
         return {
             {Value = "default"}
         }
     end,
-    FanShape = function()
+    FanShape = function(): {PublicTypes.Dictionary}
         return {
             {Value = "square"},
             {Value = "circle"}

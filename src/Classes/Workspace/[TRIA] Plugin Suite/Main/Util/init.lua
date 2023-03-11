@@ -277,7 +277,7 @@ function Util.updateSelectedParts()
             selectionMaid:GiveTask(thing.ChildRemoved:Connect(update))
             selectionMaid:GiveTask(thing.AncestryChanged:Connect(update))
 
-            selectionMaid:GiveTask(thing.ChildAdded:Connect(function(newThing)
+            selectionMaid:GiveTask(thing.ChildAdded:Connect(function(newThing: Instance)
                 if newThing:IsA("ValueBase") then
                     update()
                 end
@@ -381,7 +381,7 @@ function Util.toggleAudioPerms(enabled: boolean)
     game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 end
 
-local function schedule(task: () -> (), interval: number)
+local function schedule(task: (number) -> (), interval: number)
     local lastUpdate = 0
 
     Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
