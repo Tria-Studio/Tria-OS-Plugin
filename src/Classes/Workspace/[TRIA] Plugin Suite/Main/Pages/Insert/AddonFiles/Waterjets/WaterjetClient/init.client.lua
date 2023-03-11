@@ -1,8 +1,5 @@
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-if not RunService:IsRunning() then
-	return
-end
 
 local MapLib = game.GetMapLib:Invoke()()
 local map = MapLib.map
