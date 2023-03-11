@@ -313,6 +313,8 @@ local function getAudioChildren(): {Instance}
     songLoadData.total:set(math.max(totalAssets, 1))
 
     task.wait()
+    -- ^^ THIS IS DANGEROUS
+    -- FIX THIS WHEN EXPLICIT DEPENDENCIES RELEASE
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
