@@ -141,13 +141,13 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                 local itemName = data.Name
                 local itemData = data.Data
 
-                local liquidDropdown = SettingsUtil.DirectoryDropdown({
+                local buttonDropdown = SettingsUtil.DirectoryDropdown({
                     Default = true, 
 					IsSecondary = true,
                     Display = itemName, 
                     LayoutOrder = data.Name == "Default" and 1 or data.Name == "Group" and 2 or 3,
 					HeaderEditable = data.Name ~= "Default" and data.Name ~= "Group",
-                    OnHeaderChange = function(newHeader)
+                    OnHeaderChange = function(newHeader: string)
 						if not table.find(buttonTypes, newHeader) then
 							return
 						end
@@ -170,7 +170,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                         }
                     }
                 end)
-                return folder, liquidDropdown
+                return folder, buttonDropdown
             end, Fusion.doNothing)
         }
     }
@@ -183,7 +183,7 @@ end
 function Data:init()
     insertButtonFolders()
 
-	local function updateFolder(child)
+	local function updateFolder(child: Instance)
 		if table.find(buttonTypes, child.Name) then
 			setupButtonFolder(child)
 		end
@@ -191,14 +191,14 @@ function Data:init()
 
     local buttonFolder = Util.getDirFolder("Button")
     if buttonFolder then
-        SettingsUtil.SettingMaid:GiveTask(buttonFolder.ChildAdded:Connect(function(child)
+        SettingsUtil.SettingMaid:GiveTask(buttonFolder.ChildAdded:Connect(function(child: Instance)
             updateFolder(child)
 			SettingsUtil.SettingMaid:GiveTask(child:GetPropertyChangedSignal("Name"):Connect(function()
 				updateFolder(child)
 			end))
         end))
 
-        SettingsUtil.SettingMaid:GiveTask(buttonFolder.ChildRemoved:Connect(function(child)
+        SettingsUtil.SettingMaid:GiveTask(buttonFolder.ChildRemoved:Connect(function(child: Instance)
             local items = directories.Buttons.Items
             if items:get(false)[child] then
                 SettingsUtil.modifyStateTable(items, "set", child, nil)

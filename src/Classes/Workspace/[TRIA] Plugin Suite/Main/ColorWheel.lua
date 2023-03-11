@@ -186,7 +186,7 @@ function ColorWheel:GetUI(): Instance
                         Size = UDim2.fromScale(0.7, 0.6),
                         Image = "rbxassetid://6916730280",
                         BackgroundColor3 = Theme.Border.Default,
-                        ImageColor3 = Computed(function()
+                        ImageColor3 = Computed(function(): Color3
                             if not chosenColor:get() then
                                 return Color3.new(1, 1, 1)
                             end
@@ -260,7 +260,7 @@ function ColorWheel:GetUI(): Instance
                         [Out "AbsoluteSize"] = sliderData.Size,
 
                         [Children] = {
-                            Components.Constraints.UIGradient(Computed(function()
+                            Components.Constraints.UIGradient(Computed(function(): ColorSequence
                                 local H, S, V = (chosenColor:get() or Color3.new()):ToHSV()
                                 return ColorSequence.new(Color3.new(0, 0, 0), Color3.fromHSV(H, S, 1))
                             end), nil, 270),
@@ -370,7 +370,7 @@ function ColorWheel:GetUI(): Instance
                         TextColor3 = Theme.MainText.Default,
                         PlaceholderText = "Hex",
                         ZIndex = 9,
-                        Text = Computed(function()
+                        Text = Computed(function(): string
                             if not chosenColor:get() then
                                 return ""
                             end

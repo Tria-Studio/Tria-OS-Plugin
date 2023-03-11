@@ -19,7 +19,7 @@ return New "Frame" { --// Message
 	BackgroundTransparency = 0.625,
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
-	Visible = Computed(function()
+	Visible = Computed(function(): boolean
 		return Util._Message.Text:get() ~= ""
 	end),
 	Name = "Message",
@@ -28,7 +28,7 @@ return New "Frame" { --// Message
 	[Children] = {
 		New "ImageLabel" {
 			BackgroundTransparency = 1,
-			Size = Computed(function()
+			Size = Computed(function(): UDim2
 				local frameSize = messageFrameSize:get() or Vector2.new()
 				return UDim2.new(0, frameSize.X + 24, 0, frameSize.Y + 24)
 			end),
@@ -66,7 +66,7 @@ return New "Frame" { --// Message
 					BackgroundTransparency = 1,
 					Position = UDim2.fromOffset(0, 24),
 					Size = UDim2.fromScale(1, 0),
-					Text = Computed(function()
+					Text = Computed(function(): string
 						local message = Util._Message.Text:get()
 						if typeof(message) == "table" then
 							message = message:get()
@@ -84,25 +84,25 @@ return New "Frame" { --// Message
 				},
 
 				Components.TwoOptions({
-					Text = Computed(function()
+					Text = Computed(function(): string
 						return string.format("%s", Util._Message.Option1:get().Text or "")
 					end),
 
 					Callback = function()
 						Util._Message.Option1:get().Callback()
-						Util:CloseMessage()
+						Util.CloseMessage()
 					end,
 
-					BackgroundColor3 = Computed(function()
+					BackgroundColor3 = Computed(function(): Color3
 						return Util._Message.Option1:get() and Util._Message.Option1:get().BackgroundColor3 or Theme.Button.Selected
 					end),
 
 				}, {
-					Text = Computed(function()
+					Text = Computed(function(): string
 						return Util._Message.Option2:get() and Util._Message.Option2:get().Text or ""
 					end),
 					
-					Visible = Computed(function()
+					Visible = Computed(function(): boolean
 						Util._Message.Text:get()
 						return Util._Message.Option2:get().Text ~= nil
 					end),
@@ -111,7 +111,7 @@ return New "Frame" { --// Message
 						if Util._Message.Option2:get() and Util._Message.Option2:get().Callback then 
 							Util._Message.Option2:get().Callback()
 						end
-						Util:CloseMessage()
+						Util.CloseMessage()
 					end,
 
 					BackgroundColor3 = Computed(function()

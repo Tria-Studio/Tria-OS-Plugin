@@ -19,6 +19,9 @@ local Computed = Fusion.Computed
 local selectionMaid = Maid.new()
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
+local oldUniverseId = game.GameId
+local oldPlaceId = game.PlaceId
+
 local Util = {
     Signal = Signal,
     Maid = Maid,
@@ -94,6 +97,11 @@ local Util = {
             Name = "Divine",
             Color = Color3.fromRGB(255, 8, 152),
             Image = "rbxassetid://12132025606"
+        },
+        [7] = {
+            Name = "Eternal",
+            Color = Color3.fromRGB(255, 255, 255),
+		    Image = "rbxassetid://12741946741",
         }
     }, 
 
@@ -269,7 +277,7 @@ function Util.updateSelectedParts()
             selectionMaid:GiveTask(thing.ChildRemoved:Connect(update))
             selectionMaid:GiveTask(thing.AncestryChanged:Connect(update))
 
-            selectionMaid:GiveTask(thing.ChildAdded:Connect(function(newThing)
+            selectionMaid:GiveTask(thing.ChildAdded:Connect(function(newThing: Instance)
                 if newThing:IsA("ValueBase") then
                     update()
                 end
@@ -345,7 +353,7 @@ function Util.secondsToTime(t: number): string
     return timeStr
 end
 
-function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
+function Util.lerp(a: any, b: any, t: any): any
     return (1 - t) * a + t * b
 end
 
@@ -368,7 +376,12 @@ function Util.getRollingAverage(data: {number}, backCount: number): number
     return sum / #newData
 end
 
-local function schedule(task: () -> (), interval: number)
+function Util.toggleAudioPerms(enabled: boolean)
+    game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
+    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
+end
+
+local function schedule(task: (number) -> (), interval: number)
     local lastUpdate = 0
 
     Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)

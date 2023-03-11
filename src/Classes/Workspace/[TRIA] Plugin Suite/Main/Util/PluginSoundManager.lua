@@ -12,19 +12,14 @@ widget.Title = "PluginSoundManager"
 
 function PluginSoundManager:QueueSound(soundId: number): Sound
 	local newSound = Instance.new("Sound")
-	newSound.SoundId = "rbxassetid://" .. soundId
 	newSound.Looped = false
 	newSound.Parent = widget
 
-	return newSound
-end
+	task.defer(function()
+		newSound.SoundId = "rbxassetid://" .. soundId
+	end)
 
-function PluginSoundManager:ClearAllSounds()
-	for _, item in ipairs(widget:GetChildren()) do
-		if item:IsA("Sound") then
-			item:Destroy()
-		end
-	end
+	return newSound
 end
 
 return PluginSoundManager

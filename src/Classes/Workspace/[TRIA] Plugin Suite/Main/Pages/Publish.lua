@@ -44,36 +44,36 @@ local apiData = {
     isShowingApiKey = Value(false)
 }
 
-local whitelistIdIsEmpty = Computed(function()
+local whitelistIdIsEmpty = Computed(function(): boolean
     return whitelistMapId:get() ~= ""
 end)
 
-local selectedMapToPublishExists = Computed(function()
+local selectedMapToPublishExists = Computed(function(): boolean
     return selectedPublishMap:get() ~= nil
 end)
 
-local isUnfilteredKeySimilar = Computed(function()
+local isUnfilteredKeySimilar = Computed(function(): boolean
     return apiData.apiKey.unfiltered:get() ~= "" and apiData.apiKey.unfiltered:get() ~= apiData.playerApiKey:get()
 end)
 
 local springs = {
-    ["selectedMapSpring"] = Spring(Computed(function()
+    ["selectedMapSpring"] = Spring(Computed(function(): Color3
         return selectedPublishMap:get() and Theme.MainButton.Default:get() or Theme.CurrentMarker.Selected:get()
     end), 20),
 
-    ["publishButtonSpring"] = Spring(Computed(function()
+    ["publishButtonSpring"] = Spring(Computed(function(): Color3
         return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
     end), 20),
 
-    ["whitelistMapSpring"] = Spring(Computed(function()
+    ["whitelistMapSpring"] = Spring(Computed(function(): Color3
         return whitelistIdIsEmpty:get() and Theme.MainButton.Default:get() or Theme.CurrentMarker.Selected:get()
     end), 20),
 
-    ["whitelistIdSpring"] = Spring(Computed(function()
+    ["whitelistIdSpring"] = Spring(Computed(function(): Color3
         return whitelistIdIsEmpty:get() and Theme.BrightText.Default:get() or Theme.SubText.Default:get()
     end), 20),
 
-    ["whitelistedTextSpring"] = Spring(Computed(function()
+    ["whitelistedTextSpring"] = Spring(Computed(function(): Color3
         return selectedPublishMap:get() and Theme.BrightText.Default:get() or Theme.DimmedText.Default:get()
     end), 20)
 }
@@ -112,7 +112,7 @@ local function InfoTextLabel(text: string, layoutOrder: number): Instance
 end
 
 local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instance
-    return function(visible)
+    return function(visible: Fusion.StateObject<boolean>): Instance
         return New "Frame" {
             LayoutOrder = layoutOrder,
             AutomaticSize = Enum.AutomaticSize.Y,
@@ -147,10 +147,10 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                             LayoutOrder = value.ID,
                             Image = value.Image,
                             ScaleType = Enum.ScaleType.Crop,
-                            Size = Computed(function()
+                            Size = Computed(function(): UDim2
                                 return UDim2.new(1, 0, 0, publishedMaps[1] == noMapsFoundText:get() and 40 or 75)
                             end),
-                            ImageColor3 = Spring(Computed(function()
+                            ImageColor3 = Spring(Computed(function(): Color3
                                 return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
                             end), 20),
 
@@ -186,7 +186,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                                         Size = UDim2.new(0, 110, 0.55, 0),
                                         FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold),
                                         TextSize = 18,
-                                        TextColor3 = Spring(Computed(function()
+                                        TextColor3 = Spring(Computed(function(): Color3
                                             return Color3.fromRGB(204 * colorMultiplier:get(), 204 * colorMultiplier:get(), 204 * colorMultiplier:get())
                                         end), 20)
                                     },
@@ -199,7 +199,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                                         FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.SemiBold),
                                         TextStrokeColor3 = Theme.Border.Default,
                                         TextStrokeTransparency = 0,
-                                        TextColor3 = Spring(Computed(function()
+                                        TextColor3 = Spring(Computed(function(): Color3
                                             local Color = Util.Difficulty[value.Difficulty].Color
                                             return Color3.new(Color.R * colorMultiplier:get(), Color.G * colorMultiplier:get(), Color.B * colorMultiplier:get())
                                         end), 20)
@@ -209,7 +209,7 @@ local function CreateMapList(list: {}, layoutOrder: number): (boolean) -> Instan
                                         Position = UDim2.new(1, -34, 0, 4),
                                         Size = UDim2.fromOffset(26, 26),
                                         Image = Util.Difficulty[value.Difficulty].Image,
-                                        ImageColor3 = Spring(Computed(function()
+                                        ImageColor3 = Spring(Computed(function(): Color3
                                             return Color3.new(colorMultiplier:get(), colorMultiplier:get(), colorMultiplier:get())
                                         end), 20)
                                     }
@@ -294,7 +294,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Dropdown({
                                 Header = "Setup Instructions",
                                 DefaultState = false
-                            }, function(visible)
+                            }, function(visible: Fusion.StateObject<boolean>): Instance
                                 return Components.DropdownTextlabel {
                                     TextXAlignment = Enum.TextXAlignment.Left,
                                     DropdownVisible = visible,
@@ -317,7 +317,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Dropdown({
                                 Header = "IMPORTANT NOTICE",
                                 DefaultState = true
-                            }, function(visible)
+                            }, function(visible: Fusion.StateObject<boolean>): Instance
                                 return Components.DropdownTextlabel {
                                     DropdownVisible = visible,
                                     Text = [[Your creator token is a long phrase of characters which authenticates and allows you to publish & whitelist maps.
@@ -350,7 +350,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Size = UDim2.new(0.4, 0, 0, 24),
                             Text = "Whitelist Map",
 
-                            Active = Computed(function()
+                            Active = Computed(function(): boolean
                                 local mapExists = whitelistIdIsEmpty:get()
                                 return Util.interfaceActive:get() and mapExists
                             end),
@@ -380,7 +380,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Font = Enum.Font.SourceSansSemibold,
                             TextSize = 16,
                             Size = UDim2.new(1, 0, 0, 32),
-                            Text = Computed(function()
+                            Text = Computed(function(): string
                                 return if selectedPublishMap:get() then selectedPublishMap:get().Name else "No map selected"
                             end),
                             TextColor3 = springs.whitelistedTextSpring,
@@ -411,7 +411,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Size = UDim2.new(0.4, 0, 0, 24),
                             Text = publishButtonText,
 
-                            Active = Computed(function()
+                            Active = Computed(function(): boolean
                                 local mapExists = selectedMapToPublishExists:get()
                                 return Util.interfaceActive:get() and mapExists
                             end),
@@ -458,7 +458,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         LayoutOrder = 1,
                         Header = "How This Works",
                         DefaultState = true
-                    }, function(visible)
+                    }, function(visible: Fusion.StateObject<boolean>): Instance
                         return Components.DropdownTextlabel {
                             DropdownVisible = visible,
                             Text = [[
@@ -504,7 +504,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                     TextSize = 18,
                                     TextTransparency = 0,
                                     TextColor3 = Theme.BrightText.Default,
-                                    Text = Computed(function()
+                                    Text = Computed(function(): string
                                         return apiData.apiKey[apiData.isShowingApiKey:get() and "unfiltered" or "filtered"]:get()
                                     end),
 
@@ -549,7 +549,7 @@ If you generate a new key, your old key will become invalid and you will need to
                                             ScaleType = Enum.ScaleType.Fit,
             
                                             ImageColor3 = Theme.SubText.Default,
-                                            Image = Computed(function()
+                                            Image = Computed(function(): string
                                                 return if apiData.isShowingApiKey:get() then "rbxassetid://6031075931" else "rbxassetid://6031075929"
                                             end),
 
@@ -578,12 +578,12 @@ If you generate a new key, your old key will become invalid and you will need to
                                     Text = "Submit",
                                     Active = isUnfilteredKeySimilar,
                                     AutoButtonColor = isUnfilteredKeySimilar,
-                                    TextColor3 = Spring(Computed(function()
+                                    TextColor3 = Spring(Computed(function(): Color3
                                         return if isUnfilteredKeySimilar:get()
                                             then Theme.BrightText.Default:get()
                                             else Theme.SubText.Default:get()
                                     end), 20),
-                                    BackgroundColor3 = Spring(Computed(function()
+                                    BackgroundColor3 = Spring(Computed(function(): Color3
                                         return if isUnfilteredKeySimilar:get()
                                             then Theme.MainButton.Default:get() 
                                             else Theme.CurrentMarker.Selected:get()
@@ -608,12 +608,12 @@ If you generate a new key, your old key will become invalid and you will need to
                                     Active = apiData.submittedApiKey,
                                     AutoButtonColor = apiData.submittedApiKey,
 
-                                    TextColor3 = Spring(Computed(function()
+                                    TextColor3 = Spring(Computed(function(): Color3
                                         return if apiData.submittedApiKey:get()
                                             then Theme.BrightText.Default:get() 
                                             else Theme.SubText.Default:get()
                                     end), 20),
-                                    BackgroundColor3 = Spring(Computed(function()
+                                    BackgroundColor3 = Spring(Computed(function(): Color3
                                         return if apiData.submittedApiKey:get() 
                                             then Theme.ErrorText.Default:get() 
                                             else Theme.DiffTextDeletionBackground.Default:get()

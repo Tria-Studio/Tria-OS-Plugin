@@ -17,7 +17,7 @@ local function positionModel(model: Model)
     Selection:Set({model})
 end
 
-local function insertModel(modelName: string, parent: Instance): Instance
+local function insertModel(modelName: string, parent: Instance?): Instance
     ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", modelName))
     local newModel = (componentFiles:FindFirstChild(modelName) or addonFiles:FindFirstChild(modelName)):Clone()
     newModel.Parent = parent
@@ -74,7 +74,7 @@ return {
     
             InsertFunction = function()
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
-                    return
+                    return false
                 end
 
                 local currentMap = Util.mapModel:get(false)
@@ -109,8 +109,6 @@ end)                ]], line + 1)
                     Util:ShowMessage(Util._Headers.ERROR_HEADER, "Failed to install TUNE, this could be because the MapScript is setup incorrectly. Please make sure you have the following line at the top of your MapScript:\n\n<b>local MapLib = game.GetMapLib:Invoke()()</b>")
                 end
                 ChangeHistoryService:SetWaypoint("Inserted TUNE")
-
-                return true
             end
         }, {
             Name = "Jump Measurement",
@@ -137,8 +135,6 @@ end)                ]], line + 1)
                 model:Destroy()
                 Util.debugWarn("Successfully inserted Jump Measurement Tools addon!")
                 ChangeHistoryService:SetWaypoint("Inserted jump measurement")
-
-                return true
             end
         }, {
             Name = "",
@@ -192,8 +188,6 @@ end)                ]], line + 1)
                 demo:Destroy()
                 Util.debugWarn("Successfully inserted EasyTP!")
                 ChangeHistoryService:SetWaypoint("Inserted EasyTP")
-
-                return true
             end
         },  {
             Name = "",
@@ -236,8 +230,6 @@ end)                ]], line + 1)
                 end
                 demo:Destroy()
                 Util.debugWarn("Successfully inserted Waterjets!")
-
-                return true
             end
         },
     },
@@ -281,7 +273,7 @@ end)                ]], line + 1)
             InsertFunction = function()
                 local currentMap = Util.mapModel:get(false)
     
-                local newParent = if Util.hasSpecialFolder:get(false) and map.Special:FindFirstChild("Button")
+                local newParent = if Util.hasSpecialFolder:get(false) and currentMap.Special:FindFirstChild("Button")
                     then currentMap.Special.Button
                     elseif currentMap:FindFirstChild("Geometry") then currentMap.Geometry
                     else currentMap

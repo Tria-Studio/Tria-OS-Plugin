@@ -55,7 +55,7 @@ local function showDebug()
 	local selectedAction = debugMenu:ShowAsync()
 	if selectedAction then
 		if selectedAction.ActionId:find("ShowDebug") then
-			Util:ShowMessage(Util._Headers.DEBUG_HEADER, Computed(function()
+			Util:ShowMessage(Util._Headers.DEBUG_HEADER, Computed(function(): string
 				return ([[<font color='rgb(120, 120, 120)'><b>Debug Information</b></font>
 <b>Version</b>: 0.5-dev
 <b>Release</b>: false

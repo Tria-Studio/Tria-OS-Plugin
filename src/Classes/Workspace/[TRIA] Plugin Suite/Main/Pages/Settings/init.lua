@@ -66,7 +66,7 @@ local function onMapChanged()
     end
 end
 
-local function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictionary, visible): Instance
+local function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictionary, visible: Fusion.StateObject<boolean>): Instance
     return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {

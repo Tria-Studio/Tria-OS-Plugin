@@ -45,7 +45,7 @@ function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.Stat
     return New "Frame" {
         [Ref] = settingFrame,
 
-        BackgroundColor3 = Computed(function()
+        BackgroundColor3 = Computed(function(): Color3
             local baseColor = backgroundColor:get()
             return Util.dropdownActive:get() and settingFrame:get().BackgroundColor3 or baseColor
         end),
@@ -76,7 +76,7 @@ function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.Stat
                 FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json"),
                 Text = data.Text,
                 TextTruncate = Enum.TextTruncate.AtEnd,
-                TextColor3 = Computed(function()
+                TextColor3 = Computed(function(): Color3
                     return getSettingTextColor(data)
                 end),
                 TextXAlignment = Enum.TextXAlignment.Left,
@@ -103,7 +103,7 @@ end
 
 function InputBox(data: PublicTypes.Dictionary, baseButton: Instance): (PublicTypes.Dictionary) -> Instance
     return function (props)
-        local isModifiable = Computed(function()
+        local isModifiable = Computed(function(): boolean
             return isCurrentSettingModifiable(data)
         end)
         return Hydrate(Components.TextBox {
@@ -111,13 +111,13 @@ function InputBox(data: PublicTypes.Dictionary, baseButton: Instance): (PublicTy
             TextEditable = isModifiable,
 
             AnchorPoint = Vector2.new(1, 0),
-            BackgroundTransparency = Computed(function()
+            BackgroundTransparency = Computed(function(): number
                 return baseButton == currentEditing:get() and Util.interfaceActive:get() and 0 or 1
             end),
             BackgroundColor3 = Theme.InputFieldBackground.Default,
             BorderSizePixel = 1,
             FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json"),
-            TextColor3 = Computed(function()
+            TextColor3 = Computed(function(): Color3
                 return getSettingTextColor(data)
             end),
             TextXAlignment = Enum.TextXAlignment.Left,
@@ -237,10 +237,10 @@ function SettingTypes.Color(data: PublicTypes.Dictionary): Instance
             InputBox(data, baseButton){
                 Position = UDim2.fromScale(1, 0),
                 Size = UDim2.new(0.55, -28, 1, 0),
-                Text = Computed(function()
+                Text = Computed(function(): string
                     return Util.colorToRGB(data.Value:get())
                 end),
-                TextEditable = Computed(function()
+                TextEditable = Computed(function(): boolean
                     return canEditSetting(data)
                 end),
 
@@ -283,7 +283,7 @@ function SettingTypes.Time(data: PublicTypes.Dictionary): Instance
             Position = UDim2.fromScale(1, 0),
             Size = UDim2.fromScale(0.55, 1),
             Text = data.Value,
-            TextEditable = Computed(function()
+            TextEditable = Computed(function(): boolean
                 return canEditSetting(data)
             end),
 
@@ -333,7 +333,7 @@ function SettingTypes.Dropdown(data: PublicTypes.Dictionary): Instance
                     Position = UDim2.fromOffset(24, 1),
                     Size = UDim2.fromOffset(16, 16),
                     Options = data.DropdownArray,
-                    OnToggle = function(newData)
+                    OnToggle = function(newData: any)
                         data.Value:set(newData)
                         Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
                     end
@@ -341,7 +341,7 @@ function SettingTypes.Dropdown(data: PublicTypes.Dictionary): Instance
             },
 
             Components.TextBox {
-                Active = Computed(function()
+                Active = Computed(function(): boolean
                     return isCurrentSettingModifiable(data)
                 end),
     
@@ -351,10 +351,10 @@ function SettingTypes.Dropdown(data: PublicTypes.Dictionary): Instance
                 Position = UDim2.new(0.45, 20, 0, 0),
                 Size = UDim2.fromScale(0.575, 1),
                 Text = data.Value,
-                TextColor3 = Computed(function()
+                TextColor3 = Computed(function(): Color3
                     return getSettingTextColor(data)
                 end),
-                TextEditable = Computed(function()
+                TextEditable = Computed(function(): boolean
                     return canEditSetting(data)
                 end),
                 TextXAlignment = Enum.TextXAlignment.Left,

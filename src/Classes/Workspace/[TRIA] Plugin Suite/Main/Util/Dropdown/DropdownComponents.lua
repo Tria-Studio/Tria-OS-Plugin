@@ -34,10 +34,10 @@ function DropdownComponents.DropdownButton(props: PublicTypes.Dictionary): Insta
                 Size = UDim2.fromScale(1, 1),
                 BackgroundTransparency = 1,
                 Image = "rbxassetid://6031094687",
-                Rotation = Spring(Computed(function()
+                Rotation = Spring(Computed(function(): number
                     return dropdownVisible:get() and 0 or 180
                 end), 20),
-                ZIndex = Computed(function()
+                ZIndex = Computed(function(): number
                     return Util._showArrows:get() and 8 or 1
                 end),
             }

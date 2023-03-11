@@ -98,8 +98,8 @@ local function OptionFrame(props: PublicTypes.Dictionary): Instance
     }
 end
 
-local function GetScriptButton(state, scriptName: string, layoutOrder: number): Instance
-    local activeState = Computed(function()
+local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: string, layoutOrder: number): Instance
+    local activeState = Computed(function(): boolean
         return not state:get() and Util.interfaceActive:get()
     end)
     return New "Frame" {
@@ -111,17 +111,17 @@ local function GetScriptButton(state, scriptName: string, layoutOrder: number): 
         [Children] = Components.TextButton {
             Active = activeState,
             AutoButtonColor = activeState,
-            Text = Computed(function()
+            Text = Computed(function(): string
                 return state:get() 
                     and string.format("%s already inserted!", scriptName)
                     or string.format("Insert %s", scriptName)
             end),
-            BackgroundColor3 = Computed(function()
+            BackgroundColor3 = Computed(function(): Color3
                 return state:get() 
                     and Theme.CurrentMarker.Selected:get()
                     or Theme.MainButton.Default:get()
             end),
-            TextColor3 = Computed(function()
+            TextColor3 = Computed(function(): Color3
                 return state:get() 
                     and Theme.MainText.Default:get()
                     or Theme.BrightText.Default:get()
@@ -220,7 +220,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     then plugin:GetSetting(ENABLE_VAR) 
                                     else false,
                                 
-                                Validate = function(newState)
+                                Validate = function(newState: Fusion.StateObject<boolean>): boolean
                                     if newState:get(false) == true then
                                         return not Util.failedScriptInjection(Util._Errors.AUTOCOMPLETE_ERROR)
                                     end
