@@ -735,9 +735,7 @@ end)
 
 local function updateOnAllSongsLoaded()
     warn("Need to update:", permissionsNeedUpdating:get())
-    if permissionsNeedUpdating:get() then
-        Util.toggleAudioPerms(not allSongsLoaded:get())
-    end
+    Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
 end
 
 -- Replace with :onBind when released.
