@@ -330,6 +330,7 @@ local function getAudioChildren(): {Instance}
         end
     end
 
+    permissionsNeedUpdating:set(needsPermissionUpdate)
     songLoadData.loaded:set(0)
     songLoadData.total:set(math.max(totalAssets, 1))
 
