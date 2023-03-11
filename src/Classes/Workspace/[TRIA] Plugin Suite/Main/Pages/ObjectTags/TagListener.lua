@@ -35,7 +35,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
     local dataVisible = Value(false)
     local checkState = Value(Enum.TriStateBoolean.False)
 
-    local metaDataVisible = Computed(function()
+    local metaDataVisible = Computed(function(): boolean
         Util._Selection.selectedUpdate:get()
         local value = #Util._Selection.selectedParts:get() == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(Util._Selection.selectedParts:get(), name)
         checkState:set(#Util._Selection.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
@@ -62,7 +62,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
             [Children] = {
                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil),
                 New "TextButton" { --// Button
-                    AutoButtonColor = Computed(function()
+                    AutoButtonColor = Computed(function(): boolean
                         local interfaceActive = Util.interfaceActive:get()
                         return if Util.dropdownActive:get() then false else interfaceActive
                     end),
@@ -124,7 +124,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                     Tooltip = data.Tooltip.Text,
                     Position = UDim2.new(1, -4, 0, 4)
                 },
-                (function()
+                (function(): Instance
                     if #data.metadata == 0 then
                         return
                     end
@@ -136,12 +136,12 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                         BorderSizePixel = 1,
                         BorderMode = Enum.BorderMode.Inset,
                         Position = UDim2.new(0, -56, 0, 24),
-                        Size = Computed(function()
+                        Size = Computed(function(): UDim2
                             return UDim2.new(1, 56, 0, dataVisible:get() and 10 or 0)
                         end),
                         Visible = dataVisible,
 
-                        [OnChange "Visible"] = function(value)
+                        [OnChange "Visible"] = function(value: boolean)
                             if not value then
                                 Dropdown:Cancel()
                             end
@@ -177,15 +177,15 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         BackgroundColor3 = Theme.ScrollBarBackground.Default,
                                         BorderColor3 = Theme.Border.Default,
                                         BorderSizePixel = 1,
-                                        Visible = Computed(function()
+                                        Visible = Computed(function(): boolean
                                             TagUtils.OnlyShowUpdate:get()
-                                                for _, part: Instance in pairs(metadataType.data._onlyShow and Util._Selection.selectedParts:get() or {}) do
-                                                    for _, data in pairs(metadataType.data._onlyShow) do
-                                                        if part:GetAttribute(data.Attribute) ~= data.Value then
-                                                            return false
-                                                        end
+                                            for _, part: Instance in pairs(metadataType.data._onlyShow and Util._Selection.selectedParts:get() or {}) do
+                                                for _, data in pairs(metadataType.data._onlyShow) do
+                                                    if part:GetAttribute(data.Attribute) ~= data.Value then
+                                                        return false
                                                     end
                                                 end
+                                            end
                                             return true
                                         end),
                                         Size = UDim2.new(metadataType.isFullSize and 1 or 0.5, 0, 0, 22),
@@ -198,7 +198,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
-                                            (function()
+                                            (function(): Instance
                                                 local dataValue = Value(TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName) or "")
                                                 if dataValue:get(false) == Enum.TriStateBoolean.False then
                                                     dataValue:set(false)
@@ -273,14 +273,14 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         AnchorPoint = Vector2.new(1, 0.5),
                                                         Position = UDim2.new(0, -8, 0.5, 0),
                                                         Size = UDim2.fromOffset(16, 16),
-                                                        BackgroundColor3 = Computed(function()
+                                                        BackgroundColor3 = Computed(function(): Color3
                                                             return (dataValue:get() == "" or not dataValue:get()) and Color3.new() or dataValue:get()
                                                         end),
 
                                                         [OnEvent "Activated"] = function()
                                                             updateData(Colorwheel:GetColor(dataValue:get()) or dataValue:get())
                                                         end
-                                                    }}, Computed(function()
+                                                    }}, Computed(function(): string
                                                             return dataValue:get() == "" and "" or Util.parseTextColor3(dataValue:get())
                                                     end))
                                                 end
@@ -291,7 +291,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                             Position = UDim2.fromOffset(-8, -1),
                                                             Size = UDim2.fromOffset(18, 18),
                                                             Options = metadataType.data.dropdownType,
-                                                            OnToggle = function(newData)
+                                                            OnToggle = function(newData: any)
                                                                 updateData(newData)
                                                             end
                                                         }
