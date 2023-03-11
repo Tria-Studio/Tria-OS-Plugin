@@ -208,7 +208,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                 local textXBounds = textSize and textSize.X + 8 or 0
                                                 local types = {}
 
-                                                local function updateData(value)
+                                                local function updateData(value: any)
                                                     local stringTagValue = metadataType.data.dataType == "color"
                                                         and Util.parseTextColor3(dataValue:get())
                                                         or dataValue:get()

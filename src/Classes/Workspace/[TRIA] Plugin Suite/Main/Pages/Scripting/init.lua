@@ -98,7 +98,7 @@ local function OptionFrame(props: PublicTypes.Dictionary): Instance
     }
 end
 
-local function GetScriptButton(state, scriptName: string, layoutOrder: number): Instance
+local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: string, layoutOrder: number): Instance
     local activeState = Computed(function()
         return not state:get() and Util.interfaceActive:get()
     end)
