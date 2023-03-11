@@ -1,8 +1,5 @@
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-if not RunService:IsRunning() then
-	return
-end
 
 local MapLib = game.GetMapLib:Invoke()()
 local map = MapLib.map
@@ -68,8 +65,8 @@ SwimmingService.OnSwimmingStateChanged:Connect(function(isSwimming: boolean)
 				local raycastResult = workspace:Raycast(humanoidRootPart.Position, -fan.CFrame.LookVector * distance, rayParams)
 				if raycastResult then
 					local offset = (raycastResult.Position - humanoidRootPart.Position)
-					local resistance = if fan:GetAttribute("LinearMovement") then 1 else math.min(1, 1.25 - (math.abs(offset.X) / distance) ^ 3)
-					
+					local resistance = if fan:GetAttribute("LinearMovement") then 1 else math.min(1, 1.25 - (math.abs(offset.Z) / distance) ^ 4)
+
 					humanoidRootPart.CFrame += raycastResult.Normal * speed * deltaTime * resistance
 				end
 			end
@@ -109,7 +106,7 @@ for _, fan in ipairs(fans:GetChildren()) do
 	emitter.Name = "FanParticleEmitter"
 	emitter.Texture = "rbxassetid://" .. particleId
 	emitter.Shape = Enum.ParticleEmitterShape[fanShape == "Cylinder" and "Disc" or "Box"]
-	emitter.Face = Enum.NormalId.Front
+	emitter.EmissionDirection = Enum.NormalId.Front
 	emitter.Parent = fan
 end
 
