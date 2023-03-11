@@ -17,7 +17,7 @@ local DEFAULT_LIQUIDS = {
 return {
     Difficulty = function()
         local data = {}
-        for i = 1, 7 do
+        for i = 1, 8 do
             local tbl = Util.Difficulty[i - 1]
             data[i] = {
                 Image = tbl.Image,

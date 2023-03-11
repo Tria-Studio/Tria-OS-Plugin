@@ -97,6 +97,11 @@ local Util = {
             Name = "Divine",
             Color = Color3.fromRGB(255, 8, 152),
             Image = "rbxassetid://12132025606"
+        },
+        [7] = {
+            Name = "Eternal",
+            Color = Color3.fromRGB(255, 255, 255),
+		    Image = "rbxassetid://12741946741",
         }
     }, 
 
