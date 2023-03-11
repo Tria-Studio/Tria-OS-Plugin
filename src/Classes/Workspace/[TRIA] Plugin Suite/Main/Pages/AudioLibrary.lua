@@ -60,7 +60,7 @@ local songLoadData = {
     total = Value(1)
 }
 
-local allSongsLoaded = Computed(function()
+local allSongsLoaded = Computed(function(): boolean
     return songLoadData.loaded:get() >= songLoadData.total:get()
 end)
 
@@ -70,14 +70,15 @@ local permissionsNeedUpdating = Value(false)
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
-local ITEMS_PER_PAGE = Computed(function()
+local ITEMS_PER_PAGE = Computed(function(): number
     return frameAbsoluteSize:get() and math.max(1, math.floor((frameAbsoluteSize:get().Y + 32) / 40)) or 12
 end)
 
 local CURRENT_FETCH_STATUS = Value("Fetching")
 local FETCHED_AUDIO_DATA = Value({})
 
-local CURRENT_AUDIO_DATA = Computed(function()
+type audioTableFormat = {Name: string, Artist: string, ID: number}
+local CURRENT_AUDIO_DATA = Computed(function(): {audioTableFormat}
     local newData = {}
 
     local searchedArtist = searchData.artist:get() or ""
@@ -142,7 +143,7 @@ local function stopSong()
     currentSongData.currentAudio:set(nil)
 end
 
-local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
+local function playSong(newSound: Instance, soundData: audioTableFormat)
     Util.toggleAudioPerms(true)
     newSound.Volume = 0
     newSound.TimePosition = 0
@@ -163,7 +164,7 @@ local function stopCurrentTween()
     end
 end
 
-local function updatePlayingSound(newSound: Instance, soundData: PublicTypes.Dictionary)
+local function updatePlayingSound(newSound: Instance, soundData: audioTableFormat)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then -- No song playing
         stopCurrentTween()
@@ -191,7 +192,7 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
     })(data)
 end
 
-local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
+local function AudioButton(data: audioTableFormat): Instance
     local isLoaded = Value(false)
     local function updateLoaded()
         loadedSounds[data.ID] = true
@@ -212,7 +213,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
-        Size = Computed(function()
+        Size = Computed(function(): UDim2
             return UDim2.new(1, 0, 0, 36)
         end),
 
@@ -273,16 +274,16 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
                         AnchorPoint = Vector2.new(1, 0.5),
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
-                        Image = Computed(function()
+                        Image = Computed(function(): string
                             return currentAudioMatches(previewSound) and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
-                        ImageColor3 = Computed(function()
+                        ImageColor3 = Computed(function(): Color3
                             if not isLoaded:get() then
                                 return Theme.ErrorText.Default:get()
                             end
                             return currentAudioMatches(previewSound) and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
-                        HoverImage = Computed(function()
+                        HoverImage = Computed(function(): string
                             return currentAudioMatches(previewSound) and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
@@ -444,7 +445,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     New "Frame" { -- Status Message
                         BackgroundTransparency = 1,
                         Size = UDim2.fromScale(1, 0.95),
-                        Visible = Computed(function()
+                        Visible = Computed(function(): boolean
                             return CURRENT_FETCH_STATUS:get() ~= "Success"
                         end),
 
@@ -459,7 +460,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 AutomaticSize = Enum.AutomaticSize.Y,
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(0.75, 0),
-                                Text = Computed(function()
+                                Text = Computed(function(): string
                                     local fetchStatus = CURRENT_FETCH_STATUS:get()
                                     return STATUS_ERRORS[fetchStatus] or "N/A"
                                 end),
@@ -492,7 +493,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     New "Frame" { -- Audio Library
                         BackgroundTransparency = 1,
                         Size = UDim2.fromScale(1, 1),
-                        Visible = Computed(function()
+                        Visible = Computed(function(): boolean
                             return CURRENT_FETCH_STATUS:get() == "Success"
                         end),
 
@@ -522,7 +523,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 BackgroundColor3 = Theme.RibbonTab.Default,
                 AnchorPoint = Vector2.new(0, 1),
                 Size = UDim2.new(1, 0, 0, 36),
-                Position = Spring(Computed(function()
+                Position = Spring(Computed(function(): UDim2
                     return UDim2.new(0, 0, 1, if currentSongData.currentAudio:get() then -38 else 0)
                 end), 20),
 
@@ -531,7 +532,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         BackgroundTransparency = 1,
                         Size = UDim2.fromScale(1, 1),
                         Position = UDim2.fromScale(0.0, 0),
-                        Text = Computed(function()
+                        Text = Computed(function(): string
                             local currentData = currentSongData.songData:get()
                             return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
                         end),
@@ -559,7 +560,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.new(0.45, 0, 0.5, 2),
                         Size = UDim2.fromScale(0.5, 0.25),
                         TextSize = 14,
-                        Text = Computed(function()
+                        Text = Computed(function(): string
                             return ("%s/%s"):format(
                                 Util.secondsToTime(currentSongData.timePosition:get()), 
                                 Util.secondsToTime(currentSongData.timeLength:get())
@@ -571,13 +572,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     SongPlayButton {
                         Position = UDim2.fromScale(0.4, 0.3),
                         Size = UDim2.fromScale(0.6, 0.6),
-                        Image = Computed(function()
+                        Image = Computed(function(): string
                             return currentSongData.currentAudio:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
-                        ImageColor3 = Computed(function()
+                        ImageColor3 = Computed(function(): Color3
                             return currentSongData.currentAudio:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
-                        HoverImage = Computed(function()
+                        HoverImage = Computed(function(): string
                             return currentSongData.currentAudio:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
@@ -604,7 +605,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 [Children] = {
                     PageKey { -- Skip to first page
                         LayoutOrder = 1,
-                        ImageColor3 = Computed(function()
+                        ImageColor3 = Computed(function(): Color3
                             return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Image = "rbxassetid://4458877936",
@@ -621,7 +622,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Image = "rbxassetid://6031094687",
                         LayoutOrder = 2,
                         Rotation = 90,
-                        ImageColor3 = Computed(function()
+                        ImageColor3 = Computed(function(): Color3
                             return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Position = UDim2.fromScale(0.3, 0.5),
@@ -636,7 +637,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         BackgroundTransparency = 1,
                         LayoutOrder = 3,
                         PlaceholderColor3 = Color3.fromRGB(120, 120, 120),
-                        PlaceholderText = Computed(function()
+                        PlaceholderText = Computed(function(): string
                             return ("Page %d/%d"):format(pageData.current:get(), pageData.total:get())
                         end),
                         TextColor3 = Theme.MainText.Default,
@@ -671,7 +672,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     PageKey { -- Skip one page right
                         LayoutOrder = 4,
                         Image = "rbxassetid://6031094687",
-                        ImageColor3 = Computed(function()
+                        ImageColor3 = Computed(function(): Color3
                             return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Rotation = -90,
@@ -687,7 +688,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         LayoutOrder = 5,
                         Image = "rbxassetid://4458877936",
                         Position = UDim2.fromScale(0.9, 0.5),
-                        ImageColor3 = Computed(function()
+                        ImageColor3 = Computed(function(): Color3
                             return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
                         end),
                         Size = UDim2.new(0.2, -5, 1, -5),
