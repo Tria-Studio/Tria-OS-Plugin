@@ -72,22 +72,22 @@ return {
                 Tooltip = "tune tooltip"
             },
     
-            InsertFunction = function()
+            InsertFunction = function(): boolean
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
-                    return
+                    return false
                 end
 
                 local currentMap = Util.mapModel:get(false)
                 local mapScript = currentMap:FindFirstChild("MapScript")
 
                 if not mapScript then
-                    return
+                    return false
                 end
 
                 local variable, moduleId = mapScript.Source:match(TUNE_MATCH)
                 if variable:lower() == "tune" or (tonumber(moduleId) and tonumber(moduleId) == 9193619374) then
                     Util:ShowMessage("Module already installed", "TUNE is already installed in your map!")
-                    return
+                    return false
                 end
 
                 ChangeHistoryService:SetWaypoint("Inserting TUNE")
@@ -128,7 +128,7 @@ end)                ]], line + 1)
 <font color = "rgb(165,0,0)">Deep red line</font> - represents the top of the player's head, but indicates the highest jump that could be made ]]
             },
     
-            InsertFunction = function()
+            InsertFunction = function(): boolean
                 ChangeHistoryService:SetWaypoint("Inserting jump measurement")
                 local model = insertModel("JumpMeasurement", nil)
                 positionModel(model)
@@ -150,15 +150,15 @@ end)                ]], line + 1)
                 Tooltip = "Allows for you to easily add timed teleports into your maps with minimal setup. \n\nThis addon is integrated with Object Tag selection and View Mode selection."
             },
     
-            InsertFunction = function()
+            InsertFunction = function(): boolean
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
-                    return
+                    return false
                 end
 
                 local currentMap = Util.mapModel:get(false)
                 if currentMap.MapScript:FindFirstChild("EasyTP") and currentMap.MapScript.EasyTP:FindFirstChild("LocalFlash") then
                     Util:ShowMessage("Cannot Insert Addon", "This addon already exists in your map! To update the addon, delete it from your map and retry.")
-                    return
+                    return false
                 end
 
                 if not Util.hasSpecialFolder:get(false) then
@@ -168,7 +168,7 @@ end)                ]], line + 1)
                             Pages:ChangePage("Insert")
                         end
                     })
-                    return
+                    return false
                 end
 
                 ChangeHistoryService:SetWaypoint("Inserting EasyTP")
@@ -205,7 +205,8 @@ end)                ]], line + 1)
                 Tooltip = "This addon allows for enhanced underwater gameplay with new liquid jetstreams! \n\nThis addon is integrated with Object Tag selection and View Mode selection."
             },
     
-            InsertFunction = function()
+            InsertFunction = function(): boolean
+                -- Replace these two with `return false` when you're done lol
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                     return Util.debugWarn("AAAAA")
                 end
