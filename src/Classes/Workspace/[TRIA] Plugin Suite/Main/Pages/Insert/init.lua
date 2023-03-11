@@ -128,7 +128,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
 
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 BackgroundTransparency = 1,
-                ImageColor3 = Computed(function()
+                ImageColor3 = Computed(function(): Color3
                     return data.FullSize and imageColor:get() or Color3.new(1, 1, 1)
                 end),
                 Position = UDim2.fromScale(0.5, 0.5),
@@ -230,7 +230,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
-                                    Components.GradientTextLabel(Computed(function()
+                                    Components.GradientTextLabel(Computed(function(): boolean
                                         return Util.mapModel:get() == nil
                                     end), {
                                         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -278,7 +278,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
-                                    Components.GradientTextLabel(Computed(function()
+                                    Components.GradientTextLabel(Computed(function(): boolean
                                         return Util.mapModel:get() == nil
                                     end), {
                                         AnchorPoint = Vector2.new(0.5, 0.5),
