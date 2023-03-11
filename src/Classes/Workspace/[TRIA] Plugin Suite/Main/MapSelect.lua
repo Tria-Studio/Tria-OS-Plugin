@@ -250,7 +250,7 @@ function MapSelect:StartMapSelection()
     self.selectingMap:set(true)
     plugin:Activate(true)
 
-    self._Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime)
+    self._Maid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
         local target = mouse.Target
         if target ~= lastTarget then
             lastTarget = target
