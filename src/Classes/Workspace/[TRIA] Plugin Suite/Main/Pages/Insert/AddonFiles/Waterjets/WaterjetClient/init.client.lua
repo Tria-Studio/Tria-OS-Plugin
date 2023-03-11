@@ -65,7 +65,7 @@ SwimmingService.OnSwimmingStateChanged:Connect(function(isSwimming: boolean)
 				local raycastResult = workspace:Raycast(humanoidRootPart.Position, -fan.CFrame.LookVector * distance, rayParams)
 				if raycastResult then
 					local offset = (raycastResult.Position - humanoidRootPart.Position)
-					local resistance = if fan:GetAttribute("LinearMovement") then 1 else math.min(1, 1.25 - (math.abs(offset.Z) / distance) ^ 4)
+					local resistance = if fan:GetAttribute("LinearMovement") then 1 else math.min(1, 1 - (math.abs(offset.Z) / distance) ^ 3)
 
 					humanoidRootPart.CFrame += raycastResult.Normal * speed * deltaTime * resistance
 				end
