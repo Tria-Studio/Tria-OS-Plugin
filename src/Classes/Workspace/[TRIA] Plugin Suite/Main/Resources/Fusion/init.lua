@@ -8,7 +8,7 @@ local PubTypes = require(script.PubTypes)
 local restrictRead = require(script.Utility.restrictRead)
 
 local Fusion = restrictRead("Fusion", {
-	version = {major = 0, minor = 3, isRelease = false},
+	version = {major = 0, minor = 2, isRelease = true},
 
 	New = require(script.Instances.New),
 	Hydrate = require(script.Instances.Hydrate),
@@ -18,9 +18,6 @@ local Fusion = restrictRead("Fusion", {
 	Children = require(script.Instances.Children),
 	OnEvent = require(script.Instances.OnEvent),
 	OnChange = require(script.Instances.OnChange),
-	Attribute = require(script.Instances.Attribute),
-	AttributeChange = require(script.Instances.AttributeChange),
-	AttributeOut = require(script.Instances.AttributeOut),
 
 	Value = require(script.State.Value),
 	Computed = require(script.State.Computed),
@@ -34,7 +31,6 @@ local Fusion = restrictRead("Fusion", {
 
 	cleanup = require(script.Utility.cleanup),
 	doNothing = require(script.Utility.doNothing),
-	peek = require(script.State.peek)
 }) :: Fusion
 
 export type StateObject<T> = PubTypes.StateObject<T>
@@ -48,7 +44,6 @@ export type ForValues<VI, VO> = PubTypes.ForKeys<VI, VO>
 export type Observer = PubTypes.Observer
 export type Tween<T> = PubTypes.Tween<T>
 export type Spring<T> = PubTypes.Spring<T>
-export type Use = PubTypes.Use
 
 type Fusion = {
 	version: PubTypes.Version,
@@ -61,10 +56,6 @@ type Fusion = {
 	Out: (propertyName: string) -> PubTypes.SpecialKey,
 	OnEvent: (eventName: string) -> PubTypes.SpecialKey,
 	OnChange: (propertyName: string) -> PubTypes.SpecialKey,
-	Attribute: (attributeName: string) -> PubTypes.SpecialKey,
-	AttributeChange: (attributeName: string) -> PubTypes.SpecialKey,
-	AttributeOut: (attributeName: string) -> PubTypes.SpecialKey,
-
 	Value: <T>(initialValue: T) -> Value<T>,
 	Computed: <T>(callback: (Use) -> T, destructor: (T) -> ()?) -> Computed<T>,
 	ForPairs: <KI, VI, KO, VO, M>(inputTable: CanBeState<{[KI]: VI}>, processor: (Use, KI, VI) -> (KO, VO, M?), destructor: (KO, VO, M?) -> ()?) -> ForPairs<KO, VO>,
@@ -77,7 +68,6 @@ type Fusion = {
 
 	cleanup: (...any) -> (),
 	doNothing: (...any) -> (),
-	peek: Use
 }
 
 return Fusion
