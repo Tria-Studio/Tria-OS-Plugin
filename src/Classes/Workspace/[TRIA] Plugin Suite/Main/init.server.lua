@@ -203,17 +203,8 @@ task.spawn(function()
 	ContentProvider:PreloadAsync(images)
 end)
 
-if not widget.Enabled then
-	warn("Window closed")
-	Util.toggleAudioPerms(false)
-end
-
 openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
-	if not widget.Enabled then
-		warn("Window closed")
-		Util.toggleAudioPerms(false)
-	end
 end)
 
 if not MapSelect:AutoSelect() then
