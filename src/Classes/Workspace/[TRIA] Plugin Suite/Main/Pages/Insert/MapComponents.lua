@@ -72,7 +72,7 @@ return {
                 Tooltip = "tune tooltip"
             },
     
-            InsertFunction = function(): boolean
+            InsertFunction = function()
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                     return false
                 end
@@ -81,13 +81,13 @@ return {
                 local mapScript = currentMap:FindFirstChild("MapScript")
 
                 if not mapScript then
-                    return false
+                    return
                 end
 
                 local variable, moduleId = mapScript.Source:match(TUNE_MATCH)
                 if variable:lower() == "tune" or (tonumber(moduleId) and tonumber(moduleId) == 9193619374) then
                     Util:ShowMessage("Module already installed", "TUNE is already installed in your map!")
-                    return false
+                    return
                 end
 
                 ChangeHistoryService:SetWaypoint("Inserting TUNE")
@@ -109,8 +109,6 @@ end)                ]], line + 1)
                     Util:ShowMessage(Util._Headers.ERROR_HEADER, "Failed to install TUNE, this could be because the MapScript is setup incorrectly. Please make sure you have the following line at the top of your MapScript:\n\n<b>local MapLib = game.GetMapLib:Invoke()()</b>")
                 end
                 ChangeHistoryService:SetWaypoint("Inserted TUNE")
-
-                return true
             end
         }, {
             Name = "Jump Measurement",
@@ -128,7 +126,7 @@ end)                ]], line + 1)
 <font color = "rgb(165,0,0)">Deep red line</font> - represents the top of the player's head, but indicates the highest jump that could be made ]]
             },
     
-            InsertFunction = function(): boolean
+            InsertFunction = function()
                 ChangeHistoryService:SetWaypoint("Inserting jump measurement")
                 local model = insertModel("JumpMeasurement", nil)
                 positionModel(model)
@@ -137,8 +135,6 @@ end)                ]], line + 1)
                 model:Destroy()
                 Util.debugWarn("Successfully inserted Jump Measurement Tools addon!")
                 ChangeHistoryService:SetWaypoint("Inserted jump measurement")
-
-                return true
             end
         }, {
             Name = "",
@@ -150,15 +146,15 @@ end)                ]], line + 1)
                 Tooltip = "Allows for you to easily add timed teleports into your maps with minimal setup. \n\nThis addon is integrated with Object Tag selection and View Mode selection."
             },
     
-            InsertFunction = function(): boolean
+            InsertFunction = function()
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
-                    return false
+                    return
                 end
 
                 local currentMap = Util.mapModel:get(false)
                 if currentMap.MapScript:FindFirstChild("EasyTP") and currentMap.MapScript.EasyTP:FindFirstChild("LocalFlash") then
                     Util:ShowMessage("Cannot Insert Addon", "This addon already exists in your map! To update the addon, delete it from your map and retry.")
-                    return false
+                    return
                 end
 
                 if not Util.hasSpecialFolder:get(false) then
@@ -168,7 +164,7 @@ end)                ]], line + 1)
                             Pages:ChangePage("Insert")
                         end
                     })
-                    return false
+                    return
                 end
 
                 ChangeHistoryService:SetWaypoint("Inserting EasyTP")
@@ -192,8 +188,6 @@ end)                ]], line + 1)
                 demo:Destroy()
                 Util.debugWarn("Successfully inserted EasyTP!")
                 ChangeHistoryService:SetWaypoint("Inserted EasyTP")
-
-                return true
             end
         },  {
             Name = "",
@@ -205,8 +199,7 @@ end)                ]], line + 1)
                 Tooltip = "This addon allows for enhanced underwater gameplay with new liquid jetstreams! \n\nThis addon is integrated with Object Tag selection and View Mode selection."
             },
     
-            InsertFunction = function(): boolean
-                -- Replace these two with `return false` when you're done lol
+            InsertFunction = function()
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                     return Util.debugWarn("AAAAA")
                 end
@@ -237,8 +230,6 @@ end)                ]], line + 1)
                 end
                 demo:Destroy()
                 Util.debugWarn("Successfully inserted Waterjets!")
-
-                return true
             end
         },
     },
