@@ -353,7 +353,7 @@ function Util.secondsToTime(t: number): string
     return timeStr
 end
 
-function Util.lerp(a: any<T>, b: any<T>, t: any<T>): any<T>
+function Util.lerp(a: any, b: any, t: any): any
     return (1 - t) * a + t * b
 end
 

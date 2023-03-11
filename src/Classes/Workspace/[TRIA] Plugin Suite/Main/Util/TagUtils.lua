@@ -91,7 +91,7 @@ local function getTagInstance(part: Instance, tag: string): Instance | nil
     return nil
 end
 
-function tagUtils:GetPartTags(part: Instance, excludeTag: string): {string}
+function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
     local partTags = {}
     for tagType, tags in pairs(tagTypes) do
         for key, tag in ipairs(tags) do
@@ -196,14 +196,15 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
         return customization and customization:GetAttribute(data.dataName)
     end
 
-    function types.ChildInstanceValue(): any
+    function types.ChildInstanceValue(): number?
         local child = getTagInstance(part, name)
         if child then 
             return child:FindFirstChild("_Delay") and child._Delay.Value
         end
+        return
     end
 
-    function types.Property(): any
+    function types.Property(): any?
         local sound = part:FindFirstChildOfClass("Sound") or part.Parent:FindFirstChildOfClass("Sound")
         return sound and sound[data._propertyName]
     end
@@ -352,6 +353,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
                 return true
             end
         end
+        return false
     end
 
     function types.ObjectTags(): boolean?
@@ -359,6 +361,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
             return true
         end
+        return false
     end
 
     function types.AddonTags(): boolean?
@@ -370,6 +373,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         if part:GetAttribute("_action") == tag or part:GetAttribute("_action") == secondary or part:GetAttribute("_action") == TagData.dataTypes.objectTags[tag].ActionText then
             return true
         end
+        return false
     end
 
     function types.ModelTags(): boolean?
@@ -381,6 +385,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         if model and (string.find(model.Name, tag, 1) or secondary and string.find(model.Name, secondary, 1)) then
             return true
         end
+        return false
     end
 
     function types.DetailTag(): boolean?

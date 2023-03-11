@@ -215,7 +215,7 @@ function Components.MiniTopbar(data: PublicTypes.Dictionary): Instance
     }
 end
 
-function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): Instance
+function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number?): Instance
     return Components.TextButton {
         LayoutOrder = 1,
         ZIndex = zIndex,
@@ -429,7 +429,7 @@ function Components.DropdownHolderFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-function Components.TooltipImage(data: PublicTypes.Dictionary): Instance
+function Components.TooltipImage(data: PublicTypes.Dictionary): Instance?
     if not data.Tooltip and not data.Header then
         return
     end
