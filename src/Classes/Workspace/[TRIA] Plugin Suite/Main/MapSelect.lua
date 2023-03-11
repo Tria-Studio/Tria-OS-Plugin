@@ -32,7 +32,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
     --// script check
 
     if not ignoreChecks then
-        local script1: Script? = newMap:FindFirstChild("EventScript")
+        local script1 : Script? = newMap:FindFirstChild("EventScript")
         if script1 and string.find(script1.Source, "workspace.MapTest.GetMapFunctions:Invoke()", 1, true) then
             score_1 += 0.5
         end
@@ -323,6 +323,8 @@ function MapSelect:AutoSelect(): boolean
         self:ResetSelection()
         return false
     end
+
+    return false
 end
 
 function MapSelect:ResetSelection()

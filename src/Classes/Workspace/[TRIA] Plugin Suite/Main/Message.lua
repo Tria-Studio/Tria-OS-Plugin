@@ -90,7 +90,7 @@ return New "Frame" { --// Message
 
 					Callback = function()
 						Util._Message.Option1:get().Callback()
-						Util:CloseMessage()
+						Util.CloseMessage()
 					end,
 
 					BackgroundColor3 = Computed(function(): Color3
@@ -111,7 +111,7 @@ return New "Frame" { --// Message
 						if Util._Message.Option2:get() and Util._Message.Option2:get().Callback then 
 							Util._Message.Option2:get().Callback()
 						end
-						Util:CloseMessage()
+						Util.CloseMessage()
 					end,
 
 					BackgroundColor3 = Computed(function()

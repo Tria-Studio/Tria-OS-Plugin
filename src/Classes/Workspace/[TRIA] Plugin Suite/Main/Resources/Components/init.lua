@@ -238,7 +238,7 @@ function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): In
     }
 end
 
-function Components.TwoOptions(option1Data: PublicTypes.Dictionary, option2Data: PublicTypes.Dictionary, zIndex: number): Instance
+function Components.TwoOptions(option1Data: PublicTypes.Dictionary, option2Data: PublicTypes.Dictionary, zIndex: number?): Instance
     option1Data.IsPrimary = true
     return New "Frame" { --// Buttons
         BackgroundTransparency = 1,
