@@ -55,6 +55,15 @@ local currentSongData = {
     timeLength = Value(0)
 }
 
+local songLoadData = {
+    loaded = Value(0),
+    total = Value(1)
+}
+
+local allSongsLoaded = Computed(function()
+    return songLoadData.loaded:get() >= songLoadData.total:get()
+end)
+
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
@@ -185,6 +194,7 @@ local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
 
     local isLoaded = Value(false)
     previewSound.Loaded:Connect(function()
+        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
         isLoaded:set(true)
     end)
 
@@ -298,6 +308,11 @@ local function getAudioChildren(): {Instance}
     local totalPages = math.ceil(totalAssets / itemsPerPage)
 
     local assetsRemaining = totalAssets
+
+    songLoadData.loaded:set(0)
+    songLoadData.total:set(math.max(totalAssets, 1))
+
+    task.wait()
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -674,15 +689,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-function frame.OnOpen()
-    warn("Enabling")
-    Util.toggleAudioPerms(true)
-end
-
 function frame.OnClose()
     task.spawn(fetchApi)
-    warn("Disabling")
-    Util.toggleAudioPerms(false)
     stopSong()
 end
 
@@ -700,9 +708,16 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
 end))
 
 Util.MainMaid:GiveTask(function()
-    warn("Disabling due to unload")
     Util.toggleAudioPerms(false)
 end)
+
+local function updateOnAllSongsLoaded()
+    Util.toggleAudioPerms(not allSongsLoaded:get())
+end
+
+-- Replace with :onBind when released.
+updateOnAllSongsLoaded()
+Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
 
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
