@@ -12,9 +12,12 @@ widget.Title = "PluginSoundManager"
 
 function PluginSoundManager:QueueSound(soundId: number): Sound
 	local newSound = Instance.new("Sound")
-	newSound.SoundId = "rbxassetid://" .. soundId
 	newSound.Looped = false
 	newSound.Parent = widget
+
+	task.defer(function()
+		newSound.SoundId = "rbxassetid://" .. soundId
+	end)
 
 	return newSound
 end

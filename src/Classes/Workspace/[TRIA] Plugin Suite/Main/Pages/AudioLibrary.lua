@@ -64,6 +64,9 @@ local allSongsLoaded = Computed(function()
     return songLoadData.loaded:get() >= songLoadData.total:get()
 end)
 
+local loadedSounds = {}
+local permissionsNeedUpdating = Value(false)
+
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
@@ -189,14 +192,23 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
 end
 
 local function AudioButton(data: PublicTypes.Dictionary, holder): Instance
+    local isLoaded = Value(false)
+    local function updateLoaded()
+        loadedSounds[data.ID] = true
+        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
+        isLoaded:set(true)
+    end
+
+    if loadedSounds[data.ID] then
+        updateLoaded()
+    end
+
     local previewSound = PlguinSoundManager:QueueSound(data.ID)
     previewSound.Name = data.Name
 
-    local isLoaded = Value(false)
-    previewSound.Loaded:Connect(function()
-        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
-        isLoaded:set(true)
-    end)
+    if not isLoaded:get(false) then
+        previewSound.Loaded:Connect(updateLoaded)
+    end
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
@@ -309,12 +321,17 @@ local function getAudioChildren(): {Instance}
 
     local assetsRemaining = totalAssets
 
+    local needsPermissionUpdate = false
+
+    for _, item in ipairs(assets) do
+        if not loadedSounds[item.ID] then
+            needsPermissionUpdate = true
+            break
+        end
+    end
+
     songLoadData.loaded:set(0)
     songLoadData.total:set(math.max(totalAssets, 1))
-
-    task.wait()
-    -- ^^ THIS IS DANGEROUS
-    -- FIX THIS WHEN EXPLICIT DEPENDENCIES RELEASE
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -714,12 +731,16 @@ Util.MainMaid:GiveTask(function()
 end)
 
 local function updateOnAllSongsLoaded()
-    Util.toggleAudioPerms(not allSongsLoaded:get())
+    warn("Need to update:", permissionsNeedUpdating:get())
+    if permissionsNeedUpdating:get() then
+        Util.toggleAudioPerms(not allSongsLoaded:get())
+    end
 end
 
 -- Replace with :onBind when released.
 updateOnAllSongsLoaded()
 Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
+Observer(permissionsNeedUpdating):onChange(updateOnAllSongsLoaded)
 
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
