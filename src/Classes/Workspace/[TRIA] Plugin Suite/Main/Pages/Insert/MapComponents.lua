@@ -229,7 +229,7 @@ end)                ]], line + 1)
                     teleportsFolder.Parent = currentMap.Special
                 end
 
-                local demo = addonFiles.WaterjetsDemo:Clone()
+                local demo = addonFiles.WaterjetDemo:Clone()
                 positionModel(demo)
                 for  i, part in pairs(demo:GetChildren()) do
                     part.Parent = currentMap.Special.Waterjets

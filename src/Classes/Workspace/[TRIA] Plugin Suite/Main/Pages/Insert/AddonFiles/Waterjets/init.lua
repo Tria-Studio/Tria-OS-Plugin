@@ -16,7 +16,7 @@ end
 
 for _, player in pairs(game.Players:GetPlayers()) do
 	local clonedScript = script.WaterjetClient.lua:Clone()
-	clonedScript.Disabled = false
+	clonedScript.Enabled = true
 	clonedScript.Parent = player.PlayerGui
 end
 

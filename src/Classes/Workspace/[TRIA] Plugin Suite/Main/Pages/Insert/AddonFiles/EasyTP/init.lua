@@ -54,7 +54,7 @@ function EasyTP.Teleport(teleportNumber: number)
 			localFlashScript.Enabled = true
 		end
 	end
-end
+end	
 
 if RunService:IsStudio() and not RunService:IsRunning() then
 	return {Teleport = 0}
