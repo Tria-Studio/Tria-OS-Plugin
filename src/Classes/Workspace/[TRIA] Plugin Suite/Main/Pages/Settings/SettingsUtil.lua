@@ -57,7 +57,7 @@ function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, 
     end))
 end
 
-function SettingsUtil.updateStateValue(currentValue, newValue: any, tbl: PublicTypes.Dictionary)
+function SettingsUtil.updateStateValue(currentValue: any, newValue: any, tbl: PublicTypes.Dictionary)
     local acceptedValues = {
         ["String"] = {"string", "number"},
         ["Number"] = {"string", "number"},
@@ -80,7 +80,7 @@ function SettingsUtil.updateStateValue(currentValue, newValue: any, tbl: PublicT
     end
 end
 
-function SettingsUtil.modifyStateTable(state, action: string, ...)
+function SettingsUtil.modifyStateTable(state: Fusion.StateObject<any>, action: string, ...)
     local newTbl = state:get(false)
     local args = {...}
 
