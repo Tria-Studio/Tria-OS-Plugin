@@ -341,7 +341,7 @@ data.metadataTypes = {
         dropdownType = "FanShape",
         dataName = "FanShape",
         displayName = "Fan Shape",
-        default = "square",
+        default = "Square",
     },
     BubbleParticle = {
         _referenceName = "BubbleParticle",

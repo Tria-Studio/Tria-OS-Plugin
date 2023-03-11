@@ -77,8 +77,8 @@ function Dropdown:GetValue(dataArray, uiParent)
                         textTruncated:set(Enum.TextTruncate.AtEnd)
                     end
                     return Components.TextButton {
-                        Text = data.Value,
-                        Name = data.Value,
+                        Text = data.Name or data.Value,
+                        Name = data.Name or data.Value,
                         TextColor3 = data.TextColor or Theme.MainText.Default,
                         BackgroundColor3 = Theme.Dropdown.Default,
                         Font = Enum.Font.SourceSansSemibold,

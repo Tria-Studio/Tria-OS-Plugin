@@ -23,6 +23,7 @@ return {
             data[i] = {
                 Image = tbl.Image,
                 Value = i - 1,
+                Name = tbl.Name,
                 TextColor = tbl.Color
             }
         end
@@ -83,8 +84,8 @@ return {
     end,
     FanShape = function(): {PublicTypes.Dictionary}
         return {
-            {Value = "square"},
-            {Value = "circle"}
+            {Value = "Square"},
+            {Value = "Circle"}
         }
     end
 }
