@@ -19,6 +19,9 @@ local Computed = Fusion.Computed
 local selectionMaid = Maid.new()
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
+local oldUniverseId = game.GameId
+local oldPlaceId = game.PlaceId
+
 local Util = {
     Signal = Signal,
     Maid = Maid,
@@ -366,6 +369,12 @@ function Util.getRollingAverage(data: {number}, backCount: number): number
         sum += newData[i]
     end
     return sum / #newData
+end
+
+function Util.toggleAudioPerms(enabled: boolean)
+    print("Toggling", enabled and 6311279644 or oldPlaceId)
+    game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
+    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 end
 
 local function schedule(task: () -> (), interval: number)

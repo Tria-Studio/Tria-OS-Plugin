@@ -58,9 +58,6 @@ local currentSongData = {
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
-local oldUniverseId = game.GameId
-local oldPlaceId = game.PlaceId
-
 local ITEMS_PER_PAGE = Computed(function()
     return frameAbsoluteSize:get() and math.max(1, math.floor((frameAbsoluteSize:get().Y + 32) / 40)) or 12
 end)
@@ -94,12 +91,6 @@ local STATUS_ERRORS = {
     ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
 }
-
-local function toggleAudioPerms(enabled: boolean)
-    print("Toggling", enabled and 6311279644 or oldPlaceId)
-    game:SetUniverseId(enabled and 2330396164 or oldUniverseId) 
-    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
-end
 
 local function fadeSound(sound: Sound, direction: string)
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
@@ -135,12 +126,12 @@ local function stopSong()
         return
     end
     fadeSound(currentlyPlaying, "Out")
-    toggleAudioPerms(false)
+    Util.toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
 end
 
 local function playSong(newSound: Instance, soundData: PublicTypes.Dictionary)
-    toggleAudioPerms(true)
+    Util.toggleAudioPerms(true)
     newSound.Volume = 0
     newSound.TimePosition = 0
     newSound:Resume()
@@ -685,13 +676,13 @@ end
 
 function frame.OnOpen()
     warn("Enabling")
-    toggleAudioPerms(true)
+    Util.toggleAudioPerms(true)
 end
 
 function frame.OnClose()
     task.spawn(fetchApi)
     warn("Disabling")
-    toggleAudioPerms(false)
+    Util.toggleAudioPerms(false)
     stopSong()
 end
 
@@ -710,7 +701,7 @@ end))
 
 Util.MainMaid:GiveTask(function()
     warn("Disabling due to unload")
-    toggleAudioPerms(false)
+    Util.toggleAudioPerms(false)
 end)
 
 Observer(currentSongData.timePosition):onChange(function()
