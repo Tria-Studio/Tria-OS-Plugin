@@ -143,7 +143,7 @@ local function stopSong()
     currentSongData.currentAudio:set(nil)
 end
 
-local function playSong(newSound: Instance, soundData: audioTableFormat)
+local function playSong(newSound: Sound, soundData: audioTableFormat)
     Util.toggleAudioPerms(true)
     newSound.Volume = 0
     newSound.TimePosition = 0
@@ -164,7 +164,7 @@ local function stopCurrentTween()
     end
 end
 
-local function updatePlayingSound(newSound: Instance, soundData: audioTableFormat)
+local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then -- No song playing
         stopCurrentTween()
@@ -177,7 +177,7 @@ local function updatePlayingSound(newSound: Instance, soundData: audioTableForma
     end
 end
 
-local function currentAudioMatches(sound: Instance): boolean
+local function currentAudioMatches(sound: Sound): boolean
     return currentSongData.currentAudio:get() == sound
 end
 
