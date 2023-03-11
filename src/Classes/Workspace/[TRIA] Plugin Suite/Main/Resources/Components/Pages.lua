@@ -1,7 +1,10 @@
-local Resources = script.Parent.Parent
-local Fusion = require(Resources.Fusion)
+local Package = script.Parent.Parent.Parent
+local Resources = Package.Resources
 local Pages = Resources.Parent.Pages
-local Signal = require(script.Parent.Parent.Parent.Util.Signal)
+
+local Fusion = require(Resources.Fusion)
+local PublicTypes = require(Package.PublicTypes)
+local Signal = require(Package.Util.Signal)
 
 local Value = Fusion.Value
 
@@ -52,7 +55,7 @@ function PageHandler:ChangePage(newPage: string)
     end
 end
 
-function PageHandler:NewPage(data: {[string]: any}): Instance
+function PageHandler:NewPage(data: PublicTypes.Dictionary): Instance
     local newPageData = {
         Name = data.Name,
         Frame = nil,

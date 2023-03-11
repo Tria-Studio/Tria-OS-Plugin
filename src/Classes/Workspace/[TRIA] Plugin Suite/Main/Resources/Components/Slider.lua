@@ -25,11 +25,11 @@ return function (data: PublicTypes.Dictionary, holder: Instance): {Instance}
     local min = data.Min
     local max = data.Max
 
-    local sliderPosition = Computed(function()
+    local sliderPosition = Computed(function(): UDim2
         return UDim2.fromScale((data.Value:get() - min:get()) / (max:get() - min:get()), 0.5)
     end)
 
-    local backFrameSize = Computed(function()
+    local backFrameSize = Computed(function(): UDim2
         return UDim2.fromScale(data.Value:get() / max:get(), 0.8)
     end)
 

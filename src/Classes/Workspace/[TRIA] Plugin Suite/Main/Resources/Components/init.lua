@@ -51,18 +51,18 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
     local startColor = Color3.fromRGB(245, 158, 29)
     local endColor = Color3.fromRGB(247, 0, 255)
 
-    local transparencySpring = Spring(Computed(function()
+    local transparencySpring = Spring(Computed(function(): number
         return data.Visible:get() and 0 or 1
     end), 20)
 
-    local pageActive = Computed(function()
+    local pageActive = Computed(function(): boolean
         return if table.find(Pages.pageData.disabledPages, data.Name) then false else Util.mapModel:get() ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
     end)
-    local pageRatio = Computed(function()
+    local pageRatio = Computed(function(): number
         return Pages._currentPageNum:get() / #Pages._PageOrder
     end)
    
-    local colorSpring = Spring(Computed(function()
+    local colorSpring = Spring(Computed(function(): Color3
         local multiplier = pageActive:get() and 1 or 0.6
         local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
         local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
@@ -72,7 +72,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
     return New "TextButton" {
         Active = true,
         AutoButtonColor = true,
-        BackgroundColor3 = Spring(Computed(function()
+        BackgroundColor3 = Spring(Computed(function(): Color3
             local hoverColor = Theme.RibbonButton.Hover:get()
             local titlebarColor = Theme.RibbonButton.Default:get()
             return if data.Visible:get() then hoverColor else titlebarColor
@@ -117,7 +117,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
                 Name = "Disabled",
                 Size = UDim2.fromScale(1, 1),
                 BackgroundTransparency = 1,
-                Visible = Computed(function()
+                Visible = Computed(function(): boolean
                     return not data.Visible:get()
                 end),
 
@@ -138,7 +138,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
 
                 [Children] = {
                     Components.Constraints.UIAspectRatio(1),
-                    Components.Constraints.UIGradient(Spring(Computed((function()
+                    Components.Constraints.UIGradient(Spring(Computed((function(): ColorSequence
                         local multiplier = pageActive:get() and 1 or 0.6 
                         local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
                         local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
@@ -227,7 +227,7 @@ function optionButtonComponent(data: PublicTypes.Dictionary, zIndex: number): In
         TextStrokeTransparency = data.IsPrimary and 0.75,
         Font = Enum.Font.SourceSansBold,
         BorderMode = Enum.BorderMode.Outline,
-        Visible = Computed(function()
+        Visible = Computed(function(): boolean
             if typeof(data.Text) == "table" then
                 return data.Text:get() ~= ""
             end
@@ -292,7 +292,7 @@ function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (b
 
     local dropdown = New "Frame" {
         Size = UDim2.fromScale(1, 0),
-        BackgroundColor3 = Computed(function()
+        BackgroundColor3 = Computed(function(): Color3
             return headerColor:get():get()
         end),
         Name = data.Header,
@@ -307,7 +307,7 @@ function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (b
             headerColor:set(data.IsSecondary and Theme.CategoryItem.Default or Theme.Button.Default)
             headerPos = true
         end,
-        [OnEvent "MouseMoved"] = function(_, yPosition)
+        [OnEvent "MouseMoved"] = function(_, yPosition: number)
             if Util.isPluginFrozen() then
                 return
             end
@@ -322,7 +322,7 @@ function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (b
         end,
 
         [Children] = {
-            (function()
+            (function(): Instance
                 local props = {
                     Active = bypassRestriction or Util.interfaceActive,
                     BackgroundTransparency = 1,
@@ -378,7 +378,7 @@ function Components.Dropdown(data: PublicTypes.Dictionary, childrenProcessor: (b
                 Size = UDim2.fromOffset(20, 20),
                 Image = "rbxassetid://6031094687",
 
-                Rotation = Spring(Computed(function()
+                Rotation = Spring(Computed(function(): number
                     return dropdownVisible:get() and 0 or 180
                 end), 20),
 
@@ -406,7 +406,7 @@ function Components.DropdownTextlabel(data: PublicTypes.Dictionary): Instance
         RichText = true,
         TextWrapped = true,
 
-        AutomaticSize = Computed(function()
+        AutomaticSize = Computed(function(): Enum.AutomaticSize
            return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None   
         end),
         Visible = data.DropdownVisible,
@@ -417,7 +417,7 @@ end
 
 function Components.DropdownHolderFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
-        AutomaticSize = Computed(function()
+        AutomaticSize = Computed(function(): Enum.AutomaticSize
             return if data.DropdownVisible:get() then Enum.AutomaticSize.Y else Enum.AutomaticSize.None
         end),
         BackgroundTransparency = 1,
@@ -433,7 +433,7 @@ function Components.TooltipImage(data: PublicTypes.Dictionary): Instance
     if not data.Tooltip and not data.Header then
         return
     end
-    local isActive = Computed(function()
+    local isActive = Computed(function(): boolean
         return not Util.isPluginFrozen()
     end)
     return New "ImageButton" {
@@ -466,7 +466,7 @@ function Components.Checkbox(size: number, position: UDim2, anchorPoint: Vector2
         AnchorPoint = anchorPoint,
         Position = position,
         Size = UDim2.fromOffset(size, size),
-        Image = Computed(function()
+        Image = Computed(function(): string
             return if checkState:get() == Enum.TriStateBoolean.True or checkState:get() == true
                 then "rbxassetid://6031068421" --// Checked
                 elseif checkState:get() == Enum.TriStateBoolean.False  or checkState:get() == false
@@ -511,7 +511,7 @@ function Components.GradientTextLabel(enabled, data: PublicTypes.Dictionary): In
     return New "TextLabel" {
         Active = enabled,
         AnchorPoint = data.AnchorPoint,
-        BackgroundTransparency = Spring(Computed(function()
+        BackgroundTransparency = Spring(Computed(function(): number
             return enabled:get() and 0.5 or 1
         end), 18),
         BackgroundColor3 = Color3.fromRGB(0, 0, 0),
@@ -523,16 +523,16 @@ function Components.GradientTextLabel(enabled, data: PublicTypes.Dictionary): In
 
         Text = data.Text,
         TextColor3 = Theme.BrightText.Default,
-        TextSize = Spring(Computed(function()
+        TextSize = Spring(Computed(function(): number
             return 28 * (enabled:get() and 1 or 2)
         end), 18),
-        TextTransparency = Spring(Computed(function()
+        TextTransparency = Spring(Computed(function(): number
             return enabled:get() and 0 or 1
         end), 18),
 
         [Children] = {
             Components.Constraints.UIGradient(ColorSequence.new(Color3.fromRGB(255, 149, 0), Color3.fromRGB(157, 0, 255))),
-            Components.Constraints.UIStroke(nil, Color3.new(), nil, Spring(Computed(function()
+            Components.Constraints.UIStroke(nil, Color3.new(), nil, Spring(Computed(function(): number
                 return enabled:get() and 0 or 1
             end), 18))
         }
