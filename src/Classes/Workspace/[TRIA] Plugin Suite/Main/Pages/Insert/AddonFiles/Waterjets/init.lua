@@ -15,7 +15,7 @@ if RunService:IsStudio() and not RunService:IsRunning() then
 end
 
 for _, player in pairs(game.Players:GetPlayers()) do
-	local clonedScript = script.WaterjetClient.lua:Clone()
+	local clonedScript = script.WaterjetClient:Clone()
 	clonedScript.Enabled = true
 	clonedScript.Parent = player.PlayerGui
 end
