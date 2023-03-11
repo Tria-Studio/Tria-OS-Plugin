@@ -23,7 +23,7 @@ local Data = {
 local directories = SettingsUtil.Directories
 local idToConfig = {}
 
-local function addLiquidToItems(liquid: Configuration)
+local function addLiquidToItems(liquid: Instance | Configuration)
     local liquidData = {
         {
             Text = "Color", 
@@ -163,7 +163,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
 
                     HeaderEditable = true,
                     HasButton = true,
-                    OnHeaderChange = function(newHeader)
+                    OnHeaderChange = function(newHeader: string)
                         liquid.Name = newHeader
                     end
 
@@ -194,10 +194,10 @@ function Data:init()
 
     local liquidFolder = Util.getDirFolder("Liquids")
     if liquidFolder then
-        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildAdded:Connect(function(child)
+        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildAdded:Connect(function(child: Instance | Configuration)
             addLiquidToItems(child)
         end))
-        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildRemoved:Connect(function(child)
+        SettingsUtil.SettingMaid:GiveTask(liquidFolder.ChildRemoved:Connect(function(child: Instance | Configuration)
             local items = directories.Liquids.Items
             if items:get(false)[child] then
                 SettingsUtil.modifyStateTable(items, "set", child, nil)
