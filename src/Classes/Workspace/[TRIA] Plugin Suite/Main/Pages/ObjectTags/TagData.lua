@@ -608,7 +608,7 @@ Metadata:
 
             Tooltip = {
                 Header = "Liquids",
-                Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the apearance and oxygen depletion rate of the player.
+                Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the appearance and oxygen depletion rate of the player.
                 
 <font size="16"><font color = "rgb(0, 143, 156)"><b>Water: </b></font></font> -8 oxygen/sec
 <font size="16"><font color = "rgb(0, 255, 0)"><b>Acid: </b></font></font> -30 oxygen/sec
@@ -619,7 +619,7 @@ You can specify the oxygen depletion, default color, and splash sound with custo
 Metadata:
     <font size="16"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
     <font size="16"><b>Type: </b></font> Determines if the liquid is water, lava, etc.
-    <font size="16"><b>Meshless: </b></font>Determines whether or not the liquid is visibe on all 6 faces, instead of just one face.]]
+    <font size="16"><b>Meshless: </b></font>Determines whether or not the liquid is visible on all 6 faces, instead of just one face.]]
             },
         },
         _Gas = {
