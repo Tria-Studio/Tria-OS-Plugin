@@ -23,9 +23,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         [Children] = {
             Components.PageHeader("View Modes"),
-            Components.GradientTextLabel(Computed(function()
+            Components.GradientTextLabel(Computed(function(): boolean
                 local mapModel = Util.mapModel:get()
-                return not Util.hasSpecialFolder:get() and mapModel
+                return not Util.hasSpecialFolder:get() and mapModel ~= nil
             end), {
                 Size = UDim2.new(1, 0, 1, 0),
                 Text = "Unsupported Map."
