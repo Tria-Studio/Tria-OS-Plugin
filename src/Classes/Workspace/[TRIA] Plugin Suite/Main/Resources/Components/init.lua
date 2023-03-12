@@ -58,7 +58,10 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
     local pageActive = Computed(function(): boolean
         local map = Util.mapModel:get()
         local hasSpecial = Util.hasSpecialFolder:get()
-        return if data.Name == "ViewModes" then map and hasSpecial elseif table.find(Pages.pageData.disabledPages, data.Name) then false else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
+        return 
+            if data.Name == "ViewModes" then (map ~= nil and hasSpecial)
+            elseif table.find(Pages.pageData.disabledPages, data.Name) then false 
+            else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
     end)
     local pageRatio = Computed(function(): number
         return Pages._currentPageNum:get() / #Pages._PageOrder
