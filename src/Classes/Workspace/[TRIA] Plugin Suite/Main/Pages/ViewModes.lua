@@ -35,7 +35,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 Util.MapChanged:Connect(function()
-    if not Util.hasSpecialFolder:get() then
+    if not Util.hasSpecialFolder:get(false) then
         Util:ShowMessage("Feature Unavaliable", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get Mapkit", Callback = function()
             Pages:ChangePage("Insert")
         end})
@@ -43,7 +43,7 @@ Util.MapChanged:Connect(function()
 end)
 
 function frame.OnOpen()
-    if not Util.hasSpecialFolder:get() and Util.mapModel:get() then
+    if not Util.hasSpecialFolder:get(false) and Util.mapModel:get(false) then
         Util:ShowMessage("Feature Unavaliable", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get Mapkit", Callback = function()
             Pages:ChangePage("Insert")
         end})
