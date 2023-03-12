@@ -42,7 +42,7 @@ Util.MapChanged:Connect(function()
     end
 end)
 
-function frame.onOpen()
+function frame.OnOpen()
     if not Util.hasSpecialFolder:get() and Util.mapModel:get() then
         Util:ShowMessage("Feature Unavaliable", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get Mapkit", Callback = function()
             Pages:ChangePage("Insert")
