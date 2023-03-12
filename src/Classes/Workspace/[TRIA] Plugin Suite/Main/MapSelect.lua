@@ -16,7 +16,7 @@ local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local MapSelect = {
     _Maid = Util.Maid.new(),
     selectingMap = Value(false),
-    selectTextState = Value("No map selected"),
+    selectTextState = Value("No map selected (Click to select)"),
     selectTextColor = Value(Theme.ErrorText.Default:get(false)),
     selectCancelColor = Value(Theme.SubText.Default:get(false)),
     selectCancelImage = Value("rbxassetid://6022668885")
@@ -297,7 +297,7 @@ function MapSelect:StopManualSelection()
 
     self.selectCancelImage:set("rbxassetid://6022668885")
     self.selectCancelColor:set(if currentMap then Theme.ErrorText.Default:get(false) else Theme.SubText.Default:get(false))
-    self.selectTextState:set(if currentMap then currentMap.Settings.Main:GetAttribute("Name") else "No map selected")
+    self.selectTextState:set(if currentMap then currentMap.Settings.Main:GetAttribute("Name") else "No map selected (Click to select)")
     self.selectTextColor:set(if currentMap then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
 end
 
@@ -333,7 +333,7 @@ function MapSelect:ResetSelection()
     Util.MapChanged:Fire()
     Util.hasSpecialFolder:set(false)
     self.selectCancelColor:set(Theme.SubText.Default:get(false))
-    self.selectTextState:set("No map selected")
+    self.selectTextState:set("No map selected (Click to select)")
     self.selectTextColor:set(Theme.ErrorText.Default:get(false))
 end
 
