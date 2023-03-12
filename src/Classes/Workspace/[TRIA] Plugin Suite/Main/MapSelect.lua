@@ -237,6 +237,8 @@ function MapSelect:StartMapSelection()
     local currentTarget, lastTarget
 
     local humanoid = Instance.new("Humanoid")
+    humanoid.Name = "_tempplugin"
+    humanoid.Archivable = false
 
     local mapHighlight = Instance.new("Highlight", workspace.CurrentCamera)
     local mouse = plugin:GetMouse()
