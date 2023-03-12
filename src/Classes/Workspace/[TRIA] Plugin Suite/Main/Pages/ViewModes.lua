@@ -35,7 +35,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 Util.MapChanged:Connect(function()
-    if not Util.hasSpecialFolder:get(false) then
+    if not Util.hasSpecialFolder:get(false) and Pages.pageData.currentPage:get(false) == "ViewModes" then
         Util:ShowMessage("Feature Unavailable", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get Mapkit", Callback = function()
             Pages:ChangePage("Insert")
         end})
