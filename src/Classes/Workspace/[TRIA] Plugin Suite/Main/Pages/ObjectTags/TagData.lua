@@ -647,9 +647,9 @@ Metadata:
                 Header = "_Gas#",
                 Text = [[Gas objects are similar to Liquids, except players do not swim in gas. Gas uses the same types as liquids with the same oxygen depletion rates.
 
-<font size="15"><font color = "rgb(0, 143, 156)"></font><b>Water: </b></font> -8 oxygen/sec
-<font size="15"><font color = "rgb(0, 255, 0)"></font><b>Acid: </b></font> -30 oxygen/sec
-<font size="15"><font color = "rgb(255, 0, 0)"></font><b>Lava: </b></font> Instant death
+<font size="15"><font color = "rgb(0, 143, 156)"><b>Water: </b></font></font> -8 oxygen/sec
+<font size="15"><font color = "rgb(0, 255, 0)"><b>Acid: </b></font></font> -30 oxygen/sec
+<font size="15"><font color = "rgb(255, 0, 0)"><b>Lava: </b></font></font> Instant death
 
 Custom oxygen depletion rates can be specified with custom liquids.
 
