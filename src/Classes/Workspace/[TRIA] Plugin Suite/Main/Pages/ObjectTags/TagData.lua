@@ -558,8 +558,8 @@ Metadata:
                 Text = [[Wallruns allow players to latch onto the sides of parts and slide along them in the direction of the face and allow the player to jump off at any time.
 
 Metadata:
-    <font size="15"><b>Speed: </font></b>Speed in studs per second that the player will move on the wallrun. <20 is slower than your walkspeed.
-    <font size="15"><b>Momentum: </font></b>a scalar value that determines how much speed the player will carry off of the wallrun into the air.]]
+    <font size="15"><b>Speed: </b></font>Speed in studs per second that the player will move on the wallrun. Speeds &lt;20 is slower than your walkspeed.
+    <font size="15"><b>Momentum: </b></font>a scalar value that determines how much speed the player will carry off of the wallrun into the air.]]
             },
         },
         _WallJump = {
