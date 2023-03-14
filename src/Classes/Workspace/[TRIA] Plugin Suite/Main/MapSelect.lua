@@ -233,7 +233,7 @@ function MapSelect:StartMapSelection()
         self:SetMap(workspace)
         return
     end
-    if self:IsTriaMap(Selection:get()[1]) then
+    if Selection:get()[1] and self:IsTriaMap(Selection:get()[1]) then
         self:SetMap(Selection:get()[1])
         return
     end
