@@ -208,6 +208,12 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             updateSpecial()
             Util.MapMaid:GiveTask(newMap.ChildAdded:Connect(updateSpecial))
             Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(updateSpecial))
+            task.spawn(function()
+                while newMap == Util.mapModel:get() do
+                    Util.hasSpecialFolder:set(newMap:FindFirstChild("Special") ~= nil)
+                    task.wait(1)
+                end
+            end)
 
             if specialFolder then
                 Util.MapMaid:GiveTask(specialFolder:GetPropertyChangedSignal("Name"):Connect(updateSpecial))
@@ -216,6 +222,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         mapTypes[newMap.ClassName]()
         detectSpecialFolder()
+        
 
         task.wait()
         if not Util.hasSpecialFolder:get(false) then
