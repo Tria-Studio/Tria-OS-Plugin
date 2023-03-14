@@ -437,7 +437,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
-        BackgroundColor3 = Theme.MainBackground.Default,
+        BackgroundColor3 = Theme.TableItem.Default,
         Visible = data.Visible,
         Name = "AudioLib",
 
