@@ -12,6 +12,7 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Observer = Fusion.Observer
 local Value = Fusion.Value
+local Computed = Fusion.Computed
 
 local PAGE_ACTIVE = Value(false)
 
