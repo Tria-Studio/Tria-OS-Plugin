@@ -66,7 +66,6 @@ local function attemptToInsertModel(assetID: number)
     result:PivotTo(CFrame.new((workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -125) - Vector3.new(0, 50, 0)).Position))
     Selection:Set({result})
 
-    print"AAA"
     if assetID == 6404661021 and not SelectMap:AutoSelect(true) then
         result.Parent = workspace
         SelectMap:SetMap(result)
@@ -106,7 +105,6 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         end,
 
         [OnEvent "Activated"] = function()
-            print"click"
             if data.ActivatedFunction then
                 data.ActivatedFunction()
             else
