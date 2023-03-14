@@ -9,6 +9,7 @@ local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 local MapComponents = require(script.MapComponents)
+local SelectMap = require(Package.MapSelect)
 
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
@@ -65,6 +66,10 @@ local function attemptToInsertModel(assetID: number)
     result:PivotTo(CFrame.new((workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -125) - Vector3.new(0, 50, 0)).Position))
     result.Parent = workspace
     Selection:Set({result})
+
+    if assetID == 6404661021 and not Util.mapModel:get() then
+        SelectMap:SetMap(result)
+    end
     ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
@@ -208,6 +213,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
                             OverlayImage = "rbxassetid://12537133710",
                             OverlayImageTransparency = 0.5,
+                            ZIndex = 5,
                             Name = "Official TRIA.OS Map Kit",
                             Creator = "TRIA",
                             ImageCrop = Enum.ScaleType.Crop,
