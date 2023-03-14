@@ -199,7 +199,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         end
 
         local function updateSpecial()
-            Util.hasSpecialFolder:set(newMap:FindFirstChild("Special"))
+            Util.hasSpecialFolder:set(newMap:FindFirstChild("Special") ~= nil)
         end
 
         local function detectSpecialFolder()

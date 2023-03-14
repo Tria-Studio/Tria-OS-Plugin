@@ -379,8 +379,8 @@ data.dataTypes = {
                 Text = [[Selected Part(s) will appear when the following button is pressed.
 
 Metadata:
-    <font size="16"><b>Button#: </b></font>Defines what button the tag will activate
-    <font size="16"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
+    <font size="15"><b>Button#: </b></font>Defines what button the tag will activate
+    <font size="15"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Hide = {
@@ -406,8 +406,8 @@ Metadata:
                 Text = [[Selected Part(s) will be hidden, NOT destroyed when the button is activated. Use this if you want a part to hide then reappear.
 
 Metadata:
-    <font size="16"><b>Button#: </b></font>Defines what button the tag will activate
-    <font size="16"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
+    <font size="15"><b>Button#: </b></font>Defines what button the tag will activate
+    <font size="15"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Fall = {
@@ -433,8 +433,8 @@ Metadata:
                 Text = [[Selected Part(s) will become CanCollide false and get deleted after a few seconds when the following button is pressed.
 
 Metadata:
-    <font size="16"><b>Button#: </b></font>Defines what button the tag will activate
-    <font size="16"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
+    <font size="15"><b>Button#: </b></font>Defines what button the tag will activate
+    <font size="15"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Destroy = {
@@ -460,8 +460,8 @@ Metadata:
                 Text = [[Selected Part(s) will be <u>destroyed</u> when the following button is pressed.
 
 Metadata:
-    <font size="16"><b>Button#: </b></font>Defines what button the tag will activate
-    <font size="16"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
+    <font size="15"><b>Button#: </b></font>Defines what button the tag will activate
+    <font size="15"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
         _Sound = {
@@ -494,9 +494,9 @@ Metadata:
                 Text = [[Selected Part(s) will play a sound with the given AssetID when the following button is pressed.
 
 Metadata:
-    <font size="16"><b>Button#: </b></font>Defines what button the tag will activate
-    <font size="16"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect
-    <font size="16"><b>SoundID#: </b></font>Asset ID of the desired sound. To edit the sound further, use the Properties widget.]]
+    <font size="15"><b>Button#: </b></font>Defines what button the tag will activate
+    <font size="15"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect
+    <font size="15"><b>SoundID#: </b></font>Asset ID of the desired sound. To edit the sound further, use the Properties widget.]]
             },
         },
         _Explode = {
@@ -524,8 +524,8 @@ Metadata:
                 Text = [[Selected Part(s) will explode when the following button is pressed.
 
 Metadata:
-    <font size="16"><b>Button#: </b></font>Defines what button the tag will activate
-    <font size="16"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
+    <font size="15"><b>Button#: </b></font>Defines what button the tag will activate
+    <font size="15"><b>Delay#: </b></font>Amount of time in seconds that the tag will wait to take effect]]
             },
         },
     },
@@ -558,8 +558,8 @@ Metadata:
                 Text = [[Wallruns allow players to latch onto the sides of parts and slide along them in the direction of the face and allow the player to jump off at any time.
 
 Metadata:
-    <font size="16"><b>Speed: </font></b>Speed in studs per second that the player will move on the wallrun. <20 is slower than your walkspeed.
-    <font size="16"><b>Momentum: </font></b>a scalar value that determines how much speed the player will carry off of the wallrun into the air.]]
+    <font size="15"><b>Speed: </b></font>Speed in studs per second that the player will move on the wallrun. Speeds &lt;20 is slower than your walkspeed.
+    <font size="15"><b>Momentum: </b></font>a scalar value that determines how much speed the player will carry off of the wallrun into the air.]]
             },
         },
         _WallJump = {
@@ -608,18 +608,18 @@ Metadata:
 
             Tooltip = {
                 Header = "Liquids",
-                Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the apearance and oxygen depletion rate of the player.
+                Text = [[Liquids are elements that the player can swim inside if the center of their torso is submerged. Liquid type can alter the appearance and oxygen depletion rate of the player.
                 
-<font size="16"><font color = "rgb(0, 143, 156)"><b>Water: </b></font></font> -8 oxygen/sec
-<font size="16"><font color = "rgb(0, 255, 0)"><b>Acid: </b></font></font> -30 oxygen/sec
-<font size="16"><font color = "rgb(255, 0, 0)"><b>Lava: </b></font></font> Instant death
+<font size="15"><font color = "rgb(0, 143, 156)"><b>Water: </b></font></font> -8 oxygen/sec
+<font size="15"><font color = "rgb(0, 255, 0)"><b>Acid: </b></font></font> -30 oxygen/sec
+<font size="15"><font color = "rgb(255, 0, 0)"><b>Lava: </b></font></font> Instant death
 
 You can specify the oxygen depletion, default color, and splash sound with custom liquids.
 
 Metadata:
-    <font size="16"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
-    <font size="16"><b>Type: </b></font> Determines if the liquid is water, lava, etc.
-    <font size="16"><b>Meshless: </b></font>Determines whether or not the liquid is visibe on all 6 faces, instead of just one face.]]
+    <font size="15"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
+    <font size="15"><b>Type: </b></font> Determines if the liquid is water, lava, etc.
+    <font size="15"><b>Meshless: </b></font>Determines whether or not the liquid is visible on all 6 faces, instead of just one face.]]
             },
         },
         _Gas = {
@@ -647,15 +647,15 @@ Metadata:
                 Header = "_Gas#",
                 Text = [[Gas objects are similar to Liquids, except players do not swim in gas. Gas uses the same types as liquids with the same oxygen depletion rates.
 
-<font size="16"><font color = "rgb(0, 143, 156)"></font><b>Water: </b></font> -8 oxygen/sec
-<font size="16"><font color = "rgb(0, 255, 0)"></font><b>Acid: </b></font> -30 oxygen/sec
-<font size="16"><font color = "rgb(255, 0, 0)"></font><b>Lava: </b></font> Instant death
+<font size="15"><font color = "rgb(0, 143, 156)"><b>Water: </b></font></font> -8 oxygen/sec
+<font size="15"><font color = "rgb(0, 255, 0)"><b>Acid: </b></font></font> -30 oxygen/sec
+<font size="15"><font color = "rgb(255, 0, 0)"><b>Lava: </b></font></font> Instant death
 
 Custom oxygen depletion rates can be specified with custom liquids.
 
 Metadata:
-    <font size="16"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
-    <font size="16"><b>Type: </b></font> Determines if the liquid is water, lava, etc.]]
+    <font size="15"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
+    <font size="15"><b>Type: </b></font> Determines if the liquid is water, lava, etc.]]
             },
         },
         _Button = {
@@ -704,13 +704,13 @@ Metadata:
                 Text = [[Buttons are an object which players must press in sequential order in order to progress through and complete a map. Events can be called with object tags and within the MapScript to customize your map further.
 
 Metadata:
-    <font size="16"><b>Button# & Path#: </b></font>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
-    <font size="16"><b>Group: </b></font>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
-    <font size="16"><b>Inactive Color: </b></font>Overrides the inactive color specified in map settings for this button. Leave empty for default.
-    <font size="16"><b>Active Color: </b></font>Overrides the active color specified in map settings for this button. Leave empty for default.
-    <font size="16"><b>Activated Color: </b></font>Overrides the activated color specified in map settings for this button. Leave empty for default.
-    <font size="16"><b>Activated Sound: </b></font>Overrides the activated sound specified in map settings for this button. Leave empty for default.
-    <font size="16"><b>LocatorImage: </b></font>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
+    <font size="15"><b>Button# & Path#: </b></font>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
+    <font size="15"><b>Group: </b></font>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
+    <font size="15"><b>Inactive Color: </b></font>Overrides the inactive color specified in map settings for this button. Leave empty for default.
+    <font size="15"><b>Active Color: </b></font>Overrides the active color specified in map settings for this button. Leave empty for default.
+    <font size="15"><b>Activated Color: </b></font>Overrides the activated color specified in map settings for this button. Leave empty for default.
+    <font size="15"><b>Activated Sound: </b></font>Overrides the activated sound specified in map settings for this button. Leave empty for default.
+    <font size="15"><b>LocatorImage: </b></font>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
             },
         },
         Detail = {
@@ -773,12 +773,12 @@ Metadata:
                 Text = [[Ziplines are an interactive way to allow for people to travel from point A to point B in a map.
 
 Metadata:
-    <font size="16"><b>Momentum: </b></font>Determines whether or not you continue moving in the direction that you exited the zipline.
-    <font size="16"><b>Jumpable: </b></font>Allows players to jump off ziplines mid zipline.
-    <font size="16"><b>Color: </b></font>The color of the zipline.
-    <font size="16"><b>Material: </b></font>The material of the zipline.
-    <font size="16"><b>Zipline Width: </b></font>The width & height of the zipline cable.
-    <font size="16"><b>Sparkle: </b></font>Determines if a sparkle particle will play where the player 'grabs' onto the zipline.]]
+    <font size="15"><b>Momentum: </b></font>Determines whether or not you continue moving in the direction that you exited the zipline.
+    <font size="15"><b>Jumpable: </b></font>Allows players to jump off ziplines mid zipline.
+    <font size="15"><b>Color: </b></font>The color of the zipline.
+    <font size="15"><b>Material: </b></font>The material of the zipline.
+    <font size="15"><b>Zipline Width: </b></font>The width & height of the zipline cable.
+    <font size="15"><b>Sparkle: </b></font>Determines if a sparkle particle will play where the player 'grabs' onto the zipline.]]
             },
         },
         _Kill = {
@@ -817,7 +817,7 @@ Metadata:
                 Text = [[Airtanks allow for extended underwater gameplay by allowing players to get extra oxygen. Airtanks cannot prevent you from dying to lava.
                     
 Metadata:
-    <font size="16"><b>Oxygen: </b></font>The amount of oxygen the player will obtain on collection of the tank.]]
+    <font size="15"><b>Oxygen: </b></font>The amount of oxygen the player will obtain on collection of the tank.]]
             },
         },
         _SpeedBooster = {
@@ -841,7 +841,7 @@ Metadata:
                 Text = [[Speed boosters allow for easy changing of the players walkspeed. Default player walkspeed is 20.
                     
 Metadata:
-    <font size="16"><b>WalkSpeed: </b></font>The speed the players WalkSpeed will be set to.]]
+    <font size="15"><b>WalkSpeed: </b></font>The speed the players WalkSpeed will be set to.]]
             },
         },
         _JumpBooster = {
@@ -865,7 +865,7 @@ Metadata:
                 Text = [[Jump boosters allow for easy changing of the players <u>JumpPower</u>. Default JumpPower is 50.
                     
 Metadata:
-    <font size="16"><b>JumpPower: </b></font>The power the players JumpPower will be set to.]]
+    <font size="15"><b>JumpPower: </b></font>The power the players JumpPower will be set to.]]
             },
         },
     },
@@ -907,11 +907,11 @@ Metadata:
                 Text = [[A custom teleporter object from EasyTP that allows for the easy teleport of players inside a round.
 
 Metadata:
-    <font size="16"><b>TeleportNumber: </b></font>Determines which teleporters are linked together. There can only be one start and one end.
-    <font size="16"><b>TeleportType: </b></font>Determines if its the start or the end of a link.
-    <font size="16"><b>DoFlash: </b></font>Determines if the players screen will flash when telepored with the given color and duration.
-    <font size="16"><b>FlashColor: </b></font>Determines the color of the flash that will play if DoFlash is true.
-    <font size="16"><b>FlashDuration: </b></font>Determines the length of the flash if DoFlash is true.]]
+    <font size="15"><b>TeleportNumber: </b></font>Determines which teleporters are linked together. There can only be one start and one end.
+    <font size="15"><b>TeleportType: </b></font>Determines if its the start or the end of a link.
+    <font size="15"><b>DoFlash: </b></font>Determines if the players screen will flash when telepored with the given color and duration.
+    <font size="15"><b>FlashColor: </b></font>Determines the color of the flash that will play if DoFlash is true.
+    <font size="15"><b>FlashDuration: </b></font>Determines the length of the flash if DoFlash is true.]]
             },
         },
         _Waterjet = {
@@ -960,13 +960,13 @@ Metadata:
                 Text = [[A custom jetstream object from the Waterjets Addon that allows for custom underwater jetstream currents.
 
 Metadata:
-    <font size="16"><b>FanNumber: </b></font>A unique identifier for the fan in use of scripting.
-    <font size="16"><b>FanSpeed: </b></font>Speed in studs/sec that the fan will push players inside its bounds.
-    <font size="16"><b>Distance: </b></font>The total distance that the fan can push you.
-    <font size="16"><b>LinearMovement: </b></font>When true, the fans push players at a constant rate throughout the entire distance. When false, the rate that the fan pushes players decreases as you get farther away.
-    <font size="16"><b>FanShape: </b></font>Determines if the bounds that the fan will push players in is a cylinder, or a box.
-    <font size="16"><b>Enabled: </b></font>Determines whether the fan is currently active.
-    <font size="16"><b>BubbleParticle: </b></font>The number of the ImageID that the fan's particles will show. 
+    <font size="15"><b>FanNumber: </b></font>A unique identifier for the fan in use of scripting.
+    <font size="15"><b>FanSpeed: </b></font>Speed in studs/sec that the fan will push players inside its bounds.
+    <font size="15"><b>Distance: </b></font>The total distance that the fan can push you.
+    <font size="15"><b>LinearMovement: </b></font>When true, the fans push players at a constant rate throughout the entire distance. When false, the rate that the fan pushes players decreases as you get farther away.
+    <font size="15"><b>FanShape: </b></font>Determines if the bounds that the fan will push players in is a cylinder, or a box.
+    <font size="15"><b>Enabled: </b></font>Determines whether the fan is currently active.
+    <font size="15"><b>BubbleParticle: </b></font>The number of the ImageID that the fan's particles will show. 
 ]]
             },
         },
