@@ -64,12 +64,16 @@ local function attemptToInsertModel(assetID: number)
     Util.debugWarn(("Successfuly inserted %s!"):format(result.Name))
     result.Name = "[INSERTED] - " .. result.Name
     result:PivotTo(CFrame.new((workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -125) - Vector3.new(0, 50, 0)).Position))
-    result.Parent = workspace
     Selection:Set({result})
 
-    if assetID == 6404661021 and not Util.mapModel:get() then
+    print"AAA"
+    if assetID == 6404661021 and not SelectMap:AutoSelect(true) then
+        result.Parent = workspace
         SelectMap:SetMap(result)
+    else
+        result.Parent = workspace
     end
+    
     ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
@@ -102,6 +106,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         end,
 
         [OnEvent "Activated"] = function()
+            print"click"
             if data.ActivatedFunction then
                 data.ActivatedFunction()
             else

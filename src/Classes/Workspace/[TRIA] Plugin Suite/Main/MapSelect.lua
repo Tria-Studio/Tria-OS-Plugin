@@ -1,4 +1,5 @@
 local RunService = game:GetService("RunService")
+local Selection = game:GetService("Selection")
 
 local Package = script.Parent
 local Resources = Package.Resources
@@ -10,7 +11,6 @@ local Pages = require(Resources.Components.Pages)
 local Util = require(Package.Util)
 
 local Value = Fusion.Value
-local Computed = Fusion.Computed
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local MapSelect = {
@@ -233,6 +233,10 @@ function MapSelect:StartMapSelection()
         self:SetMap(workspace)
         return
     end
+    if self:IsTriaMap(Selection:get()[1]) then
+        self:SetMap(Selection:get()[1])
+        return
+    end
 
     local currentTarget, lastTarget
 
@@ -303,11 +307,13 @@ function MapSelect:StopManualSelection()
     self.selectTextColor:set(if currentMap then Theme.MainText.Default:get(false) else Theme.ErrorText.Default:get(false))
 end
 
-function MapSelect:AutoSelect(): boolean
+function MapSelect:AutoSelect(DontSet: boolean?): boolean
     local isMap, value = self:IsTriaMap(workspace)
 
     if isMap then
-        self:SetMap(workspace)
+        if not DontSet then
+            self:SetMap(workspace)
+        end
         return true
     end
 
@@ -315,10 +321,16 @@ function MapSelect:AutoSelect(): boolean
         if v:IsA("Model") then
             isMap, value = self:IsTriaMap(v)
             if isMap then
-                self:SetMap(v)
+                if not DontSet then
+                    self:SetMap(v)
+                end
                 return true
             end
         end
+    end
+
+    if DontSet then
+        return false
     end
 
     if not isMap then
