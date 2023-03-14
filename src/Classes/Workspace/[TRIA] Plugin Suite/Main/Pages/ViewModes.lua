@@ -16,10 +16,9 @@ local Computed = Fusion.Computed
 
 local PAGE_ACTIVE = Value(false)
 
-local TextLabelVisible = Value(true)
+local textLabelVisible = Value(true)
 
 local frame = {}
-
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
@@ -41,26 +40,25 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
+local function showPageError()
+    Util:ShowMessage("Feature Unavaliable", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
+        Pages:ChangePage("Insert")
+    end})
+end
 
-local function UpdatePage()
-    local old = PAGE_ACTIVE:get()
-    PAGE_ACTIVE:set(Util.hasSpecialFolder:get() and Util.mapModel:get())
-    TextLabelVisible:set(not PAGE_ACTIVE:get())
+local function updatePage()
+    local wasActive = PAGE_ACTIVE:get(false)
+    PAGE_ACTIVE:set(Util.hasSpecialFolder:get(false) and Util.mapModel:get(false))
+    textLabelVisible:set(not PAGE_ACTIVE:get(false))
     
-    if old and not PAGE_ACTIVE:get() and Pages.pageData.currentPage:get() == "ViewModes" then
-        Util:ShowMessage("Feature Unavaliable, AAAAA", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
-            Pages:ChangePage("Insert")
-        end})
+    if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get() == "ViewModes" then
+        showPageError()
     end
 end
-Observer(Util.hasSpecialFolder):onChange(UpdatePage)
-Observer(Util.mapModel):onChange(UpdatePage)
 
 function frame.onOpen()
     if not Util.hasSpecialFolder:get(false) and Util.mapModel:get(false) then
-        Util:ShowMessage("Feature Unavaliable", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
-            Pages:ChangePage("Insert")
-        end})
+        showPageError()
     end
 end
 
@@ -69,5 +67,8 @@ function frame.OnClose()
         Util.CloseMessage() 
     end
 end
+
+Observer(Util.hasSpecialFolder):onChange(updatePage)
+Observer(Util.mapModel):onChange(updatePage)
 
 return frame
