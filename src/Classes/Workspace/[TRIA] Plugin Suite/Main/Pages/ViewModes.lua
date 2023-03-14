@@ -51,7 +51,7 @@ local function updatePage()
     PAGE_ACTIVE:set(Util.hasSpecialFolder:get(false) and Util.mapModel:get(false))
     textLabelVisible:set(not PAGE_ACTIVE:get(false))
     
-    if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get() == "ViewModes" then
+    if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get(false) == "ViewModes" then
         showPageError()
     end
 end
@@ -63,7 +63,7 @@ function frame.onOpen()
 end
 
 function frame.OnClose()
-    if Util._Message.Header:get() == "Feature Unavaliable" then
+    if Pages.pageData.currentPage:get(false) == "ViewModes" then
         Util.CloseMessage() 
     end
 end
