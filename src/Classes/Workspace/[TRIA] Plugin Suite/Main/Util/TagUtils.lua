@@ -73,6 +73,7 @@ local tagsWithNumbers = {
     "_Explode",
     "_Destroy",
     "_Sound",
+    "_Waterjet",
 }
 
 local defaultMetadataTypes = {
@@ -320,7 +321,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
         function methods.Name()
             verifyFolder()
             local tagInstance = getTagInstance(part, newTag) or part
-            tagInstance.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+            tagInstance.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and tostring(Util.getObjectCountWithNameMatch(newTag, nil, true) + 1) or "")
             part.Parent = newParent
         end
 
@@ -333,7 +334,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             verifyFolder()
             local newChild = Instance.new(tagData._instanceType or "ObjectValue")
             
-            newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and "1" or "")
+            newChild.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and tostring(Util.getObjectCountWithNameMatch(newTag, nil, true) + 1) or "")
             newChild.Parent = part
             part.Parent = newParent
         end
