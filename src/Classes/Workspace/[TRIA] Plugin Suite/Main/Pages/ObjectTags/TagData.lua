@@ -874,7 +874,7 @@ Metadata:
             DisplayText = "_Teleporter",
             ActionText = "_Teleporter",
             DisplayIcon = "rbxassetid://6031082527",
-            LayoutOrder = 1,
+            LayoutOrder = 2,
             metadata = {
                 {
                     data = data.metadataTypes.TeleportNumber,

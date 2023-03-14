@@ -167,9 +167,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                 LayoutOrder = 2,
 
                                 [Children] = ForValues(data.metadata, function(metadataType: PublicTypes.Dictionary): Instance
-                                    local textBounds = Value(Vector2.new())
                                     local frameSize = Value(Vector2.new())
-                                    local onlyShow = Value(true)
 
                                     return New "TextLabel" {
                                         [Out "AbsoluteSize"] = frameSize,
