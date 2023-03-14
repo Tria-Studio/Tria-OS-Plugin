@@ -225,6 +225,7 @@ end)                ]], line + 1)
 
                 local demo = addonFiles.WaterjetDemo:Clone()
                 positionModel(demo)
+                demo.Name = "_Waterjet0"
                 demo.Parent = currentMap.Special.Waterjets
 
                 Util.debugWarn("Successfully inserted Waterjets!")

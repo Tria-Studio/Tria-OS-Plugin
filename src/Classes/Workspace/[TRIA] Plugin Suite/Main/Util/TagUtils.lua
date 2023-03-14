@@ -367,7 +367,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     function types.AddonTags(): boolean?
-        return part.Name == "_Teleporter" or string.find(part.Name, "_Waterjet", 1, true)
+        return part.Name == tag or string.find(part.Name, tag, 1, true)
     end
 
     function types.ActionTags(): boolean?
