@@ -758,7 +758,6 @@ local function updateOnAllSongsLoaded()
     Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
 end
 
--- Replace with :onBind when released.
 updateOnAllSongsLoaded()
 Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
 Observer(permissionsNeedUpdating):onChange(updateOnAllSongsLoaded)
