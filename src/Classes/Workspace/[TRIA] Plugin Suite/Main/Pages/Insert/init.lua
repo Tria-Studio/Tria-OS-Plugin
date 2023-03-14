@@ -19,7 +19,7 @@ local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Computed = Fusion.Computed
 local ForValues = Fusion.ForValues
-local Observer = Fusion.Observer
+local Out = Fusion.Out
 
 local frame = {}
 
@@ -176,16 +176,18 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
+    local AddonFrameSize = Value()
+
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
-        BackgroundColor3 = Theme.MainBackground.Default,
+        BackgroundColor3 = Theme.TableItem.Default,
         Visible = data.Visible,
         Name = "Insert",
 
         [Children] = {
             Components.PageHeader("Map Resources"),
             Components.ScrollingFrame ({
-                BackgroundColor3 = Theme.MainBackground.Default,
+                BackgroundColor3 = Theme.TableItem.Default,
                 BackgroundTransparency = 0,
                 ClipsDescendants = true,
                 Size = UDim2.fromScale(1, 1),
@@ -208,7 +210,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             OverlayImageTransparency = 0.5,
                             Name = "Official TRIA.OS Map Kit",
                             Creator = "TRIA",
-                            ImageCrop = Enum.ScaleType.Fit,
+                            ImageCrop = Enum.ScaleType.Crop,
                             Tooltip = {}
                         }
                     },
@@ -224,6 +226,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Constraints.UIListLayout(),
                             Components.FrameHeader("Featured Map Addons", 1, nil, nil, "Featured assets created by the community for use in mapmaking.", 2),
                             New "Frame" {
+                                [Out "AbsoluteSize"] = AddonFrameSize,
                                 Size = UDim2.new(1, 0, 0, 0),
                                 AutomaticSize = Enum.AutomaticSize.Y,
                                 LayoutOrder = 2,
@@ -235,7 +238,10 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     end), {
                                         AnchorPoint = Vector2.new(0.5, 0.5),
                                         Position = UDim2.fromScale(0.5, 0.5),
-                                        Size = UDim2.fromScale(1, 1),
+                                        Size = Computed(function()
+                                            local size = AddonFrameSize:get() or Vector2.new()
+                                            return UDim2.fromOffset(size.X, size.Y)
+                                        end),
                                         Text = "Select a map to continue.",
                                         ZIndex = 5,
                                     }),
