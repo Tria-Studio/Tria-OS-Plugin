@@ -84,7 +84,7 @@ local defaultMetadataTypes = {
 }
 
 local function getTagInstance(part: Instance, tag: string): Instance | nil
-    if part.Parent == game then
+    if part.Parent ~= game then
         for _, child in ipairs(part:GetChildren()) do
             if string.find(child.Name, tag, 1, true) then
                 return child
@@ -95,6 +95,7 @@ local function getTagInstance(part: Instance, tag: string): Instance | nil
 end
 
 function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
+    -- TODO: see if its possible to efficiently add a system to check the most common types first and the least common last, and to also stop checking if tags are incompatible(not sure if this is "possible")
     local partTags = {}
     for tagType, tags in pairs(tagTypes) do
         for key, tag in ipairs(tags) do
@@ -351,6 +352,8 @@ end
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local types = {}
 
+    --TODO: try to get these functions as optimized and fast as possible
+
     function types.ButtonTags(): boolean?
         for _, child in ipairs(part:GetChildren()) do
             if string.find(child.Name, tag.."%d") then
@@ -398,6 +401,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         return detailFolder and part:IsDescendantOf(detailFolder)
     end
 
+    --TODO: theres probably a better way to do this thats more efficient 
     for type, tags in pairs(tagTypes) do
         if table.find(tags, tag) and types[type]() then
             return true
