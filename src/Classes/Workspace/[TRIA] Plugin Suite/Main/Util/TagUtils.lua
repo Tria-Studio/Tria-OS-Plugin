@@ -83,9 +83,11 @@ local defaultMetadataTypes = {
 }
 
 local function getTagInstance(part: Instance, tag: string): Instance | nil
-    for _, child in ipairs(part:GetChildren()) do
-        if string.find(child.Name, tag, 1, true) then
-            return child
+    if part.Parent == game then
+        for _, child in ipairs(part:GetChildren()) do
+            if string.find(child.Name, tag, 1, true) then
+                return child
+            end
         end
     end
     return nil
