@@ -137,7 +137,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
         end
 
         function types.Property()
-            local tagInstance = getTagInstance(part, tag)
+            local tagInstance = getTagInstance(part, tag) or part
 
             if tagInstance then
                 tagInstance[metadata.data._propertyName] = newValue
@@ -145,7 +145,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
         end
 
         function types.EndOfName()
-            local tagInstance = getTagInstance(part, tag)
+            local tagInstance = getTagInstance(part, tag) or part
 
             if tagInstance then
                 tagInstance.Name = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag] or TagData.dataTypes.addonTags[tag])._nameStub .. newValue or 0
@@ -212,7 +212,7 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
     end
 
     function types.EndOfName() : string
-        local tagInstance = getTagInstance(part, name)
+        local tagInstance = getTagInstance(part, name) or part
         return tagInstance
             and string.sub(tagInstance.Name, #mainData._nameStub + 1)
             or string.sub(part.Name, #mainData._nameStub + 1)
