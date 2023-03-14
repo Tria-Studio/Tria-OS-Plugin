@@ -55,6 +55,13 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
         return data.Visible:get() and 0 or 1
     end), 20)
 
+    local colors = Computed(function()
+        local multiplier = pageActive:get() and 1 or 0.6
+        local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
+        local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
+        return {newStartColor, newEndColor}
+    end)
+
     local pageActive = Computed(function(): boolean
         local map = Util.mapModel:get()
         local hasSpecial = Util.hasSpecialFolder:get()
@@ -63,15 +70,14 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
             elseif table.find(Pages.pageData.disabledPages, data.Name) then false 
             else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
     end)
+
     local pageRatio = Computed(function(): number
         return Pages._currentPageNum:get() / #Pages._PageOrder
     end)
    
     local colorSpring = Spring(Computed(function(): Color3
-        local multiplier = pageActive:get() and 1 or 0.6
-        local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
-        local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
-        return lerpType(newStartColor, newEndColor, pageRatio:get())
+        local currentColors = colors:get()
+        return lerpType(currentColors[1], currentColors[2], pageRatio:get())
     end), 20)
 
     return New "TextButton" {
@@ -144,13 +150,11 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
                 [Children] = {
                     Components.Constraints.UIAspectRatio(1),
                     Components.Constraints.UIGradient(Spring(Computed((function(): ColorSequence
-                        local multiplier = pageActive:get() and 1 or 0.6 
-                        local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
-                        local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
+                        local currentColors = colors:get()
                         local ratio = (index - 1) / #Pages._PageOrder
 
-                        local start = lerpType(newStartColor, newEndColor, ratio)
-                        local finish = lerpType(newStartColor, newEndColor, ratio + (1 / #Pages._PageOrder))
+                        local start = lerpType(currentColors[1], currentColors[2], ratio)
+                        local finish = lerpType(currentColors[1], currentColors[2], ratio + (1 / #Pages._PageOrder))
 
                         return ColorSequence.new(start, finish)
                     end)), 20), NumberSequence.new(0), 0)        
