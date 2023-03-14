@@ -56,7 +56,7 @@ local function updatePage()
     end
 end
 
-function frame.onOpen()
+function frame.OnOpen()
     if not Util.hasSpecialFolder:get(false) and Util.mapModel:get(false) then
         showPageError()
     end
