@@ -13,8 +13,7 @@ local Computed = Fusion.Computed
 local Value = Fusion.Value
 local ForValues = Fusion.ForValues
 
-
-return function(name: string, data: PublicTypes.Dictionary)
+return function(name: string, data: PublicTypes.Dictionary): Instance
     local checkState = Value(false)
 
     return New "Frame" {
