@@ -91,4 +91,12 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
+function frame.OnOpen()
+    Util.objectTagsActive:set(true)
+end
+function frame.OnClose()
+    Util.objectTagsActive:set(false)
+end
+
+
 return frame

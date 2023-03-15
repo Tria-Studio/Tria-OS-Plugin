@@ -37,9 +37,16 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
     local metaDataVisible = Computed(function(): boolean
         Util._Selection.selectedUpdate:get()
-        local value = #Util._Selection.selectedParts:get() == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(Util._Selection.selectedParts:get(), name)
-        checkState:set(#Util._Selection.selectedParts:get() > 0 and value or Enum.TriStateBoolean.False)
-        return #Util._Selection.selectedParts:get() > 0 and value == Enum.TriStateBoolean.True
+        local selectedParts = Util._Selection.selectedParts:get()
+        local active = Util.objectTagsActive:get()
+
+        if not active then
+            return
+        end
+
+        local value = #selectedParts == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(selectedParts, name)
+        checkState:set(#selectedParts > 0 and value or Enum.TriStateBoolean.False)
+        return #selectedParts > 0 and value == Enum.TriStateBoolean.True
     end)
 
     Observer(metaDataVisible):onChange(function()

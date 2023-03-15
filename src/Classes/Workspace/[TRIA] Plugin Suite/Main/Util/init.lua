@@ -14,7 +14,6 @@ local Signal = require(script.Signal)
 
 local Value = Fusion.Value
 local Observer = Fusion.Observer
-local Computed = Fusion.Computed
 
 local selectionMaid = Maid.new()
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
@@ -39,6 +38,7 @@ local Util = {
     _manualActive = Value(true),
     interfaceActive = Value(false),
     dropdownActive = Value(false),
+    objectTagsActive = Value(false),
 
     _Addons = {
         hasAddonsWithObjectTags = Value(false),

@@ -55,13 +55,6 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
         return data.Visible:get() and 0 or 1
     end), 20)
 
-    local colors = Computed(function()
-        local multiplier = pageActive:get() and 1 or 0.6
-        local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
-        local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
-        return {newStartColor, newEndColor}
-    end)
-
     local pageActive = Computed(function(): boolean
         local map = Util.mapModel:get()
         local hasSpecial = Util.hasSpecialFolder:get()
@@ -69,6 +62,13 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
             if data.Name == "ViewModes" then (map ~= nil and hasSpecial)
             elseif table.find(Pages.pageData.disabledPages, data.Name) then false 
             else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
+    end)
+
+    local colors = Computed(function()
+        local multiplier = pageActive:get() and 1 or 0.6
+        local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
+        local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
+        return {newStartColor, newEndColor}
     end)
 
     local pageRatio = Computed(function(): number

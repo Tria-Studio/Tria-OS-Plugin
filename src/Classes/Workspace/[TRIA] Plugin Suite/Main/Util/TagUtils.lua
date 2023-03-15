@@ -96,6 +96,7 @@ end
 
 function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
     -- TODO: see if its possible to efficiently add a system to check the most common types first and the least common last, and to also stop checking if tags are incompatible(not sure if this is "possible")
+    -- TODO: add a system possibly where if a part has an object tag that incompatible with other object tags(ex: most object tags can only have one, so why check every single object tag?)
     local partTags = {}
     for tagType, tags in pairs(tagTypes) do
         for key, tag in ipairs(tags) do
@@ -352,7 +353,7 @@ end
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local types = {}
 
-    --TODO: try to get these functions as optimized and fast as possible
+    --TODO: try to get these functions as optimized and fast as possible, as this function will be the one thats used the most by a longshot
 
     function types.ButtonTags(): boolean?
         for _, child in ipairs(part:GetChildren()) do
