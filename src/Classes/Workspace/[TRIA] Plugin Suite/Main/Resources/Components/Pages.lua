@@ -20,7 +20,7 @@ local PageHandler = {
     _currentPageNum = Value(0),
     _PageOrder = {
         "ObjectTags",
-        "ViewModes",
+        "DataVisualizer",
         "Settings",
         "Scripting",
         "Publish",

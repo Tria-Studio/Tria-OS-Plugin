@@ -179,8 +179,14 @@ local mainFrame = New "Frame" {
 				local increment = 1 / #pages
 
 				local index = math.ceil((math.ceil(percent / increment) * increment) * #pages)
+
+				local pageNameToDisplay = {
+					ObjectTags = "Object Tags",
+						
+				}
+
 				topbarData.mousePos:set(UDim2.fromOffset(relativePos.X, relativePos.Y))
-				topbarData.hoveredButton:set(pages[index])
+				topbarData.hoveredButton:set(pageNameToDisplay[pages[index]])
 			end,
 
 			[Children] = {
