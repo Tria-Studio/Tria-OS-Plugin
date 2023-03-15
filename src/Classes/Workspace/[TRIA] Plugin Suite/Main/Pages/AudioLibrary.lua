@@ -744,6 +744,7 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     if 
         currentlyPlaying ~= nil 
         and currentlyPlaying.IsLoaded 
+        and currentlyPlaying.IsPlaying
         and not Util._Slider.isUsingSlider:get(false) 
     then
         currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
