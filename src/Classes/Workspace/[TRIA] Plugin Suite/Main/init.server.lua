@@ -82,9 +82,10 @@ end
 
 local topbarData = {
 	absolutePosition = Value(Vector2.new()),
-	absoluteSize = Value(Vector2.new()),
-	mousePos = Value(UDim2.new()),
+	absoluteSize = Value(Vector2.new(250, 0)),
+	mousePos = Value(Vector2.new()),
 	hoverVisible = Value(false),
+	hoverSize = Value(Vector2.new(40, 0)),
 	hoveredButton = Value("")
 }
 
@@ -116,25 +117,39 @@ local mainFrame = New "Frame" {
 			}
 		},
 		New "Frame" { -- Topbar hover
-			AnchorPoint = Vector2.new(0.5, 1),
-			Size = UDim2.fromOffset(80, 20),
-			BackgroundColor3 = Theme.MainBackground.Default,
+			[Out "AbsoluteSize"] = topbarData.hoverSize,
+
+			AnchorPoint = Vector2.new(0.5, .5),
+			Size = UDim2.fromOffset(40, 20),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundColor3 = Theme.Button.Default,
 			BackgroundTransparency = 0,
 			BorderSizePixel = 1,
-			BorderColor3 = Theme.Border.Default,
+			BorderColor3 = Theme.DimmedText.Default,
 			Visible = topbarData.hoverVisible,
 			ZIndex = 12,
 
-			Position = topbarData.mousePos,
+			Position = Computed(function()
+				local hoverSize = topbarData.hoverSize:get() or Vector2.new(40, 0)
+				local absoluteSize = topbarData.absoluteSize:get() or Vector2.new(250, 0)
+				local min = hoverSize.X / 2
+				local pos = (topbarData.mousePos:get() or Vector2.new()).X
+
+				return UDim2.new(0, math.clamp((math.floor((pos + absoluteSize.X / 14) / absoluteSize.X * 7 + .5) - .5) * absoluteSize.X / 7, hoverSize.X / 2 , math.max(min + 1, (absoluteSize.X - hoverSize.X / 2))), 0, 46) 
+			end),
 
 			[Children] = {
+				Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), UDim.new(0, 4)),
 				New "TextLabel" {
 					BackgroundTransparency = 1,
-					TextColor3 = Theme.SubText.Default,
-					Text = topbarData.hoveredButton,
+					TextColor3 = Theme.MainText.Default,
+					AutomaticSize = Enum.AutomaticSize.X,
+					Text = Computed(function()
+						return topbarData.hoveredButton:get() or ""
+					end),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
-					Size = UDim2.fromScale(1, 1),
+					Size = UDim2.fromScale(0, 1),
 					ZIndex = 12,
 
 					[Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
@@ -190,7 +205,7 @@ local mainFrame = New "Frame" {
 					AudioLibrary = "Audio Library"
 				}
 
-				topbarData.mousePos:set(UDim2.fromOffset(relativePos.X, relativePos.Y))
+				topbarData.mousePos:set(Vector2.new(relativePos.X, relativePos.Y))
 				topbarData.hoveredButton:set(pageNameToDisplay[pages[index]])
 			end,
 

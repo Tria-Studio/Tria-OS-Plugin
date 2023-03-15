@@ -117,6 +117,9 @@ local themes = {
     RibbonTab = {
         Default = Value(StudioTheme:GetColor(GuideColor.RibbonTab)),
     },
+    Tooltip = {
+        Default = Value(StudioTheme:GetColor(GuideColor.Tooltip))
+    }
 }
 
 settings().Studio.ThemeChanged:Connect(function()
