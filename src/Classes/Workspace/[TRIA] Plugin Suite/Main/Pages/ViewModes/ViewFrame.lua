@@ -88,7 +88,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                     Components.Checkbox(18, UDim2.fromOffset(-2, 2), Vector2.new(1, 0), dataValue)
                                 }
                             }
-                        end)
+                        end, Fusion.cleanup)
                     }
                 }
             }
