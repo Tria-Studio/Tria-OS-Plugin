@@ -442,6 +442,11 @@ end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local textboxObject = Value()
+
+    local isSongPlaying = Computed(function(): boolean
+        local currentSong = currentSongData.currentAudio:get()
+        return currentSong and currentSong.IsPlaying 
+    end)
     
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -603,16 +608,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.fromScale(0.4, 0.3),
                         Size = UDim2.fromScale(0.6, 0.6),
                         Image = Computed(function(): string
-                            local currentSong = currentSongData.currentAudio:get()
-                            return currentSong and currentSong.IsPlaying and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return isSongPlaying:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            local currentSong = currentSongData.currentAudio:get()
-                            return currentSong and currentSong.IsPlaying and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            local currentSong = currentSongData.currentAudio:get()
-                            return currentSong and currentSong.IsPlaying and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return isSongPlaying:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
                         [OnEvent "Activated"] = function()
