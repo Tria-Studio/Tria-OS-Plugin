@@ -161,7 +161,7 @@ local mainFrame = New "Frame" {
 			end,
 
 			[OnEvent "MouseMoved"] = function()
-				local mousePos = absolutePosition:get(false) - widget:GetRelativeMousePosition()
+				local mousePos = topbarData.absolutePosition:get(false) - widget:GetRelativeMousePosition()
 				print(mousePos)
 			end,
 
