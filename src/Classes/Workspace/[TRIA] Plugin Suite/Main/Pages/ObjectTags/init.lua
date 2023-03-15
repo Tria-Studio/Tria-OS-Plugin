@@ -23,7 +23,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "ObjectTags",
 
         [Children] = {
-            Components.PageHeader("Object Tags"),
+            Components.PageHeader("Event & Item Tags"),
             Components.ScrollingFrame {
                 Size = UDim2.fromScale(1, 1),
                 CanvasSize = UDim2.fromOffset(0, 180),
@@ -45,7 +45,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             end, Fusion.cleanup)
                         },
                     },
-                    Components.FrameHeader("Object Tags", 3),
+                    Components.FrameHeader("Event & Item Tags", 3),
                     New "Frame" {
                         BackgroundTransparency = 1,
                         AutomaticSize = Enum.AutomaticSize.Y,

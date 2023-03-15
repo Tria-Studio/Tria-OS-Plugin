@@ -193,7 +193,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "Insert",
 
         [Children] = {
-            Components.PageHeader("Map Resources"),
+            Components.PageHeader("Resources & Addons"),
             Components.ScrollingFrame ({
                 BackgroundColor3 = Theme.TableItem.Default,
                 BackgroundTransparency = 0,

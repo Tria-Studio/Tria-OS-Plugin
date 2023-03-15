@@ -166,7 +166,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "Scripting",
 
         [Children] = {
-            Components.PageHeader("Scripting"),
+            Components.PageHeader("Map Scripting"),
             Components.ScrollingFrame {
                 BackgroundColor3 = Theme.TableItem.Default,
                 Size = UDim2.fromScale(1, 1),
