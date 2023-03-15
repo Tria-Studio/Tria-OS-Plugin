@@ -431,10 +431,9 @@ local function fetchApi()
         FETCHED_AUDIO_DATA:set(newData)
     end
 end
-
+--[[
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local textboxObject = Value()
-    
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.TableItem.Default,
@@ -730,6 +729,10 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         }
     }
+end]]
+
+function frame:GetFrame()
+    return New "Frame" {}
 end
 
 function frame.OnClose()
