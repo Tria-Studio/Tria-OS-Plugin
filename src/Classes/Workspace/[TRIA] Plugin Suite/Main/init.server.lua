@@ -120,6 +120,17 @@ local mainFrame = New "Frame" {
 				end
 			end,
 
+			[OnEvent "MouseEnter"] = function()
+				
+			end,
+
+			[OnEvent "MouseLeave"] = function()
+				
+			end,
+
+			[OnEvent "MouseMoved"] = function()
+				
+			end,
 
 			[Children] = {
 				Components.Constraints.UIGridLayout(UDim2.fromScale(1 / #MenuData.Buttons, 1), UDim2.new(), Enum.FillDirection.Horizontal),
