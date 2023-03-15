@@ -28,7 +28,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "ViewModes",
 
         [Children] = {
-            Components.PageHeader("View Modes"),
+            Components.PageHeader("Data Visualizers"),
             Components.GradientTextLabel(Computed(function(): boolean
                 local mapModel = Util.mapModel:get()
                 return not Util.hasSpecialFolder:get() and mapModel ~= nil
