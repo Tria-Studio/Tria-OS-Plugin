@@ -99,6 +99,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                                     BackgroundTransparency = 1,
                                     AnchorPoint = Vector2.new(1, 0),
                                     Image = metadata.DisplayIcon,
+                                    ImageColor3 = Theme.MainText.Default
                                 },
                             }
                         }
