@@ -79,8 +79,12 @@ local function showDebug()
 	end
 end
 
-local topbarAbsoluteSize = Value(nil)
-local topbarHoverVisible = Value(false)
+
+local topbarData = {
+	absolutePosition = Value(Vector2.new()),
+	absoluteSize = Value(Vector2.new()),
+	hoverVisible = Value(false)
+}
 
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
@@ -113,6 +117,7 @@ local mainFrame = New "Frame" {
 			Size = UDim2.fromOffset(60, 20),
 			BackgroundColor3 = Theme.MainBackground.Default,
 			BackgroundTransparency = 0,
+			Visible = topbarData.hoverVisible,
 			ZIndex = 12,
 
 			[Children] = {
@@ -134,7 +139,8 @@ local mainFrame = New "Frame" {
 			Size = UDim2.new(1, 0, 0, 36),
 			BackgroundColor3 = Theme.Titlebar.Default,
 
-			[Out "AbsoluteSize"] = topbarAbsoluteSize,
+			[Out "AbsolutePosition"] = topbarData.absolutePosition,
+			[Out "AbsoluteSize"] = topbarData.absoluteSize,
 
 			[OnEvent "InputChanged"] = function(inputObject: InputObject)
 				if inputObject.UserInputType == Enum.UserInputType.MouseWheel and not Util._Topbar.FreezeFrame:get(false) then
@@ -147,15 +153,16 @@ local mainFrame = New "Frame" {
 			end,
 
 			[OnEvent "MouseEnter"] = function()
-				
+				topbarData.hoverVisible:set(true)
 			end,
 
 			[OnEvent "MouseLeave"] = function()
-				
+				topbarData.hoverVisible:set(false)
 			end,
 
 			[OnEvent "MouseMoved"] = function()
-				
+				local mousePos = absolutePosition:get(false) - widget:GetRelativeMousePosition()
+				print(mousePos)
 			end,
 
 			[Children] = {
