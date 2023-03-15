@@ -83,7 +83,9 @@ end
 local topbarData = {
 	absolutePosition = Value(Vector2.new()),
 	absoluteSize = Value(Vector2.new()),
-	hoverVisible = Value(false)
+	mousePos = Value(UDim2.new()),
+	hoverVisible = Value(false),
+	hoveredButton = Value("")
 }
 
 local mainFrame = New "Frame" {
@@ -114,17 +116,22 @@ local mainFrame = New "Frame" {
 			}
 		},
 		New "Frame" { -- Topbar hover
-			Size = UDim2.fromOffset(60, 20),
+			AnchorPoint = Vector2.new(0.5, 1),
+			Size = UDim2.fromOffset(80, 20),
 			BackgroundColor3 = Theme.MainBackground.Default,
 			BackgroundTransparency = 0,
+			BorderSizePixel = 1,
+			BorderColor3 = Theme.Border.Default,
 			Visible = topbarData.hoverVisible,
 			ZIndex = 12,
+
+			Position = topbarData.mousePos,
 
 			[Children] = {
 				New "TextLabel" {
 					BackgroundTransparency = 1,
 					TextColor3 = Theme.SubText.Default,
-					Text = "Hello",
+					Text = topbarData.hoveredButton,
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Size = UDim2.fromScale(1, 1),
@@ -161,8 +168,19 @@ local mainFrame = New "Frame" {
 			end,
 
 			[OnEvent "MouseMoved"] = function()
-				local mousePos = topbarData.absolutePosition:get(false) - widget:GetRelativeMousePosition()
-				print(mousePos)
+				local relativePos = widget:GetRelativeMousePosition()
+				local mousePos = -(topbarData.absolutePosition:get(false) - relativePos)
+
+				local pages = PageHandler._PageOrder
+
+				local absoluteSize = topbarData.absoluteSize:get(false) or Vector2.new(1, 1)
+
+				local percent = mousePos.X / absoluteSize.X
+				local increment = 1 / #pages
+
+				local index = math.ceil((math.ceil(percent / increment) * increment) * #pages)
+				topbarData.mousePos:set(UDim2.fromOffset(relativePos.X, relativePos.Y))
+				topbarData.hoveredButton:set(pages[index])
 			end,
 
 			[Children] = {
