@@ -1,4 +1,5 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local ContentProvider = game:GetService("ContentProvider")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
@@ -235,9 +236,7 @@ local function AudioButton(data: audioTableFormat): Instance
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
-        Size = Computed(function(): UDim2
-            return UDim2.new(1, 0, 0, 36)
-        end),
+        Size = UDim2.new(1, 0, 0, 36),
 
         [Cleanup] = previewSound,
         
