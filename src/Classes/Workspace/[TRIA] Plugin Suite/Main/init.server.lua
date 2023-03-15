@@ -110,15 +110,17 @@ local mainFrame = New "Frame" {
 			Size = UDim2.new(1, 0, 0, 36),
 			BackgroundColor3 = Theme.Titlebar.Default,
 
-			[OnEvent "InputChanged"] = function(InputObject: InputObject)
-				if InputObject.UserInputType == Enum.UserInputType.MouseWheel and not Util._Topbar.FreezeFrame:get(false) then
-					local newPage = PageHandler._currentPageNum:get(false) - InputObject.Position.Z
+			[OnEvent "InputChanged"] = function(inputObject: InputObject)
+				if inputObject.UserInputType == Enum.UserInputType.MouseWheel and not Util._Topbar.FreezeFrame:get(false) then
+					local newPage = PageHandler._currentPageNum:get(false) - inputObject.Position.Z
 					newPage = if newPage < 1 then #PageHandler._PageOrder elseif newPage > #PageHandler._PageOrder then 1 else newPage
 
 					PageHandler._currentPageNum:set(newPage)
 					PageHandler:ChangePage(PageHandler._PageOrder[PageHandler._currentPageNum:get(false)])
 				end
 			end,
+
+
 			[Children] = {
 				Components.Constraints.UIGridLayout(UDim2.fromScale(1 / #MenuData.Buttons, 1), UDim2.new(), Enum.FillDirection.Horizontal),
 				ForPairs(MenuData.Buttons, function(index: number, data: PublicTypes.Dictionary): (number, Instance)
