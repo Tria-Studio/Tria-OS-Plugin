@@ -150,6 +150,7 @@ local function pauseSong()
         return
     end
     currentlyPlaying:Pause()
+    currentSongData.currentAudio:set(currentlyPlaying, true)
 end
 
 local function resumeSong()
@@ -159,6 +160,7 @@ local function resumeSong()
     end
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
+    currentSongData.currentAudio:set(currentlyPlaying, true)
     fadeSound(currentlyPlaying, "In")
 end
 
@@ -186,15 +188,18 @@ end
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then -- No song playing
+        print("New song")
         stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentlyPlaying == newSound then -- Song being paused/resumed
+        print("Paused/resumed")
         if currentlyPlaying.IsPaused then
             resumeSong()
         else
             pauseSong()
         end
     else -- Song switched while playing
+        print("Switched")
         fadeSound(currentlyPlaying, "Out")
         playSong(newSound, soundData)
     end
@@ -233,6 +238,10 @@ local function AudioButton(data: audioTableFormat): Instance
     if not isLoaded:get(false) then
         previewSound.Loaded:Connect(updateLoaded)
     end
+
+    previewSound.Ended:Connect(function()
+        currentSongData.timePosition:set(0)
+    end)
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
@@ -296,16 +305,16 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return currentAudioMatches(previewSound) and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if not isLoaded:get() then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return currentAudioMatches(previewSound) and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return currentAudioMatches(previewSound) and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
                         [OnEvent "Activated"] = function()
@@ -594,13 +603,16 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.fromScale(0.4, 0.3),
                         Size = UDim2.fromScale(0.6, 0.6),
                         Image = Computed(function(): string
-                            return currentSongData.currentAudio:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            local currentSong = currentSongData.currentAudio:get()
+                            return currentSong and currentSong.IsPlaying and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            return currentSongData.currentAudio:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            local currentSong = currentSongData.currentAudio:get()
+                            return currentSong and currentSong.IsPlaying and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return currentSongData.currentAudio:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            local currentSong = currentSongData.currentAudio:get()
+                            return currentSong and currentSong.IsPlaying and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
                         [OnEvent "Activated"] = function()
