@@ -241,6 +241,7 @@ local function AudioButton(data: audioTableFormat): Instance
 
     previewSound.Ended:Connect(function()
         currentSongData.timePosition:set(0)
+        currentSongData.currentAudio:set(nil)
     end)
 
     return New "Frame" {
@@ -764,17 +765,17 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     end
 end))
 
-Util.MainMaid:GiveTask(function()
-    Util.toggleAudioPerms(false)
-end)
+-- Util.MainMaid:GiveTask(function()
+--     Util.toggleAudioPerms(false)
+-- end)
 
-local function updateOnAllSongsLoaded()
-    Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
-end
+-- local function updateOnAllSongsLoaded()
+--     Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
+-- end
 
-updateOnAllSongsLoaded()
-Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
-Observer(permissionsNeedUpdating):onChange(updateOnAllSongsLoaded)
+-- updateOnAllSongsLoaded()
+-- Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
+-- Observer(permissionsNeedUpdating):onChange(updateOnAllSongsLoaded)
 
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
