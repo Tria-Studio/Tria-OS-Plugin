@@ -182,7 +182,12 @@ local mainFrame = New "Frame" {
 
 				local pageNameToDisplay = {
 					ObjectTags = "Object Tags",
-						
+					DataVisualizer = "Data Visualizer",
+					Settings = "Settings",
+					Scripting = "Scripting",
+					Publish = "Publish",
+					Insert = "Insert",
+					AudioLibrary = "Audio Library"
 				}
 
 				topbarData.mousePos:set(UDim2.fromOffset(relativePos.X, relativePos.Y))
