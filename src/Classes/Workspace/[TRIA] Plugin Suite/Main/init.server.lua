@@ -80,6 +80,8 @@ local function showDebug()
 end
 
 local topbarAbsoluteSize = Value(nil)
+local topbarHoverVisible = Value(false)
+
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
 	Parent = widget,
@@ -105,6 +107,26 @@ local mainFrame = New "Frame" {
 					Position = UDim2.fromScale(0.5, 0.5),
 					ZIndex = 5
 				})
+			}
+		},
+		New "Frame" { -- Topbar hover
+			Size = UDim2.fromOffset(60, 20),
+			BackgroundColor3 = Theme.MainBackground.Default,
+			BackgroundTransparency = 0,
+			ZIndex = 12,
+
+			[Children] = {
+				New "TextLabel" {
+					BackgroundTransparency = 1,
+					TextColor3 = Theme.SubText.Default,
+					Text = "Hello",
+					TextSize = 13,
+					TextXAlignment = Enum.TextXAlignment.Left,
+					Size = UDim2.fromScale(1, 1),
+					ZIndex = 12,
+
+					[Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
+ 				}
 			}
 		},
 		New "Frame" { -- Topbar
