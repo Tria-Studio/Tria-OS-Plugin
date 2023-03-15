@@ -57,7 +57,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 local function showPageError()
-    Util:ShowMessage("Feature Unavaliable", "View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
+    Util:ShowMessage("Feature Unavailable", "View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
         Pages:ChangePage("Insert")
     end})
 end
