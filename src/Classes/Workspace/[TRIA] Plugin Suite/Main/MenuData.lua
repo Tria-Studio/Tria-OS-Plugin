@@ -4,7 +4,7 @@ return {
 			Name = "ObjectTags",
 			Icon = "rbxassetid://6031079158",
 		}, {
-			Name = "ViewModes",
+			Name = "DataVisualizer",
 			Icon = "rbxassetid://6031260793",
 		}, {
 			Name = "Settings",
@@ -26,7 +26,7 @@ return {
 
 	Pages = {
 		{Name = "ObjectTags", Default = true},
-		{Name = "ViewModes"},
+		{Name = "DataVisualizer"},
 		{Name = "Settings"},
 		{Name = "Scripting"},
 		{Name = "Publish"},

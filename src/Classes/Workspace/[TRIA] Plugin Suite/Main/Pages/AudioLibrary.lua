@@ -1,4 +1,5 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local ContentProvider = game:GetService("ContentProvider")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
@@ -55,17 +56,7 @@ local currentSongData = {
     timeLength = Value(0)
 }
 
-local songLoadData = {
-    loaded = Value(0),
-    total = Value(1)
-}
-
-local allSongsLoaded = Computed(function(): boolean
-    return songLoadData.loaded:get() >= songLoadData.total:get()
-end)
-
 local loadedSounds = {}
-local permissionsNeedUpdating = Value(false)
 
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
@@ -149,6 +140,7 @@ local function pauseSong()
         return
     end
     currentlyPlaying:Pause()
+    currentSongData.currentAudio:set(currentlyPlaying, true)
 end
 
 local function resumeSong()
@@ -158,6 +150,7 @@ local function resumeSong()
     end
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
+    currentSongData.currentAudio:set(currentlyPlaying, true)
     fadeSound(currentlyPlaying, "In")
 end
 
@@ -218,7 +211,6 @@ local function AudioButton(data: audioTableFormat): Instance
     local isLoaded = Value(false)
     local function updateLoaded()
         loadedSounds[data.ID] = true
-        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
         isLoaded:set(true)
     end
 
@@ -233,11 +225,14 @@ local function AudioButton(data: audioTableFormat): Instance
         previewSound.Loaded:Connect(updateLoaded)
     end
 
+    previewSound.Ended:Connect(function()
+        currentSongData.timePosition:set(0)
+        currentSongData.currentAudio:set(nil)
+    end)
+
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
-        Size = Computed(function(): UDim2
-            return UDim2.new(1, 0, 0, 36)
-        end),
+        Size = UDim2.new(1, 0, 0, 36),
 
         [Cleanup] = previewSound,
         
@@ -297,16 +292,16 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return currentAudioMatches(previewSound) and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if not isLoaded:get() then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return currentAudioMatches(previewSound) and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return currentAudioMatches(previewSound) and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
                         [OnEvent "Activated"] = function()
@@ -343,19 +338,6 @@ local function getAudioChildren(): {Instance}
     local totalPages = math.ceil(totalAssets / itemsPerPage)
 
     local assetsRemaining = totalAssets
-
-    local needsPermissionUpdate = false
-
-    for _, item in ipairs(assets) do
-        if not loadedSounds[item.ID] then
-            needsPermissionUpdate = true
-            break
-        end
-    end
-
-    permissionsNeedUpdating:set(needsPermissionUpdate)
-    songLoadData.loaded:set(0)
-    songLoadData.total:set(math.max(totalAssets, 1))
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -434,6 +416,11 @@ end
 --[[
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local textboxObject = Value()
+    local isSongPlaying = Computed(function(): boolean
+        local currentSong = currentSongData.currentAudio:get()
+        return currentSong and currentSong.IsPlaying 
+    end)
+    
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.TableItem.Default,
@@ -594,13 +581,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.fromScale(0.4, 0.3),
                         Size = UDim2.fromScale(0.6, 0.6),
                         Image = Computed(function(): string
-                            return currentSongData.currentAudio:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return isSongPlaying:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            return currentSongData.currentAudio:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return currentSongData.currentAudio:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return isSongPlaying:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
                         [OnEvent "Activated"] = function()
@@ -747,6 +734,7 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     if 
         currentlyPlaying ~= nil 
         and currentlyPlaying.IsLoaded 
+        and currentlyPlaying.IsPlaying
         and not Util._Slider.isUsingSlider:get(false) 
     then
         currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
@@ -756,14 +744,6 @@ end))
 Util.MainMaid:GiveTask(function()
     Util.toggleAudioPerms(false)
 end)
-
-local function updateOnAllSongsLoaded()
-    Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
-end
-
-updateOnAllSongsLoaded()
-Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
-Observer(permissionsNeedUpdating):onChange(updateOnAllSongsLoaded)
 
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then

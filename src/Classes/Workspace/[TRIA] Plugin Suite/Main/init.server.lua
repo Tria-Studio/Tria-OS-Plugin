@@ -42,6 +42,7 @@ local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
 local Value = Fusion.Value
+local Out = Fusion.Out
 
 widget.Title = "TRIA.os Mapmaker"
 Util.Widget = widget
@@ -78,6 +79,15 @@ local function showDebug()
 	end
 end
 
+
+local topbarData = {
+	absolutePosition = Value(Vector2.new()),
+	absoluteSize = Value(Vector2.new()),
+	mousePos = Value(UDim2.new()),
+	hoverVisible = Value(false),
+	hoveredButton = Value("")
+}
+
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
 	Parent = widget,
@@ -105,20 +115,85 @@ local mainFrame = New "Frame" {
 				})
 			}
 		},
+		New "Frame" { -- Topbar hover
+			AnchorPoint = Vector2.new(0.5, 1),
+			Size = UDim2.fromOffset(80, 20),
+			BackgroundColor3 = Theme.MainBackground.Default,
+			BackgroundTransparency = 0,
+			BorderSizePixel = 1,
+			BorderColor3 = Theme.Border.Default,
+			Visible = topbarData.hoverVisible,
+			ZIndex = 12,
+
+			Position = topbarData.mousePos,
+
+			[Children] = {
+				New "TextLabel" {
+					BackgroundTransparency = 1,
+					TextColor3 = Theme.SubText.Default,
+					Text = topbarData.hoveredButton,
+					TextSize = 13,
+					TextXAlignment = Enum.TextXAlignment.Left,
+					Size = UDim2.fromScale(1, 1),
+					ZIndex = 12,
+
+					[Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), nil)
+ 				}
+			}
+		},
 		New "Frame" { -- Topbar
 			Name = "Topbar",
 			Size = UDim2.new(1, 0, 0, 36),
 			BackgroundColor3 = Theme.Titlebar.Default,
 
-			[OnEvent "InputChanged"] = function(InputObject: InputObject)
-				if InputObject.UserInputType == Enum.UserInputType.MouseWheel and not Util._Topbar.FreezeFrame:get(false) then
-					local newPage = PageHandler._currentPageNum:get(false) - InputObject.Position.Z
+			[Out "AbsolutePosition"] = topbarData.absolutePosition,
+			[Out "AbsoluteSize"] = topbarData.absoluteSize,
+
+			[OnEvent "InputChanged"] = function(inputObject: InputObject)
+				if inputObject.UserInputType == Enum.UserInputType.MouseWheel and not Util._Topbar.FreezeFrame:get(false) then
+					local newPage = PageHandler._currentPageNum:get(false) - inputObject.Position.Z
 					newPage = if newPage < 1 then #PageHandler._PageOrder elseif newPage > #PageHandler._PageOrder then 1 else newPage
 
 					PageHandler._currentPageNum:set(newPage)
 					PageHandler:ChangePage(PageHandler._PageOrder[PageHandler._currentPageNum:get(false)])
 				end
 			end,
+
+			[OnEvent "MouseEnter"] = function()
+				topbarData.hoverVisible:set(true)
+			end,
+
+			[OnEvent "MouseLeave"] = function()
+				topbarData.hoverVisible:set(false)
+			end,
+
+			[OnEvent "MouseMoved"] = function()
+				local relativePos = widget:GetRelativeMousePosition()
+				local mousePos = -(topbarData.absolutePosition:get(false) - relativePos)
+
+				local pages = PageHandler._PageOrder
+
+				local absoluteSize = topbarData.absoluteSize:get(false) or Vector2.new(1, 1)
+
+				local percent = mousePos.X / absoluteSize.X
+				local increment = 1 / #pages
+
+				local index = math.ceil((math.ceil(percent / increment) * increment) * #pages)
+
+				local pageNameToDisplay = {
+					ObjectTags = "Object Tags",
+					DataVisualizer = "Data Visualizer",
+					Settings = "Settings",
+					Scripting = "Scripting",
+					Publish = "Publish",
+					Insert = "Insert",
+					AudioLibrary = "Audio Library"
+				}
+
+				topbarData.mousePos:set(UDim2.fromOffset(relativePos.X, relativePos.Y))
+				topbarData.hoveredButton:set(pageNameToDisplay[pages[index]])
+			end,
+
 			[Children] = {
 				Components.Constraints.UIGridLayout(UDim2.fromScale(1 / #MenuData.Buttons, 1), UDim2.new(), Enum.FillDirection.Horizontal),
 				ForPairs(MenuData.Buttons, function(index: number, data: PublicTypes.Dictionary): (number, Instance)

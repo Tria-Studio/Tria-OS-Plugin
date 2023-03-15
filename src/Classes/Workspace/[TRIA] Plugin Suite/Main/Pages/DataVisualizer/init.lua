@@ -28,7 +28,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.MainBackground.Default,
         Visible = data.Visible,
-        Name = "ViewModes",
+        Name = "DataVisualizer",
 
         [Children] = {
             Components.PageHeader("Tag Visualization"),
@@ -59,7 +59,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 local function showPageError()
-    Util:ShowMessage("Feature Unavaliable", "View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
+    Util:ShowMessage("Feature Unavailable", "View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
         Pages:ChangePage("Insert")
     end})
 end
@@ -69,7 +69,7 @@ local function updatePage()
     PAGE_ACTIVE:set(Util.hasSpecialFolder:get(false) and Util.mapModel:get(false))
     textLabelVisible:set(not PAGE_ACTIVE:get(false))
     
-    if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get(false) == "ViewModes" then
+    if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get(false) == "DataVisualizer" then
         showPageError()
     end
 end
@@ -81,7 +81,7 @@ function frame.OnOpen()
 end
 
 function frame.OnClose()
-    if Pages.pageData.currentPage:get(false) == "ViewModes" then
+    if Pages.pageData.currentPage:get(false) == "DataVisualizer" then
         Util.CloseMessage() 
     end
 end
