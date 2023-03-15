@@ -30,10 +30,6 @@ local tagTypes = {
             _Gas = "_Gas%d",
         }
     },
-    AddonTags = {
-        "_Teleporter",
-        "_Waterjet"
-    },
     ActionTags = { --// _action attribute
         "_WallRun",
         "_WallJump",
@@ -49,6 +45,9 @@ local tagTypes = {
             _WallRun = "WallRun"
         }
     },
+    DetailTag = { --// Parented to the detail folder
+        "Detail"
+    },
     ModelTags = { --// They are a model named this and stuff
         "Zipline",
         "_Button",
@@ -58,8 +57,9 @@ local tagTypes = {
             _Button = "_Button%d"
         }
     },
-    DetailTag = { --// Parented to the detail folder
-        "Detail"
+    AddonTags = {
+        "_Teleporter",
+        "_Waterjet"
     }
 }
 
@@ -402,7 +402,6 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         return detailFolder and part:IsDescendantOf(detailFolder)
     end
 
-    --TODO: theres probably a better way to do this thats more efficient 
     for type, tags in pairs(tagTypes) do
         if table.find(tags, tag) and types[type]() then
             return true

@@ -40,7 +40,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
         local selectedParts = Util._Selection.selectedParts:get()
         local active = Util.objectTagsActive:get()
 
-        if not active then
+        if not active or Util._Addons.hasAddonsWithObjectTags:get() and (name == "_Teleporter" or name == "_Waterjet") then
             return
         end
 
