@@ -161,6 +161,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                 BackgroundColor3 = Theme.MainBackground.Default,
                                 BorderColor3 = Theme.Border.Default,
                                 BorderSizePixel = 1,
+                                BorderMode = Enum.BorderMode.Inset,
                                 Size = UDim2.new(1, 0, 0, 22),
                                 Font = Enum.Font.SourceSansSemibold,
                                 TextColor3 = Theme.BrightText.Default,

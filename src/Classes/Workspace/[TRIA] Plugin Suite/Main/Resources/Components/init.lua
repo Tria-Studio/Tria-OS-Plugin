@@ -281,7 +281,7 @@ function Components.FrameHeader(text: string, layoutOrder: number, color: any?, 
 
         [Children] = tooltip and Components.TooltipImage ({
             Header = text,
-            Tooltip = tooltip,
+            Tooltip = tooltip ,
             Position = UDim2.new(1, -5, 0, 5),
             ZIndex = ZIndex
         }) or nil
@@ -507,13 +507,14 @@ function Components.BasicTextLabel(text: string, layoutOrder: number, background
 end
 
 function Components.Spacer(hidden: boolean?, layoutOrder: number?, size: number?, zIndex: number?, BackgroundColor3: Color3?): Instance
-    return New "Frame" {
-        LayoutOrder = layoutOrder,
-        BackgroundColor3 = BackgroundColor3 or Theme.TableItem.Default,
-        Size = UDim2.new(1, 0, 0, size or 12),
-        Visible = not hidden,
-        ZIndex = zIndex,
-    }
+    if not hidden then
+        return New "Frame" {
+            LayoutOrder = layoutOrder,
+            BackgroundColor3 = BackgroundColor3 or Theme.TableItem.Default,
+            Size = UDim2.new(1, 0, 0, size or 12),
+            ZIndex = zIndex,
+        }
+    end
 end
 
 function Components.GradientTextLabel(enabled, data: PublicTypes.Dictionary): Instance

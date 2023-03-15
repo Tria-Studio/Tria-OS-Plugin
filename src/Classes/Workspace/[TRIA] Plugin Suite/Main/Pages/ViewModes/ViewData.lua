@@ -12,6 +12,7 @@ return {
     },
     ButtonTags = {
         DisplayText = "Button Tags",
+        SubText = "All Button Tags",
         DisplayIcon = "rbxassetid://6031079158",
         LayoutOrder = 2,
         ViewOptions = {
@@ -48,6 +49,7 @@ return {
     },
     ObjectView = {
         DisplayText = "Object Tags",
+        SubText = "All Object Tags",
         DisplayIcon = "rbxassetid://6031079158",
         LayoutOrder = 3,
         ViewOptions = {
@@ -124,6 +126,7 @@ return {
     },
     AddonView = {
         DisplayText = "Map Addons View",
+        SubText = "All Addon Tags",
         DisplayIcon = "rbxassetid://6023565892",
         LayoutOrder = 7,
         ViewOptions = {
@@ -138,8 +141,8 @@ return {
             }
         },
         Tooltip = {
-            Header = "",
-            Text = ""
+            Header = "Map Addons View",
+            Text = "Because the selected map has map addons that support Object & Button Tags, those tags can be visualized below."
         }
     },
 }

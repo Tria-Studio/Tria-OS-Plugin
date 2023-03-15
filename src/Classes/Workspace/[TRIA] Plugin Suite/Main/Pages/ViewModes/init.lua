@@ -39,14 +39,16 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Size = UDim2.new(1, 0, 1, 0),
                 Text = "Unsupported Map."
             }),
-            New "Frame" {
-                BackgroundColor3 = Theme.Button.Default,
-                AutomaticSize = Enum.AutomaticSize.Y,
-                Size = UDim2.new(1, 0, 0, 0),
+            Components.ScrollingFrame {
+                BackgroundColor3 = Theme.ScrollBarBackground.Default,
+                BorderColor3 = Theme.Border.Default,
+                BorderSizePixel = 1,
+                Size = UDim2.new(1, 0, 1, 0),
                 LayoutOrder = 2,
 
                 [Children] = {
-                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
+                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 0)),
+                    
                     ForPairs(ViewData, function(tagName: string, data: PublicTypes.Dictionary): (string, Instance)
                         return tagName, ViewFrame(tagName, data)
                     end, Fusion.cleanup)

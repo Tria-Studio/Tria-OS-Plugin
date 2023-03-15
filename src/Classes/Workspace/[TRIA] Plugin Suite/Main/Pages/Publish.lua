@@ -328,7 +328,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             end, true),
                         }
                     },
-                    Components.Spacer(true),
+                    Components.Spacer(false),
 
                     GetInfoFrame("Map Whitelisting", { --// Whitelisting
                         Components.TextBox { --// Insert Whitelist ID
