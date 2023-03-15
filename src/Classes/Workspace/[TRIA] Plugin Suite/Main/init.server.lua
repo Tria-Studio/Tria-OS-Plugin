@@ -42,6 +42,7 @@ local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
 local Value = Fusion.Value
+local Out = Fusion.Out
 
 widget.Title = "TRIA.os Mapmaker"
 Util.Widget = widget
@@ -78,6 +79,7 @@ local function showDebug()
 	end
 end
 
+local topbarAbsoluteSize = Value(nil)
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
 	Parent = widget,
@@ -109,6 +111,8 @@ local mainFrame = New "Frame" {
 			Name = "Topbar",
 			Size = UDim2.new(1, 0, 0, 36),
 			BackgroundColor3 = Theme.Titlebar.Default,
+
+			[Out "AbsoluteSize"] = topbarAbsoluteSize,
 
 			[OnEvent "InputChanged"] = function(inputObject: InputObject)
 				if inputObject.UserInputType == Enum.UserInputType.MouseWheel and not Util._Topbar.FreezeFrame:get(false) then
