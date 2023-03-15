@@ -7,11 +7,14 @@ local Components = require(Resources.Components)
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
 local Pages = require(Resources.Components.Pages)
+local ViewFrame = require(script.ViewFrame)
+local ViewData = require(script.ViewData)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Observer = Fusion.Observer
 local Value = Fusion.Value
+local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
 
 local PAGE_ACTIVE = Value(false)
@@ -35,13 +38,26 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             end), {
                 Size = UDim2.new(1, 0, 1, 0),
                 Text = "Unsupported Map."
-            })
+            }),
+            New "Frame" {
+                BackgroundColor3 = Theme.Button.Default,
+                AutomaticSize = Enum.AutomaticSize.Y,
+                Size = UDim2.new(1, 0, 0, 0),
+                LayoutOrder = 2,
+
+                [Children] = {
+                    Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 2)),
+                    ForPairs(ViewData, function(tagName: string, data: PublicTypes.Dictionary): (string, Instance)
+                        return tagName, ViewFrame(tagName, data)
+                    end, Fusion.cleanup)
+                }
+            }
         }
     }
 end
 
 local function showPageError()
-    Util:ShowMessage("Feature Unavaliable", "Due to the complexity and performance, View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
+    Util:ShowMessage("Feature Unavaliable", "View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
         Pages:ChangePage("Insert")
     end})
 end
