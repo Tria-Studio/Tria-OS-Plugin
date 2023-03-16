@@ -129,13 +129,22 @@ local mainFrame = New "Frame" {
 			Visible = topbarData.hoverVisible,
 			ZIndex = 12,
 
-			Position = Computed(function()
+			Position = Computed(function(): UDim2
 				local hoverSize = topbarData.hoverSize:get() or Vector2.new(40, 0)
 				local absoluteSize = topbarData.absoluteSize:get() or Vector2.new(250, 0)
+				local totalPages = #PageHandler._PageOrder
+				
 				local min = hoverSize.X / 2
 				local pos = (topbarData.mousePos:get() or Vector2.new()).X
-
-				return UDim2.new(0, math.clamp((math.floor((pos + absoluteSize.X / 14) / absoluteSize.X * 7 + 0.5) - 0.5) * absoluteSize.X / 7, hoverSize.X / 2 , math.max(min + 1, (absoluteSize.X - hoverSize.X / 2))), 0, 46) 
+				
+				return UDim2.fromOffset(
+					math.clamp(
+						(math.floor((pos + absoluteSize.X / (totalPages * 2)) / absoluteSize.X * totalPages + 0.5) - 0.5) * absoluteSize.X / totalPages, 
+						min, 
+						math.max(min + 1, (absoluteSize.X - min))
+					), 
+					46
+				) 
 			end),
 
 			[Children] = {
