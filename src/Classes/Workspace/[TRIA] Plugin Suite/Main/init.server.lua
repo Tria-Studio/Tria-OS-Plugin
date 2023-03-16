@@ -119,7 +119,7 @@ local mainFrame = New "Frame" {
 		New "Frame" { -- Topbar hover
 			[Out "AbsoluteSize"] = topbarData.hoverSize,
 
-			AnchorPoint = Vector2.new(0.5, .5),
+			AnchorPoint = Vector2.new(0.5, 0.5),
 			Size = UDim2.fromOffset(40, 20),
 			AutomaticSize = Enum.AutomaticSize.X,
 			BackgroundColor3 = Theme.Tooltip.Default,
@@ -135,7 +135,7 @@ local mainFrame = New "Frame" {
 				local min = hoverSize.X / 2
 				local pos = (topbarData.mousePos:get() or Vector2.new()).X
 
-				return UDim2.new(0, math.clamp((math.floor((pos + absoluteSize.X / 14) / absoluteSize.X * 7 + .5) - .5) * absoluteSize.X / 7, hoverSize.X / 2 , math.max(min + 1, (absoluteSize.X - hoverSize.X / 2))), 0, 46) 
+				return UDim2.new(0, math.clamp((math.floor((pos + absoluteSize.X / 14) / absoluteSize.X * 7 + 0.5) - 0.5) * absoluteSize.X / 7, hoverSize.X / 2 , math.max(min + 1, (absoluteSize.X - hoverSize.X / 2))), 0, 46) 
 			end),
 
 			[Children] = {
