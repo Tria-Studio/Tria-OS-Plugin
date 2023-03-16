@@ -226,7 +226,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		and not AutocompleteUtil.tokenMatches(tokens[2], ")") 
 		and AutocompleteUtil.tokenMatches(tokens[3], {":", "."}) 
 	then
-		do			
+		do	
 			local tempLineData = {
 				line = "",
 				lineNumber = 0,
@@ -338,6 +338,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		-- Match Case 5: Normal line
 		if table.find(prefixes, tokens[1].value) then
 			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
+			print(branches)
 			suggestResponses(branches, treeEntryIndex, tokens)
 		end
 	end
