@@ -48,7 +48,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                 [Children] = {
                     Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 0)),
-                    
                     ForPairs(ViewData, function(tagName: string, data: PublicTypes.Dictionary): (string, Instance)
                         return tagName, ViewFrame(tagName, data)
                     end, Fusion.cleanup)

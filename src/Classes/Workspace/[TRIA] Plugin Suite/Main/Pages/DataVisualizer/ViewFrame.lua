@@ -103,7 +103,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                                 },
                             }
                         }
-                    end),
+                    end, Fusion.cleanup),
                     Components.Spacer(data.SingleOption, #data.ViewOptions + 2, 2, 1, Theme.ScrollBarBackground.Default),   
                 }
             }
