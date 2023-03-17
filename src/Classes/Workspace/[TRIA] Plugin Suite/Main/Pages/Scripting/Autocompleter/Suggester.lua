@@ -18,6 +18,7 @@ local Util = require(Package.Util)
 local AUTOCOMPLETE_IDEN = "([%.:])"
 local ARGS_MATCH = "(%w+)[:%s%w+]*"
 local ANY_CHAR = "[%w%p]*"
+local PARAM_MATCH = "(%w+)%((%w*)%)*"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
@@ -173,9 +174,8 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		if current and current.Branches and not reachedEnd then
 			for name, data in pairs(current.Branches) do
 				local lastToken = lineTokens[#lineTokens].value
-				local isIndexer = lastToken == ":" or lastToken == "."
 
-				if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
+				if (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 					addResponse({
 						label = name,
 						kind = index == "Methods" and Enum.CompletionItemKind.Function or Enum.CompletionItemKind.Property,
@@ -183,7 +183,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 						text = name, 
 						beforeCursor = beforeCursor,
 						afterCursor = afterCursor,
-						alreadyTyped = isIndexer and 0 or #lastToken
+						alreadyTyped = (lastToken == ":" or lastToken == ".") and 0 or #lastToken
 					}, index)
 				end
 			end
@@ -191,8 +191,18 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 
 	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
-		-- Implement parameter detection
-		suggestResponses(branches, entryIndex, tokenList)
+		local lastToken = tokenList[#tokenList].value
+		local isInParameters = #branches > 0 and line:match(PARAM_MATCH) and (lastToken == ":" or lastToken == ".")
+		
+		if #branches > 0 then
+			for paramName, paramMatch in line:gmatch(PARAM_MATCH) do
+				print(paramName, paramMatch)
+			end
+		end
+		print(isInParameters)
+		if not isInParameters then
+			suggestResponses(branches, entryIndex, tokenList)
+		end
 	end
 
 	local function suggestAll(index: string, tokens: {AutocompleteTypes.Token})
