@@ -2,6 +2,7 @@ return {
 	AutocompleteArgs= {"text", "color", "duration"},
 	Name = "Alert",
 	Branches = nil,
+	Params = nil,
 	Documentation = {
 		value = "Sends an alert out to all players ingame with a custom text, color and duration."
 	},

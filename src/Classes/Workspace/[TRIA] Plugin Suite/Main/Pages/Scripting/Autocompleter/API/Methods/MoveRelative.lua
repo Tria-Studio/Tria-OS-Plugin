@@ -2,6 +2,7 @@ return {
 	AutocompleteArgs= {"object", "movement", "duration"},
 	Name = "MoveRelative",
 	Branches = nil,
+	Params = nil,
 	Documentation = {
 		value = "Moves an object in local space (relative to its own rotation)"
 	},

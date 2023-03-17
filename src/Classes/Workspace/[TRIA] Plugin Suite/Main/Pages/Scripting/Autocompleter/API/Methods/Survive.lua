@@ -2,6 +2,7 @@ return {
 	AutocompleteArgs= {"player"},
 	Name = "Survive",
 	Branches = nil,
+	Params = nil,
 	Documentation = {
 		value = "Automatically makes a player survive"
 	},
