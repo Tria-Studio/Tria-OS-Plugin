@@ -190,11 +190,11 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		end
 	end
 
-	local function suggest(branches: {string}, entryIndex: string, tokens: {AutocompleteTypes.Token})
+	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
 		if #branches > 0 then
 			-- 
 		end
-		suggestResponses(branches, treeEntryIndex, tokens)
+		suggestResponses(branches, entryIndex, tokenList)
 	end
 
 	local function suggestAll(index: string, tokens: {AutocompleteTypes.Token})
