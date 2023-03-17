@@ -201,6 +201,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		-- 	end
 		-- end
 		
+		print("PARAM:", isInParameters)
 		if not isInParameters then
 			suggestResponses(branches, entryIndex, tokenList)
 		end
