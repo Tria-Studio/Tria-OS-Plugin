@@ -174,8 +174,9 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		if current and current.Branches and not reachedEnd then
 			for name, data in pairs(current.Branches) do
 				local lastToken = lineTokens[#lineTokens].value
+				local isIndexer = lastToken == ":" or lastToken == "."
 
-				if (name:lower():sub(1, #lastToken) == lastToken:lower()) then
+				if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 					addResponse({
 						label = name,
 						kind = index == "Methods" and Enum.CompletionItemKind.Function or Enum.CompletionItemKind.Property,
@@ -183,7 +184,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 						text = name, 
 						beforeCursor = beforeCursor,
 						afterCursor = afterCursor,
-						alreadyTyped = (lastToken == ":" or lastToken == ".") and 0 or #lastToken
+						alreadyTyped = isIndexer and 0 or #lastToken
 					}, index)
 				end
 			end
