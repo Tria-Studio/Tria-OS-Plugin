@@ -18,6 +18,7 @@ local Util = require(Package.Util)
 local AUTOCOMPLETE_IDEN = "([%.:])"
 local ARGS_MATCH = "(%w+)[:%s%w+]*"
 local ANY_CHAR = "[%w%p]*"
+local PARAM_MATCH = "(%w+)(%b())"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
@@ -191,7 +192,9 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 
 	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
-		print(branches)
+		if #branches > 0 then
+			
+		end
 		suggestResponses(branches, entryIndex, tokenList)
 	end
 
