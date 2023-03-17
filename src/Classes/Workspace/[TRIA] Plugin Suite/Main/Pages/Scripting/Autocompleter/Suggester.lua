@@ -18,7 +18,7 @@ local Util = require(Package.Util)
 local AUTOCOMPLETE_IDEN = "([%.:])"
 local ARGS_MATCH = "(%w+)[:%s%w+]*"
 local ANY_CHAR = "[%w%p]*"
-local PARAM_MATCH = "(%w+)%(([%w%p%s]*)%)*"
+local PARAM_MATCH = "(%w+)%(([%w,%s]*)%)*"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
