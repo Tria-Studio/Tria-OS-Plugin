@@ -192,14 +192,14 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
 		local lastToken = tokenList[#tokenList].value
-		local isInParameters = #branches > 0 and line:match(PARAM_MATCH) and (lastToken == ":" or lastToken == ".")
+		local isInParameters = #branches > 0 and line:match(PARAM_MATCH) and not (lastToken == ":" or lastToken == ".")
 		
-		if #branches > 0 then
-			for paramName, paramMatch in line:gmatch(PARAM_MATCH) do
-				print(paramName, paramMatch)
-			end
-		end
-		print(isInParameters)
+		-- if #branches > 0 then
+		-- 	for paramName, paramMatch in line:gmatch(PARAM_MATCH) do
+		-- 		print(paramName, paramMatch)
+		-- 	end
+		-- end
+		
 		if not isInParameters then
 			suggestResponses(branches, entryIndex, tokenList)
 		end
