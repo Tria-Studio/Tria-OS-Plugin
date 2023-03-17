@@ -18,7 +18,7 @@ local Util = require(Package.Util)
 local AUTOCOMPLETE_IDEN = "([%.:])"
 local ARGS_MATCH = "(%w+)[:%s%w+]*"
 local ANY_CHAR = "[%w%p]*"
-local PARAM_MATCH = "(%w+)%((.*)%)*"
+local PARAM_MATCH = "(%w+)%(([%w%p]*)%)*"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
@@ -202,7 +202,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			for name, match in fullLine:gmatch(PARAM_MATCH) do
 				table.insert(matches, match:sub(-1) == ")" and match:sub(1, -2) or match)
 			end
-			print(matches[#matches])
+			print(#matches, matches[#matches])
 		else
 			suggestResponses(branches, entryIndex, tokenList)
 		end
