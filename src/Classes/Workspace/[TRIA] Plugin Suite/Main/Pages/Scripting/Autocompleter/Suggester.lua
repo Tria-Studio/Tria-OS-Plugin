@@ -18,7 +18,7 @@ local Util = require(Package.Util)
 local AUTOCOMPLETE_IDEN = "([%.:])"
 local ARGS_MATCH = "(%w+)[:%s%w+]*"
 local ANY_CHAR = "[%w%p]*"
-local PARAM_MATCH = "(%w+)%((%w*)%)*"
+local PARAM_MATCH = "(%w+)%((.*)%)*"
 
 local VARIABLE_CREATE = `=%s*(%w+){AUTOCOMPLETE_IDEN}`
 local FUNCTION_CREATE = `function (%w+){AUTOCOMPLETE_IDEN}(%w+)(%b())`
@@ -193,16 +193,17 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
 		local lastToken = tokenList[#tokenList].value
-		local isInParameters = #branches > 0 and line:match(PARAM_MATCH) and not (lastToken == ":" or lastToken == ".")
-		
-		-- if #branches > 0 then
-		-- 	for paramName, paramMatch in line:gmatch(PARAM_MATCH) do
-		-- 		print(paramName, paramMatch)
-		-- 	end
-		-- end
-		
-		print("PARAM:", isInParameters)
-		if not isInParameters then
+		local fullLine = line .. afterCursor
+
+		local isInParameters = #branches > 0 and fullLine:match(PARAM_MATCH) and not (lastToken == ":" or lastToken == ".")
+
+		if isInParameters then
+			local matches = {}
+			for name, match in fullLine:gmatch(PARAM_MATCH) do
+				table.insert(matches, match)
+			end
+			print(matches[#matches])
+		else
 			suggestResponses(branches, entryIndex, tokenList)
 		end
 	end
