@@ -200,7 +200,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		if isInParameters then
 			local matches = {}
 			for name, match in fullLine:gmatch(PARAM_MATCH) do
-				print(name, match)
 				table.insert(matches, {Name = name, Match = match:sub(-1) == ")" and match:sub(1, -2) or match})
 			end
 		else
