@@ -2,7 +2,6 @@ return {
 	AutocompleteArgs= {"object", "movement", "duration"},
 	Name = "Move",
 	Branches = nil,
-	Params = nil,
 	Documentation = {
 		value = "Moves an object in world space"
 	},
