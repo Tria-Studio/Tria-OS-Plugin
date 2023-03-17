@@ -173,17 +173,19 @@ function Util.deepCopy(t: {}): {}
 	return new
 end
 
-function Util.traverseBranchList(current: {}, branchList: { string }): (boolean, {})
+function Util.traverseBranchList(current: {}, branchList: { string }): (boolean, {}, string)
 	local reachedEnd = false
+	local branchName = ""
 
 	if not current then
-		return false, nil
+		return false, nil, nil
 	end
 
 	for _, branch in ipairs(branchList) do
 		if current.Branches ~= nil then
 			if current.Branches[branch] then
 				current = current.Branches[branch]
+				branchName = branch
 			end
 		else
 			reachedEnd = true
@@ -191,7 +193,7 @@ function Util.traverseBranchList(current: {}, branchList: { string }): (boolean,
 		end
 	end
 
-	return reachedEnd, current
+	return reachedEnd, current, branchName
 end
 
 function Util.splitStringParameters(str: string): {string}
@@ -207,7 +209,7 @@ function Util.splitStringParameters(str: string): {string}
 			nestCount += 1
 		elseif currentChar:match("[\")]") then
 			nestCount = math.max(nestCount - 1, 0)
-		elseif currentChar == "," and CurrentParentheses == 0 then
+		elseif currentChar == "," and nestCount == 0 then
 			table.insert(splits, current)
 			current = ""
 			ignore = true

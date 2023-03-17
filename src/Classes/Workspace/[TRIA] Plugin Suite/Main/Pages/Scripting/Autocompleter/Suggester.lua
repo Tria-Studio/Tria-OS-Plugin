@@ -170,7 +170,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 	
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
-		local reachedEnd, current = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
+		local reachedEnd, current, _ = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
 		if current and current.Branches and not reachedEnd then
 			for name, data in pairs(current.Branches) do
 				local lastToken = lineTokens[#lineTokens].value
@@ -199,8 +199,19 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 		if isInParameters then
 			local matches = {}
+			local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
+			
+			local parameterMatch = nil
+
 			for name, match in fullLine:gmatch(PARAM_MATCH) do
-				table.insert(matches, {Name = name, Match = match:sub(-1) == ")" and match:sub(1, -2) or match})
+				if name == branchName then
+					parameterMatch = {Name = name, Match = match:sub(-1) == ")" and match:sub(1, -2) or match}
+				end
+			end
+
+			if parameterMatch then
+				local params = AutocompleteUtil.splitStringParameters(parameterMatch.Match)
+				print(params)
 			end
 		else
 			suggestResponses(branches, entryIndex, tokenList)
