@@ -196,33 +196,4 @@ function Util.traverseBranchList(current: {}, branchList: { string }): (boolean,
 	return reachedEnd, current, branchName
 end
 
-function Util.splitStringParameters(str: string): {string}
-	local splits = {}
-	local nestCount = 0
-	local current = ""
-
-	for count = 1, #str do
-		local currentChar = str:sub(count, count)
-		local ignore = false
-
-		if currentChar:match("[\"(]") then
-			nestCount += 1
-		elseif currentChar:match("[\")]") then
-			nestCount = math.max(nestCount - 1, 0)
-		elseif currentChar == "," and nestCount == 0 then
-			table.insert(splits, current)
-			current = ""
-			ignore = true
-		end
-		
-		if not ignore and (current ~= "" or currentChar ~= " ") then
-			current ..= currentChar
-		end
-	end
-	if current ~= "" then
-		table.insert(splits, current)
-	end
-	return splits
-end
-
 return Util
