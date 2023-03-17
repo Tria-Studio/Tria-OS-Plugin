@@ -169,24 +169,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 	
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
-		local current = AutocompleteData[index]
-		local reachedEnd = false
-		
-		if not current then
-			return
-		end
-		
-		for _, branch in ipairs(branchList) do
-			if current.Branches ~= nil then
-				if current.Branches[branch] then
-					current = current.Branches[branch]
-				end
-			else
-				reachedEnd = true
-				break
-			end
-		end
-		
+		local current, reachedEnd = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
 		if current and current.Branches and not reachedEnd then
 			for name, data in pairs(current.Branches) do
 				local lastToken = lineTokens[#lineTokens].value

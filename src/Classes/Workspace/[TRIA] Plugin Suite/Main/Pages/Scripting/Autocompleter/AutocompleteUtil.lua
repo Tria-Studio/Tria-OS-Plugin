@@ -2,17 +2,28 @@ local Util = {}
 local AutocompleteTypes = require(script.Parent.AutocompleteTypes)
 local Lexer = require(script.Parent.Lexer)
 
-function Util.buildReplacement(position: AutocompleteTypes.CodePosition, newText: string, beforeCursor: number, afterCursor: number, alreadyTyped: number): AutocompleteTypes.TextEdit
+function Util.buildReplacement(
+	position: AutocompleteTypes.CodePosition,
+	newText: string,
+	beforeCursor: number,
+	afterCursor: number,
+	alreadyTyped: number
+): AutocompleteTypes.TextEdit
 	return {
 		newText = newText,
 		replace = {
-			["start"] = {line = position.line, character = position.character - alreadyTyped},
-			["end"] = {line = position.line, character = position.character + #newText},
-		}
+			["start"] = { line = position.line, character = position.character - alreadyTyped },
+			["end"] = { line = position.line, character = position.character + #newText },
+		},
 	}
 end
 
-local function matchPatternOnMultiLine(document: ScriptDocument, line: number, char: number, patterns: {Start: string, End: string}): boolean
+local function matchPatternOnMultiLine(
+	document: ScriptDocument,
+	line: number,
+	char: number,
+	patterns: { Start: string, End: string }
+): boolean
 	local startLine = document:GetLine(line)
 	local lineCount = document:GetLineCount()
 
@@ -79,17 +90,17 @@ function Util.backTraceComments(document: ScriptDocument, line: number, char: nu
 		return true
 	end
 
-	return matchPatternOnMultiLine(document, line, char, {Start = "%-%-%[%[", End = "%]%]"})
+	return matchPatternOnMultiLine(document, line, char, { Start = "%-%-%[%[", End = "%]%]" })
 end
 
 function Util.backTraceMultiString(document: ScriptDocument, line: number, char: number): boolean
-	return matchPatternOnMultiLine(document, line, char, {Start = "%[%[", End = "%]%]"})
+	return matchPatternOnMultiLine(document, line, char, { Start = "%[%[", End = "%]%]" })
 end
 
-function Util.getBranchesFromTokenList(tokens: {AutocompleteTypes.Token}): ({string}, string)	
+function Util.getBranchesFromTokenList(tokens: { AutocompleteTypes.Token }): ({ string }, string)
 	local branches = {}
 	local treeEntryIndex = nil
-	
+
 	for count = 1, #tokens do
 		local token = tokens[count]
 		if token.name == ":" or token.name == "." then
@@ -107,11 +118,11 @@ function Util.getBranchesFromTokenList(tokens: {AutocompleteTypes.Token}): ({str
 			end
 		end
 	end
-	
+
 	return branches, treeEntryIndex
 end
 
-function Util.tokenMatches(token: AutocompleteTypes.Token, name: string | {string}, value: any | {any}): boolean
+function Util.tokenMatches(token: AutocompleteTypes.Token, name: string | { string }, value: any | { any }): boolean
 	local function nameMatch()
 		return if typeof(name) == "table" then table.find(name, token.name) else token.name == name
 	end
@@ -125,7 +136,7 @@ function Util.tokenMatches(token: AutocompleteTypes.Token, name: string | {strin
 	return nameMatch() and valueMatch()
 end
 
-function Util.lexerScanToTokens(line: string): {AutocompleteTypes.Token}
+function Util.lexerScanToTokens(line: string): { AutocompleteTypes.Token }
 	local tokens = {}
 	for x in Lexer.scan(line) do
 		table.insert(tokens, x)
@@ -133,17 +144,17 @@ function Util.lexerScanToTokens(line: string): {AutocompleteTypes.Token}
 	return tokens
 end
 
-function Util.flipArray(t: {any})
+function Util.flipArray(t: { any })
 	for i = 1, math.floor(#t / 2) do
 		local j = #t - i + 1
 		t[i], t[j] = t[j], t[i]
 	end
 end
 
-function Util.isTokenSeriesBroken(tokens: {AutocompleteTypes.Token}): boolean
+function Util.isTokenSeriesBroken(tokens: { AutocompleteTypes.Token }): boolean
 	local broken = false
 	for count = 1, #tokens - 1 do
-		if Util.tokenMatches(tokens[count], {":", "."}) and Util.tokenMatches(tokens[count + 1], {":", "."}) then
+		if Util.tokenMatches(tokens[count], { ":", "." }) and Util.tokenMatches(tokens[count + 1], { ":", "." }) then
 			broken = true
 			break
 		end
@@ -160,6 +171,27 @@ function Util.deepCopy(t: {}): {}
 		new[k] = v
 	end
 	return new
+end
+
+function Util.traverseBranchList(current: {}, branchList: { string }): (boolean, {})
+	local reachedEnd = false
+
+	if not current then
+		return false, nil
+	end
+
+	for _, branch in ipairs(branchList) do
+		if current.Branches ~= nil then
+			if current.Branches[branch] then
+				current = current.Branches[branch]
+			end
+		else
+			reachedEnd = true
+			break
+		end
+	end
+
+	return reachedEnd, current
 end
 
 return Util
