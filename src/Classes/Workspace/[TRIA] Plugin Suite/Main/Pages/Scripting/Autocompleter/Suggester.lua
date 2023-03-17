@@ -190,12 +190,19 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		end
 	end
 
+	local function suggest(branches: {string}, entryIndex: string, tokens: {AutocompleteTypes.Token})
+		if #branches > 0 then
+			-- 
+		end
+		suggestResponses(branches, treeEntryIndex, tokens)
+	end
+
 	local function suggestAll(index: string, tokens: {AutocompleteTypes.Token})
 		local allVariables = {}
 		for k in pairs(AutocompleteData[index].Branches) do
 			table.insert(allVariables, k)
 		end
-		suggestResponses({}, index, tokens)
+		suggest({}, index, tokens)
 	end
 
 	if AutocompleteUtil.tokenMatches(tokens[1], "space") then
@@ -295,7 +302,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				AutocompleteUtil.flipArray(allBranches)
 				if #allBranches > 0 then
 					local _, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(lineTokens)
-					suggestResponses(allBranches, treeEntryIndex, lineTokens)
+					suggest(allBranches, treeEntryIndex, lineTokens)
 				end
 			end
 		end
@@ -321,8 +328,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		-- Match Case 5: Normal line
 		if table.find(prefixes, tokens[1].value) then
 			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
-			print(branches)
-			suggestResponses(branches, treeEntryIndex, tokens)
+			suggest(branches, treeEntryIndex, tokens)
 		end
 	end
 	
