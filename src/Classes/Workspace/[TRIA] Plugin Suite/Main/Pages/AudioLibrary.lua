@@ -220,6 +220,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local isLoaded = Value(false)
     local function updateLoaded()
         loadedSounds[data.ID] = true
+        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
         isLoaded:set(true)
     end
 
@@ -347,6 +348,19 @@ local function getAudioChildren(): {Instance}
     local totalPages = math.ceil(totalAssets / itemsPerPage)
 
     local assetsRemaining = totalAssets
+
+    local needsPermissionUpdate = false
+
+    for _, item in ipairs(assets) do
+        if not loadedSounds[item.ID] then
+            needsPermissionUpdate = true
+            break
+        end
+    end
+
+    permissionsNeedUpdating:set(needsPermissionUpdate)
+    songLoadData.loaded:set(0)
+    songLoadData.total:set(math.max(totalAssets, 1))
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
