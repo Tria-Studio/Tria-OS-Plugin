@@ -56,6 +56,15 @@ local currentSongData = {
     timeLength = Value(0)
 }
 
+local songLoadData = {
+    loaded = Value(0),
+    total = Value(1)
+}
+
+local allSongsLoaded = Computed(function(): boolean
+    return songLoadData.loaded:get() >= songLoadData.total:get()
+end)
+
 local loadedSounds = {}
 
 local lastFetchTime = 0
