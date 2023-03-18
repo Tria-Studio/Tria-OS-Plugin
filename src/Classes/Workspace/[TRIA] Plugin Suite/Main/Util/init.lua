@@ -19,7 +19,6 @@ local selectionMaid = Maid.new()
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local oldUniverseId = game.GameId
-local oldPlaceId = game.PlaceId
 
 local Util = {
     Signal = Signal,
