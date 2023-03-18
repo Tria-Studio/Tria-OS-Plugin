@@ -125,13 +125,12 @@ local function incrementPage(increment: number)
 end
 
 local function stopSong()
-    Util.toggleAudioPerms(false)
-
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then
         return
     end
     fadeSound(currentlyPlaying, "Out")
+    Util.toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
 end
 
