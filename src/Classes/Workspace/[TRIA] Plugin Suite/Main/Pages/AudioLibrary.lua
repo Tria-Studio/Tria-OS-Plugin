@@ -125,12 +125,13 @@ local function incrementPage(increment: number)
 end
 
 local function stopSong()
+    Util.toggleAudioPerms(false)
+
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then
         return
     end
     fadeSound(currentlyPlaying, "Out")
-    Util.toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
 end
 
@@ -413,7 +414,7 @@ local function fetchApi()
         FETCHED_AUDIO_DATA:set(newData)
     end
 end
---[[
+
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local textboxObject = Value()
     local isSongPlaying = Computed(function(): boolean
@@ -716,42 +717,38 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
         }
     }
-end]]
-
-function frame:GetFrame()
-    return New "Frame" {}
 end
 
--- function frame.OnClose()
---     task.spawn(fetchApi)
---     stopSong()
--- end
+function frame.OnClose()
+    task.spawn(fetchApi)
+    stopSong()
+end
 
--- task.spawn(fetchApi)
+task.spawn(fetchApi)
 
--- Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
---     local currentlyPlaying = currentSongData.currentAudio:get(false)
---     if 
---         currentlyPlaying ~= nil 
---         and currentlyPlaying.IsLoaded 
---         and currentlyPlaying.IsPlaying
---         and not Util._Slider.isUsingSlider:get(false) 
---     then
---         currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
---     end
--- end))
+Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    if 
+        currentlyPlaying ~= nil 
+        and currentlyPlaying.IsLoaded 
+        and currentlyPlaying.IsPlaying
+        and not Util._Slider.isUsingSlider:get(false) 
+    then
+        currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
+    end
+end))
 
--- Util.MainMaid:GiveTask(function()
---     Util.toggleAudioPerms(false)
--- end)
+Util.MainMaid:GiveTask(function()
+    Util.toggleAudioPerms(false)
+end)
 
--- Observer(currentSongData.timePosition):onChange(function()
---     if Util._Slider.isUsingSlider:get(false) then
---         local currentlyPlaying = currentSongData.currentAudio:get(false)
---         if currentlyPlaying then
---             currentlyPlaying.TimePosition = currentSongData.timePosition:get(false)
---         end
---     end
--- end)
+Observer(currentSongData.timePosition):onChange(function()
+    if Util._Slider.isUsingSlider:get(false) then
+        local currentlyPlaying = currentSongData.currentAudio:get(false)
+        if currentlyPlaying then
+            currentlyPlaying.TimePosition = currentSongData.timePosition:get(false)
+        end
+    end
+end)
 
 return frame

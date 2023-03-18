@@ -1,7 +1,6 @@
 local ContentProvider = game:GetService("ContentProvider")
-local RunService = game:GetService("RunService")
 
-if RunService:IsRunning() then
+if not plugin then
 	return
 end
 
@@ -313,8 +312,10 @@ if not MapSelect:AutoSelect() then
 end
 
 plugin.Unloading:Connect(function()
+	Util.toggleAudioPerms(false)
 	Util.PluginActive:set(false)
     MapSelect._Maid:DoCleaning()
     Util.MainMaid:DoCleaning()
     SettingsUtil.SettingMaid:DoCleaning()
+	MapSelect:SetMap(nil)
 end)
