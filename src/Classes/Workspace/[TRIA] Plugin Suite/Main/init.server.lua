@@ -1,5 +1,4 @@
 local ContentProvider = game:GetService("ContentProvider")
-local PathfindingService = game:GetService("PathfindingService")
 local RunService = game:GetService("RunService")
 
 if RunService:IsRunning() then
@@ -37,7 +36,6 @@ local PublicTypes = require(script.PublicTypes)
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
-local Spring = Fusion.Spring
 local OnEvent = Fusion.OnEvent
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
@@ -302,15 +300,20 @@ task.spawn(function()
 	ContentProvider:PreloadAsync(images)
 end)
 
+
 openButton.Click:Connect(function()
-	widget.Enabled = not widget.Enabled
+	widget.Enabled = widget.Enabled
+	Util.PluginActive:set(widget.Enabled)
 end)
+Util.PluginActive:set(widget.Enabled)
+
 
 if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")
 end
 
 plugin.Unloading:Connect(function()
+	Util.PluginActive:set(false)
     MapSelect._Maid:DoCleaning()
     Util.MainMaid:DoCleaning()
     SettingsUtil.SettingMaid:DoCleaning()

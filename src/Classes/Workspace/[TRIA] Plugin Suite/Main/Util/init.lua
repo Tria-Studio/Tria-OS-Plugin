@@ -25,6 +25,7 @@ local Util = {
     Signal = Signal,
     Maid = Maid,
 
+    PluginActive = Value(false),
     Widget = nil,
     mapModel = Value(nil),
     hasSpecialFolder = Value(false),
@@ -256,6 +257,10 @@ local function updateButtonsActive()
 end
 
 function Util.updateSelectedParts()
+    if not Util.PluginActive:get() then
+        return
+    end
+
     local newTable = {}
     for _, thing: Instance in ipairs(Selection:Get()) do
         if thing:IsDescendantOf(Util.mapModel:get(false)) then

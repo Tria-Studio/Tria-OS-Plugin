@@ -19,7 +19,6 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Value = Fusion.Value
 local OnEvent = Fusion.OnEvent
-local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
 
 local ENABLE_VAR = "TRIA_AutocompleteEnabled"
