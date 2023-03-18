@@ -56,6 +56,11 @@ local currentSongData = {
     timeLength = Value(0)
 }
 
+local songLoadData = {
+    loaded = Value(0),
+    total = Value(1)
+}
+
 local loadedSounds = {}
 
 local lastFetchTime = 0
@@ -211,6 +216,10 @@ local function AudioButton(data: audioTableFormat): Instance
     local isLoaded = Value(false)
     local function updateLoaded()
         loadedSounds[data.ID] = true
+        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
+        if songLoadData.loaded:get(false) >= songLoadData.total:get(false) then
+            Util.toggleAudioPerms(false)
+        end
         isLoaded:set(true)
     end
 
@@ -339,6 +348,8 @@ local function getAudioChildren(): {Instance}
 
     local assetsRemaining = totalAssets
 
+    songLoadData.loaded:set(0)
+    songLoadData.total:set(math.max(totalAssets, 1))
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
 
@@ -724,7 +735,6 @@ function frame.OnClose()
 end
 
 task.spawn(fetchApi)
-task.spawn(toggleAudioPerms, true)
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)

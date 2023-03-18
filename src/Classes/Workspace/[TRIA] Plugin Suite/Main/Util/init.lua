@@ -381,6 +381,7 @@ function Util.getRollingAverage(data: {number}, backCount: number): number
 end
 
 function Util.toggleAudioPerms(enabled: boolean)
+    warn("Updating universe id (" .. tostring(enabled) .. "),", enabled and 2330396164 or oldUniverseId)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId)
 end
 
