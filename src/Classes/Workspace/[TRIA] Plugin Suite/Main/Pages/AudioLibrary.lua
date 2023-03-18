@@ -750,6 +750,14 @@ Util.MainMaid:GiveTask(function()
     Util.toggleAudioPerms(false)
 end)
 
+local function updateOnAllSongsLoaded()
+    Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
+end
+
+updateOnAllSongsLoaded()
+Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
+Observer(permissionsNeedUpdating):onChange(updateOnAllSongsLoaded)
+
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
         local currentlyPlaying = currentSongData.currentAudio:get(false)
