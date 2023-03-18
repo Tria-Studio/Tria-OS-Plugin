@@ -302,7 +302,7 @@ end)
 
 
 openButton.Click:Connect(function()
-	widget.Enabled = widget.Enabled
+	widget.Enabled = not widget.Enabled
 	Util.PluginActive:set(widget.Enabled)
 end)
 Util.PluginActive:set(widget.Enabled)
