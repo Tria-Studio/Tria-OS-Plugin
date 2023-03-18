@@ -56,15 +56,6 @@ local currentSongData = {
     timeLength = Value(0)
 }
 
-local songLoadData = {
-    loaded = Value(0),
-    total = Value(1)
-}
-
-local allSongsLoaded = Computed(function(): boolean
-    return songLoadData.loaded:get() >= songLoadData.total:get()
-end)
-
 local loadedSounds = {}
 
 local lastFetchTime = 0
@@ -220,7 +211,6 @@ local function AudioButton(data: audioTableFormat): Instance
     local isLoaded = Value(false)
     local function updateLoaded()
         loadedSounds[data.ID] = true
-        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
         isLoaded:set(true)
     end
 
@@ -348,19 +338,6 @@ local function getAudioChildren(): {Instance}
     local totalPages = math.ceil(totalAssets / itemsPerPage)
 
     local assetsRemaining = totalAssets
-
-    local needsPermissionUpdate = false
-
-    for _, item in ipairs(assets) do
-        if not loadedSounds[item.ID] then
-            needsPermissionUpdate = true
-            break
-        end
-    end
-
-    permissionsNeedUpdating:set(needsPermissionUpdate)
-    songLoadData.loaded:set(0)
-    songLoadData.total:set(math.max(totalAssets, 1))
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -747,6 +724,7 @@ function frame.OnClose()
 end
 
 task.spawn(fetchApi)
+task.spawn(toggleAudioPerms, true)
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
@@ -763,14 +741,6 @@ end))
 Util.MainMaid:GiveTask(function()
     Util.toggleAudioPerms(false)
 end)
-
-local function updateOnAllSongsLoaded()
-    Util.toggleAudioPerms(permissionsNeedUpdating:get() and not allSongsLoaded:get())
-end
-
-updateOnAllSongsLoaded()
-Observer(allSongsLoaded):onChange(updateOnAllSongsLoaded)
-Observer(permissionsNeedUpdating):onChange(updateOnAllSongsLoaded)
 
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
