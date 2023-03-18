@@ -350,6 +350,8 @@ local function getAudioChildren(): {Instance}
 
     songLoadData.loaded:set(0)
     songLoadData.total:set(math.max(totalAssets, 1))
+    Util.toggleAudioPerms(true)
+
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
 
@@ -382,7 +384,7 @@ local function getAudioChildren(): {Instance}
 
         assetsRemaining -= itemsPerPage
     end
-
+    
     jumpToPage(1)
     pageData.total:set(totalPages)
     return children
