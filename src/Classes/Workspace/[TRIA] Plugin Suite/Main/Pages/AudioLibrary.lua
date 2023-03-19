@@ -155,6 +155,7 @@ local function playSong(soundData: audioTableFormat)
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(true)
+        print(currentSound.TimeLength)
         currentSongData.timeLength:set(math.max(currentSound.TimeLength, 0.1))
         task.delay(1, function()
             Util.toggleAudioPerms(false)
