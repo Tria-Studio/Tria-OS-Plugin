@@ -17,6 +17,7 @@ local Hydrate = Fusion.Hydrate
 local Spring = Fusion.Spring
 local Ref = Fusion.Ref
 local Out = Fusion.Out
+local OnChange = Fusion.OnChange
 
 local Components = {
     Constraints = require(script.Constraints),
@@ -562,7 +563,9 @@ function Components.SearchBox(data: PublicTypes.Dictionary): Instance
         BorderMode = Enum.BorderMode.Inset,
         BorderSizePixel = 2,
 
-        [Out "Text"] = data.State,
+        [OnChange "Text"] = function(newText: string)
+            data.State:set(escapeString(newText))
+        end,
 
         [Children] = {
             Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 30)),
