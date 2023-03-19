@@ -51,7 +51,7 @@ local currentSongData = {
     currentAudio = Value(nil),
     currentTween = Value(nil),
 
-    songData = Value({Name = "", Artist = ""}),
+    songData = Value({Name = "", Artist = "", ID = 0}),
 
     timePosition = Value(0),
     timeLength = Value(0)
@@ -194,7 +194,7 @@ local function updatePlayingSound(soundData: audioTableFormat)
         stopCurrentTween()
         playSong(soundData)
     elseif currentlyPlaying.ID == soundData.ID then -- Song being paused/resumed
-        if currentSongData.currentAudio:get().IsPaused then
+        if currentSongData.currentAudio:get(false).IsPaused then
             resumeSong()
         else
             pauseSong()
@@ -598,7 +598,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
+                            updatePlayingSound(currentSongData.songData:get(false))
                         end
                     },
 
