@@ -37,6 +37,12 @@ local function stringToTreeIndex(input: string): string
 	return input == ":" and "Methods" or "Properties"
 end
 
+local function escapeString(str: string): string
+	return str:gsub("[%$%%%^%*%(%)%.%[%]%+%-%?]", function(match)
+		return "%" .. match	
+	end)
+end
+
 local function handleCallback(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
 	local currentScript = request.textDocument.script
 	local currentScriptContext = ScriptEditorService:FindScriptDocument(currentScript)
