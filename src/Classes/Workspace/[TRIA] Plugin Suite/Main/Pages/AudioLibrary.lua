@@ -84,6 +84,16 @@ local STATUS_ERRORS = {
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
 }
 
+local PLAY_IMAGE = {
+    normal = "rbxassetid://6026663726",
+    hover = "rbxassetid://6026663718"
+}
+
+local PAUSE_IMAGE = {
+    normal = "rbxassetid://6026663701",
+    hover = "rbxassetid://6026663705"
+}
+
 local function escapeString(str: string): string
 	return str:gsub("[%$%%%^%*%(%)%.%[%]%+%-%?]", function(match): string
 		return "%" .. match	
@@ -307,7 +317,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return soundID == currentSongData.currentSoundId:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return soundID == currentSongData.currentSoundId:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[soundID]:get() == false then
@@ -316,7 +326,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             return soundID == currentSongData.currentSoundId:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return soundID == currentSongData.currentSoundId:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return soundID == currentSongData.currentSoundId:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
                         end),
 
                         [OnEvent "Activated"] = function()
@@ -605,13 +615,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.fromScale(0.4, 0.3),
                         Size = UDim2.fromScale(0.6, 0.6),
                         Image = Computed(function(): string
-                            return isSongPlaying:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return isSongPlaying:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return isSongPlaying:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
                         end),
 
                         [OnEvent "Activated"] = function()
