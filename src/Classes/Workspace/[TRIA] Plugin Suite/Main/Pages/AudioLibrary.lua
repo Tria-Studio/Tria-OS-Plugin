@@ -156,8 +156,6 @@ local function playSong(soundData: audioTableFormat)
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(true)
-        print(currentSound.TimeLength)
-        currentSongData.timeLength:set(math.max(currentSound.TimeLength, 0.1))
         task.delay(1, function()
             Util.toggleAudioPerms(false)
         end)
@@ -178,11 +176,14 @@ local function playSong(soundData: audioTableFormat)
     currentSongData.songData:set(soundData)
     currentSongData.currentSoundId:set(soundData.ID)
     currentSongData.currentAudio:set(currentSound)
-    currentSongData.timeLength:set(currentSound.TimeLength)
 
     SoundMaid:GiveTask(currentSound.Ended:Connect(function()
         currentSongData.timePosition:set(0)
         currentSongData.currentAudio:set(nil)
+    end))
+
+    SoundMaid:GiveTask(currentSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
+        currentSongData.timeLength:set(math.max(currentSound.TimeLength, 0.1))
     end))
 end
 
