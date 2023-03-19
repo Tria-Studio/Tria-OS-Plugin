@@ -50,8 +50,9 @@ local pageData = {
 local currentSongData = {
     currentAudio = Value(nil),
     currentTween = Value(nil),
+    currentSoundId = Value(0),
 
-    songData = Value({Name = "", Artist = "", ID = 0}),
+    songData = Value({Name = "", Artist = ""}),
 
     timePosition = Value(0),
     timeLength = Value(0)
@@ -122,6 +123,7 @@ local function stopSong()
     fadeSound(currentlyPlaying, "Out")
     Util.toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
+    currentSongData.currentSoundId:set(-1)
 end
 
 local function pauseSong()
@@ -151,7 +153,6 @@ local function playSong(soundData: audioTableFormat)
     SoundMaid:GiveTask(currentSound)
 
     local function updateLoaded()
-        print("Loaded")
         loadedSongs[soundData.ID]:set(true)
         currentSongData.timeLength:set(math.max(currentSound.TimeLength, 0.1))
         task.delay(1, function()
@@ -172,6 +173,7 @@ local function playSong(soundData: audioTableFormat)
 
     currentSongData.timePosition:set(0)
     currentSongData.songData:set(soundData)
+    currentSongData.currentSoundId:set(soundData.ID)
     currentSongData.currentAudio:set(currentSound)
     currentSongData.timeLength:set(currentSound.TimeLength)
 
@@ -291,16 +293,16 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return soundID == currentSongData.songData:get().ID and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return soundID == currentSongData.currentSoundId:get() and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[soundID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return soundID == currentSongData.songData:get().ID and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return soundID == currentSongData.currentSoundId:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return soundID == currentSongData.songData:get().ID and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return soundID == currentSongData.currentSoundId:get() and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
                         [OnEvent "Activated"] = function()
