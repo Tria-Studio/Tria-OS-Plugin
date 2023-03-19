@@ -27,9 +27,10 @@ local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
 
-local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
+local UpdateIDMaid = Util.Maid.new()
+local SoundMaid = Util.Maid.new()
 
-local plugin = script:FindFirstAncestorWhichIsA("Plugin")
+local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
 local frame = {}
 
@@ -61,8 +62,9 @@ local songLoadData = {
     total = Value(1)
 }
 
-local loadedSounds = {}
+local loadedSongs = {}
 
+local currentSound
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
@@ -102,6 +104,9 @@ local STATUS_ERRORS = {
 }
 
 local function fadeSound(sound: Sound, direction: string)
+    if not sound then
+        return
+    end
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
     currentSongData.currentTween:set(tween)
@@ -159,17 +164,40 @@ local function resumeSong()
     fadeSound(currentlyPlaying, "In")
 end
 
-local function playSong(newSound: Sound, soundData: audioTableFormat)
+local function playSong(soundData: audioTableFormat)
+    print"play"
+    SoundMaid:DoCleaning()
     Util.toggleAudioPerms(true)
-    newSound.Volume = 0
-    newSound.TimePosition = 0
-    newSound:Resume()
-    fadeSound(newSound, "In")
+    currentSound = PlguinSoundManager:QueueSound(soundData.ID)
+    SoundMaid:GiveTask(currentSound)
+
+    local function updateLoaded()
+        loadedSongs[soundData.ID]:set(true)
+        task.delay(1, function()
+            Util.toggleAudioPerms(false)
+        end)
+    end
+
+    if currentSound.Loaded then
+        updateLoaded()
+    else
+        SoundMaid:GiveTask(currentSound.Loaded:Connect(updateLoaded))
+    end
+
+    currentSound.Volume = 0
+    currentSound.TimePosition = 0
+    currentSound:Resume()
+    fadeSound(currentSound, "In")
 
     currentSongData.timePosition:set(0)
     currentSongData.songData:set(soundData)
-    currentSongData.currentAudio:set(newSound)
-    currentSongData.timeLength:set(newSound.TimeLength)
+    currentSongData.currentAudio:set(currentSound)
+    currentSongData.timeLength:set(currentSound.TimeLength)
+
+    SoundMaid:GiveTask(currentSound.Ended:Connect(function(soundId)
+        currentSongData.timePosition:set(0)
+        currentSongData.currentAudio:set(nil)
+    end))
 end
 
 local function stopCurrentTween()
@@ -180,25 +208,21 @@ local function stopCurrentTween()
     end
 end
 
-local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
+local function updatePlayingSound(soundData: audioTableFormat)
+    local currentlyPlaying = currentSongData.songData:get(false)
     if not currentlyPlaying then -- No song playing
         stopCurrentTween()
-        playSong(newSound, soundData)
-    elseif currentlyPlaying == newSound then -- Song being paused/resumed
-        if currentlyPlaying.IsPaused then
+        playSong(soundData)
+    elseif currentlyPlaying.ID == soundData.ID then -- Song being paused/resumed
+        if currentSongData.currentAudio:get().IsPaused then
             resumeSong()
         else
             pauseSong()
         end
     else -- Song switched while playing
-        fadeSound(currentlyPlaying, "Out")
-        playSong(newSound, soundData)
+        fadeSound(currentSongData.currentAudio:get(), "Out")
+        playSong(soundData)
     end
-end
-
-local function currentAudioMatches(sound: Sound): boolean
-    return currentSongData.currentAudio:get() == sound
 end
 
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
@@ -213,37 +237,13 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
 end
 
 local function AudioButton(data: audioTableFormat): Instance
-    local isLoaded = Value(false)
-    local function updateLoaded()
-        loadedSounds[data.ID] = true
-        songLoadData.loaded:set(songLoadData.loaded:get(false) + 1)
-        if songLoadData.loaded:get(false) >= songLoadData.total:get(false) then
-            Util.toggleAudioPerms(false)
-        end
-        isLoaded:set(true)
-    end
-
-    if loadedSounds[data.ID] then
-        updateLoaded()
-    end
-
-    local previewSound = PlguinSoundManager:QueueSound(data.ID)
-    previewSound.Name = data.Name
-
-    if not isLoaded:get(false) then
-        previewSound.Loaded:Connect(updateLoaded)
-    end
-
-    previewSound.Ended:Connect(function()
-        currentSongData.timePosition:set(0)
-        currentSongData.currentAudio:set(nil)
-    end)
+    local soundID = data.ID
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
 
-        [Cleanup] = previewSound,
+        [Cleanup] = UpdateIDMaid, -- idk what this does but it doesnt look to break anything?
         
         [Children] = {
             New "TextLabel" {
@@ -301,23 +301,22 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and "rbxassetid://6026663701" or "rbxassetid://6026663726"
+                            return soundID == currentSongData.songData:get().ID and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if not isLoaded:get() then
+                            local MainButton = Theme.MainButton.Default:get()
+                            local SubText = Theme.SubText.Default:get()
+                            if loadedSongs[soundID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return soundID == currentSongData.songData:get().ID and MainButton or SubText
                         end),
                         HoverImage = Computed(function(): string
-                            return currentAudioMatches(previewSound) and previewSound.IsPlaying and "rbxassetid://6026663718" or "rbxassetid://6026663705"
+                            return soundID == currentSongData.songData:get().ID and "rbxassetid://6026663718" or "rbxassetid://6026663705"
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if not isLoaded:get(false) then
-                                return
-                            end
-                            updatePlayingSound(previewSound, data)
+                            updatePlayingSound(data)
                         end
                     },
                 }
@@ -348,9 +347,13 @@ local function getAudioChildren(): {Instance}
 
     local assetsRemaining = totalAssets
 
+    if #assets == 0 then
+        return
+    end
+
+    UpdateIDMaid:Destroy()
     songLoadData.loaded:set(0)
     songLoadData.total:set(math.max(totalAssets, 1))
-    Util.toggleAudioPerms(true)
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -384,7 +387,7 @@ local function getAudioChildren(): {Instance}
 
         assetsRemaining -= itemsPerPage
     end
-    
+
     jumpToPage(1)
     pageData.total:set(totalPages)
     return children
@@ -395,6 +398,8 @@ local function fetchApi()
         return;
     end
     
+    local newLoaded = {}
+
     lastFetchTime = os.clock()
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(0.5)
@@ -407,6 +412,7 @@ local function fetchApi()
         local newData = {}
 
         for key, tbl in pairs(result) do
+            newLoaded[tbl.id] = Value(nil)
             table.insert(newData, {
                 ["Name"] = tbl.name or "N/A", 
                 ["ID"] = tbl.id or 0, 
@@ -422,6 +428,7 @@ local function fetchApi()
             end
         end)
 
+        loadedSongs = newLoaded
         pageData.current:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
     end
@@ -732,11 +739,12 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 function frame.OnClose()
-    task.spawn(fetchApi)
     stopSong()
 end
 
-task.spawn(fetchApi)
+function frame.OnOpen()
+    fetchApi()
+end
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
@@ -749,10 +757,6 @@ Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
         currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
     end
 end))
-
-Util.MainMaid:GiveTask(function()
-    Util.toggleAudioPerms(false)
-end)
 
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then

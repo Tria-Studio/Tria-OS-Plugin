@@ -19,6 +19,7 @@ local selectionMaid = Maid.new()
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local oldUniverseId = game.GameId
+local oldPlaceId = game.PlaceId
 
 local Util = {
     Signal = Signal,
@@ -383,6 +384,7 @@ end
 function Util.toggleAudioPerms(enabled: boolean)
     warn("Updating universe id (" .. tostring(enabled) .. "),", enabled and 2330396164 or oldUniverseId)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId)
+    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 end
 
 local function schedule(task: (number) -> (), interval: number)
