@@ -133,6 +133,7 @@ local function pauseSong()
     end
     currentlyPlaying:Pause()
     currentSongData.currentAudio:set(currentlyPlaying, true)
+    currentSongData.currentSoundId:set(-1)
 end
 
 local function resumeSong()
