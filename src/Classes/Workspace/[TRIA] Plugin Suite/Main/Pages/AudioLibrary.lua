@@ -613,7 +613,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                     SongPlayButton {
                         Position = UDim2.fromScale(0.4, 0.3),
-                        Size = UDim2.fromScale(0.6, 0.6),
+                        Size = UDim2.fromScale(0.5, 0.5),
                         Image = Computed(function(): string
                             return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
