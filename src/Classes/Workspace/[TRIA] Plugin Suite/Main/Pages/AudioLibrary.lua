@@ -76,25 +76,6 @@ local CURRENT_FETCH_STATUS = Value("Fetching")
 local FETCHED_AUDIO_DATA = Value({})
 
 type audioTableFormat = {Name: string, Artist: string, ID: number}
-local CURRENT_AUDIO_DATA = Computed(function(): {audioTableFormat}
-    local newData = {}
-
-    local searchedArtist = searchData.artist:get() or ""
-    local searchedName = searchData.name:get() or ""
-
-    for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
-        local matches = 
-            if #searchedArtist > 0 then tbl.Artist:lower():find(searchedArtist:lower()) ~= nil
-            elseif #searchedName > 0 then tbl.Name:lower():find(searchedName:lower()) ~= nil
-            else true
-
-        if matches then
-            table.insert(newData, tbl)
-        end
-    end
-
-    return newData
-end)
 
 local STATUS_ERRORS = {
     ["Fetching"] = "Currently fetching the latest audio...",
@@ -165,7 +146,6 @@ local function resumeSong()
 end
 
 local function playSong(soundData: audioTableFormat)
-    print"play"
     SoundMaid:DoCleaning()
     Util.toggleAudioPerms(true)
     currentSound = PlguinSoundManager:QueueSound(soundData.ID)
@@ -243,8 +223,16 @@ local function AudioButton(data: audioTableFormat): Instance
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
 
-        [Cleanup] = UpdateIDMaid, -- idk what this does but it doesnt look to break anything?
-        
+        Visible = Computed(function(): boolean
+            local searchedArtist = searchData.artist:get()
+            local searchedName = searchData.name:get()
+            return 
+                if #searchedArtist > 0 then tbl.Artist:lower():find(searchedArtist:lower()) ~= nil
+                elseif #searchedName > 0 then tbl.Name:lower():find(searchedName:lower()) ~= nil
+                else true
+        end),
+
+        [Cleanup] = UpdateIDMaid,
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
@@ -304,12 +292,10 @@ local function AudioButton(data: audioTableFormat): Instance
                             return soundID == currentSongData.songData:get().ID and "rbxassetid://6026663701" or "rbxassetid://6026663726"
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            local MainButton = Theme.MainButton.Default:get()
-                            local SubText = Theme.SubText.Default:get()
                             if loadedSongs[soundID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return soundID == currentSongData.songData:get().ID and MainButton or SubText
+                            return soundID == currentSongData.songData:get().ID and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
                             return soundID == currentSongData.songData:get().ID and "rbxassetid://6026663718" or "rbxassetid://6026663705"
@@ -339,7 +325,7 @@ end
 local function getAudioChildren(): {Instance}
     local children = {}
 
-    local assets = CURRENT_AUDIO_DATA:get()
+    local assets = FETCHED_AUDIO_DATA:get()
     local itemsPerPage = ITEMS_PER_PAGE:get()
 
     local totalAssets = #assets
