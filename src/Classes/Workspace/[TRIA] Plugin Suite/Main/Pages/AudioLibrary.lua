@@ -181,6 +181,7 @@ local function playSong(soundData: audioTableFormat)
         currentSongData.timePosition:set(0)
         currentSongData.currentAudio:set(nil)
         currentSongData.currentSoundId:set(-1)
+        Util._Slider.isUsingSlider:set(false)
     end))
 
     SoundMaid:GiveTask(currentSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
@@ -197,18 +198,20 @@ local function stopCurrentTween()
 end
 
 local function updatePlayingSound(soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.songData:get(false)
-    if not currentlyPlaying then -- No song playing
+    local currentAudioData = currentSongData.songData:get(false)
+    local currentAudio = currentSongData.currentAudio:get(false)
+
+    if not currentAudio then -- No song playing
         stopCurrentTween()
         playSong(soundData)
-    elseif currentlyPlaying.ID == soundData.ID then -- Song being paused/resumed
-        if currentSongData.currentAudio:get(false).IsPaused then
+    elseif currentAudioData.ID == soundData.ID then -- Song being paused/resumed
+        if currentAudio.IsPaused then
             resumeSong(soundData)
         else
             pauseSong(soundData)
         end
     else -- Song switched while playing
-        fadeSound(currentSongData.currentAudio:get(), "Out")
+        fadeSound(currentAudio, "Out")
         playSong(soundData)
     end
 end
