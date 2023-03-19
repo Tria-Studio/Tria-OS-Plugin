@@ -126,7 +126,7 @@ local function stopSong()
     currentSongData.currentSoundId:set(-1)
 end
 
-local function pauseSong()
+local function pauseSong(soundData: audioTableFormat)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then
         return
@@ -136,7 +136,7 @@ local function pauseSong()
     currentSongData.currentSoundId:set(-1)
 end
 
-local function resumeSong()
+local function resumeSong(soundData: audioTableFormat)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then
         return
@@ -144,6 +144,7 @@ local function resumeSong()
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
     currentSongData.currentAudio:set(currentlyPlaying, true)
+    currentSongData.currentSoundId:set(soundData.ID)
     fadeSound(currentlyPlaying, "In")
 end
 
@@ -200,9 +201,9 @@ local function updatePlayingSound(soundData: audioTableFormat)
         playSong(soundData)
     elseif currentlyPlaying.ID == soundData.ID then -- Song being paused/resumed
         if currentSongData.currentAudio:get(false).IsPaused then
-            resumeSong()
+            resumeSong(soundData)
         else
-            pauseSong()
+            pauseSong(soundData)
         end
     else -- Song switched while playing
         fadeSound(currentSongData.currentAudio:get(), "Out")
