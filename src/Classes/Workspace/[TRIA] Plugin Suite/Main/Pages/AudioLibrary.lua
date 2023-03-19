@@ -74,7 +74,6 @@ end)
 
 local CURRENT_FETCH_STATUS = Value("Fetching")
 local FETCHED_AUDIO_DATA = Value({})
-
 type audioTableFormat = {Name: string, Artist: string, ID: number}
 
 local STATUS_ERRORS = {
@@ -153,6 +152,7 @@ local function playSong(soundData: audioTableFormat)
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(true)
+        currentSongData.timeLength:set(currentSound.TimeLength)
         task.delay(1, function()
             Util.toggleAudioPerms(false)
         end)
