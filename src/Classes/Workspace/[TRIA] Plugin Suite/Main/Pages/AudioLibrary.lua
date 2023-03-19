@@ -180,6 +180,7 @@ local function playSong(soundData: audioTableFormat)
     SoundMaid:GiveTask(currentSound.Ended:Connect(function()
         currentSongData.timePosition:set(0)
         currentSongData.currentAudio:set(nil)
+        currentSongData.currentSoundId:set(-1)
     end))
 
     SoundMaid:GiveTask(currentSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
