@@ -226,9 +226,10 @@ local function AudioButton(data: audioTableFormat): Instance
         Visible = Computed(function(): boolean
             local searchedArtist = searchData.artist:get()
             local searchedName = searchData.name:get()
+            
             return 
-                if #searchedArtist > 0 then tbl.Artist:lower():find(searchedArtist:lower()) ~= nil
-                elseif #searchedName > 0 then tbl.Name:lower():find(searchedName:lower()) ~= nil
+                if searchedArtist and #searchedArtist > 0 then tbl.Artist:lower():find(searchedArtist:lower()) ~= nil
+                elseif searchedName and #searchedName > 0 then tbl.Name:lower():find(searchedName:lower()) ~= nil
                 else true
         end),
 
