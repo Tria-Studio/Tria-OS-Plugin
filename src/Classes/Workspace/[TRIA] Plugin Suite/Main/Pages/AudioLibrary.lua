@@ -84,6 +84,12 @@ local STATUS_ERRORS = {
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
 }
 
+local function escapeString(str: string): string
+	return str:gsub("[%$%%%^%*%(%)%.%[%]%+%-%?]", function(match): string
+		return "%" .. match	
+	end)
+end
+
 local function fadeSound(sound: Sound, direction: string)
     if not sound then
         return
