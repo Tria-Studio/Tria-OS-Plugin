@@ -86,12 +86,12 @@ local STATUS_ERRORS = {
 
 local PLAY_IMAGE = {
     normal = "rbxassetid://6026663726",
-    hover = "rbxassetid://6026663718"
+    hover = "rbxassetid://6026663705"
 }
 
 local PAUSE_IMAGE = {
     normal = "rbxassetid://6026663701",
-    hover = "rbxassetid://6026663705"
+    hover = "rbxassetid://6026663718"
 }
 
 local function escapeString(str: string): string
