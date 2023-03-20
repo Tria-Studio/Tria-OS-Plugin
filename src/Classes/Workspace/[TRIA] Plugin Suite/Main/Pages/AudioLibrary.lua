@@ -232,6 +232,11 @@ end
 local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
 
+    local isSongPlaying = Computed(function(): boolean
+        local currentSong = currentSongData.currentAudio:get()
+        return currentSong and currentSong == sound and currentSong.IsPlaying 
+    end)
+
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
@@ -302,16 +307,16 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return sound == currentSongData.currentAudio:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
+                            return sound == isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[data.ID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return sound == currentSongData.currentAudio:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return sound == currentSongData.currentAudio:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
+                            return isSongPlaying:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
                         end),
 
                         [OnEvent "Activated"] = function()
