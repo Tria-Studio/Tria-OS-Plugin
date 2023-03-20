@@ -199,8 +199,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         newSound:GetPropertyChangedSignal("TimeLength"):Wait()
         return newSound.TimeLength > 0
     end)
-
-    warn("LOADED:", loaded)
+    
     if newSound.IsLoaded then
         updateLoaded()
         playAudioInstance()
@@ -210,8 +209,10 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
             playAudioInstance()
         end))
     else
-        loadedSongs[newSound]:set(false)
         Util.toggleAudioPerms(false)
+        task.defer(function()
+            loadedSongs[newSound]:set(false)
+        end)
     end
 end
 
@@ -336,8 +337,10 @@ local function AudioButton(data: audioTableFormat): Instance
                         Image = Computed(function(): string
                             local isLoaded = loadedSongs[sound]:get()
                             local isPlaying = isSongPlaying:get()
-                            return if isLoaded == false then BUTTON_ICONS.Error.normal
-                                else isPlaying and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
+                            return 
+                                if isLoaded == false then BUTTON_ICONS.Error.normal
+                                elseif isPlaying then BUTTON_ICONS.Pause.normal
+                                else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if not loadedSongs[sound]:get() then
@@ -348,8 +351,10 @@ local function AudioButton(data: audioTableFormat): Instance
                         HoverImage = Computed(function(): string
                             local isLoaded = loadedSongs[sound]:get()
                             local isPlaying = isSongPlaying:get()
-                            return if isLoaded == false then BUTTON_ICONS.Error.hover
-                                else isPlaying and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
+                            return 
+                                if isLoaded == false then BUTTON_ICONS.Error.hover
+                                elseif isPlaying then BUTTON_ICONS.Pause.hover
+                                else BUTTON_ICONS.Play.hover
                         end),
 
                         [OnEvent "Activated"] = function()
