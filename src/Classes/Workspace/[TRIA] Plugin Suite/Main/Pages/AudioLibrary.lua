@@ -800,7 +800,8 @@ function frame.OnClose()
     Util.toggleAudioPerms(false)
     fetchApi()
 end
-fetchApi()
+
+task.spawn(fetchApi)
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
