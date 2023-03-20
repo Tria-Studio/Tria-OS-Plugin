@@ -307,7 +307,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return sound == isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
+                            return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[data.ID]:get() == false then
