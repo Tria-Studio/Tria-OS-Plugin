@@ -27,7 +27,6 @@ local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
 
-local UpdateIDMaid = Util.Maid.new()
 local SoundMaid = Util.Maid.new()
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
@@ -50,7 +49,6 @@ local pageData = {
 local currentSongData = {
     currentAudio = Value(nil),
     currentTween = Value(nil),
-    currentSoundId = Value(0),
 
     songData = Value({Name = "", Artist = ""}),
 
@@ -65,8 +63,8 @@ local songLoadData = {
 
 local loadedSongs = {}
 
-local currentSound
 local lastFetchTime = 0
+
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
 local ITEMS_PER_PAGE = Computed(function(): number
@@ -94,16 +92,11 @@ local PAUSE_IMAGE = {
     hover = "rbxassetid://6026663718"
 }
 
-local function escapeString(str: string): string
-	return str:gsub("[%$%%%^%*%(%)%.%[%]%+%-%?]", function(match): string
-		return "%" .. match	
-	end)
-end
-
 local function fadeSound(sound: Sound, direction: string)
     if not sound then
         return
     end
+
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
     currentSongData.currentTween:set(tween)
@@ -139,7 +132,6 @@ local function stopSong()
     fadeSound(currentlyPlaying, "Out")
     Util.toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
-    currentSongData.currentSoundId:set(-1)
 end
 
 local function pauseSong(soundData: audioTableFormat)
@@ -149,7 +141,6 @@ local function pauseSong(soundData: audioTableFormat)
     end
     currentlyPlaying:Pause()
     currentSongData.currentAudio:set(currentlyPlaying, true)
-    currentSongData.currentSoundId:set(-1)
 end
 
 local function resumeSong(soundData: audioTableFormat)
@@ -159,50 +150,55 @@ local function resumeSong(soundData: audioTableFormat)
     end
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
-    currentSongData.currentAudio:set(currentlyPlaying, true)
-    currentSongData.currentSoundId:set(soundData.ID)
+    currentSongData.currentAudio:set(currentlyPlaying)
     fadeSound(currentlyPlaying, "In")
 end
 
-local function playSong(soundData: audioTableFormat)
+local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
     Util.toggleAudioPerms(true)
-    currentSound = PlguinSoundManager:QueueSound(soundData.ID)
-    SoundMaid:GiveTask(currentSound)
-
+    newSound.SoundId = "rbxassetid://" .. soundData.ID
+    Util.toggleAudioPerms(false)
+    
     local function updateLoaded()
-        loadedSongs[soundData.ID]:set(true)
+        loadedSongs[newSound]:set(true)
         task.delay(1, function()
             Util.toggleAudioPerms(false)
         end)
     end
 
-    if currentSound.Loaded then
-        updateLoaded()
-    else
-        SoundMaid:GiveTask(currentSound.Loaded:Connect(updateLoaded))
+    local function playAudioInstance()
+        newSound.Volume = 0
+        newSound.TimePosition = 0
+        newSound:Resume()
+        fadeSound(newSound, "In")
+
+        currentSongData.timePosition:set(0)
+        currentSongData.songData:set(soundData)
+        currentSongData.currentAudio:set(newSound)
+
+        SoundMaid:GiveTask(newSound.Ended:Connect(function()
+            currentSongData.timePosition:set(0)
+            currentSongData.currentAudio:set(nil)
+            Util._Slider.isUsingSlider:set(false)
+        end))
+
+        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+        SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
+            currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+        end))
     end
 
-    currentSound.Volume = 0
-    currentSound.TimePosition = 0
-    currentSound:Resume()
-    fadeSound(currentSound, "In")
-
-    currentSongData.timePosition:set(0)
-    currentSongData.songData:set(soundData)
-    currentSongData.currentSoundId:set(soundData.ID)
-    currentSongData.currentAudio:set(currentSound)
-
-    SoundMaid:GiveTask(currentSound.Ended:Connect(function()
-        currentSongData.timePosition:set(0)
-        currentSongData.currentAudio:set(nil)
-        currentSongData.currentSoundId:set(-1)
-        Util._Slider.isUsingSlider:set(false)
-    end))
-
-    SoundMaid:GiveTask(currentSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
-        currentSongData.timeLength:set(math.max(currentSound.TimeLength, 0.1))
-    end))
+    if newSound.IsLoaded then
+        updateLoaded()
+        playAudioInstance()
+    else
+        loadedSongs[newSound]:set(false)
+        SoundMaid:GiveTask(newSound.Loaded:Connect(function()
+            updateLoaded()
+            playAudioInstance()
+        end))
+    end
 end
 
 local function stopCurrentTween()
@@ -213,22 +209,21 @@ local function stopCurrentTween()
     end
 end
 
-local function updatePlayingSound(soundData: audioTableFormat)
-    local currentAudioData = currentSongData.songData:get(false)
+local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
         stopCurrentTween()
-        playSong(soundData)
-    elseif currentAudioData.ID == soundData.ID then -- Song being paused/resumed
+        playSong(newSound, soundData)
+    elseif currentAudio == newSound then -- Song being paused/resumed
         if currentAudio.IsPaused then
             resumeSong(soundData)
         else
             pauseSong(soundData)
         end
     else -- Song switched while playing
+        playSong(newSound, soundData)
         fadeSound(currentAudio, "Out")
-        playSong(soundData)
     end
 end
 
@@ -244,7 +239,14 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
 end
 
 local function AudioButton(data: audioTableFormat): Instance
-    local soundID = data.ID
+    local sound = PlguinSoundManager:CreateSound()
+    sound.Name = data.Name
+
+    loadedSongs[sound] = Value(true)
+    local isSongPlaying = Computed(function(): boolean
+        local currentSong = currentSongData.currentAudio:get()
+        return currentSong and currentSong == sound and currentSong.IsPlaying 
+    end)
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
@@ -260,7 +262,8 @@ local function AudioButton(data: audioTableFormat): Instance
                 else true
         end),
 
-        [Cleanup] = UpdateIDMaid,
+        [Cleanup] = sound,
+
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
@@ -317,20 +320,20 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return soundID == currentSongData.currentSoundId:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
+                            return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[soundID]:get() == false then
+                            if loadedSongs[sound]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return soundID == currentSongData.currentSoundId:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return soundID == currentSongData.currentSoundId:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
+                            return isSongPlaying:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
                         end),
 
                         [OnEvent "Activated"] = function()
-                            updatePlayingSound(data)
+                            updatePlayingSound(sound, data)
                         end
                     },
                 }
@@ -362,12 +365,15 @@ local function getAudioChildren(): {Instance}
     local assetsRemaining = totalAssets
 
     if #assets == 0 then
-        return
+        return {}
     end
 
-    UpdateIDMaid:Destroy()
     songLoadData.loaded:set(0)
     songLoadData.total:set(math.max(totalAssets, 1))
+    currentSongData.currentAudio:set(nil)
+    currentSongData.currentTween:set(nil)
+    currentSongData.timePosition:set(0)
+    currentSongData.timeLength:set(0)
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -404,6 +410,7 @@ local function getAudioChildren(): {Instance}
 
     jumpToPage(1)
     pageData.total:set(totalPages)
+
     return children
 end
 
@@ -412,8 +419,6 @@ local function fetchApi()
         return;
     end
     
-    local newLoaded = {}
-
     lastFetchTime = os.clock()
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(0.5)
@@ -426,7 +431,6 @@ local function fetchApi()
         local newData = {}
 
         for key, tbl in pairs(result) do
-            newLoaded[tbl.id] = Value(nil)
             table.insert(newData, {
                 ["Name"] = tbl.name or "N/A", 
                 ["ID"] = tbl.id or 0, 
@@ -442,7 +446,7 @@ local function fetchApi()
             end
         end)
 
-        loadedSongs = newLoaded
+        loadedSongs = {}
         pageData.current:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
     end
@@ -625,7 +629,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            updatePlayingSound(currentSongData.songData:get(false))
+                            updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
                         end
                     },
 
@@ -754,6 +758,7 @@ end
 
 function frame.OnClose()
     stopSong()
+    SoundMaid:DoCleaning()
 end
 
 function frame.OnOpen()
