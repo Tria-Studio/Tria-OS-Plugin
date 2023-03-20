@@ -103,8 +103,8 @@ local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
 
     for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
         local matches = 
-            if (searchedArtist and #searchedArtist > 0) then tbl.Artist:lower():match(searchedArtist:lower()) == nil
-            elseif (searchedName and #searchedName > 0) then tbl.Name:lower():match(searchedName:lower()) == nil
+            if (searchedArtist and #searchedArtist > 0) then tbl.Artist:lower():match(searchedArtist:lower()) ~= nil
+            elseif (searchedName and #searchedName > 0) then tbl.Name:lower():match(searchedName:lower()) ~= nil
             else true
 
         if matches then
