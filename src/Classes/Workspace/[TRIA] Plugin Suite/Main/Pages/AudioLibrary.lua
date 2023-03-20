@@ -305,7 +305,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             return sound == currentSongData.currentAudio:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[soundID]:get() == false then
+                            if loadedSongs[data.ID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
                             return sound == currentSongData.currentAudio:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
