@@ -96,6 +96,7 @@ local function fadeSound(sound: Sound, direction: string)
     if not sound then
         return
     end
+
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
     currentSongData.currentTween:set(tween)
@@ -149,7 +150,7 @@ local function resumeSong(soundData: audioTableFormat)
     end
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
-    currentSongData.currentAudio:set(currentlyPlaying, true)
+    currentSongData.currentAudio:set(currentlyPlaying)
     fadeSound(currentlyPlaying, "In")
 end
 
@@ -157,7 +158,6 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
     Util.toggleAudioPerms(true)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
-    SoundMaid:GiveTask(newSound)
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(true)
@@ -217,8 +217,8 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
         end
     else -- Song switched while playing
         print("Switched")
-        fadeSound(currentAudio, "Out")
         playSong(newSound, soundData)
+        fadeSound(currentAudio, "Out")
     end
 end
 
@@ -235,6 +235,7 @@ end
 
 local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
+    sound.Name = data.Name
 
     local isSongPlaying = Computed(function(): boolean
         local currentSong = currentSongData.currentAudio:get()
