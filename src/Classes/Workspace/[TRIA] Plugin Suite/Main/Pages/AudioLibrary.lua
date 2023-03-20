@@ -197,7 +197,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         if loadedSongs[newSound]:get(false) then
             return true
         end
-        
+
         newSound.Volume = 0
         newSound.TimePosition = 0
         newSound:GetPropertyChangedSignal("TimeLength"):Wait()
@@ -794,6 +794,7 @@ end
 function frame.OnClose()
     stopSong()
     SoundMaid:DoCleaning()
+    Util.toggleAudioPerms(false)
 end
 
 function frame.OnOpen()
