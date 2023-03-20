@@ -64,7 +64,6 @@ local songLoadData = {
 
 local loadedSongs = {}
 
-local currentSound
 local lastFetchTime = 0
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
@@ -157,11 +156,11 @@ local function resumeSong(soundData: audioTableFormat)
     fadeSound(currentlyPlaying, "In")
 end
 
-local function playSong(soundData: audioTableFormat)
+local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
     Util.toggleAudioPerms(true)
-    currentSound = PlguinSoundManager:QueueSound(soundData.ID)
-    SoundMaid:GiveTask(currentSound)
+    newSound.SoundId = "rbxassetid://" .. soundData.ID
+    SoundMaid:GiveTask(newSound)
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(true)
@@ -170,31 +169,31 @@ local function playSong(soundData: audioTableFormat)
         end)
     end
 
-    if currentSound.Loaded then
+    if newSound.Loaded then
         updateLoaded()
     else
-        SoundMaid:GiveTask(currentSound.Loaded:Connect(updateLoaded))
+        SoundMaid:GiveTask(newSound.Loaded:Connect(updateLoaded))
     end
 
-    currentSound.Volume = 0
-    currentSound.TimePosition = 0
-    currentSound:Resume()
-    fadeSound(currentSound, "In")
+    newSound.Volume = 0
+    newSound.TimePosition = 0
+    newSound:Resume()
+    fadeSound(newSound, "In")
 
     currentSongData.timePosition:set(0)
     currentSongData.songData:set(soundData)
     currentSongData.currentSoundId:set(soundData.ID)
-    currentSongData.currentAudio:set(currentSound)
+    currentSongData.currentAudio:set(newSound)
 
-    SoundMaid:GiveTask(currentSound.Ended:Connect(function()
+    SoundMaid:GiveTask(newSound.Ended:Connect(function()
         currentSongData.timePosition:set(0)
         currentSongData.currentAudio:set(nil)
         currentSongData.currentSoundId:set(-1)
         Util._Slider.isUsingSlider:set(false)
     end))
 
-    SoundMaid:GiveTask(currentSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
-        currentSongData.timeLength:set(math.max(currentSound.TimeLength, 0.1))
+    SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
+        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
     end))
 end
 
@@ -206,13 +205,13 @@ local function stopCurrentTween()
     end
 end
 
-local function updatePlayingSound(soundData: audioTableFormat)
+local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudioData = currentSongData.songData:get(false)
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
         stopCurrentTween()
-        playSong(soundData)
+        playSong(newSound, soundData)
     elseif currentAudioData.ID == soundData.ID then -- Song being paused/resumed
         if currentAudio.IsPaused then
             resumeSong(soundData)
@@ -221,7 +220,7 @@ local function updatePlayingSound(soundData: audioTableFormat)
         end
     else -- Song switched while playing
         fadeSound(currentAudio, "Out")
-        playSong(soundData)
+        playSong(newSound, soundData)
     end
 end
 
@@ -239,6 +238,8 @@ end
 local function AudioButton(data: audioTableFormat): Instance
     local soundID = data.ID
 
+    local sound = PlguinSoundManager:CreateSound()
+
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
@@ -248,8 +249,8 @@ local function AudioButton(data: audioTableFormat): Instance
             local searchedName = searchData.name:get()
             
             return 
-                if searchedArtist and #searchedArtist > 0 then tbl.Artist:lower():find(searchedArtist:lower()) ~= nil
-                elseif searchedName and #searchedName > 0 then tbl.Name:lower():find(searchedName:lower()) ~= nil
+                if searchedArtist and #searchedArtist > 0 then data.Artist:lower():find(searchedArtist:lower()) ~= nil
+                elseif searchedName and #searchedName > 0 then data.Name:lower():find(searchedName:lower()) ~= nil
                 else true
         end),
 
@@ -322,7 +323,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            updatePlayingSound(data)
+                            updatePlayingSound(sound, data)
                         end
                     },
                 }
@@ -616,7 +617,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            updatePlayingSound(currentSongData.songData:get(false))
+                            updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
                         end
                     },
 
