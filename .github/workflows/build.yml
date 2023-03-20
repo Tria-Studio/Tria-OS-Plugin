@@ -17,5 +17,5 @@ jobs:
         run: rojo build --output build.rbxlx build.project.json
 
       - name: Deploy plugin
-        uses: Tria-Studio/upload-plugin@v1
+        uses: KryptonForce102/upload-plugin@v1
         
