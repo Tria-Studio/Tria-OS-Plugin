@@ -304,7 +304,12 @@ local function AudioButton(data: audioTableFormat): Instance
         Size = UDim2.new(1, 0, 0, 36),
         Visible = true,
 
-        [Cleanup] = sound,
+        [Cleanup] = {
+            function ()
+                sound:Destroy()
+                loadingSongs[sound] = nil
+            end
+        },
 
         [Children] = {
             New "TextLabel" {
