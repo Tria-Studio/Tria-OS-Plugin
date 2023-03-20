@@ -162,7 +162,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     
     local function updateLoaded()
         loadedSongs[newSound]:set(true)
-        task.delay(1, function()
+        task.delay(0.01, function()
             Util.toggleAudioPerms(false)
         end)
     end
