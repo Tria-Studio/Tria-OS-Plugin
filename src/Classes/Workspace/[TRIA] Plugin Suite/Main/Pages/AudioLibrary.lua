@@ -305,7 +305,7 @@ local function AudioButton(data: audioTableFormat): Instance
         Visible = true,
 
         [Cleanup] = {
-            function ()
+            function()
                 sound:Destroy()
                 loadingSongs[sound] = nil
             end
