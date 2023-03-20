@@ -337,6 +337,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         Image = Computed(function(): string
                             local isLoaded = loadedSongs[sound]:get()
                             local isPlaying = isSongPlaying:get()
+
                             return 
                                 if isLoaded == false then BUTTON_ICONS.Error.normal
                                 elseif isPlaying then BUTTON_ICONS.Pause.normal
