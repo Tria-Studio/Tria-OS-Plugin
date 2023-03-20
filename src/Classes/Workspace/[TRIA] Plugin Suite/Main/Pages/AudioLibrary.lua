@@ -194,12 +194,17 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     end
 
     local fired, loaded = pcall(function()
+        if loadedSongs[newSound]:get(false) then
+            return true
+        end
+        
         newSound.Volume = 0
         newSound.TimePosition = 0
         newSound:GetPropertyChangedSignal("TimeLength"):Wait()
         return newSound.TimeLength > 0
     end)
     
+    print("LOADED:", loaded)
     if newSound.IsLoaded then
         updateLoaded()
         playAudioInstance()
