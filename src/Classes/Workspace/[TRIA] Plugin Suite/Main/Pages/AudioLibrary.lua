@@ -192,7 +192,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
 
     local function updateLoaded()
-        loadedSongs[soundData.ID]:set(true)
+        loadedSongs[newSound]:set(true)
         loadingSongs[newSound]:set(false)
 
         task.delay(0.5, function()
@@ -224,7 +224,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     end
 
     local fired, loaded = pcall(function(): boolean
-        if loadedSongs[soundData.ID]:get(false) then
+        if loadedSongs[newSound]:get(false) then
             return true
         end
 
@@ -245,7 +245,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     else
         Util.toggleAudioPerms(false)
         task.defer(function()
-            loadedSongs[soundData.ID]:set(false)
+            loadedSongs[newSound]:set(false)
         end)
     end
 end
@@ -291,7 +291,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
     sound.Name = data.Name
 
-    loadedSongs[data.ID] = Value(nil)
+    loadedSongs[sound] = Value(nil)
     loadingSongs[sound] = Value(false)
 
     local isSongPlaying = Computed(function(): boolean
@@ -306,8 +306,9 @@ local function AudioButton(data: audioTableFormat): Instance
 
         [Cleanup] = {
             function()
-                sound:Destroy()
-                loadingSongs[sound] = nil
+                loadingSongs[sound]:set(false)
+                loadedSongs[sound]:set(false)
+                task.defer(sound.Destroy, sound)
             end
         },
 
@@ -367,9 +368,9 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            local isLoaded = loadedSongs[data.ID]:get()
+                            local isLoaded = loadedSongs[sound]:get()
                             local isPlaying = isSongPlaying:get()
-                            local isLoading = loadingSongs[sound]:get()
+                            local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
 
                             return 
                                 if isLoading then BUTTON_ICONS.Loading.normal
@@ -378,15 +379,15 @@ local function AudioButton(data: audioTableFormat): Instance
                                 else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == false then
+                            if loadedSongs[sound] and loadedSongs[sound]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            local isLoaded = loadedSongs[data.ID]:get()
+                            local isLoaded = loadedSongs[sound]:get()
                             local isPlaying = isSongPlaying:get()
-                            local isLoading = loadingSongs[sound]:get()
+                            local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
 
                             return
                                 if isLoading then BUTTON_ICONS.Loading.hover
@@ -396,7 +397,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[data.ID]:get(false) == false then
+                            if loadedSongs[sound]:get(false) == false then
                                 return
                             end
 
