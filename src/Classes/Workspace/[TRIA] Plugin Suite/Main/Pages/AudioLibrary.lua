@@ -203,8 +203,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         newSound:GetPropertyChangedSignal("TimeLength"):Wait()
         return newSound.TimeLength > 0
     end)
-    
-    print("LOADED:", loaded)
+
     if newSound.IsLoaded then
         updateLoaded()
         playAudioInstance()
