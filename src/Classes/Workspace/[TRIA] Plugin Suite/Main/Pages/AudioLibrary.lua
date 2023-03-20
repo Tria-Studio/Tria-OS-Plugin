@@ -204,19 +204,15 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
-        print("No song playing")
         stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentAudio == newSound then -- Song being paused/resumed
         if currentAudio.IsPaused then
-            print("Resuming")
             resumeSong(soundData)
         else
-            print("Pausing")
             pauseSong(soundData)
         end
     else -- Song switched while playing
-        print("Switched")
         playSong(newSound, soundData)
         fadeSound(currentAudio, "Out")
     end
