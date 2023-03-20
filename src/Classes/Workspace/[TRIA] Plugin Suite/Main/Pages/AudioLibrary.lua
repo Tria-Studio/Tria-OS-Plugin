@@ -159,7 +159,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     Util.toggleAudioPerms(true)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
     Util.toggleAudioPerms(false)
-    
+
     local function updateLoaded()
         loadedSongs[newSound]:set(true)
         task.delay(1, function()
@@ -195,6 +195,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     else
         loadedSongs[newSound]:set(false)
         SoundMaid:GiveTask(newSound.Loaded:Connect(function()
+            print("Playing")
             updateLoaded()
             playAudioInstance()
         end))
@@ -323,7 +324,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[sound]:get() == false then
+                            if not loadedSongs[sound]:get() then
                                 return Theme.ErrorText.Default:get()
                             end
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
@@ -333,6 +334,10 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
+                            if not loadedSongs[sound]:get(false) then
+                                return
+                            end
+
                             updatePlayingSound(sound, data)
                         end
                     },
