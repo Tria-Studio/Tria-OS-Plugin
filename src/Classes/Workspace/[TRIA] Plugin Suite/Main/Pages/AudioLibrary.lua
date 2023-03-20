@@ -802,6 +802,7 @@ function frame.OnClose()
 end
 task.spawn(fetchApi)
 
+
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if 
