@@ -755,6 +755,7 @@ end
 
 function frame.OnClose()
     stopSong()
+    SoundMaid:DoCleaning()
 end
 
 function frame.OnOpen()
