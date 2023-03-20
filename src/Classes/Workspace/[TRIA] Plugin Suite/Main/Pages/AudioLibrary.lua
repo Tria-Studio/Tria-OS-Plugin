@@ -183,15 +183,17 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
             Util._Slider.isUsingSlider:set(false)
         end))
 
+        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
         SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
             currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
         end))
     end
 
-    if newSound.Loaded then
+    if newSound.IsLoaded then
         updateLoaded()
         playAudioInstance()
     else
+        loadedSongs[soundData.ID]:set(false)
         SoundMaid:GiveTask(newSound.Loaded:Connect(function()
             updateLoaded()
             playAudioInstance()
