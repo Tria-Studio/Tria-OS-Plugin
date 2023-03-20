@@ -24,6 +24,12 @@ local Components = {
     Slider = require(script.Slider)
 }
 
+local function escapeString(str: string): string
+	return str:gsub("[%$%%%^%*%(%)%.%[%]%+%-%?]", function(match): string
+		return "%" .. match	
+	end)
+end
+
 local function getInstanceWithStrippedProperties(className: string, data: PublicTypes.Dictionary): Instance
     local props = {}
     for key, value in pairs(DefaultComponentProps[className]) do

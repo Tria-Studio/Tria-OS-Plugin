@@ -93,12 +93,6 @@ local PAUSE_IMAGE = {
     hover = "rbxassetid://6026663718"
 }
 
-local function escapeString(str: string): string
-	return str:gsub("[%$%%%^%*%(%)%.%[%]%+%-%?]", function(match): string
-		return "%" .. match	
-	end)
-end
-
 local function fadeSound(sound: Sound, direction: string)
     if not sound then
         return
