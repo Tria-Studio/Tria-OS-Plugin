@@ -41,8 +41,8 @@ local BUTTON_ICONS = {
         hover = "rbxassetid://6026663705"
     },
     Error = {
-        normal = "rbxasssetid://6031071050",
-        hover = "rbxasssetid://6031071057",
+        normal = "rbxassetid://6031071050",
+        hover = "rbxassetid://6031071057",
     },
     Loading = {
         normal = "",
@@ -347,7 +347,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             local isPlaying = isSongPlaying:get()
 
                             return 
-                                if isLoaded == false then BUTTON_ICONS.Play.normal
+                                if isLoaded == false then BUTTON_ICONS.Error.normal
                                 elseif isPlaying then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
@@ -800,8 +800,8 @@ function frame.OnClose()
     Util.toggleAudioPerms(false)
     fetchApi()
 end
-
 task.spawn(fetchApi)
+
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
