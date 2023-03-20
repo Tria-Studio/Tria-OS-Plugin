@@ -166,30 +166,37 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         end)
     end
 
-    if newSound.Loaded then
-        updateLoaded()
-    else
-        SoundMaid:GiveTask(newSound.Loaded:Connect(updateLoaded))
+    local function playAudioInstance()
+        print("Playing")
+        newSound.Volume = 0
+        newSound.TimePosition = 0
+        newSound:Resume()
+        fadeSound(newSound, "In")
+
+        currentSongData.timePosition:set(0)
+        currentSongData.songData:set(soundData)
+        currentSongData.currentAudio:set(newSound)
+
+        SoundMaid:GiveTask(newSound.Ended:Connect(function()
+            currentSongData.timePosition:set(0)
+            currentSongData.currentAudio:set(nil)
+            Util._Slider.isUsingSlider:set(false)
+        end))
+
+        SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
+            currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+        end))
     end
 
-    newSound.Volume = 0
-    newSound.TimePosition = 0
-    newSound:Resume()
-    fadeSound(newSound, "In")
-
-    currentSongData.timePosition:set(0)
-    currentSongData.songData:set(soundData)
-    currentSongData.currentAudio:set(newSound)
-
-    SoundMaid:GiveTask(newSound.Ended:Connect(function()
-        currentSongData.timePosition:set(0)
-        currentSongData.currentAudio:set(nil)
-        Util._Slider.isUsingSlider:set(false)
-    end))
-
-    SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
-        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
-    end))
+    if newSound.Loaded then
+        updateLoaded()
+        playAudioInstance()
+    else
+        SoundMaid:GiveTask(newSound.Loaded:Connect(function()
+            updateLoaded()
+            playAudioInstance()
+        end))
+    end
 end
 
 local function stopCurrentTween()
