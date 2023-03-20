@@ -27,6 +27,8 @@ local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
 
+type audioTableFormat = {Name: string, Artist: string, ID: number}
+
 local SoundMaid = Util.Maid.new()
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
@@ -91,8 +93,27 @@ local ITEMS_PER_PAGE = Computed(function(): number
 end)
 
 local CURRENT_FETCH_STATUS = Value("Fetching")
+
 local FETCHED_AUDIO_DATA = Value({})
-type audioTableFormat = {Name: string, Artist: string, ID: number}
+local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
+    local newData = {}
+
+    local searchedArtist = searchData.artist:get() or ""
+    local searchedName = searchData.name:get() or ""
+
+    for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
+        local matches = 
+            if (searchedArtist and #searchedArtist > 0) then tbl.Artist:lower():match(searchedArtist:lower()) == nil
+            elseif (searchedName and #searchedName > 0) then tbl.Name:lower():match(searchedName:lower()) == nil
+            else true
+
+        if matches then
+            table.insert(newData, tbl)
+        end
+    end
+
+    return newData
+end)
 
 local STATUS_ERRORS = {
     ["Fetching"] = "Currently fetching the latest audio...",
@@ -274,16 +295,7 @@ local function AudioButton(data: audioTableFormat): Instance
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
-
-        Visible = Computed(function(): boolean
-            local searchedArtist = searchData.artist:get()
-            local searchedName = searchData.name:get()
-
-            return 
-                if (searchedArtist and #searchedArtist > 0) then data.Artist:lower():match(searchedArtist:lower()) ~= nil
-                elseif (searchedName and #searchedName > 0) then data.Name:lower():match(searchedName:lower()) ~= nil
-                else true
-        end),
+        Visible = true,
 
         [Cleanup] = sound,
 
@@ -394,7 +406,7 @@ end
 local function getAudioChildren(): {Instance}
     local children = {}
 
-    local assets = FETCHED_AUDIO_DATA:get()
+    local assets = FILTERED_AUDIO_DATA:get()
     local itemsPerPage = ITEMS_PER_PAGE:get()
 
     local totalAssets = #assets
