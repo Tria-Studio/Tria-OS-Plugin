@@ -27,7 +27,6 @@ local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
 
-local UpdateIDMaid = Util.Maid.new()
 local SoundMaid = Util.Maid.new()
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
@@ -260,7 +259,6 @@ local function AudioButton(data: audioTableFormat): Instance
                 else true
         end),
 
-        [Cleanup] = UpdateIDMaid,
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
@@ -365,7 +363,6 @@ local function getAudioChildren(): {Instance}
         return
     end
 
-    UpdateIDMaid:Destroy()
     songLoadData.loaded:set(0)
     songLoadData.total:set(math.max(totalAssets, 1))
 
