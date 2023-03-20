@@ -262,7 +262,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
     sound.Name = data.Name
 
-    loadedSongs[sound] = Value(true)
+    loadedSongs[sound] = Value(nil)
     local isSongPlaying = Computed(function(): boolean
         local currentSong = currentSongData.currentAudio:get()
         return currentSong and currentSong == sound and currentSong.IsPlaying 
@@ -349,7 +349,7 @@ local function AudioButton(data: audioTableFormat): Instance
                                 else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if not loadedSongs[sound]:get() then
+                            if loadedSongs[sound]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
@@ -364,7 +364,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if not loadedSongs[sound]:get(false) then
+                            if loadedSongs[sound]:get(false) == false then
                                 return
                             end
 
