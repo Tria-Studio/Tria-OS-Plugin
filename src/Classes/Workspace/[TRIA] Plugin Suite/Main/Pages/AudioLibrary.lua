@@ -339,7 +339,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             local isPlaying = isSongPlaying:get()
 
                             return 
-                                if isLoaded == false then BUTTON_ICONS.Error.normal
+                                if isLoaded == false then BUTTON_ICONS.Play.normal
                                 elseif isPlaying then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
