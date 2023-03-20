@@ -3,11 +3,11 @@ on: [workflow_dispatch]
 
 jobs:
 	ci:
-		runs-on: ubuntu-latest
-		steps:
-		  - uses: actions/checkout@v3
-		  - uses: ok-nick/setup-aftman@v0
+	  runs-on: ubuntu-latest
+	  steps:
+		- uses: actions/checkout@v3
+		- uses: ok-nick/setup-aftman@v0
 
-		  - name: Build
-      		run: rojo build --output plugin.rbxlx build.project.json
+		- name: Build
+			run: rojo build --output plugin.rbxlx build.project.json
 	
