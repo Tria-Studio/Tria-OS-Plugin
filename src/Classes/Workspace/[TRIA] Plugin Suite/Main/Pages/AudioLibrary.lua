@@ -193,15 +193,25 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         end))
     end
 
+    local fired, loaded = pcall(function()
+        newSound.Volume = 0
+        newSound.TimePosition = 0
+        newSound:GetPropertyChangedSignal("TimeLength"):Wait()
+        return newSound.TimeLength > 0
+    end)
+
+    warn("LOADED:", loaded)
     if newSound.IsLoaded then
         updateLoaded()
         playAudioInstance()
-    else
-        loadedSongs[newSound]:set(false)
+    elseif loaded then
         SoundMaid:GiveTask(newSound.Loaded:Connect(function()
             updateLoaded()
             playAudioInstance()
         end))
+    else
+        loadedSongs[newSound]:set(false)
+        Util.toggleAudioPerms(false)
     end
 end
 
