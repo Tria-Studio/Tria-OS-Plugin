@@ -794,11 +794,9 @@ function frame.OnClose()
     stopSong()
     SoundMaid:DoCleaning()
     Util.toggleAudioPerms(false)
-end
-
-function frame.OnOpen()
     fetchApi()
 end
+fetchApi()
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
