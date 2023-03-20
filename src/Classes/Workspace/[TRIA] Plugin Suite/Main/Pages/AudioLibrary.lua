@@ -49,7 +49,6 @@ local pageData = {
 local currentSongData = {
     currentAudio = Value(nil),
     currentTween = Value(nil),
-    currentSoundId = Value(0),
 
     songData = Value({Name = "", Artist = ""}),
 
@@ -131,7 +130,6 @@ local function stopSong()
     fadeSound(currentlyPlaying, "Out")
     Util.toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
-    currentSongData.currentSoundId:set(-1)
 end
 
 local function pauseSong(soundData: audioTableFormat)
@@ -141,7 +139,6 @@ local function pauseSong(soundData: audioTableFormat)
     end
     currentlyPlaying:Pause()
     currentSongData.currentAudio:set(currentlyPlaying, true)
-    currentSongData.currentSoundId:set(-1)
 end
 
 local function resumeSong(soundData: audioTableFormat)
@@ -152,7 +149,6 @@ local function resumeSong(soundData: audioTableFormat)
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
     currentSongData.currentAudio:set(currentlyPlaying, true)
-    currentSongData.currentSoundId:set(soundData.ID)
     fadeSound(currentlyPlaying, "In")
 end
 
@@ -182,13 +178,11 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 
     currentSongData.timePosition:set(0)
     currentSongData.songData:set(soundData)
-    currentSongData.currentSoundId:set(soundData.ID)
     currentSongData.currentAudio:set(newSound)
 
     SoundMaid:GiveTask(newSound.Ended:Connect(function()
         currentSongData.timePosition:set(0)
         currentSongData.currentAudio:set(nil)
-        currentSongData.currentSoundId:set(-1)
         Util._Slider.isUsingSlider:set(false)
     end))
 
@@ -236,8 +230,6 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
 end
 
 local function AudioButton(data: audioTableFormat): Instance
-    local soundID = data.ID
-
     local sound = PlguinSoundManager:CreateSound()
 
     return New "Frame" {
@@ -310,16 +302,16 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return soundID == currentSongData.currentSoundId:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
+                            return sound == currentSongData.currentAudio:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[soundID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
-                            return soundID == currentSongData.currentSoundId:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return sound == currentSongData.currentAudio:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return soundID == currentSongData.currentSoundId:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
+                            return sound == currentSongData.currentAudio:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
                         end),
 
                         [OnEvent "Activated"] = function()
