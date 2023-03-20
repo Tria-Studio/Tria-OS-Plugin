@@ -24,12 +24,6 @@ local Components = {
     Slider = require(script.Slider)
 }
 
-local function escapeString(str: string): string
-	return str:gsub("[%$%%%^%*%(%)%.%[%]%+%-%?]", function(match): string
-		return "%" .. match	
-	end)
-end
-
 local function getInstanceWithStrippedProperties(className: string, data: PublicTypes.Dictionary): Instance
     local props = {}
     for key, value in pairs(DefaultComponentProps[className]) do
@@ -569,9 +563,7 @@ function Components.SearchBox(data: PublicTypes.Dictionary): Instance
         BorderMode = Enum.BorderMode.Inset,
         BorderSizePixel = 2,
 
-        [OnChange "Text"] = function(newText: string)
-            data.State:set(escapeString(newText))
-        end,
+        [Out "Text"] = data.State,
 
         [Children] = {
             Components.Constraints.UIPadding(nil, nil, nil, UDim.new(0, 30)),
