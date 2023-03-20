@@ -161,7 +161,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 
     local function updateLoaded()
         print("Updating loaded")
-        loadedSongs[soundData.ID]:set(true)
+        loadedSongs[newSound]:set(true)
         task.delay(1, function()
             Util.toggleAudioPerms(false)
         end)
@@ -193,7 +193,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         updateLoaded()
         playAudioInstance()
     else
-        loadedSongs[soundData.ID]:set(false)
+        loadedSongs[newSound]:set(false)
         SoundMaid:GiveTask(newSound.Loaded:Connect(function()
             updateLoaded()
             playAudioInstance()
@@ -242,6 +242,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
     sound.Name = data.Name
 
+    loadedSongs[sound] = Value(false)
     local isSongPlaying = Computed(function(): boolean
         local currentSong = currentSongData.currentAudio:get()
         return currentSong and currentSong == sound and currentSong.IsPlaying 
@@ -322,7 +323,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[data.ID]:get() == false then
+                            if loadedSongs[sound]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
@@ -418,8 +419,6 @@ local function fetchApi()
         return;
     end
     
-    local newLoaded = {}
-
     lastFetchTime = os.clock()
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(0.5)
@@ -432,7 +431,6 @@ local function fetchApi()
         local newData = {}
 
         for key, tbl in pairs(result) do
-            newLoaded[tbl.id] = Value(nil)
             table.insert(newData, {
                 ["Name"] = tbl.name or "N/A", 
                 ["ID"] = tbl.id or 0, 
@@ -448,7 +446,7 @@ local function fetchApi()
             end
         end)
 
-        loadedSongs = newLoaded
+        loadedSongs = {}
         pageData.current:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
     end
