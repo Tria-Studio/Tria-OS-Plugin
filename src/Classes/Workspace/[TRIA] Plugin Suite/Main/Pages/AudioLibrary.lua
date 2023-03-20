@@ -31,6 +31,21 @@ local SoundMaid = Util.Maid.new()
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
+local BUTTON_ICONS = {
+    Pause = {
+        normal = "rbxassetid://6026663701",
+        hover = "rbxassetid://6026663718"
+    },
+    Play = {
+        normal = "rbxassetid://6026663726",
+        hover = "rbxassetid://6026663705"
+    },
+    Error = {
+        normal = "rbxasssetid://6031071050",
+        hover = "rbxasssetid://6031071057",
+    }
+}
+
 local frame = {}
 
 local frameAbsoluteSize = Value()
@@ -80,16 +95,6 @@ local STATUS_ERRORS = {
     ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plugin Settings\" tab.",
     ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
-}
-
-local PLAY_IMAGE = {
-    normal = "rbxassetid://6026663726",
-    hover = "rbxassetid://6026663705"
-}
-
-local PAUSE_IMAGE = {
-    normal = "rbxassetid://6026663701",
-    hover = "rbxassetid://6026663718"
 }
 
 local function fadeSound(sound: Sound, direction: string)
@@ -320,7 +325,10 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
+                            local isLoaded = loadedSongs[sound]:get()
+                            local isPlaying = isSongPlaying:get()
+                            return if isLoaded == false then BUTTON_ICONS.Error.normal
+                                else isPlaying and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[sound]:get() == false then
@@ -329,7 +337,10 @@ local function AudioButton(data: audioTableFormat): Instance
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return isSongPlaying:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
+                            local isLoaded = loadedSongs[sound]:get()
+                            local isPlaying = isSongPlaying:get()
+                            return if isLoaded == false then BUTTON_ICONS.Error.hover
+                                else isPlaying and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
                         end),
 
                         [OnEvent "Activated"] = function()
@@ -619,13 +630,13 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = UDim2.fromScale(0.4, 0.3),
                         Size = UDim2.fromScale(0.5, 0.5),
                         Image = Computed(function(): string
-                            return isSongPlaying:get() and PAUSE_IMAGE.normal or PLAY_IMAGE.normal
+                            return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            return isSongPlaying:get() and PAUSE_IMAGE.hover or PLAY_IMAGE.hover
+                            return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
                         end),
 
                         [OnEvent "Activated"] = function()
