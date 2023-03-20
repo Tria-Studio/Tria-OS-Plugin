@@ -180,7 +180,7 @@ local function resumeSong(soundData: audioTableFormat)
     end
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
-    currentSongData.currentAudio:set(currentlyPlaying)
+    currentSongData.currentAudio:set(currentlyPlaying, true)
     fadeSound(currentlyPlaying, "In")
 end
 
