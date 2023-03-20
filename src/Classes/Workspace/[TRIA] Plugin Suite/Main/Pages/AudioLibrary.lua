@@ -199,7 +199,6 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     else
         loadedSongs[newSound]:set(false)
         SoundMaid:GiveTask(newSound.Loaded:Connect(function()
-            print("Playing")
             updateLoaded()
             playAudioInstance()
         end))
