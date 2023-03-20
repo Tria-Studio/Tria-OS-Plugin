@@ -160,6 +160,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
 
     local function updateLoaded()
+        print("Updating loaded")
         loadedSongs[soundData.ID]:set(true)
         task.delay(1, function()
             Util.toggleAudioPerms(false)
@@ -167,7 +168,6 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     end
 
     local function playAudioInstance()
-        print("Playing")
         newSound.Volume = 0
         newSound.TimePosition = 0
         newSound:Resume()
