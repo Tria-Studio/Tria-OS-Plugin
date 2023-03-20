@@ -83,6 +83,7 @@ local songLoadData = {
 }
 
 local loadedSongs = {}
+local loadingSongs = {}
 
 local lastFetchTime = 0
 
@@ -187,10 +188,13 @@ end
 local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
     Util.toggleAudioPerms(true)
+    loadingSongs[newSound]:set(false)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(true)
+        loadingSongs[newSound]:set(true)
+
         task.delay(0.5, function()
             Util.toggleAudioPerms(false)
         end)
@@ -202,6 +206,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         newSound:Resume()
         fadeSound(newSound, "In")
 
+        loadingSongs[newSound]:set(false)
         currentSongData.timePosition:set(0)
         currentSongData.songData:set(soundData)
         currentSongData.currentAudio:set(newSound)
@@ -287,6 +292,7 @@ local function AudioButton(data: audioTableFormat): Instance
     sound.Name = data.Name
 
     loadedSongs[data.ID] = Value(nil)
+    loadingSongs[sound] = Value(false)
 
     local isSongPlaying = Computed(function(): boolean
         local currentSong = currentSongData.currentAudio:get()
