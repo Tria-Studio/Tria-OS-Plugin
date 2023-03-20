@@ -369,9 +369,11 @@ local function AudioButton(data: audioTableFormat): Instance
                         Image = Computed(function(): string
                             local isLoaded = loadedSongs[data.ID]:get()
                             local isPlaying = isSongPlaying:get()
+                            local isLoading = loadingSongs[sound]:get()
 
                             return 
-                                if isLoaded == false then BUTTON_ICONS.Error.normal
+                                if isLoading then BUTTON_ICONS.Loading.normal
+                                elseif isLoaded == false then BUTTON_ICONS.Error.normal
                                 elseif isPlaying then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
@@ -384,8 +386,11 @@ local function AudioButton(data: audioTableFormat): Instance
                         HoverImage = Computed(function(): string
                             local isLoaded = loadedSongs[data.ID]:get()
                             local isPlaying = isSongPlaying:get()
-                            return 
-                                if isLoaded == false then BUTTON_ICONS.Error.hover
+                            local isLoading = loadingSongs[sound]:get()
+
+                            return
+                                if isLoading then BUTTON_ICONS.Loading.hover
+                                elseif isLoaded == false then BUTTON_ICONS.Error.hover
                                 elseif isPlaying then BUTTON_ICONS.Pause.hover
                                 else BUTTON_ICONS.Play.hover
                         end),
