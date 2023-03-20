@@ -160,7 +160,6 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
 
     local function updateLoaded()
-        print("Updating loaded")
         loadedSongs[newSound]:set(true)
         task.delay(1, function()
             Util.toggleAudioPerms(false)
@@ -242,7 +241,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
     sound.Name = data.Name
 
-    loadedSongs[sound] = Value(false)
+    loadedSongs[sound] = Value(true)
     local isSongPlaying = Computed(function(): boolean
         local currentSong = currentSongData.currentAudio:get()
         return currentSong and currentSong == sound and currentSong.IsPlaying 
