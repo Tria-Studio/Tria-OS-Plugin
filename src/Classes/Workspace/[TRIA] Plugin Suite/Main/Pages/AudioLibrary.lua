@@ -158,7 +158,8 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
     Util.toggleAudioPerms(true)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
-
+    Util.toggleAudioPerms(false)
+    
     local function updateLoaded()
         loadedSongs[newSound]:set(true)
         task.delay(1, function()
