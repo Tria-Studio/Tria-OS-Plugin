@@ -64,8 +64,6 @@ local songLoadData = {
 local loadedSongs = {}
 
 local lastFetchTime = 0
-local lastItemsPerPage = 0
-local audioChildrenCache = {}
 
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
@@ -360,17 +358,12 @@ local function getAudioChildren(): {Instance}
         return {}
     end
 
-    if itemsPerPage == lastItemsPerPage then
-        return audioChildrenCache
-    end
-
     songLoadData.loaded:set(0)
     songLoadData.total:set(math.max(totalAssets, 1))
     currentSongData.currentAudio:set(nil)
     currentSongData.currentTween:set(nil)
     currentSongData.timePosition:set(0)
     currentSongData.timeLength:set(0)
-    lastItemsPerPage = itemsPerPage
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
@@ -407,7 +400,6 @@ local function getAudioChildren(): {Instance}
 
     jumpToPage(1)
     pageData.total:set(totalPages)
-    audioChildrenCache = children
 
     return children
 end
