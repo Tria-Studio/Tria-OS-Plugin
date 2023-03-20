@@ -43,6 +43,10 @@ local BUTTON_ICONS = {
     Error = {
         normal = "rbxasssetid://6031071050",
         hover = "rbxasssetid://6031071057",
+    },
+    Loading = {
+        normal = "",
+        hover = ""
     }
 }
 
