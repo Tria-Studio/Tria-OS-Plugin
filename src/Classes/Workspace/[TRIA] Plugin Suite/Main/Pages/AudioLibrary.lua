@@ -218,7 +218,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         end))
     end
 
-    local fired, loaded = pcall(function()
+    local fired, loaded = pcall(function(): boolean
         if loadedSongs[soundData.ID]:get(false) then
             return true
         end
