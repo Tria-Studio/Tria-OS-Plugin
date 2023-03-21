@@ -1,5 +1,5 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
-local ContentProvider = game:GetService("ContentProvider")
+local LogService = game:GetService("LogService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
@@ -161,7 +161,6 @@ local function stopSong()
         return
     end
     fadeSound(currentlyPlaying, "Out")
-    Util.toggleAudioPerms(false)
     currentSongData.currentAudio:set(nil)
 end
 
@@ -187,16 +186,20 @@ end
 
 local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
-    Util.toggleAudioPerms(true)
+    if loadedSongs[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
+        Util.toggleAudioPerms(true)
+    end
     loadingSongs[newSound]:set(true)
     newSound.SoundId = "rbxassetid://" .. soundData.ID
 
     local function updateLoaded()
-        loadedSongs[newSound]:set(true)
+        loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.True)
         loadingSongs[newSound]:set(false)
 
-        task.delay(0.5, function()
-            Util.toggleAudioPerms(false)
+        task.delay(.01, function()
+            if soundData.ID == currentSongData.songData:get().ID then
+                Util.toggleAudioPerms(false)
+            end
         end)
     end
 
@@ -223,29 +226,48 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         end))
     end
 
-    local fired, loaded = pcall(function(): boolean
-        if loadedSongs[newSound]:get(false) then
-            return true
+    local audioLoaded = Util.Signal.new()
+    SoundMaid:GiveTask(audioLoaded)
+    local isLoaded = false
+
+    SoundMaid:GiveTask(LogService.MessageOut:Connect(function(message, type)
+        if type == Enum.MessageType.MessageError and string.find(message, soundData.ID, 1, true) then
+            audioLoaded:Fire()
+        end
+    end))
+    
+    task.spawn(function()
+        if loadedSongs[soundData.ID]:get(false) == Enum.TriStateBoolean.True then
+            isLoaded = true
+            audioLoaded:Fire()
+            return
         end
 
         newSound.Volume = 0
         newSound.TimePosition = 0
         newSound:GetPropertyChangedSignal("TimeLength"):Wait()
-        return newSound.TimeLength > 0
+
+        if newSound.TimeLength > 0 then
+            isLoaded = true
+        end
+        audioLoaded:Fire()
     end)
+
+    audioLoaded:Wait()
 
     if newSound.IsLoaded then
         updateLoaded()
         playAudioInstance()
-    elseif loaded then
+    elseif isLoaded then
         SoundMaid:GiveTask(newSound.Loaded:Connect(function()
             updateLoaded()
             playAudioInstance()
         end))
     else
-        Util.toggleAudioPerms(false)
         task.defer(function()
-            loadedSongs[newSound]:set(false)
+            loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
+            loadingSongs[newSound]:set(false)
+            task.delay(.01, Util.toggleAudioPerms)
         end)
     end
 end
@@ -262,6 +284,7 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
+        print"Playing new song"
         stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentAudio == newSound then -- Song being paused/resumed
@@ -271,6 +294,7 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
             pauseSong(soundData)
         end
     else -- Song switched while playing
+        print"Switching songs"
         playSong(newSound, soundData)
         fadeSound(currentAudio, "Out")
     end
@@ -291,7 +315,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
     sound.Name = data.Name
 
-    loadedSongs[sound] = Value(nil)
+    loadedSongs[data.ID] = Value(Enum.TriStateBoolean.Unknown)
     loadingSongs[sound] = Value(false)
 
     local isSongPlaying = Computed(function(): boolean
@@ -307,7 +331,7 @@ local function AudioButton(data: audioTableFormat): Instance
         [Cleanup] = {
             function()
                 loadingSongs[sound]:set(false)
-                loadedSongs[sound]:set(false)
+                -- loadedSongs[data.ID]:set(Enum.TriStateBoolean.False)
                 task.defer(sound.Destroy, sound)
             end
         },
@@ -368,36 +392,39 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            local isLoaded = loadedSongs[sound]:get()
+                            local isLoaded = loadedSongs[data.ID]:get()
                             local isPlaying = isSongPlaying:get()
                             local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
 
+                            if data.Name == "Invaders" then
+                                print(isLoaded, isLoading, isPlaying)
+                            end
                             return 
                                 if isLoading then BUTTON_ICONS.Loading.normal
-                                elseif isLoaded == false then BUTTON_ICONS.Error.normal
+                                elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.normal
                                 elseif isPlaying then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[sound] and loadedSongs[sound]:get() == false then
+                            if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
                                 return Theme.ErrorText.Default:get()
                             end
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            local isLoaded = loadedSongs[sound]:get()
+                            local isLoaded = loadedSongs[data.ID]:get()
                             local isPlaying = isSongPlaying:get()
                             local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
 
                             return
                                 if isLoading then BUTTON_ICONS.Loading.hover
-                                elseif isLoaded == false then BUTTON_ICONS.Error.hover
+                                elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.hover
                                 elseif isPlaying then BUTTON_ICONS.Pause.hover
                                 else BUTTON_ICONS.Play.hover
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[sound]:get(false) == false then
+                            if loadedSongs[data.ID]:get(false) == Enum.TriStateBoolean.False then
                                 return
                             end
 
@@ -698,7 +725,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [OnEvent "Activated"] = function()
                             local songData = currentSongData.songData:get(false)
-                            if loadedSongs[songData.ID]:get(false) == false then
+                            if loadedSongs[songData.ID]:get(false) == Enum.TriStateBoolean.False then
                                 return
                             end
                             updatePlayingSound(currentSongData.currentAudio:get(false), songData)
@@ -831,7 +858,9 @@ end
 function frame.OnClose()
     stopSong()
     SoundMaid:DoCleaning()
-    Util.toggleAudioPerms(false)
+    if currentSongData.currentAudio:get() and loadingSongs[currentSongData.currentAudio:get()]:get() then
+        Util.toggleAudioPerms(false)
+    end
     fetchApi()
 end
 task.spawn(fetchApi)
