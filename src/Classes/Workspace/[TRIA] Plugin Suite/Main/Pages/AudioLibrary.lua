@@ -47,8 +47,8 @@ local BUTTON_ICONS = {
         hover = "rbxassetid://6031071057",
     },
     Loading = {
-        normal = "rbxassetid://12853387225",
-        hover = "rbxassetid://12853387151"
+        normal = "",--"rbxassetid://12853387225",
+        hover = "",--"rbxassetid://12853387151"
     }
 }
 
