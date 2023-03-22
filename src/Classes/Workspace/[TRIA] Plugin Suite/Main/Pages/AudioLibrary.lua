@@ -188,7 +188,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         Util.toggleAudioPerms(true)
     end
     isLoading:set(true)
-    loadingSongs[newSound]:set(true)
+    loadingSongs[soundData.ID]:set(true)
     
     newSound.SoundId = ""
     task.wait()
@@ -196,13 +196,13 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.True)
-        loadingSongs[newSound]:set(false)
+        loadingSongs[soundData.ID]:set(false)
 
         print(loadedSongs[soundData.ID])
         task.defer(function()
             if soundData.ID == currentSongData.songData:get().ID then
                 Util.toggleAudioPerms(false)
-                task.wait(1)
+                task.wait(1.5)
                 isLoading:set(false)
             end
         end)
@@ -218,7 +218,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         newSound:Resume()
         fadeSound(newSound, "In")
 
-        loadingSongs[newSound]:set(false)
+        loadingSongs[soundData.ID]:set(false)
         currentSongData.timePosition:set(0)
         currentSongData.songData:set(soundData)
         currentSongData.currentAudio:set(newSound)
@@ -243,6 +243,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         return
     end
 
+    local loaded = false
     ContentProvider:PreloadAsync({newSound}, function(assetId, FetchStatus)
         if currentLoadSession ~= currentId then
             return
@@ -254,15 +255,29 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
             task.defer(function()
                 updateLoaded()
                 playAudioInstance()
+                loaded = true
             end)
         else
             task.defer(function()
+                currentLoadSession += 1
                 loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
-                loadingSongs[newSound]:set(false)
+                loadingSongs[soundData.ID]:set(false)
                 task.delay(.01, Util.toggleAudioPerms)
-                task.wait(1)
+                task.wait(1.5)
                 isLoading:set(false)
+                loaded = true
             end)
+        end
+    end)
+
+    task.delay(5, function()
+        if not loaded then
+            currentLoadSession += 1
+            loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
+            loadingSongs[soundData.ID]:set(false)
+            task.delay(.01, Util.toggleAudioPerms)
+            task.wait()
+            isLoading:set(false)
         end
     end)
 end
@@ -313,7 +328,7 @@ local function AudioButton(data: audioTableFormat): Instance
     sound.Name = data.Name
 
     loadedSongs[data.ID] = Value(Enum.TriStateBoolean.Unknown)
-    loadingSongs[sound] = Value(false)
+    loadingSongs[data.ID] = Value(false)
 
     local isSongPlaying = Computed(function(): boolean
         local currentSong = currentSongData.currentAudio:get()
@@ -327,7 +342,7 @@ local function AudioButton(data: audioTableFormat): Instance
 
         [Cleanup] = {
             function()
-                loadingSongs[sound]:set(false)
+                loadingSongs[data.ID]:set(false)
                 task.defer(sound.Destroy, sound)
             end
         },
@@ -390,7 +405,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         Image = Computed(function(): string
                             local isLoaded = loadedSongs[data.ID]:get()
                             local isPlaying = isSongPlaying:get()
-                            local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
+                            local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
 
                             return 
                                 if isLoading then BUTTON_ICONS.Loading.normal
@@ -407,7 +422,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         HoverImage = Computed(function(): string
                             local isLoaded = loadedSongs[data.ID]:get()
                             local isPlaying = isSongPlaying:get()
-                            local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
+                            local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
 
                             return
                                 if isLoading then BUTTON_ICONS.Loading.hover
@@ -417,10 +432,6 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[data.ID]:get(false) == Enum.TriStateBoolean.False then
-                                return
-                            end
-
                             updatePlayingSound(sound, data)
                         end
                     },
@@ -715,11 +726,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            local songData = currentSongData.songData:get(false)
-                            if loadedSongs[songData.ID]:get(false) == Enum.TriStateBoolean.False then
-                                return
-                            end
-                            updatePlayingSound(currentSongData.currentAudio:get(false), songData)
+                            updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
                         end
                     },
 
