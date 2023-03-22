@@ -54,6 +54,7 @@ local BUTTON_ICONS = {
 
 local frame = {}
 
+local songPlayingUpdate = Value(0)
 local frameAbsoluteSize = Value()
 local pageLayout = Value()
 
@@ -125,8 +126,6 @@ local function fadeSound(sound: Sound, direction: string)
         return
     end
 
-    print"asd"
-
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
     currentSongData.currentTween:set(tween)
@@ -178,7 +177,9 @@ local function resumeSong(soundData: audioTableFormat)
         return
     end
     currentlyPlaying.Volume = 0
-    currentSongData.currentAudio:set(currentlyPlaying, true)
+    currentSongData.currentAudio:set(currentlyPlaying)
+    currentlyPlaying:Resume()
+    songPlayingUpdate:set(songPlayingUpdate:get() + 1)
     fadeSound(currentlyPlaying, "In")
 end
 
@@ -292,25 +293,24 @@ local function stopCurrentTween()
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
+    if isLoading:get() then
+        return
+    end
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
-        if isLoading:get() then
-            return
-        end
         stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentAudio == newSound then -- Song being paused/resumed
-        print(currentAudio.IsPaused)    
+        isLoading:set(true)
         if currentAudio.IsPaused then
             resumeSong(soundData)
         else
             pauseSong(soundData)
         end
+        task.wait(1)
+        isLoading:set(false)
     else -- Song switched while playing
-        if isLoading:get() then
-            return
-        end
         fadeSound(currentAudio, "Out")
         task.wait()
         playSong(newSound, soundData)
@@ -336,6 +336,7 @@ local function AudioButton(data: audioTableFormat): Instance
     loadingSongs[data.ID] = Value(false)
 
     local isSongPlaying = Computed(function(): boolean
+        songPlayingUpdate:get()
         local currentSong = currentSongData.currentAudio:get()
         return currentSong and currentSong == sound and currentSong.IsPlaying 
     end)
@@ -560,6 +561,7 @@ end
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local textboxObject = Value()
     local isSongPlaying = Computed(function(): boolean
+        songPlayingUpdate:get()
         local currentSong = currentSongData.currentAudio:get()
         return currentSong and currentSong.IsPlaying 
     end)
