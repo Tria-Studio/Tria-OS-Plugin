@@ -125,6 +125,8 @@ local function fadeSound(sound: Sound, direction: string)
         return
     end
 
+    print"asd"
+
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
     currentSongData.currentTween:set(tween)
@@ -198,11 +200,10 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.True)
         loadingSongs[soundData.ID]:set(false)
 
-        print(loadedSongs[soundData.ID])
         task.defer(function()
             if soundData.ID == currentSongData.songData:get().ID then
-                Util.toggleAudioPerms(false)
-                task.wait(1.5)
+                Util.toggleAudioPerms(nil)
+                task.wait(2)
                 isLoading:set(false)
             end
         end)
@@ -249,7 +250,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
             currentLoadSession += 1
             loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
             loadingSongs[soundData.ID]:set(false)
-            task.delay(.01, Util.toggleAudioPerms)
+            task.defer(Util.toggleAudioPerms)
             task.wait()
             isLoading:set(false)
         end
@@ -273,8 +274,8 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
                 currentLoadSession += 1
                 loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
                 loadingSongs[soundData.ID]:set(false)
-                task.delay(.01, Util.toggleAudioPerms)
-                task.wait(1.5)
+                task.defer(Util.toggleAudioPerms)
+                task.wait(2)
                 isLoading:set(false)
                 loaded = true
             end)
@@ -291,21 +292,25 @@ local function stopCurrentTween()
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
-    if isLoading:get() then
-        return
-    end
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
+        if isLoading:get() then
+            return
+        end
         stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentAudio == newSound then -- Song being paused/resumed
+        print(currentAudio.IsPaused)    
         if currentAudio.IsPaused then
             resumeSong(soundData)
         else
             pauseSong(soundData)
         end
     else -- Song switched while playing
+        if isLoading:get() then
+            return
+        end
         fadeSound(currentAudio, "Out")
         task.wait()
         playSong(newSound, soundData)
@@ -432,6 +437,9 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
+                            if loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
+                                return
+                            end
                             updatePlayingSound(sound, data)
                         end
                     },
@@ -726,6 +734,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
+                            if loadedSongs[currentSongData.songData:get().ID]:get() == Enum.TriStateBoolean.False then
+                                return
+                            end
                             updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
                         end
                     },
@@ -856,8 +867,8 @@ end
 function frame.OnClose()
     stopSong()
     SoundMaid:DoCleaning()
-    if currentSongData.currentAudio:get() and loadingSongs[currentSongData.currentAudio:get()]:get() then
-        Util.toggleAudioPerms(false)
+    if currentSongData.currentAudio:get() and loadingSongs[currentSongData.currentAudio:get()]:get() or isLoading:get() then
+        task.defer(Util.toggleAudioPerms)
     end
     fetchApi()
 end

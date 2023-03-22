@@ -41,7 +41,7 @@ local ForPairs = Fusion.ForPairs
 local Value = Fusion.Value
 local Out = Fusion.Out
 
-widget.Title = "TRIA.os Mapmaker"
+widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = widget
 Util.attemptScriptInjection()
 
@@ -312,7 +312,7 @@ if not MapSelect:AutoSelect() then
 end
 
 plugin.Unloading:Connect(function()
-	Util.toggleAudioPerms(false)
+	Util.toggleAudioPerms(nil)
 	Util.PluginActive:set(false)
     MapSelect._Maid:DoCleaning()
     Util.MainMaid:DoCleaning()

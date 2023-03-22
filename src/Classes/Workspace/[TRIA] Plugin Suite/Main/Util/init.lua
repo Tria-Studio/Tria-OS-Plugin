@@ -385,11 +385,13 @@ function Util.getRollingAverage(data: {number}, backCount: number): number
 end
 
 function Util.toggleAudioPerms(enabled: boolean)
-    warn("Updating universe id (" .. tostring(enabled) .. "),", enabled and 2330396164 or oldUniverseId)
-    game:SetUniverseId(enabled and 2330396164 or oldUniverseId)
-    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
-    Util.AudioPerms = enabled
-    Util.AudioPermsToggled:Fire()
+    if Util.AudioPerms ~= enabled then
+	    warn("Updating universe id (" .. tostring(enabled) .. "),", enabled and 2330396164 or oldUniverseId)
+	    game:SetUniverseId(enabled and 2330396164 or oldUniverseId)
+	    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
+	    Util.AudioPerms = enabled
+		Util.AudioPermsToggled:Fire()
+	end
 end
 
 local function schedule(task: (number) -> (), interval: number)
