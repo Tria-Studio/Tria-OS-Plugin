@@ -13,7 +13,7 @@ local Components = require(Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
 local PlguinSoundManager = require(Package.Util.PluginSoundManager)
-local GitUtil = require(Package.GitUtil)
+local GitUtil = require(Package.Util.GitUtil)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -47,8 +47,8 @@ local BUTTON_ICONS = {
         hover = "rbxassetid://6031071057",
     },
     Loading = {
-        normal = "",--"rbxassetid://12853387225",
-        hover = "",--"rbxassetid://12853387151"
+        normal = "rbxassetid://12853387225",
+        hover = "rbxassetid://12853387151"
     }
 }
 
@@ -77,14 +77,11 @@ local currentSongData = {
     timeLength = Value(0)
 }
 
-local songLoadData = {
-    loaded = Value(0),
-    total = Value(1)
-}
-
 local loadedSongs = {}
 local loadingSongs = {}
+local isLoading = Value(false)
 
+local currentLoadSession = 0
 local lastFetchTime = 0
 
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
@@ -185,10 +182,13 @@ local function resumeSong(soundData: audioTableFormat)
 end
 
 local function playSong(newSound: Sound, soundData: audioTableFormat)
+    currentLoadSession += 1
+    local currentId = currentLoadSession 
     SoundMaid:DoCleaning()
     if loadedSongs[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
         Util.toggleAudioPerms(true)
     end
+    isLoading:set(true)
     loadingSongs[newSound]:set(true)
     
     newSound.SoundId = "rbxassetid://" .. soundData.ID
@@ -198,9 +198,10 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         loadingSongs[newSound]:set(false)
 
         print(loadedSongs[soundData.ID])
-        task.delay(.25, function()
+        task.defer(function()
             if soundData.ID == currentSongData.songData:get().ID then
                 Util.toggleAudioPerms(false)
+                isLoading:set(false)
             end
         end)
     end
@@ -229,12 +230,16 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     end
     
     ContentProvider:PreloadAsync({newSound}, function(assetId, FetchStatus)
-        print(FetchStatus)
+        if currentLoadSession ~= currentId then
+            return
+        end
         if FetchStatus == Enum.AssetFetchStatus.TimedOut or FetchStatus ==  Enum.AssetFetchStatus.Failure then
             task.defer(function()
                 loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
                 loadingSongs[newSound]:set(false)
                 task.delay(.01, Util.toggleAudioPerms)
+                task.wait(1)
+                isLoading:set(false)
             end)
         elseif FetchStatus == Enum.AssetFetchStatus.Success then
             if not newSound.IsLoaded then
@@ -257,10 +262,12 @@ local function stopCurrentTween()
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
+    if isLoading:get() then
+        return
+    end
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
-        print"Playing new song"
         stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentAudio == newSound then -- Song being paused/resumed
@@ -270,7 +277,6 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
             pauseSong(soundData)
         end
     else -- Song switched while playing
-        print"Switching songs"
         playSong(newSound, soundData)
         fadeSound(currentAudio, "Out")
     end
@@ -439,8 +445,6 @@ local function getAudioChildren(): {Instance}
         return {}
     end
 
-    songLoadData.loaded:set(0)
-    songLoadData.total:set(math.max(totalAssets, 1))
     currentSongData.currentAudio:set(nil)
     currentSongData.currentTween:set(nil)
     currentSongData.timePosition:set(0)

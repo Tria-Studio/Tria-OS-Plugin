@@ -41,6 +41,9 @@ local Util = {
     dropdownActive = Value(false),
     objectTagsActive = Value(false),
 
+    AudioPerms = false,
+    AudioPermsToggled = Signal.new(),
+
     _Addons = {
         hasAddonsWithObjectTags = Value(false),
         hasWaterjet = Value(false),
@@ -385,6 +388,8 @@ function Util.toggleAudioPerms(enabled: boolean)
     warn("Updating universe id (" .. tostring(enabled) .. "),", enabled and 2330396164 or oldUniverseId)
     game:SetUniverseId(enabled and 2330396164 or oldUniverseId)
     game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
+    Util.AudioPerms = enabled
+    Util.AudioPermsToggled:Fire()
 end
 
 local function schedule(task: (number) -> (), interval: number)

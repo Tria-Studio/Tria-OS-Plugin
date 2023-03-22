@@ -1,8 +1,13 @@
-local GitUtil = {}
-
 local HttpService = game:GetService("HttpService")
 
+local Util = require(script.Parent)
+
+local GitUtil = {}
+
 function GitUtil:Fetch(url: string): (boolean, any?, string?, string?)
+	if Util.AudioPerms then
+		Util.AudioPermsToggled:Wait()
+	end
 	local result
 	local fired, err = pcall(function()
 		result = HttpService:GetAsync(url)
