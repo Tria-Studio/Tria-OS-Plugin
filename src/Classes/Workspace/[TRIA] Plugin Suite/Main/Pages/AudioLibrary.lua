@@ -205,7 +205,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 
         task.defer(function()
             if soundData.ID == currentSongData.songData:get().ID then
-                -- Util.toggleAudioPerms(nil)
+                Util.toggleAudioPerms(nil)
                 task.wait(2)
                 isLoading:set(false)
             end
