@@ -244,6 +244,17 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     end
 
     local loaded = false
+    task.delay(5, function()
+        if not loaded then
+            currentLoadSession += 1
+            loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
+            loadingSongs[soundData.ID]:set(false)
+            task.delay(.01, Util.toggleAudioPerms)
+            task.wait()
+            isLoading:set(false)
+        end
+    end)
+    
     ContentProvider:PreloadAsync({newSound}, function(assetId, FetchStatus)
         if currentLoadSession ~= currentId then
             return
@@ -267,17 +278,6 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
                 isLoading:set(false)
                 loaded = true
             end)
-        end
-    end)
-
-    task.delay(5, function()
-        if not loaded then
-            currentLoadSession += 1
-            loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
-            loadingSongs[soundData.ID]:set(false)
-            task.delay(.01, Util.toggleAudioPerms)
-            task.wait()
-            isLoading:set(false)
         end
     end)
 end
