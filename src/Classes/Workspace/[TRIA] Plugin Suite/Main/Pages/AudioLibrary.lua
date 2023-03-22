@@ -1,5 +1,5 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
-local LogService = game:GetService("LogService")
+local ContentProvider = game:GetService("ContentProvider")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
@@ -190,13 +190,15 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         Util.toggleAudioPerms(true)
     end
     loadingSongs[newSound]:set(true)
+    
     newSound.SoundId = "rbxassetid://" .. soundData.ID
 
     local function updateLoaded()
         loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.True)
         loadingSongs[newSound]:set(false)
 
-        task.delay(.01, function()
+        print(loadedSongs[soundData.ID])
+        task.delay(.25, function()
             if soundData.ID == currentSongData.songData:get().ID then
                 Util.toggleAudioPerms(false)
             end
@@ -225,51 +227,25 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
             currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
         end))
     end
-
-    local audioLoaded = Util.Signal.new()
-    SoundMaid:GiveTask(audioLoaded)
-    local isLoaded = false
-
-    SoundMaid:GiveTask(LogService.MessageOut:Connect(function(message, type)
-        if type == Enum.MessageType.MessageError and string.find(message, soundData.ID, 1, true) then
-            audioLoaded:Fire()
-        end
-    end))
     
-    task.spawn(function()
-        if loadedSongs[soundData.ID]:get(false) == Enum.TriStateBoolean.True then
-            isLoaded = true
-            audioLoaded:Fire()
-            return
-        end
-
-        newSound.Volume = 0
-        newSound.TimePosition = 0
-        newSound:GetPropertyChangedSignal("TimeLength"):Wait()
-
-        if newSound.TimeLength > 0 then
-            isLoaded = true
-        end
-        audioLoaded:Fire()
-    end)
-
-    audioLoaded:Wait()
-
-    if newSound.IsLoaded then
-        updateLoaded()
-        playAudioInstance()
-    elseif isLoaded then
-        SoundMaid:GiveTask(newSound.Loaded:Connect(function()
+    ContentProvider:PreloadAsync({newSound}, function(assetId, FetchStatus)
+        print(FetchStatus)
+        if FetchStatus == Enum.AssetFetchStatus.TimedOut or FetchStatus ==  Enum.AssetFetchStatus.Failure then
+            task.defer(function()
+                loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
+                loadingSongs[newSound]:set(false)
+                task.delay(.01, Util.toggleAudioPerms)
+            end)
+        elseif FetchStatus == Enum.AssetFetchStatus.Success then
+            if not newSound.IsLoaded then
+                newSound.Loaded:Wait()
+            end
+            newSound.Volume = 0
+            newSound.TimePosition = 0
             updateLoaded()
             playAudioInstance()
-        end))
-    else
-        task.defer(function()
-            loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
-            loadingSongs[newSound]:set(false)
-            task.delay(.01, Util.toggleAudioPerms)
-        end)
-    end
+        end
+    end)
 end
 
 local function stopCurrentTween()
@@ -396,7 +372,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             local isPlaying = isSongPlaying:get()
                             local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
 
-                            if data.Name == "Invaders" then
+                            if data.Name == "Invaders" or data.Name == "Eurobeat Remix" then
                                 print(isLoaded, isLoading, isPlaying)
                             end
                             return 
