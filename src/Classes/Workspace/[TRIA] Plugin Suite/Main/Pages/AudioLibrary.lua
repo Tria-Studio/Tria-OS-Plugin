@@ -176,7 +176,6 @@ local function resumeSong(soundData: audioTableFormat)
         return
     end
     currentlyPlaying.Volume = 0
-    currentlyPlaying:Resume()
     currentSongData.currentAudio:set(currentlyPlaying, true)
     fadeSound(currentlyPlaying, "In")
 end
@@ -191,6 +190,8 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     isLoading:set(true)
     loadingSongs[newSound]:set(true)
     
+    newSound.SoundId = ""
+    task.wait()
     newSound.SoundId = "rbxassetid://" .. soundData.ID
 
     local function updateLoaded()
@@ -201,12 +202,17 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         task.defer(function()
             if soundData.ID == currentSongData.songData:get().ID then
                 Util.toggleAudioPerms(false)
+                task.wait(1)
                 isLoading:set(false)
             end
         end)
     end
 
     local function playAudioInstance()
+        if currentLoadSession ~= currentId then
+            return
+        end
+
         newSound.Volume = 0
         newSound.TimePosition = 0
         newSound:Resume()
@@ -229,11 +235,27 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         end))
     end
     
+    if loadedSongs[soundData.ID]:get() and newSound.TimeLength > 0 then
+        task.defer(function()
+            updateLoaded()
+            playAudioInstance()
+        end)
+        return
+    end
+
     ContentProvider:PreloadAsync({newSound}, function(assetId, FetchStatus)
         if currentLoadSession ~= currentId then
             return
         end
-        if FetchStatus == Enum.AssetFetchStatus.TimedOut or FetchStatus ==  Enum.AssetFetchStatus.Failure then
+        if FetchStatus == Enum.AssetFetchStatus.Success then
+            if not newSound.IsLoaded then
+                newSound.Loaded:Wait()
+            end
+            task.defer(function()
+                updateLoaded()
+                playAudioInstance()
+            end)
+        else
             task.defer(function()
                 loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
                 loadingSongs[newSound]:set(false)
@@ -241,14 +263,6 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
                 task.wait(1)
                 isLoading:set(false)
             end)
-        elseif FetchStatus == Enum.AssetFetchStatus.Success then
-            if not newSound.IsLoaded then
-                newSound.Loaded:Wait()
-            end
-            newSound.Volume = 0
-            newSound.TimePosition = 0
-            updateLoaded()
-            playAudioInstance()
         end
     end)
 end
@@ -277,8 +291,9 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
             pauseSong(soundData)
         end
     else -- Song switched while playing
-        playSong(newSound, soundData)
         fadeSound(currentAudio, "Out")
+        task.wait()
+        playSong(newSound, soundData)
     end
 end
 
@@ -313,7 +328,6 @@ local function AudioButton(data: audioTableFormat): Instance
         [Cleanup] = {
             function()
                 loadingSongs[sound]:set(false)
-                -- loadedSongs[data.ID]:set(Enum.TriStateBoolean.False)
                 task.defer(sound.Destroy, sound)
             end
         },
@@ -378,9 +392,6 @@ local function AudioButton(data: audioTableFormat): Instance
                             local isPlaying = isSongPlaying:get()
                             local isLoading = (not loadingSongs[sound]) or loadingSongs[sound]:get()
 
-                            if data.Name == "Invaders" or data.Name == "Eurobeat Remix" then
-                                print(isLoaded, isLoading, isPlaying)
-                            end
                             return 
                                 if isLoading then BUTTON_ICONS.Loading.normal
                                 elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.normal
