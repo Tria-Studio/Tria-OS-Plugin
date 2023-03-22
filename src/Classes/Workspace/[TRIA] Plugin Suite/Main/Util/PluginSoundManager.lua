@@ -7,7 +7,7 @@ local widget = plugin:CreateDockWidgetPluginGui("SoundPlayer", DockWidgetPluginG
 	10, 10,
 	10, 10
 ))
-widget.Name = "PluginSoundManager"
+widget.Name = "TRIA_soundManager"
 widget.Title = "PluginSoundManager"
 
 function PluginSoundManager:CreateSound(): Sound

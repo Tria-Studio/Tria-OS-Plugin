@@ -188,7 +188,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     currentLoadSession += 1
     local currentId = currentLoadSession 
     SoundMaid:DoCleaning()
-    print(loadedSongs[soundData.ID]:get(false))
+
     if loadedSongs[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
         Util.toggleAudioPerms(true)
     end
@@ -878,7 +878,14 @@ function frame.OnClose()
     end
     fetchApi()
 end
-task.spawn(fetchApi)
+
+task.defer(function()
+    if not Util.mapModel:get() then
+        Util.MapChanged:Wait()
+    end
+    task.defer(fetchApi)
+end)
+
 
 
 Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
