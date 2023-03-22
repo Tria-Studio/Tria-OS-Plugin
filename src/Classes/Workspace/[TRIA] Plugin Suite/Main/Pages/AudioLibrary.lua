@@ -168,6 +168,7 @@ local function pauseSong(soundData: audioTableFormat)
         return
     end
     currentlyPlaying:Pause()
+    songPlayingUpdate:set(songPlayingUpdate:get() + 1)
     currentSongData.currentAudio:set(currentlyPlaying, true)
 end
 
