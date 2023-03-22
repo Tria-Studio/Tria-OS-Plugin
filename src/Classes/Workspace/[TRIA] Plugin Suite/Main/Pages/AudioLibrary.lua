@@ -188,6 +188,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     currentLoadSession += 1
     local currentId = currentLoadSession 
     SoundMaid:DoCleaning()
+    print(loadedSongs[soundData.ID]:get(false))
     if loadedSongs[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
         Util.toggleAudioPerms(true)
     end
@@ -333,8 +334,10 @@ local function AudioButton(data: audioTableFormat): Instance
     local sound = PlguinSoundManager:CreateSound()
     sound.Name = data.Name
 
-    loadedSongs[data.ID] = Value(Enum.TriStateBoolean.Unknown)
-    loadingSongs[data.ID] = Value(false)
+    if not loadedSongs[data.ID] then
+        loadedSongs[data.ID] = Value(Enum.TriStateBoolean.Unknown)
+        loadingSongs[data.ID] = Value(false)
+    end
 
     local isSongPlaying = Computed(function(): boolean
         songPlayingUpdate:get()
