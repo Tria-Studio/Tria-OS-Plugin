@@ -263,7 +263,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
             currentLoadSession += 1
             loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
             loadingSongs[soundData.ID]:set(false)
-            -- task.defer(Util.toggleAudioPerms)
+            task.defer(Util.toggleAudioPerms)
             task.wait()
             isLoading:set(false)
         end
@@ -287,7 +287,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
                 currentLoadSession += 1
                 loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
                 loadingSongs[soundData.ID]:set(false)
-                -- task.defer(Util.toggleAudioPerms)
+                task.defer(Util.toggleAudioPerms)
                 task.wait(2)
                 isLoading:set(false)
                 loaded = true
