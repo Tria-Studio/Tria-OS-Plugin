@@ -3,7 +3,7 @@ return {
 	Name = "Survive",
 	Branches = nil,
 	Documentation = {
-		value = "Automatically makes a player survive"
+		value = "Calling this function will make the player survive without needing to touch the ExitRegion."
 	},
-	CodeSample = "MapLib:Survive(MapLib:GetPlayers()[1])",
+	CodeSample = "MapLib:Survive(MapLib:GetPlayers()[1])  ",
 }

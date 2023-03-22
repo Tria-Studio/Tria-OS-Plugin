@@ -5,11 +5,13 @@ return {
 		value = "Get's a specific buttons events which allow you to detect when it is pressed"
 	},
 	CodeSample = [[
-MapLib:GetButtonEvent(1):Connect(function()
-	
-end)
-	
-MapLib:GetButtonEvent(2):Wait()]],
+MapLib:GetButtonEvent(1):Connect(function()  
+	-- Code inside here will run when button 1 is pressed  
+end)  
+
+print("Waiting for button 2")  
+MapLib:GetButtonEvent(2):Wait()  
+print("Button 2 was pressed!")  ]],
 	
 	Branches = {
 		["Connect"] = {
@@ -21,9 +23,9 @@ MapLib:GetButtonEvent(2):Wait()]],
 				value = "Allows you to connect a custom function for when a button is pressed"
 			},
 			CodeSample = [[
-MapLib:GetButtonEvent(1):Connect(function()
-	print("This runs when button one is clicked.")
-end)]],
+MapLib:GetButtonEvent(1):Connect(function()  
+	print("This runs when button one is clicked.")    
+end)  ]],
 		},
 		["Wait"] = {
 			AutocompleteArgs= {""},
@@ -34,9 +36,9 @@ end)]],
 				value = "Yields/halts the current thread until this button is pressed"
 			},
 			CodeSample = [[
-print("Waiting for button one")
-MapLib:GetButtonEvent(1):Wait()
-print("Button one pressed!")]],
+print("Waiting for button one")  
+MapLib:GetButtonEvent(1):Wait()  
+print("Button one pressed!")  ]],
 		}
 	}
 }

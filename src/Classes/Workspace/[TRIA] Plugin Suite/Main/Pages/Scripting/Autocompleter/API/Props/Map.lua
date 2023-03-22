@@ -4,6 +4,6 @@ return {
 	Branches = nil,
 	
 	Documentation = {
-		value = "The current map"
+		value = "The current map model."
 	}
 }

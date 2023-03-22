@@ -5,5 +5,5 @@ return {
 	Documentation = {
 		value = "Allows you to get a specific Feature from the MapLib"
 	},
-	CodeSample = "local Skills = MapLib:GetFeature(\"Skills\")",
+	CodeSample = "local Skills = MapLib:GetFeature(\"Skills\")  ",
 }
