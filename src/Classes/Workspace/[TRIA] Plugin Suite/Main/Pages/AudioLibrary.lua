@@ -233,6 +233,16 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
             Util._Slider.isUsingSlider:set(false)
         end))
 
+        SoundMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+            if newSound ~= nil 
+                and newSound.IsLoaded 
+                and newSound.IsPlaying
+                and not Util._Slider.isUsingSlider:get(false) 
+            then
+                currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
+            end
+        end))
+
         currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
         SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
             currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
@@ -885,20 +895,6 @@ task.defer(function()
     end
     task.defer(fetchApi)
 end)
-
-
-
-Util.MainMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
-    if 
-        currentlyPlaying ~= nil 
-        and currentlyPlaying.IsLoaded 
-        and currentlyPlaying.IsPlaying
-        and not Util._Slider.isUsingSlider:get(false) 
-    then
-        currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
-    end
-end))
 
 Observer(currentSongData.timePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
