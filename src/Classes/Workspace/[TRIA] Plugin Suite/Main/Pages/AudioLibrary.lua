@@ -190,7 +190,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
 
     if loadedSongs[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
-        Util.toggleAudioPerms(true)
+        -- Util.toggleAudioPerms(true)
     end
     isLoading:set(true)
     loadingSongs[soundData.ID]:set(true)
@@ -205,7 +205,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 
         task.defer(function()
             if soundData.ID == currentSongData.songData:get().ID then
-                Util.toggleAudioPerms(nil)
+                -- Util.toggleAudioPerms(nil)
                 task.wait(2)
                 isLoading:set(false)
             end
@@ -880,6 +880,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
+function frame.OnOpen()
+    Util.toggleAudioPerms(true)
+end
 function frame.OnClose()
     stopSong()
     SoundMaid:DoCleaning()
