@@ -389,20 +389,25 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[data.ID]:get(false) == false then
-                                return
-                            end
+                            
                             if isLoading:get(false) then
                                 return
                             end
 
-                            local success = loadSound(sound, data)
+                            local success = false
 
-                            if success then
-                                updatePlayingSound(sound, data)
+                            if loadedSongs[data.ID]:get(false) then
+                                success = true
                             else
-                                stopSong()
+                                success = loadSound(sound, data)
                             end
+
+                            print(success)
+                            -- if success then
+                            --     updatePlayingSound(sound, data)
+                            -- else
+                            --     stopSong()
+                            -- end
                         end
                     },
                 }
