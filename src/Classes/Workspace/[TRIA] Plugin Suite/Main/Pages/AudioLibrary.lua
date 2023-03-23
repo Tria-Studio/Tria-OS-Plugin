@@ -216,9 +216,9 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound:Resume()
     fadeSound(newSound, "In")
 
-    currentSongData.timePosition:set(0)
-    currentSongData.songData:set(soundData)
-    currentSongData.currentAudio:set(newSound)
+    -- currentSongData.timePosition:set(0)
+    -- currentSongData.songData:set(soundData)
+    -- currentSongData.currentAudio:set(newSound)
 
     -- SoundMaid:GiveTask(newSound.Ended:Connect(function()
     --     currentSongData.timePosition:set(0)
