@@ -263,6 +263,7 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
         end
     else -- Song switched while playing
         fadeSound(currentAudio, "Out")
+        playSong(newSound, soundData)
     end
 end
 
