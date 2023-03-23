@@ -29,6 +29,7 @@ local Util = {
     Widget = nil,
     mapModel = Value(nil),
     hasSpecialFolder = Value(false),
+    variantFolderChildren = Value({}),
 
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),

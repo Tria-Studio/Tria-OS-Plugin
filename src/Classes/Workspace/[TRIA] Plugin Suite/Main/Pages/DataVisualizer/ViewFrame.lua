@@ -12,6 +12,7 @@ local Children = Fusion.Children
 local Computed = Fusion.Computed
 local Value = Fusion.Value
 local ForValues = Fusion.ForValues
+local OnEvent = Fusion.OnEvent
 
 
 return function(name: string, data: PublicTypes.Dictionary)
@@ -81,8 +82,9 @@ return function(name: string, data: PublicTypes.Dictionary)
                     },
                     ForValues(data.ViewOptions, function(metadata: PublicTypes.Dictionary): Instance
                         local dataValue = Value(false)
+                        local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get())
                         return New "TextButton" {
-                            BackgroundColor3 = Theme.ScrollBarBackground.Default,
+                            BackgroundColor3 = BackgroundColor,
                             BorderColor3 = Theme.Border.Default,
                             BorderSizePixel = 1,
                             Size = UDim2.new(1, 0, 0, 22),
@@ -96,6 +98,27 @@ return function(name: string, data: PublicTypes.Dictionary)
                                 print(metadata.Name)
                                 return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get()
                             end) or true,
+
+                            [OnEvent "MouseEnter"] = function()
+                                if not Util.isPluginFrozen() then
+                                    BackgroundColor:set(Theme.Mid.Default:get())
+                                end
+                            end,
+                            [OnEvent "MouseLeave"] = function()
+                                if not Util.isPluginFrozen() then
+                                    BackgroundColor:set(Theme.ScrollBarBackground.Default:get())
+                                end
+                            end,
+                            [OnEvent "MouseButton1Down"] = function()
+                                if not Util.isPluginFrozen() then
+                                    BackgroundColor:set(Theme.Light.Default:get())
+                                end
+                            end,
+                            [OnEvent "MouseButton1Up"] = function()
+                                if not Util.isPluginFrozen() then
+                                    BackgroundColor:set(Theme.Mid.Default:get())
+                                end
+                            end,
 
                             [Children] = {
                                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 44)),
