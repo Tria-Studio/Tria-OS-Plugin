@@ -154,6 +154,26 @@ local function incrementPage(increment: number)
     jumpToPage(pageData.current:get(false) + increment)
 end
 
+local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
+    local loaded = false
+
+    isLoading:set(true)
+    loadingSongs[soundData.ID]:set(true)
+
+    sound.SoundId = ""
+    task.wait()
+    sound.SoundId = "rbxassetid://" .. soundData.ID
+
+    ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
+        loaded = fetchStatus == Enum.AssetFetchStatus.Success
+    end)
+
+    isLoading:set(false)
+    loadingSongs[soundData.ID]:set(false)
+    loadedSongs[soundData.ID]:set(loaded)
+
+    return loaded
+end
 
 local function stopCurrentTween()
     local tween = currentSongData.currentTween:get(false)
@@ -170,7 +190,6 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
         stopCurrentTween()
         playSong(newSound, soundData)
     elseif currentAudio == newSound then -- Song being paused/resumed
-        isLoading:set(true)
         if currentAudio.IsPaused then
             resumeSong(soundData)
         else
@@ -312,6 +331,8 @@ local function AudioButton(data: audioTableFormat): Instance
                             if isLoading:get(false) then
                                 return
                             end
+
+                            local success = loadSound(sound, data)
                             updatePlayingSound(sound, data)
                         end
                     },
