@@ -179,13 +179,17 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     return loaded
 end
 
-local function stopSong()
+local function stopSong(instant: boolean)
     local currentlyPlaying = currentSongData.currentAudio:get(false)
     if not currentlyPlaying then
         return
     end
     currentSongData.currentAudio:set(nil)
-    fadeSound(currentlyPlaying, "Out")
+    if instant then
+        currentlyPlaying:Stop()
+    else
+        fadeSound(currentlyPlaying, "Out")
+    end
 end
 
 local function pauseSong(soundData: audioTableFormat)
@@ -442,6 +446,7 @@ local function getAudioChildren(): {Instance}
         return {}
     end
 
+    stopSong(true)
     currentSongData.currentAudio:set(nil)
     currentSongData.currentTween:set(nil)
     currentSongData.timePosition:set(0)
