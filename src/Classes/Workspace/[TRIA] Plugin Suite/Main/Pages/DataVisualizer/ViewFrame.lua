@@ -18,6 +18,9 @@ return function(name: string, data: PublicTypes.Dictionary)
     local checkState = Value(false)
 
     return New "Frame" {
+        Visible = name == "AddonView" and Computed(function()
+            return Util._Addons.hasAddonsWithObjectTags:get()
+        end) or true,
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = Theme.ScrollBarBackground.Default,
         LayoutOrder = data.LayoutOrder,
@@ -89,6 +92,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                             Font = Enum.Font.SourceSansSemibold,
                             TextSize = 15,
                             TextXAlignment = Enum.TextXAlignment.Left,
+                            Visible = name == "AddonView" and Computed(function()
+                                print(metadata.Name)
+                                return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get()
+                            end) or true,
 
                             [Children] = {
                                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 44)),
