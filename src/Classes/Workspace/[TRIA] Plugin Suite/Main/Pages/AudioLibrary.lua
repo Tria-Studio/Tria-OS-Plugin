@@ -185,7 +185,6 @@ local function stopSong()
         return
     end
     fadeSound(currentlyPlaying, "Out")
-    currentSongData.currentAudio:set(nil)
 end
 
 local function pauseSong(soundData: audioTableFormat)
@@ -400,11 +399,16 @@ local function AudioButton(data: audioTableFormat): Instance
                                 return
                             end
 
-                            local success = loadSound(sound, data)
+                            local success = true
+                            if not loadedSongs[data.ID]:get(false) then
+                                success = loadSound(sound, data)
+                            end
+
                             if success then
                                 updatePlayingSound(sound, data)
                             else
-                                warn("FAILED")
+                                stopSong()
+                                currentSongData.currentAudio:set(nil)
                             end
                         end
                     },
@@ -832,6 +836,8 @@ end
 
 function frame.OnClose()
     stopSong()
+
+    currentSongData.currentAudio:set(nil)
     SoundMaid:DoCleaning()
 
     local playingAudio = currentSongData.currentAudio:get(false)
