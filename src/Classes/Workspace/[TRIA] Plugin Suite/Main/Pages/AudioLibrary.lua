@@ -889,7 +889,9 @@ function frame.OnClose()
     if currentSongData.currentAudio:get() and loadingSongs[currentSongData.currentAudio:get()]:get() or isLoading:get() then
         task.defer(Util.toggleAudioPerms)
     end
-    fetchApi()
+    if Util.mapModel:get() then
+        fetchApi()
+    end
 end
 
 task.defer(function()
