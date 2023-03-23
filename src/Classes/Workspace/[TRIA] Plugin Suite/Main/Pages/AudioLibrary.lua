@@ -193,7 +193,6 @@ local function pauseSong(soundData: audioTableFormat)
         return
     end
     currentlyPlaying:Pause()
-    currentSongData.currentAudio:set(currentlyPlaying, true)
 end
 
 local function resumeSong(soundData: audioTableFormat)
@@ -202,7 +201,6 @@ local function resumeSong(soundData: audioTableFormat)
         return
     end
     currentlyPlaying.Volume = 0
-    currentSongData.currentAudio:set(currentlyPlaying)
     currentlyPlaying:Resume()
     fadeSound(currentlyPlaying, "In")
 end
@@ -264,8 +262,6 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
         end
     else -- Song switched while playing
         fadeSound(currentAudio, "Out")
-        task.wait()
-        playSong(newSound, soundData)
     end
 end
 
@@ -399,10 +395,7 @@ local function AudioButton(data: audioTableFormat): Instance
                                 return
                             end
 
-                            local success = true
-                            if not loadedSongs[data.ID]:get(false) then
-                                success = loadSound(sound, data)
-                            end
+                            local success = loadSound(sound, data)
 
                             if success then
                                 updatePlayingSound(sound, data)
