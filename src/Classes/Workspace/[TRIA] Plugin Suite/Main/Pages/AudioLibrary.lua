@@ -652,7 +652,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 },
 
                                 [OnEvent "Activated"] = function()
-                                    if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) then
+                                    if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) and Util.mapModel:get() then
                                         task.spawn(fetchApi)
                                     end
                                 end
