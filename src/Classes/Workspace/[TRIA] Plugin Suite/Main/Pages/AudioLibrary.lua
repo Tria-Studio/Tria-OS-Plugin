@@ -227,6 +227,18 @@ local function AudioButton(data: audioTableFormat): Instance
         return currentSong and currentSong == sound and currentSong.IsPlaying 
     end)
 
+    local iconIndex = Computed(function(): string
+        local isLoaded = loadedSongs[data.ID]:get()
+        local isPlaying = isSongPlaying:get()
+        local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
+
+        return 
+            if isLoading then "Loading" 
+            elseif isLoaded == false then "Error"
+            elseif isPlaying then "Pause"
+            else "Play"
+    end)
+
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
@@ -296,32 +308,20 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            local isLoaded = loadedSongs[data.ID]:get()
-                            local isPlaying = isSongPlaying:get()
-                            local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
-
-                            return 
-                                if isLoading then BUTTON_ICONS.Loading.normal
-                                elseif isLoaded == false then BUTTON_ICONS.Error.normal
-                                elseif isPlaying then BUTTON_ICONS.Pause.normal
-                                else BUTTON_ICONS.Play.normal
+                            local index = iconIndex:get()
+                            return BUTTON_ICONS[index].normal
                         end),
+                        
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
-                        HoverImage = Computed(function(): string
-                            local isLoaded = loadedSongs[data.ID]:get()
-                            local isPlaying = isSongPlaying:get()
-                            local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
 
-                            return
-                                if isLoading then BUTTON_ICONS.Loading.hover
-                                elseif isLoaded == false then BUTTON_ICONS.Error.hover
-                                elseif isPlaying then BUTTON_ICONS.Pause.hover
-                                else BUTTON_ICONS.Play.hover
+                        HoverImage = Computed(function(): string
+                            local index = iconIndex:get()
+                            return BUTTON_ICONS[index].hover
                         end),
 
                         [OnEvent "Activated"] = function()
