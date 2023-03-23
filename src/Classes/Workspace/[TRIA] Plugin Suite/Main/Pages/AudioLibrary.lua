@@ -154,151 +154,6 @@ local function incrementPage(increment: number)
     jumpToPage(pageData.current:get(false) + increment)
 end
 
-local function stopSong()
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
-    if not currentlyPlaying then
-        return
-    end
-    fadeSound(currentlyPlaying, "Out")
-    currentSongData.currentAudio:set(nil)
-end
-
-local function pauseSong(soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
-    if not currentlyPlaying then
-        return
-    end
-    currentlyPlaying:Pause()
-    songPlayingUpdate:set(songPlayingUpdate:get() + 1)
-    currentSongData.currentAudio:set(currentlyPlaying, true)
-end
-
-local function resumeSong(soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
-    if not currentlyPlaying then
-        return
-    end
-    currentlyPlaying.Volume = 0
-    currentSongData.currentAudio:set(currentlyPlaying)
-    currentlyPlaying:Resume()
-    songPlayingUpdate:set(songPlayingUpdate:get() + 1)
-    fadeSound(currentlyPlaying, "In")
-end
-
-local function playSong(newSound: Sound, soundData: audioTableFormat)
-    currentLoadSession += 1
-    local currentId = currentLoadSession 
-    SoundMaid:DoCleaning()
-
-    if loadedSongs[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
-        Util.toggleAudioPerms(true)
-        task.delay(0.125, function()
-            Util.toggleAudioPerms(nil)
-        end)
-    end
-    isLoading:set(true)
-    loadingSongs[soundData.ID]:set(true)
-    
-    newSound.SoundId = ""
-    task.wait()
-    newSound.SoundId = "rbxassetid://" .. soundData.ID
-
-    local function updateLoaded()
-        loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.True)
-        loadingSongs[soundData.ID]:set(false)
-
-        task.defer(function()
-            if soundData.ID == currentSongData.songData:get().ID then
-                Util.toggleAudioPerms(nil)
-                task.wait(2)
-                isLoading:set(false)
-            end
-        end)
-    end
-
-    local function playAudioInstance()
-        if currentLoadSession ~= currentId then
-            return
-        end
-
-        newSound.Volume = 0
-        newSound.TimePosition = 0
-        newSound:Resume()
-        fadeSound(newSound, "In")
-
-        loadingSongs[soundData.ID]:set(false)
-        currentSongData.timePosition:set(0)
-        currentSongData.songData:set(soundData)
-        currentSongData.currentAudio:set(newSound)
-
-        SoundMaid:GiveTask(newSound.Ended:Connect(function()
-            currentSongData.timePosition:set(0)
-            currentSongData.currentAudio:set(nil)
-            Util._Slider.isUsingSlider:set(false)
-        end))
-
-        SoundMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
-            if newSound ~= nil 
-                and newSound.IsLoaded 
-                and newSound.IsPlaying
-                and not Util._Slider.isUsingSlider:get(false) 
-            then
-                currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
-            end
-        end))
-
-        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
-        SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
-            currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
-        end))
-    end
-    
-    if loadedSongs[soundData.ID]:get() and newSound.TimeLength > 0 then
-        task.defer(function()
-            updateLoaded()
-            playAudioInstance()
-        end)
-        return
-    end
-
-    local loaded = false
-    task.delay(5, function()
-        if not loaded then
-            currentLoadSession += 1
-            loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
-            loadingSongs[soundData.ID]:set(false)
-            task.defer(Util.toggleAudioPerms)
-            task.wait()
-            isLoading:set(false)
-        end
-    end)
-    
-    ContentProvider:PreloadAsync({newSound}, function(assetId, FetchStatus)
-        if currentLoadSession ~= currentId then
-            return
-        end
-        if FetchStatus == Enum.AssetFetchStatus.Success then
-            if not newSound.IsLoaded then
-                newSound.Loaded:Wait()
-            end
-            task.defer(function()
-                updateLoaded()
-                playAudioInstance()
-                loaded = true
-            end)
-        else
-            task.defer(function()
-                currentLoadSession += 1
-                loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
-                loadingSongs[soundData.ID]:set(false)
-                task.defer(Util.toggleAudioPerms)
-                task.wait(2)
-                isLoading:set(false)
-                loaded = true
-            end)
-        end
-    end)
-end
 
 local function stopCurrentTween()
     local tween = currentSongData.currentTween:get(false)
@@ -309,9 +164,6 @@ local function stopCurrentTween()
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
-    if isLoading:get() then
-        return
-    end
     local currentAudio = currentSongData.currentAudio:get(false)
 
     if not currentAudio then -- No song playing
@@ -324,11 +176,8 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
         else
             pauseSong(soundData)
         end
-        task.wait(1)
-        isLoading:set(false)
     else -- Song switched while playing
         fadeSound(currentAudio, "Out")
-        task.wait()
         playSong(newSound, soundData)
     end
 end
@@ -457,7 +306,10 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
+                            if loadedSongs[data.ID]:get(false) == Enum.TriStateBoolean.False then
+                                return
+                            end
+                            if isLoading:get(false) then
                                 return
                             end
                             updatePlayingSound(sound, data)
