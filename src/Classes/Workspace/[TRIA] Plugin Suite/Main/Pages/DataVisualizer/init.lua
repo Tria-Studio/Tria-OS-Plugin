@@ -1,3 +1,4 @@
+local plugin = plugin or script:FindFirstAncestorWhichIsA("Plugin")
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
@@ -76,6 +77,11 @@ end
 function frame.OnOpen()
     if not Util.hasSpecialFolder:get(false) and Util.mapModel:get(false) then
         showPageError()
+    end
+
+    if not plugin:GetSetting("TRIA_HasViewedDebugView") then
+        plugin:SetSetting("TRIA_HasViewedDebugView", true)
+        Util:ShowMessage("Welcome to Debug View", "With the click of a button, you can view every part, instance, model, etc. of every data type that TRIA.os supports! This feature requires the OptimizedStructure (AKA the 'Special' folder) in order to work.\n\nUsing a featured addon in your map? Some featured addons support Debug View!")
     end
 end
 
