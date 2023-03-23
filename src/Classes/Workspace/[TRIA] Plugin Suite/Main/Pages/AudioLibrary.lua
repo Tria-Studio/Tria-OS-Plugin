@@ -184,6 +184,7 @@ local function stopSong()
     if not currentlyPlaying then
         return
     end
+    currentSongData.currentAudio:set(nil)
     fadeSound(currentlyPlaying, "Out")
 end
 
@@ -213,9 +214,9 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound:Resume()
     fadeSound(newSound, "In")
 
-    currentSongData.timePosition:set(0)
-    currentSongData.songData:set(soundData)
-    currentSongData.currentAudio:set(newSound)
+    -- currentSongData.timePosition:set(0)
+    -- currentSongData.songData:set(soundData)
+    -- currentSongData.currentAudio:set(newSound, true)
 
     -- SoundMaid:GiveTask(newSound.Ended:Connect(function()
     --     currentSongData.timePosition:set(0)
@@ -310,8 +311,8 @@ local function AudioButton(data: audioTableFormat): Instance
         [Cleanup] = {
             function()
                 loadingSongs[data.ID]:set(false)
-                task.defer(sound.Destroy, sound)
-            end
+            end,
+            sound
         },
 
         [Children] = {
@@ -401,7 +402,6 @@ local function AudioButton(data: audioTableFormat): Instance
                                 updatePlayingSound(sound, data)
                             else
                                 stopSong()
-                                currentSongData.currentAudio:set(nil)
                             end
                         end
                     },
@@ -829,8 +829,6 @@ end
 
 function frame.OnClose()
     stopSong()
-
-    currentSongData.currentAudio:set(nil)
     SoundMaid:DoCleaning()
 
     local playingAudio = currentSongData.currentAudio:get(false)
