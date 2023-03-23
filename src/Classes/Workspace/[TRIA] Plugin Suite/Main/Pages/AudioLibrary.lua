@@ -220,7 +220,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 
     -- currentSongData.timePosition:set(0)
     -- currentSongData.songData:set(soundData)
-    -- currentSongData.currentAudio:set(newSound, true)
+    currentSongData.currentAudio:set(newSound, true)
 
     -- SoundMaid:GiveTask(newSound.Ended:Connect(function()
     --     currentSongData.timePosition:set(0)
