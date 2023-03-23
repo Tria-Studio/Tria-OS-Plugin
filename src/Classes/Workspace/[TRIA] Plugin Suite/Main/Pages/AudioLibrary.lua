@@ -55,7 +55,6 @@ local BUTTON_ICONS = {
 
 local frame = {}
 
-local songPlayingUpdate = Value(0)
 local frameAbsoluteSize = Value()
 local pageLayout = Value()
 
@@ -180,6 +179,35 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     return loaded
 end
 
+local function stopSong()
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    fadeSound(currentlyPlaying, "Out")
+    currentSongData.currentAudio:set(nil)
+end
+
+local function pauseSong(soundData: audioTableFormat)
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    currentlyPlaying:Pause()
+    currentSongData.currentAudio:set(currentlyPlaying, true)
+end
+
+local function resumeSong(soundData: audioTableFormat)
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    currentlyPlaying.Volume = 0
+    currentSongData.currentAudio:set(currentlyPlaying)
+    currentlyPlaying:Resume()
+    fadeSound(currentlyPlaying, "In")
+end
+
 local function stopCurrentTween()
     local tween = currentSongData.currentTween:get(false)
     if tween then
@@ -227,7 +255,6 @@ local function AudioButton(data: audioTableFormat): Instance
     end
 
     local isSongPlaying = Computed(function(): boolean
-        songPlayingUpdate:get()
         local currentSong = currentSongData.currentAudio:get()
         return currentSong and currentSong == sound and currentSong.IsPlaying 
     end)
@@ -462,7 +489,6 @@ end
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local textboxObject = Value()
     local isSongPlaying = Computed(function(): boolean
-        songPlayingUpdate:get()
         local currentSong = currentSongData.currentAudio:get()
         return currentSong and currentSong.IsPlaying 
     end)
