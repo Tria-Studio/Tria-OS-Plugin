@@ -20,7 +20,7 @@ return function(name: string, data: PublicTypes.Dictionary)
 
     return New "Frame" {
         Visible = name == "AddonView" and Computed(function()
-            return Util._Addons.hasAddonsWithObjectTags:get()
+            return Util._Addons.hasAddonsWithObjectTags:get() ~= false
         end) or true,
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = Theme.ScrollBarBackground.Default,
@@ -95,8 +95,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             TextSize = 15,
                             TextXAlignment = Enum.TextXAlignment.Left,
                             Visible = name == "AddonView" and Computed(function()
-                                print(metadata.Name)
-                                return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get()
+                                return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get() ~= false
                             end) or true,
 
                             [OnEvent "MouseEnter"] = function()
