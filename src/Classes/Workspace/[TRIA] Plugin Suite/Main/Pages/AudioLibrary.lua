@@ -741,10 +741,12 @@ end
 function frame.OnClose()
     stopSong()
     SoundMaid:DoCleaning()
-    if currentSongData.currentAudio:get() and loadingSongs[currentSongData.currentAudio:get()]:get() or isLoading:get() then
+
+    local playingAudio = currentSongData.currentAudio:get(false)
+    if playingAudio and loadingSongs[playingAudio]:get() or isLoading:get(false) then
         task.defer(Util.toggleAudioPerms)
     end
-    if Util.mapModel:get() then
+    if Util.mapModel:get(false) then
         fetchApi()
     end
 end
@@ -757,7 +759,7 @@ function frame.OnOpen()
 end
 
 task.defer(function()
-    if not Util.mapModel:get() then
+    if not Util.mapModel:get(false) then
         Util.MapChanged:Wait()
     end
     task.defer(fetchApi)
