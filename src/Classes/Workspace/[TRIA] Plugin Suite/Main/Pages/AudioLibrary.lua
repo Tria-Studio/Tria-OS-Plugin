@@ -115,7 +115,7 @@ local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
 end)
 
 local STATUS_ERRORS = {
-    ["Fetching"] = "Currently fetching the latest audio...",
+    ["Fetching"] = "Fetching the latest audio...",
     ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plugin Settings\" tab.",
     ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
@@ -410,7 +410,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             Util.updateMapSetting("Main", "Music", data.ID)
                             ChangeHistoryService:SetWaypoint("Updated map music")
                         end
-                    })
+                    },{Text = "Nevermind", Callback = function() end})
                 end
             },
 
