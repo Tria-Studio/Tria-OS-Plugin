@@ -41,6 +41,7 @@ local ForPairs = Fusion.ForPairs
 local Value = Fusion.Value
 local Out = Fusion.Out
 
+widget.Name = "TRIA_PluginSuite"
 widget.Title = "[TRIA] Plugin Suite"
 Util.Widget = widget
 Util.attemptScriptInjection()

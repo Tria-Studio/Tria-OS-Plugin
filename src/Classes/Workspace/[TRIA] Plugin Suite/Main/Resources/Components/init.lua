@@ -165,9 +165,9 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
     }
 end
 
-function Components.PageHeader(pageName: string): Instance
+function Components.PageHeader(pageName: string, ZIndex): Instance
     return New "TextLabel" {
-        ZIndex = 2,
+        ZIndex = ZIndex or 2,
         Size = UDim2.new(1, 0, 0, 16),
         BackgroundColor3 = Theme.Titlebar.Default,
         TextColor3 = Theme.TitlebarText.Default,

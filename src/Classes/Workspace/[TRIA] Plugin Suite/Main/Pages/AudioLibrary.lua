@@ -373,7 +373,8 @@ local function AudioButton(data: audioTableFormat): Instance
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
-                Size = UDim2.fromScale(0.4, 1),
+                Size = UDim2.fromScale(0.8, 1),
+                ClipsDescendants = true,
                 Position = UDim2.fromScale(0.005, 0),
                 Text = ("<b>%s</b>\n%s"):format(data.Artist, data.Name),
                 TextColor3 = Theme.MainText.Default,
@@ -590,7 +591,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "AudioLib",
 
         [Children] = {
-            Components.PageHeader("Audio Library"),
+            Components.PageHeader("Audio Library", 4),
             Components.SearchBox {
                 Position = UDim2.fromScale(0, 0),
                 Size = UDim2.new(0.5, 0, 0, 29),
@@ -700,7 +701,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 [Children] = {
                     New "TextLabel" {
                         BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(1, 1),
+                        Size = UDim2.fromScale(.6, 1),
                         Position = UDim2.fromScale(0.0, 0),
                         Text = Computed(function(): string
                             local currentData = currentSongData.songData:get()
@@ -709,6 +710,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         TextColor3 = Theme.MainText.Default,
                         LineHeight = 1.1,
                         RichText = true,
+                        ClipsDescendants = true,
                         TextTruncate = Enum.TextTruncate.AtEnd,
                         TextSize = 15,
                         TextXAlignment = Enum.TextXAlignment.Left,
