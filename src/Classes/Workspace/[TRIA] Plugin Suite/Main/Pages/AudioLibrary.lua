@@ -157,6 +157,10 @@ end
 local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
 
+    if not loadedSongs[soundData.ID]:get(false) then
+        Util.toggleAudioPerms(true)
+    end
+
     isLoading:set(true)
     loadingSongs[soundData.ID]:set(true)
 
@@ -171,6 +175,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     isLoading:set(false)
     loadingSongs[soundData.ID]:set(false)
     loadedSongs[soundData.ID]:set(loaded)
+    Util.toggleAudioPerms(false)
 
     return loaded
 end
@@ -311,7 +316,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             local index = iconIndex:get()
                             return BUTTON_ICONS[index].normal
                         end),
-                        
+
                         ImageColor3 = Computed(function(): Color3
                             if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == false then
                                 return Theme.ErrorText.Default:get()
