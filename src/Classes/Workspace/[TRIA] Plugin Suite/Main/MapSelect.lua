@@ -136,10 +136,14 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         self.selectCancelColor:set(Theme.ErrorText.Default:get(false))
         self.selectTextColor:set(Theme.MainText.Default:get(false))
+        local oldMap = Util.mapModel:get()
+
         Util.mapModel:set(newMap)
-        Util.MapChanged:Fire()
         Util.MapMaid:DoCleaning()
         Util.updateSelectedParts()
+        if oldMap ~= newMap then
+            Util.MapChanged:Fire()
+        end
 
         self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
 
@@ -349,13 +353,17 @@ function MapSelect:AutoSelect(DontSet: boolean?): boolean
 end
 
 function MapSelect:ResetSelection()
+    local oldModel = Util.mapModel:get()
     Util._Selection.selectedParts:set({})
     Util.mapModel:set(nil)
-    Util.MapChanged:Fire()
     Util.hasSpecialFolder:set(false)
     self.selectCancelColor:set(Theme.SubText.Default:get(false))
     self.selectTextState:set("No map selected (Click to select)")
     self.selectTextColor:set(Theme.ErrorText.Default:get(false))
+
+    if oldModel then
+        Util.MapChanged:Fire()
+    end
 end
 
 return MapSelect
