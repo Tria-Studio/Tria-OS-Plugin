@@ -217,7 +217,7 @@ local function AudioButton(data: audioTableFormat): Instance
     sound.Name = data.Name
 
     if not loadedSongs[data.ID] then
-        loadedSongs[data.ID] = Value(Enum.TriStateBoolean.Unknown)
+        loadedSongs[data.ID] = Value(nil)
         loadingSongs[data.ID] = Value(false)
     end
 
@@ -302,12 +302,12 @@ local function AudioButton(data: audioTableFormat): Instance
 
                             return 
                                 if isLoading then BUTTON_ICONS.Loading.normal
-                                elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.normal
+                                elseif isLoaded == false then BUTTON_ICONS.Error.normal
                                 elseif isPlaying then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
+                            if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == false then
                                 return Theme.ErrorText.Default:get()
                             end
                             return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
@@ -319,13 +319,13 @@ local function AudioButton(data: audioTableFormat): Instance
 
                             return
                                 if isLoading then BUTTON_ICONS.Loading.hover
-                                elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.hover
+                                elseif isLoaded == false then BUTTON_ICONS.Error.hover
                                 elseif isPlaying then BUTTON_ICONS.Pause.hover
                                 else BUTTON_ICONS.Play.hover
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[data.ID]:get(false) == Enum.TriStateBoolean.False then
+                            if loadedSongs[data.ID]:get(false) == false then
                                 return
                             end
                             if isLoading:get(false) then
@@ -333,7 +333,11 @@ local function AudioButton(data: audioTableFormat): Instance
                             end
 
                             local success = loadSound(sound, data)
-                            updatePlayingSound(sound, data)
+                            if success then
+                                updatePlayingSound(sound, data)
+                            else
+                                warn("FAILED")
+                            end
                         end
                     },
                 }
@@ -629,7 +633,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[currentSongData.songData:get().ID]:get() == Enum.TriStateBoolean.False then
+                            if loadedSongs[currentSongData.songData:get().ID]:get() == false then
                                 return
                             end
                             updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
