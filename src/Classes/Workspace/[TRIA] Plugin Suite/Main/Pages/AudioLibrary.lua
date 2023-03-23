@@ -311,7 +311,6 @@ local function AudioButton(data: audioTableFormat): Instance
         [Cleanup] = {
             function()
                 print("CLEAN")
-                --loadingSongs[data.ID]:set(false)
             end,
             sound
         },
@@ -403,11 +402,11 @@ local function AudioButton(data: audioTableFormat): Instance
                             end
 
                             print(success)
-                            -- if success then
-                            --     updatePlayingSound(sound, data)
-                            -- else
-                            --     stopSong()
-                            -- end
+                            if success then
+                                updatePlayingSound(sound, data)
+                            else
+                                stopSong()
+                            end
                         end
                     },
                 }
@@ -518,7 +517,6 @@ local function fetchApi()
             end
         end)
 
-        loadedSongs = {}
         pageData.current:set(#newData > 0 and 1 or 0)
         FETCHED_AUDIO_DATA:set(newData)
     end
