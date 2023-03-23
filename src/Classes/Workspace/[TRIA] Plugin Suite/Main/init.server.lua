@@ -203,12 +203,12 @@ local mainFrame = New "Frame" {
 				local index = math.ceil((math.ceil(percent / increment) * increment) * #pages)
 
 				local pageNameToDisplay = {
-					ObjectTags = "Object Tags",
-					DataVisualizer = "Data Visualizer",
-					Settings = "Settings",
+					ObjectTags = "Object & Event Tags",
+					DataVisualizer = "Debug View",
+					Settings = "Map Settings",
 					Scripting = "Scripting",
-					Publish = "Publish",
-					Insert = "Insert",
+					Publish = "Publish & Whitelist",
+					Insert = "Resources",
 					AudioLibrary = "Audio Library"
 				}
 
