@@ -872,4 +872,8 @@ Observer(currentSongData.timePosition):onChange(function()
     end
 end)
 
+Observer(currentSongData.currentAudio):onChange(function()
+    warn(currentSongData.currentAudio:get(false))
+end)
+
 return frame
