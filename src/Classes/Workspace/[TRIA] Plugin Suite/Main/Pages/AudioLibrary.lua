@@ -310,7 +310,8 @@ local function AudioButton(data: audioTableFormat): Instance
 
         [Cleanup] = {
             function()
-                loadingSongs[data.ID]:set(false)
+                print("CLEAN")
+                --loadingSongs[data.ID]:set(false)
             end,
             sound
         },
@@ -389,7 +390,6 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            
                             if isLoading:get(false) then
                                 return
                             end
