@@ -700,10 +700,10 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            if loadedSongs[currentSongData.songData:get().ID]:get(false) == false then
-                                return
-                            end
-                            updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
+                            -- if loadedSongs[currentSongData.songData:get().ID]:get(false) == false then
+                            --     return
+                            -- end
+                            -- updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
                         end
                     },
 
