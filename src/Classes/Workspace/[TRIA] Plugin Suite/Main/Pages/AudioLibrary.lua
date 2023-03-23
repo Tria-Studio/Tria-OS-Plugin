@@ -208,6 +208,40 @@ local function resumeSong(soundData: audioTableFormat)
     fadeSound(currentlyPlaying, "In")
 end
 
+local function playSong(newSound: Sound, soundData: audioTableFormat)
+    SoundMaid:DoCleaning()
+    newSound.Volume = 0
+    newSound.TimePosition = 0
+    newSound:Resume()
+    fadeSound(newSound, "In")
+
+    currentSongData.timePosition:set(0)
+    currentSongData.songData:set(soundData)
+    currentSongData.currentAudio:set(newSound)
+
+    SoundMaid:GiveTask(newSound.Ended:Connect(function()
+        currentSongData.timePosition:set(0)
+        currentSongData.currentAudio:set(nil)
+        Util._Slider.isUsingSlider:set(false)
+    end))
+
+    SoundMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+        if 
+            newSound ~= nil 
+            and newSound.IsLoaded 
+            and newSound.IsPlaying
+            and not Util._Slider.isUsingSlider:get(false) 
+        then
+            currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
+        end
+    end))
+
+    currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+    SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
+        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+    end))
+end
+
 local function stopCurrentTween()
     local tween = currentSongData.currentTween:get(false)
     if tween then
