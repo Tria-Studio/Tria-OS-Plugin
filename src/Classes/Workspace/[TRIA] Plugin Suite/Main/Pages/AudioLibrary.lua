@@ -174,7 +174,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     isLoading:set(false)
     loadingSongs[soundData.ID]:set(false)
     loadedSongs[soundData.ID]:set(loaded)
-    Util.toggleAudioPerms(false)
+    task.defer(Util.toggleAudioPerms, false)
 
     return loaded
 end
@@ -210,6 +210,7 @@ end
 
 local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
+    
     newSound.Volume = 0
     newSound.TimePosition = 0
     newSound:Resume()
