@@ -66,7 +66,7 @@ colorCorrection.Parent = Lighting
 
 local folder = currentMap:FindFirstChild("Special") or currentMap
 for _, part in ipairs(folder:GetDescendants()) do
-	local teleportNumber = part:GetAttribute("TeleportNumber")
+	local teleportNumber = tonumber(part.Name:sub(12))
 	local isStart = part:GetAttribute("TeleportType") == "start"
 
 	if part.Name == "_Teleporter" then

@@ -278,7 +278,7 @@ data.metadataTypes = {
     },
     TeleportNumber = {
         _referenceName = "TeleportNumber",
-        type = "Attribute",
+        type = "EndOfName",
         dataType = "number",
         dataName = "TeleportNumber",
         displayName = "Teleport Number",
