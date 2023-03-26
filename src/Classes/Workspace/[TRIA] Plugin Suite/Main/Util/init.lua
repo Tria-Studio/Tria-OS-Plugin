@@ -261,7 +261,7 @@ local function updateButtonsActive()
 end
 
 function Util.updateSelectedParts()
-    if not Util.PluginActive:get() then
+    if not Util.PluginActive:get() or not Util.mapModel:get() then
         return
     end
 
