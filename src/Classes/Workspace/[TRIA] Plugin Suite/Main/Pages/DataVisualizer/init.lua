@@ -41,7 +41,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Text = "Unsupported Map."
             }),
             Components.ScrollingFrame {
-                BackgroundColor3 = Theme.ScrollBarBackground.Default,
+                BackgroundColor3 = Theme.MainBackground.Default,
                 BorderColor3 = Theme.Border.Default,
                 BorderSizePixel = 1,
                 Size = UDim2.new(1, 0, 1, 0),

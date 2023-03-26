@@ -95,11 +95,11 @@ return {
             }, {
                 Name = "_Liquid",
                 LayoutOrder = 3,
-                DisplayIcon = "rbxassetid://12903642348",
+                DisplayIcon = "rbxassetid://6026568295",
             }, {
                 Name = "_Gas",
                 LayoutOrder = 4,
-                DisplayIcon = "rbxassetid://12903642348",
+                DisplayIcon = "rbxassetid://6026568253", 
             }, {
                 Name = "Killbrick",
                 LayoutOrder = 5,

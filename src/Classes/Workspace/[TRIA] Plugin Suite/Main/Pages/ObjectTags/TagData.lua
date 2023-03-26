@@ -584,7 +584,7 @@ Metadata:
             _nameStub = "_Liquid",
             DisplayText = "_Liquid#",
             ActionText = nil,
-            DisplayIcon = "rbxassetid://12903642348",
+            DisplayIcon = "rbxassetid://6026568295", 
             LayoutOrder = 4,
             metadata = {
                 {
@@ -625,8 +625,8 @@ Metadata:
         _Gas = {
             _nameStub = "_Gas",
             DisplayText = "_Gas#",
-            ActionText = nil,
-            DisplayIcon = "rbxassetid://12903642348",
+            ActionText = nil, 
+            DisplayIcon = "rbxassetid://6026568253",
             LayoutOrder = 5,
             metadata = {
                 {

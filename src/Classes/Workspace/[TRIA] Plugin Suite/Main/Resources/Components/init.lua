@@ -456,7 +456,7 @@ function Components.TooltipImage(data: PublicTypes.Dictionary): Instance?
         Size = UDim2.fromOffset(18, 18),
         Image = "rbxassetid://6026568254",
         HoverImage = "rbxassetid://6026568247",
-        ImageColor3 = Theme.SubText.Default,
+        ImageColor3 = Theme.DimmedText.Default,
 
         [OnEvent "Activated"] = function()
             if not data.Header or not data.Tooltip then
