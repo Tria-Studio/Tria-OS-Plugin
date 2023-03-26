@@ -1,3 +1,34 @@
+local Package = script.Parent.Parent.Parent
+local Fusion = require(Package.Resources.Fusion)
+local Util = require(Package.Util)
+
+local Computed = Fusion.Value
+local Observer = Fusion.Observer
+local Value = Fusion.Value
+
+local varaints = Value({})
+local nameEvents = Util.Maid.new()
+
+Observer(Util.variantFolderChildren):onChange(function()
+    local newTable = {}
+    nameEvents:DoCleaning()
+
+    for i, variant in pairs(Util.variantFolderChildren:get()) do
+        local name = Value(variant.Name)
+        nameEvents:GiveTask(variant:GetPropertyChangedSignal("Name"):Connect(function()
+            name:set(variant.Name)
+        end))
+
+        table.insert(newTable, {
+            LayoutOrder = i,
+            Name = name,
+            DisplayIcon = "rbxassetid://6035067831"
+        })
+    end
+
+    varaints:set(newTable)
+end)
+
 return {
     LowDetail = {
         SingleOption = true,
@@ -118,7 +149,7 @@ return {
         DisplayText = "Variant View",
         DisplayIcon = "rbxassetid://6022668909",
         LayoutOrder = 6,
-        ViewOptions = {}, --TODO: find a way to have this and the UI update when variants are created and destroyed
+        ViewOptions = varaints, --TODO: find a way to have this and the UI update when variants are created and destroyed
         Tooltip = {
             Header = "",
             Text = ""

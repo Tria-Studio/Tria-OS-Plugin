@@ -871,6 +871,7 @@ Metadata:
     },
     addonTags = {
         _Teleporter = {
+            _nameStub = "_Teleporter",
             DisplayText = "_Teleporter",
             ActionText = "_Teleporter",
             DisplayIcon = "rbxassetid://6031082527",

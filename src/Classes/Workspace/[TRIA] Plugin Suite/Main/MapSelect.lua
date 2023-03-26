@@ -10,6 +10,7 @@ local Pages = require(Resources.Components.Pages)
 
 local Util = require(Package.Util)
 
+local Observer = Fusion.Observer
 local Value = Fusion.Value
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
@@ -366,4 +367,12 @@ function MapSelect:ResetSelection()
     end
 end
 
+Observer(Util.hasSpecialFolder):onChange(function()
+    while Util.hasSpecialFolder:get() do
+        if #Util.variantFolderChildren:get() ~= #Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren() then
+            Util.variantFolderChildren:set(Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren())
+        end
+        task.wait(.25)
+    end
+end)
 return MapSelect

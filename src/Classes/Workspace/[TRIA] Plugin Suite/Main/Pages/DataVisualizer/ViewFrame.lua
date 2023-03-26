@@ -80,6 +80,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                         TextColor3 = Theme.BrightText.Default,
                         TextSize = 16
                     },
+
                     ForValues(data.ViewOptions, function(metadata: PublicTypes.Dictionary): Instance
                         local dataValue = Value(false)
                         local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get())
@@ -89,7 +90,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             BorderSizePixel = 1,
                             Size = UDim2.new(1, 0, 0, 22),
                             LayoutOrder = metadata.LayoutOrder + 1,
-                            Text = " " .. metadata.Name,
+                            Text = typeof(metadata.Name) == "table" and metadata.Name or " " .. metadata.Name,
                             TextColor3 = Theme.MainText.Default,
                             Font = Enum.Font.SourceSansSemibold,
                             TextSize = 15,
