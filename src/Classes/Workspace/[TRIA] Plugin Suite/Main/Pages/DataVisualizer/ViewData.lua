@@ -58,7 +58,7 @@ return {
             }, {
                 Name = "_Fall",
                 LayoutOrder = 3,
-                DisplayIcon = "rbxassetid://6031094674",
+                DisplayIcon = "rbxassetid://12903664425",
             }, {
                 Name = "_Sound",
                 LayoutOrder = 4,
