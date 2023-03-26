@@ -151,6 +151,7 @@ local mainFrame = New "Frame" {
 				New "ImageLabel" {
 					Size = UDim2.fromOffset(20, 20),
 					BackgroundTransparency = 1,
+					ImageColor3 = Theme.MainText.Default,
 					Image = Computed(function()
 						return topbarData.hoverIcon:get()
 					end),
