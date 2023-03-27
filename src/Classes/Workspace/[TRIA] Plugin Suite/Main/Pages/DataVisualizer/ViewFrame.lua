@@ -15,10 +15,26 @@ local Computed = Fusion.Computed
 local Value = Fusion.Value
 local ForValues = Fusion.ForValues
 local OnEvent = Fusion.OnEvent
-local Observer = Fusion.Observer
 
 local viewObjects = {}
 
+Util.MapChanged:Connect(function()
+    if Util.mapModel:get() then
+        return
+    end
+
+    for name, state in pairs(viewObjects) do
+        local value = state.get and state:get() or state
+
+        if not value.Name then
+            for _, ViewObject in pairs(value) do
+                ViewObject:Disable()
+            end
+        else
+            value:Disable()
+        end
+    end
+end)
 
 return function(name: string, data: PublicTypes.Dictionary)
     local Controller
@@ -29,7 +45,7 @@ return function(name: string, data: PublicTypes.Dictionary)
         checkState = Controller.checkState
     else
         if viewObjects[name] and viewObjects[name].get then
-            for metadataName, viewObject in pairs(viewObjects[name]:get()) do --// destroy them all
+            for metadataName, viewObject in pairs(viewObjects[name]:get()) do --// destroy them all because THIS WAS THE SOLUTION SOHDSFJKFHDJKSHFSKJLFHSDLKJHFL
                 viewObject:Destroy()
             end
         end
@@ -80,6 +96,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                 TextXAlignment = Enum.TextXAlignment.Left,
 
                 [OnEvent "Activated"] = function()
+                    if Util.isPluginFrozen() then
+                        return
+                    end
+
                     if data.SingleOption then
                         if Controller.Enabled then
                             Controller:Disable()
@@ -159,6 +179,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                             end) or true,
 
                             [OnEvent "Activated"] = function()
+                                if Util.isPluginFrozen() then
+                                    return
+                                end
+
                                 if ViewObject.Enabled then
                                     ViewObject:Disable()
                                 else
