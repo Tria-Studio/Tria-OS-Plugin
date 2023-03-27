@@ -41,14 +41,16 @@ return function(name: string, data: PublicTypes.Dictionary)
         end
 
         viewObjects[name] = Value(viewObjects[name])
-        checkState = Computed(function()
-            for name, data in viewObjects[name]:get() do
-                if not data.Enabled then
-                    return false
-                end
+        checkState = Value(false)
+    end
+
+    local function GetState(Objects)
+        for name, ViewObject in pairs(Objects) do
+            if not ViewObject.Enabled then
+                return false
             end
-            return true
-        end)
+        end
+        return true
     end
 
     return New "Frame" {
@@ -76,6 +78,28 @@ return function(name: string, data: PublicTypes.Dictionary)
                 Text = data.DisplayText,
                 TextColor3 = Theme.MainText.Default,
                 TextXAlignment = Enum.TextXAlignment.Left,
+
+                [OnEvent "Activated"] = function()
+                    if data.SingleOption then
+                        if Controller.Enabled then
+                            Controller:Disable()
+                        else
+                            Controller:Enable()
+                        end
+                    else
+                        local ALlViewObjects = viewObjects[name]:get()
+                        local CurrentState = GetState(ALlViewObjects)
+
+                        for name, data in pairs(ALlViewObjects) do
+                            if CurrentState then
+                                data:Disable()
+                            else
+                                data:Enable()
+                            end
+                        end
+                        checkState:set(not CurrentState)
+                    end
+                end,
 
                 [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil)
             },
@@ -133,6 +157,17 @@ return function(name: string, data: PublicTypes.Dictionary)
                             Visible = name == "AddonView" and Computed(function()
                                 return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get() ~= false
                             end) or true,
+
+                            [OnEvent "Activated"] = function()
+                                if ViewObject.Enabled then
+                                    ViewObject:Disable()
+                                else
+                                    ViewObject:Enable()
+                                end
+
+                                local CurrentState = GetState(viewObjects[name]:get())
+                                checkState:set(CurrentState)
+                            end,
 
                             [OnEvent "MouseEnter"] = function()
                                 if not Util.isPluginFrozen() then

@@ -6,7 +6,6 @@ local Util = require(Package.Util)
 local Observer = Fusion.Observer
 local Value = Fusion.Value
 
-local UpdateViewOptions = Util.Signal.new(0)
 local varaints = Value({})
 local nameEvents = Util.Maid.new()
 
@@ -28,7 +27,6 @@ Observer(Util.variantFolderChildren):onChange(function()
     end
 
     varaints:set(newTable)
-    UpdateViewOptions:Fire()
 end)
 
 return {
@@ -151,7 +149,6 @@ return {
         DisplayText = "Variant View",
         DisplayIcon = "rbxassetid://6022668909",
         LayoutOrder = 6,
-        UpdateViewOptions = UpdateViewOptions,
         ViewOptions = varaints, --TODO: find a way to have this and the UI update when variants are created and destroyed
         Tooltip = {
             Header = "",

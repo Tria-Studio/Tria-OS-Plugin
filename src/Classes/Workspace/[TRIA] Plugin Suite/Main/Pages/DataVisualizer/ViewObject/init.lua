@@ -30,6 +30,7 @@ function ViewObject.new(Name, data)
     self._Maid = Util.Maid.new()
 
     self.Name = Name
+    self._name = Name.get and Name:get() or Name
     self.Data = data
 
     self.checkState = Value(false)
@@ -39,11 +40,24 @@ function ViewObject.new(Name, data)
 end
 
 function ViewObject:Enable()
-    
+    if self.Enabled then
+        return
+    end
+
+    self.Enabled = true
+    self.checkState:set(true)
+    print("Enabled " .. self._name)
 end
 
 function ViewObject:Disable()
-    
+    if not self.Enabled then
+        return
+    end
+
+    self.Enabled = false
+    self.checkState:set(false)
+
+    print("Disabled " .. self._name)
 end
 
 function ViewObject:Destroy()
