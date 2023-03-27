@@ -14,3 +14,41 @@
 
     destroy() - destroys it (will be used for variants)
 ]]
+
+local Package = script.Parent.Parent.Parent
+local Util = require(Package.Util)
+local Fusion = require(Package.Resources.Fusion)
+
+local Value = Fusion.Value
+
+local ViewObject = {}
+ViewObject.__index = ViewObject
+
+function ViewObject.new(Name, data)
+    local self = setmetatable({}, ViewObject)
+
+    self._Maid = Util.Maid.new()
+
+    self.Name = Name
+    self.Data = data
+
+    self.checkState = Value(false)
+    self.Enabled = false
+
+    return self
+end
+
+function ViewObject:Enable()
+    
+end
+
+function ViewObject:Disable()
+    
+end
+
+function ViewObject:Destroy()
+    self:Disable()
+    self._Maid:DoCleaning()
+end
+
+return ViewObject

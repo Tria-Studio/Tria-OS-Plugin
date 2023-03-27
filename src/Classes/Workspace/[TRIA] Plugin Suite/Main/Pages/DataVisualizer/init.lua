@@ -20,8 +20,6 @@ local Computed = Fusion.Computed
 
 local PAGE_ACTIVE = Value(false)
 
-local textLabelVisible = Value(true)
-
 local frame = {}
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -67,7 +65,7 @@ end
 local function updatePage()
     local wasActive = PAGE_ACTIVE:get(false)
     PAGE_ACTIVE:set(Util.hasSpecialFolder:get(false) and Util.mapModel:get(false))
-    textLabelVisible:set(not PAGE_ACTIVE:get(false))
+    -- textLabelVisible:set(not PAGE_ACTIVE:get(false)) -- what does this do (?)
     
     if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get(false) == "DataVisualizer" then
         showPageError()

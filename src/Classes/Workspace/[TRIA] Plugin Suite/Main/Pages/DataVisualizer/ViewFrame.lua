@@ -6,6 +6,8 @@ local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
+local ViewObject = require(script.Parent.ViewObject)
+
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -13,10 +15,41 @@ local Computed = Fusion.Computed
 local Value = Fusion.Value
 local ForValues = Fusion.ForValues
 local OnEvent = Fusion.OnEvent
+local Observer = Fusion.Observer
+
+local viewObjects = {}
 
 
 return function(name: string, data: PublicTypes.Dictionary)
-    local checkState = Value(false)
+    local Controller
+    local checkState
+    if data.SingleOption then
+        Controller = ViewObject.new(name, data)
+        viewObjects[name] = Controller
+        checkState = Controller.checkState
+    else
+        if viewObjects[name] and viewObjects[name].get then
+            for metadataName, viewObject in pairs(viewObjects[name]:get()) do --// destroy them all
+                viewObject:Destroy()
+            end
+        end
+        viewObjects[name] = {}
+
+        for _, metadata in pairs(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) do
+            Controller = ViewObject.new(metadata.Name, metadata)
+            viewObjects[name][metadata.Name] = Controller
+        end
+
+        viewObjects[name] = Value(viewObjects[name])
+        checkState = Computed(function()
+            for name, data in viewObjects[name]:get() do
+                if not data.Enabled then
+                    return false
+                end
+            end
+            return true
+        end)
+    end
 
     return New "Frame" {
         Visible = name == "AddonView" and Computed(function()
@@ -81,9 +114,11 @@ return function(name: string, data: PublicTypes.Dictionary)
                         TextSize = 16
                     },
 
-                    ForValues(data.ViewOptions, function(metadata: PublicTypes.Dictionary): Instance
-                        local dataValue = Value(false)
-                        local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get())
+                    ForValues(not data.SingleOption and viewObjects[name] or {}, function(ViewObject: PublicTypes.Dictionary): Instance
+                        local metadata = ViewObject.Data
+                        local dataValue = ViewObject.checkState
+                        local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get())  
+
                         return New "TextButton" {
                             BackgroundColor3 = BackgroundColor,
                             BorderColor3 = Theme.Border.Default,
@@ -134,7 +169,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             }
                         }
                     end, Fusion.cleanup),
-                    Components.Spacer(data.SingleOption, #data.ViewOptions + 2, 2, 1, Theme.ScrollBarBackground.Default),   
+                    Components.Spacer(data.SingleOption, #(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) + 2, 2, 1, Theme.ScrollBarBackground.Default),   
                 }
             }
         }

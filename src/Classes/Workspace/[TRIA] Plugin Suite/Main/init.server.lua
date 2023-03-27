@@ -222,7 +222,7 @@ local mainFrame = New "Frame" {
 					Insert = "Resources",
 					AudioLibrary = "Audio Library"
 				}
-				topbarData.hoverIcon:set(MenuData.Buttons[index].Icon)
+				topbarData.hoverIcon:set(MenuData.Buttons[index] and MenuData.Buttons[index].Icon or "")
 				topbarData.mousePos:set(Vector2.new(relativePos.X, relativePos.Y))
 				topbarData.hoveredButton:set(pageNameToDisplay[pages[index]])
 			end,
