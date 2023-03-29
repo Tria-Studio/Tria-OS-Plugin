@@ -323,6 +323,10 @@ if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")
 end
 
+Util.DebugObjectsFolder = Instance.new("Folder")
+Util.DebugObjectsFolder.Parent = widget
+Util.DebugObjectsFolder.Name = "DebugObjects"
+
 plugin.Unloading:Connect(function()
 	Util.toggleAudioPerms(nil)
 	Util.PluginActive:set(false)

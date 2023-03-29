@@ -17,6 +17,7 @@
 
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
+local TagUtil = require(Package.Util.TagUtils)
 local Fusion = require(Package.Resources.Fusion)
 
 local Value = Fusion.Value
@@ -30,10 +31,11 @@ function ViewObject.new(Name, data)
     self._Maid = Util.Maid.new()
     self.Objects = {}
 
+    self.Tag = data.Name
+    self.TagType = data.TagType
     self.Color3 = Color3.new()
     self.Name = Name
     self._name = Name.get and Name:get() or Name
-    self.Data = data
 
     self.checkState = Value(false)
     self.Enabled = false
@@ -42,7 +44,13 @@ function ViewObject.new(Name, data)
 end
 
 function ViewObject:SetColor(newColor: Color3)
-    
+    self.Color = newColor
+
+    if self.Enabled then
+        for i, Object in pairs(self.Objects) do
+            Object:UpdateAppearance()
+        end
+    end
 end
 
 function ViewObject:Enable()
@@ -50,10 +58,16 @@ function ViewObject:Enable()
         return
     end
 
+    local PartsWithTag = TagUtil:GetPartsWithTag(self.Tag)
+    local Controller = require(script.ObectTypes.example)
+
+    for i, Part in pairs(PartsWithTag) do
+        local PartController = Controller.new(Part, self)
+        table.insert(self.Objects, PartController)
+        
+    end
     self.Enabled = true
     self.checkState:set(true)
-
-
 end
 
 function ViewObject:Disable()
@@ -61,6 +75,10 @@ function ViewObject:Disable()
         return
     end
 
+    for i, Object in pairs(self.Objects) do
+        Object:Destroy()
+    end
+    self.Objects = nil
     self.Enabled = false
     self.checkState:set(false)
     self._Maid:DoCleaning()

@@ -1,4 +1,3 @@
-local DataStoreService = game:GetService("DataStoreService")
 local Package = script.Parent.Parent.Parent
 local Fusion = require(Package.Resources.Fusion)
 local Util = require(Package.Util)
@@ -21,6 +20,7 @@ Observer(Util.variantFolderChildren):onChange(function()
 
         table.insert(newTable, {
             LayoutOrder = i,
+            TagType = "Parent",
             Name = name,
             Color = Color3.fromHSV((i / #Util.variantFolderChildren:get()), .25,.875),
             DisplayIcon = "rbxassetid://6035067831"
@@ -32,6 +32,7 @@ end)
 
 return {
     LowDetail = {
+        TagType = "Parent",
         SingleOption = true,
         DisplayText = "Low Detail View",
         DisplayIcon = "rbxassetid://6034925618",
@@ -50,32 +51,37 @@ return {
         LayoutOrder = 2,
         ViewOptions = {
             {
+                TagType = "Any",
                 Name = "_Show",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031075931",
                 Color = Color3.fromRGB(51, 162, 48),
-                
             }, {
+                TagType = "Any",
                 Name = "_Hide",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6031075929",
                 Color = Color3.fromRGB(75, 52, 156),
             }, {
+                TagType = "Any",
                 Name = "_Fall",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://12903664425",
                 Color = Color3.fromRGB(214, 240, 99),
             }, {
+                TagType = "Any",
                 Name = "_Sound",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026671215",
                 Color = Color3.fromRGB(102, 102, 102),
             }, {
+                TagType = "Any",
                 Name = "_Destroy",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668962",
                 Color = Color3.fromRGB(135, 40, 40),
             }, {
+                TagType = "Any",
                 Name = "_Explode",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034684949",
@@ -94,41 +100,49 @@ return {
         LayoutOrder = 3,
         ViewOptions = {
             {
+                TagType = "Any",
                 Name = "WallJump",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://9468872087",
                 Color = Color3.fromRGB(180, 180, 180),
             }, {
+                TagType = "Any",
                 Name = "WallRun",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6026568215",
                 Color = Color3.fromRGB(225, 225, 225),
             }, {
+                TagType = "Any",
                 Name = "_Liquid",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://6026568295",
                 Color = Color3.fromRGB(60, 60, 220)
             }, {
+                TagType = "Any",
                 Name = "_Gas",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026568253",
                 Color = Color3.fromRGB(206, 143, 211)
             }, {
+                TagType = "NoChild",
                 Name = "Killbrick",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668916",
                 Color = Color3.fromRGB(255, 0, 0)
             }, {
+                TagType = "NoChild",
                 Name = "SpeedBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
                 Color = Color3.fromRGB(110, 203, 53)
             }, {
+                TagType = "NoChild",
                 Name = "JumpBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
                 Color = Color3.fromRGB(190, 222, 48)
             }, {
+                TagType = "Any",
                 Name = "AirTank",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6031068426",
@@ -141,6 +155,7 @@ return {
         },
     },
     ButtonView = {
+        TagType = "Any",
         SingleOption = true,
         DisplayText = "Button View",
         DisplayIcon = "rbxassetid://6026647916",
@@ -152,6 +167,7 @@ return {
         }
     },
     ZiplineView = {
+        TagType = "Any",
         SingleOption = true,
         DisplayText = "Zipline View",
         DisplayIcon = "rbxassetid://6035067839",
@@ -179,11 +195,13 @@ return {
         LayoutOrder = 7,
         ViewOptions = {
             {
+                TagType = "Any",
                 Name = "_Teleporter",
                 Color = Color3.fromRGB(255, 255, 255),
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031082527",
             }, {
+                TagType = "Any",
                 Name = "_Waterjet",
                 Color = Color3.fromRGB(89, 193, 248),
                 LayoutOrder = 2,
