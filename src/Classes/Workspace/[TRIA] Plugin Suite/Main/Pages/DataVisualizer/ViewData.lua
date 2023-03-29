@@ -22,6 +22,7 @@ Observer(Util.variantFolderChildren):onChange(function()
         table.insert(newTable, {
             LayoutOrder = i,
             Name = name,
+            Color = Color3.fromHSV((i / #Util.variantFolderChildren:get()), .25,.875),
             DisplayIcon = "rbxassetid://6035067831"
         })
     end
@@ -36,6 +37,7 @@ return {
         DisplayIcon = "rbxassetid://6034925618",
         LayoutOrder = 1,
         ViewOptions = {},
+        Color = Color3.fromRGB(187, 67, 227),
         Tooltip = {
             Header = "",
             Text = ""
@@ -51,26 +53,33 @@ return {
                 Name = "_Show",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031075931",
+                Color = Color3.fromRGB(51, 162, 48),
+                
             }, {
                 Name = "_Hide",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6031075929",
+                Color = Color3.fromRGB(75, 52, 156),
             }, {
                 Name = "_Fall",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://12903664425",
+                Color = Color3.fromRGB(214, 240, 99),
             }, {
                 Name = "_Sound",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026671215",
+                Color = Color3.fromRGB(102, 102, 102),
             }, {
                 Name = "_Destroy",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668962",
+                Color = Color3.fromRGB(135, 40, 40),
             }, {
                 Name = "_Explode",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034684949",
+                Color = Color3.fromRGB(240, 115, 48),
             },
         },
         Tooltip = {
@@ -88,34 +97,42 @@ return {
                 Name = "WallJump",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://9468872087",
+                Color = Color3.fromRGB(180, 180, 180),
             }, {
                 Name = "WallRun",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6026568215",
+                Color = Color3.fromRGB(225, 225, 225),
             }, {
                 Name = "_Liquid",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://6026568295",
+                Color = Color3.fromRGB(60, 60, 220)
             }, {
                 Name = "_Gas",
                 LayoutOrder = 4,
-                DisplayIcon = "rbxassetid://6026568253", 
+                DisplayIcon = "rbxassetid://6026568253",
+                Color = Color3.fromRGB(206, 143, 211)
             }, {
                 Name = "Killbrick",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668916",
+                Color = Color3.fromRGB(255, 0, 0)
             }, {
                 Name = "SpeedBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
+                Color = Color3.fromRGB(110, 203, 53)
             }, {
                 Name = "JumpBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
+                Color = Color3.fromRGB(190, 222, 48)
             }, {
                 Name = "AirTank",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6031068426",
+                Color = Color3.fromRGB(41, 184, 232)
             },
         },
         Tooltip = {
@@ -163,10 +180,12 @@ return {
         ViewOptions = {
             {
                 Name = "_Teleporter",
+                Color = Color3.fromRGB(255, 255, 255),
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031082527",
             }, {
                 Name = "_Waterjet",
+                Color = Color3.fromRGB(89, 193, 248),
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6022668890",
             }

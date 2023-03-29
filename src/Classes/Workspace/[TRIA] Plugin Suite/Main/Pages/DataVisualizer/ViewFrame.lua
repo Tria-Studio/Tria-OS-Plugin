@@ -7,6 +7,7 @@ local Components = require(Resources.Components)
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
 local ViewObject = require(script.Parent.ViewObject)
+local ColorWheel = require(Package.ColorWheel)
 
 
 local New = Fusion.New
@@ -36,13 +37,53 @@ Util.MapChanged:Connect(function()
     end
 end)
 
+local function GetColorButton(name, metadataName, data)
+    if data and not data.SingleOption then
+        return
+    end
+    local Controller = viewObjects[name].get and viewObjects[name]:get() or viewObjects[name]
+    if metadataName then
+        Controller = Controller[metadataName]
+    end
+
+    if Controller.Customizable then
+        return New "TextButton" {
+            AutoButtonColor = Computed(function()
+                return Util.mapModel:get() and Util.hasSpecialFolder:get()
+            end),
+            Size = UDim2.new(0, 15, 0, 15),
+            Position = UDim2.new(1, -6, .5, 0),
+            AnchorPoint = Vector2.new(1, .5),
+            Name = "_LINE" .. (name.get and name:get() or name),
+            BackgroundColor3 = Controller.Color,
+    
+            [OnEvent "Activated"] = function()
+                if Util.mapModel:get() and Util.hasSpecialFolder:get() then
+                    Controller.Color:set(ColorWheel:GetColor(Controller.Color:get()) or Controller.Color:get())
+                end
+            end,
+
+            [Children] = New "Frame" {
+                Size = UDim2.new(0, 2, 0, 25),
+                AnchorPoint = Vector2.new(1, .5),
+                Position = UDim2.new(0, -5, .5, 0),
+                BackgroundColor3 = Theme.Border.Default,
+                Visible = not data
+            }
+        }
+    end
+end
+
 return function(name: string, data: PublicTypes.Dictionary)
-    local Controller
     local checkState
     if data.SingleOption then
         Controller = ViewObject.new(name, data)
         viewObjects[name] = Controller
         checkState = Controller.checkState
+        if data.Color then
+            Controller.Color = Value(data.Color)
+            Controller.Customizable = true
+        end
     else
         if viewObjects[name] and viewObjects[name].get then
             for metadataName, viewObject in pairs(viewObjects[name]:get()) do --// destroy them all because THIS WAS THE SOLUTION SOHDSFJKFHDJKSHFSKJLFHSDLKJHFL
@@ -54,6 +95,11 @@ return function(name: string, data: PublicTypes.Dictionary)
         for _, metadata in pairs(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) do
             Controller = ViewObject.new(metadata.Name, metadata)
             viewObjects[name][metadata.Name] = Controller
+
+            if metadata.Color then
+                Controller.Color = Value(metadata.Color)
+                Controller.Customizable = true
+            end
         end
 
         viewObjects[name] = Value(viewObjects[name])
@@ -121,7 +167,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                     end
                 end,
 
-                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil)
+                [Children] = {
+                    Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil),
+                    GetColorButton(name, nil, data),
+                }
             },
             Components.Checkbox(20, UDim2.fromOffset(-30, 2), Vector2.new(1, 0), checkState),
             New "ImageLabel" { --// Icon
@@ -225,12 +274,14 @@ return function(name: string, data: PublicTypes.Dictionary)
                                     Image = metadata.DisplayIcon,
                                     ImageColor3 = Theme.MainText.Default
                                 },
+
+                                GetColorButton(name, metadata.Name)
                             }
                         }
                     end, Fusion.cleanup),
                     Components.Spacer(data.SingleOption, #(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) + 2, 2, 1, Theme.ScrollBarBackground.Default),   
                 }
-            }
+            },
         }
     }
 end

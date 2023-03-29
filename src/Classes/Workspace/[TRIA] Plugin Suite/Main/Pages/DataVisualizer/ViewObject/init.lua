@@ -28,7 +28,9 @@ function ViewObject.new(Name, data)
     local self = setmetatable({}, ViewObject)
 
     self._Maid = Util.Maid.new()
+    self.Objects = {}
 
+    self.Color3 = Color3.new()
     self.Name = Name
     self._name = Name.get and Name:get() or Name
     self.Data = data
@@ -39,6 +41,10 @@ function ViewObject.new(Name, data)
     return self
 end
 
+function ViewObject:SetColor(newColor: Color3)
+    
+end
+
 function ViewObject:Enable()
     if self.Enabled then
         return
@@ -46,7 +52,8 @@ function ViewObject:Enable()
 
     self.Enabled = true
     self.checkState:set(true)
-    print("Enabled " .. self._name)
+
+
 end
 
 function ViewObject:Disable()
@@ -56,8 +63,7 @@ function ViewObject:Disable()
 
     self.Enabled = false
     self.checkState:set(false)
-
-    print("Disabled " .. self._name)
+    self._Maid:DoCleaning()
 end
 
 function ViewObject:Destroy()
