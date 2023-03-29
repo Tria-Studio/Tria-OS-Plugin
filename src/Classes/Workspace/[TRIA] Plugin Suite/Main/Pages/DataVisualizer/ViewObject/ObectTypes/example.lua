@@ -1,7 +1,89 @@
---[[
-    one function will exist for every type of "object" that can be toggled with debug view
+local Package = script.Parent.Parent.Parent.Parent.Parent
+local Util = require(Package.Util)
+local TagUtils = require(Package.Util.TagUtils)
 
-    setappearance() -- creates the parts appearance
-    clearappearance() -- removes all parts related to its appearance
-    updateappearance() -- clears the appearance then re-sets it
-]]
+local ObjectType = {}
+ObjectType.__index = ObjectType
+
+function ObjectType.new(part, controller)
+    local self = setmetatable({}, ObjectType)
+
+    self.AppearanceSet = false
+    self.Tag = controller.Name
+    self.Color = controller.Color
+    self.Parts = part
+    self.Objects = {}
+    self._Maid = Util.Maid.new()
+
+    return self
+end
+
+function ObjectType:SetAppearance(parts)
+    if ObjectType.AppearanceSet then
+        ObjectType:ClearAppearance()
+    end
+
+    for i, part in pairs(parts) do
+        local SelectionBox = Instance.new("SelectionBox")
+        local selectionId = self._Maid:GiveTask(SelectionBox)
+        self.Objects[part] = {
+            SelectionBox = SelectionBox
+        }
+        SelectionBox.SurfaceColor3 = self.Color
+        SelectionBox.Color3 = self.Color
+        SelectionBox.LineThickness = 0.04
+        SelectionBox.Transparency = 0.375
+        SelectionBox.SurfaceTransparency = .625
+        SelectionBox.Parent = Util.DebugObjectsFolder
+
+        local index1, index2
+        if self.TagType == "Any" then
+            index1 = self._Maid:GiveTask(part.Changed:Connect(function()
+                if not TagUtils:PartHasTag(part, self.Name) then
+                    self._Maid[index1] = nil
+                    self._Maid[selectionId] = nil
+                end
+            end))
+        elseif self.TagType == "Child" then
+            index1 = self._Maid:GiveTask(part.ChildAdded:Connect(function()
+                if not TagUtils:PartHasTag(part, self.Name) then
+                    self._Maid[index1] = nil
+                    self._Maid[selectionId] = nil
+                end
+            end))
+            index2 = self._Maid:GiveTask(part.ChildAdded:Connect(function()
+                if not TagUtils:PartHasTag(part, self.Name) then
+                    self._Maid[index2] = nil
+                    self._Maid[selectionId] = nil
+                end
+            end))
+        elseif self.TagType == "Parent" then
+            index1 = self._Maid:GiveTask(part.AncestryChanged:Connect(function()
+                if not TagUtils:PartHasTag(part, self.Name) then
+                    self._Maid[index1] = nil
+                    self._Maid[selectionId] = nil
+                end
+            end))
+        end
+    end
+    self.AppearanceSet = true
+end
+
+function ObjectType:UpdateAppearance()
+    for i, part in pairs(self.Parts) do
+        local Parts = self.Objects[part]
+        Parts.SelectionBox.Color3 = self.Color
+        Parts.SelectionBox.SurfaceColor3 = self.Color
+    end
+end
+
+function ObjectType:ClearAppearance()
+    self._Maid:Destroy ()
+    self.AppearanceSet = false
+end
+
+function ObjectType:Destroy()
+    self._Maid:Destroy()
+end
+
+return ObjectType
