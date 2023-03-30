@@ -25,17 +25,21 @@ local Value = Fusion.Value
 local ViewObject = {}
 ViewObject.__index = ViewObject
 
-function ViewObject.new(Name, data)
+function ViewObject.new(Name, data, color)
     local self = setmetatable({}, ViewObject)
 
     self._Maid = Util.Maid.new()
     self.Objects = {}
 
-    self.Tag = data.Name
+    self.ObjectType = data.ObjectType or "SelectionBox"
     self.TagType = data.TagType
-    self.Color3 = Color3.new()
+    
+    self.Tag = data.Name
     self.Name = Name
-    self._name = Name.get and Name:get() or Name
+    self.Data = data
+
+    self.Color = Value(color)
+    self.ObjectHandler = require(script.ObectTypes[self.ObjectType]).new(self)
 
     self.checkState = Value(false)
     self.Enabled = false
@@ -44,12 +48,10 @@ function ViewObject.new(Name, data)
 end
 
 function ViewObject:SetColor(newColor: Color3)
-    self.Color = newColor
+    self.Color:set(newColor)
 
     if self.Enabled then
-        for i, Object in pairs(self.Objects) do
-            Object:UpdateAppearance()
-        end
+        self.ObjectHandler:UpdateAppearance()
     end
 end
 
@@ -59,13 +61,8 @@ function ViewObject:Enable()
     end
 
     local PartsWithTag = TagUtil:GetPartsWithTag(self.Tag)
-    local Controller = require(script.ObectTypes.example)
+    self.ObjectHandler:SetAppearance(PartsWithTag)
 
-    for i, Part in pairs(PartsWithTag) do
-        local PartController = Controller.new(Part, self)
-        table.insert(self.Objects, PartController)
-        
-    end
     self.Enabled = true
     self.checkState:set(true)
 end
@@ -75,9 +72,7 @@ function ViewObject:Disable()
         return
     end
 
-    for i, Object in pairs(self.Objects) do
-        Object:Destroy()
-    end
+    self.ObjectHandler:ClearAppearance()
     self.Objects = nil
     self.Enabled = false
     self.checkState:set(false)

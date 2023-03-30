@@ -5,13 +5,13 @@ local TagUtils = require(Package.Util.TagUtils)
 local ObjectType = {}
 ObjectType.__index = ObjectType
 
-function ObjectType.new(part, controller)
+function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)
 
     self.AppearanceSet = false
     self.Tag = controller.Name
     self.Color = controller.Color
-    self.Parts = part
+    self.Parts = {}
     self.Objects = {}
     self._Maid = Util.Maid.new()
 
@@ -29,8 +29,8 @@ function ObjectType:SetAppearance(parts)
         self.Objects[part] = {
             SelectionBox = SelectionBox
         }
-        SelectionBox.SurfaceColor3 = self.Color
-        SelectionBox.Color3 = self.Color
+        SelectionBox.SurfaceColor3 = self.Color:get()
+        SelectionBox.Color3 = self.Color:get()
         SelectionBox.LineThickness = 0.04
         SelectionBox.Transparency = 0.375
         SelectionBox.SurfaceTransparency = .625
@@ -72,8 +72,8 @@ end
 function ObjectType:UpdateAppearance()
     for i, part in pairs(self.Parts) do
         local Parts = self.Objects[part]
-        Parts.SelectionBox.Color3 = self.Color
-        Parts.SelectionBox.SurfaceColor3 = self.Color
+        Parts.SelectionBox.Color3 = self.Color:get()
+        Parts.SelectionBox.SurfaceColor3 = self.Color:get()
     end
 end
 

@@ -353,8 +353,6 @@ end
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local types = {}
 
-    --TODO: try to get these functions as optimized and fast as possible, as this function will be the one thats used the most by a longshot
-
     function types.ButtonTags(): boolean?
         for _, child in ipairs(part:GetChildren()) do
             if string.find(child.Name, tag.."%d") then
@@ -425,6 +423,10 @@ function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.T
     return #parts == numYes and Enum.TriStateBoolean.True
         or numYes == 0 and Enum.TriStateBoolean.False
         or Enum.TriStateBoolean.Unknown
+end
+
+function tagUtils:GetPartsWithTag(tag: string): {[number]: Instance}
+    
 end
 
 return tagUtils

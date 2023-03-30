@@ -22,8 +22,10 @@ Observer(Util.variantFolderChildren):onChange(function()
             LayoutOrder = i,
             TagType = "Parent",
             Name = name,
+            DisplayIcon = "rbxassetid://6035067831",
+
             Color = Color3.fromHSV((i / #Util.variantFolderChildren:get()), .25,.875),
-            DisplayIcon = "rbxassetid://6035067831"
+            ObjectType = "SelectionBox",
         })
     end
 
@@ -38,11 +40,13 @@ return {
         DisplayIcon = "rbxassetid://6034925618",
         LayoutOrder = 1,
         ViewOptions = {},
-        Color = Color3.fromRGB(187, 67, 227),
         Tooltip = {
             Header = "",
             Text = ""
-        }
+        },
+
+        Color = Color3.fromRGB(187, 67, 227),
+        ObjectType = "SelectionBox",
     },
     ButtonTags = {
         DisplayText = "Button Tags",
@@ -55,37 +59,49 @@ return {
                 Name = "_Show",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031075931",
+
                 Color = Color3.fromRGB(51, 162, 48),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "_Hide",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6031075929",
+
                 Color = Color3.fromRGB(75, 52, 156),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "_Fall",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://12903664425",
+
                 Color = Color3.fromRGB(214, 240, 99),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "_Sound",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026671215",
+
                 Color = Color3.fromRGB(102, 102, 102),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "_Destroy",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668962",
+
                 Color = Color3.fromRGB(135, 40, 40),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "_Explode",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034684949",
+
                 Color = Color3.fromRGB(240, 115, 48),
+                ObjectType = "SelectionBox",
             },
         },
         Tooltip = {
@@ -104,49 +120,65 @@ return {
                 Name = "WallJump",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://9468872087",
+
                 Color = Color3.fromRGB(180, 180, 180),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "WallRun",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6026568215",
+                
                 Color = Color3.fromRGB(225, 225, 225),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "_Liquid",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://6026568295",
-                Color = Color3.fromRGB(60, 60, 220)
+
+                Color = Color3.fromRGB(60, 60, 220),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "_Gas",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026568253",
-                Color = Color3.fromRGB(206, 143, 211)
+
+                Color = Color3.fromRGB(206, 143, 211),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "NoChild",
                 Name = "Killbrick",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668916",
-                Color = Color3.fromRGB(255, 0, 0)
+
+                Color = Color3.fromRGB(255, 0, 0),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "NoChild",
                 Name = "SpeedBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
-                Color = Color3.fromRGB(110, 203, 53)
+
+                Color = Color3.fromRGB(110, 203, 53),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "NoChild",
                 Name = "JumpBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
-                Color = Color3.fromRGB(190, 222, 48)
+
+                Color = Color3.fromRGB(190, 222, 48),
+                ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
                 Name = "AirTank",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6031068426",
-                Color = Color3.fromRGB(41, 184, 232)
+
+                Color = Color3.fromRGB(41, 184, 232),
+                ObjectType = "SelectionBox",
             },
         },
         Tooltip = {
@@ -182,7 +214,7 @@ return {
         DisplayText = "Variant View",
         DisplayIcon = "rbxassetid://6022668909",
         LayoutOrder = 6,
-        ViewOptions = varaints, --TODO: find a way to have this and the UI update when variants are created and destroyed
+        ViewOptions = varaints,
         Tooltip = {
             Header = "",
             Text = ""
@@ -197,15 +229,19 @@ return {
             {
                 TagType = "Any",
                 Name = "_Teleporter",
-                Color = Color3.fromRGB(255, 255, 255),
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031082527",
+
+                Color = Color3.fromRGB(255, 255, 255),
+                ObjectType = "SelectionBox"
             }, {
                 TagType = "Any",
                 Name = "_Waterjet",
-                Color = Color3.fromRGB(89, 193, 248),
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6022668890",
+
+                Color = Color3.fromRGB(89, 193, 248),
+                ObjectType = "SelectionBox"
             }
         },
         Tooltip = {

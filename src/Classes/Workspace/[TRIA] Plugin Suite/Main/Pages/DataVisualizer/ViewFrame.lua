@@ -46,7 +46,7 @@ local function GetColorButton(name, metadataName, data)
         Controller = Controller[metadataName]
     end
 
-    if Controller.Customizable then
+    if Controller.Color:get() then
         return New "TextButton" {
             AutoButtonColor = Computed(function()
                 return Util.mapModel:get() and Util.hasSpecialFolder:get()
@@ -56,6 +56,9 @@ local function GetColorButton(name, metadataName, data)
             AnchorPoint = Vector2.new(1, .5),
             Name = "_LINE" .. (name.get and name:get() or name),
             BackgroundColor3 = Controller.Color,
+            BorderMode = Enum.BorderMode.Inset,
+            BorderColor3 = Theme.Border.Default,
+            BorderSizePixel = 2,
     
             [OnEvent "Activated"] = function()
                 if Util.mapModel:get() and Util.hasSpecialFolder:get() then
@@ -77,13 +80,9 @@ end
 return function(name: string, data: PublicTypes.Dictionary)
     local checkState
     if data.SingleOption then
-        Controller = ViewObject.new(name, data)
+        Controller = ViewObject.new(name, data, data.Color)
         viewObjects[name] = Controller
         checkState = Controller.checkState
-        if data.Color then
-            Controller.Color = Value(data.Color)
-            Controller.Customizable = true
-        end
     else
         if viewObjects[name] and viewObjects[name].get then
             for metadataName, viewObject in pairs(viewObjects[name]:get()) do --// destroy them all because THIS WAS THE SOLUTION SOHDSFJKFHDJKSHFSKJLFHSDLKJHFL
@@ -93,13 +92,8 @@ return function(name: string, data: PublicTypes.Dictionary)
         viewObjects[name] = {}
 
         for _, metadata in pairs(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) do
-            Controller = ViewObject.new(metadata.Name, metadata)
+            Controller = ViewObject.new(metadata.Name, metadata, metadata.Color)
             viewObjects[name][metadata.Name] = Controller
-
-            if metadata.Color then
-                Controller.Color = Value(metadata.Color)
-                Controller.Customizable = true
-            end
         end
 
         viewObjects[name] = Value(viewObjects[name])
