@@ -30,7 +30,7 @@ end
 
 function Dropdown:GetValue(dataArray, uiParent)
     local dropdownData, sortOrder = DropdownData[dataArray]()
-    local dropdownSize = #dropdownData * 20
+    local dropdownSize = #dropdownData * 22
 
     local localYPos = uiParent.AbsolutePosition.Y + uiParent.AbsoluteSize.Y / 2
     local isOnTop = Util.Widget.AbsoluteSize.Y - localYPos < math.min(dropdownSize, 240)
@@ -59,7 +59,7 @@ function Dropdown:GetValue(dataArray, uiParent)
     Maid:GiveTask(
         Components.ScrollingFrame {
             Parent = uiParent,
-            Size = UDim2.fromOffset(120 + (dropdownSize > 240 and 12 or 0), math.min(dropdownSize, 240) + 5),
+            Size = UDim2.fromOffset(120 + (dropdownSize > 240 and 12 or 0), math.min(dropdownSize, 240)),
             Position = UDim2.fromScale(0, isOnTop and 0 or 1) + UDim2.fromOffset(0, isOnTop and -5 or 5),
             AnchorPoint = Vector2.new(0, isOnTop and 1 or 0),
             BackgroundColor3 = Theme.Border.Default,
@@ -67,11 +67,11 @@ function Dropdown:GetValue(dataArray, uiParent)
             CanvasSize = UDim2.new(0, 0, 0, 0),
             AutomaticCanvasSize = dropdownSize > 240 and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
             BorderColor3 = Theme.Border.Default,
-            BorderSizePixel = 2,
+            BorderSizePixel = 1,
             ZIndex = 8,
 
             [Children] = {
-                Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 1), nil, sortOrder),
+                Components.Constraints.UIListLayout(nil, nil, nil, nil, sortOrder),
                 ForValues(dropdownData, function(data: PublicTypes.Dictionary): Instance
                     if data.Image then
                         textTruncated:set(Enum.TextTruncate.AtEnd)
@@ -85,7 +85,7 @@ function Dropdown:GetValue(dataArray, uiParent)
                         TextTruncate = textTruncated,
                         TextXAlignment = Enum.TextXAlignment.Left,
                         TextSize = 16,
-                        Size = UDim2.new(1, 0, 0, 20),
+                        Size = UDim2.new(1, 0, 0, 22),
                         ZIndex = 8,
 
                         [OnEvent "Activated"] = function()

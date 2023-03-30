@@ -43,7 +43,7 @@ function DropdownComponents.DropdownButton(props: PublicTypes.Dictionary): Insta
             }
         },
 
-        [OnEvent "Activated"] = function()
+        [OnEvent "Activated"] = function() 
             if not dropdownVisible:get() then
                 dropdownVisible:set(true)
                 local newData = Dropdown:GetValue(props.Options, arrowButton:get())
