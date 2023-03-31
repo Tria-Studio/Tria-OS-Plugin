@@ -19,9 +19,8 @@ local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
 local Ref = Fusion.Ref
 
-local PAGE_ACTIVE = Value(false)
-
 local frame = {}
+
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
@@ -78,7 +77,6 @@ New "Folder" {
 Util.MainMaid:GiveTask(Util._DebugView.debugObjectsFolder:get())
 
 Observer(Util._DebugView.activeDebugViews):onChange(function()
-    print"ASS"
     Util._DebugView.debugObjectsFolder:get().Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.Terrain or Util.Widget
 end)
 

@@ -4,6 +4,7 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
 local Pages = require(Package.Resources.Components.Pages)
+local TagUtils = require(Package.Util.TagUtils)
 
 local componentFiles = script.Parent.ComponentFiles
 local addonFiles = script.Parent.AddonFiles
@@ -261,7 +262,7 @@ end)                ]], line + 1)
                 ChangeHistoryService:SetWaypoint("Inserted new variant")
             end
         }, {
-            Name = "New Button",
+            Name = "New Button", 
             Icon = "rbxassetid://12536983604",
             LayoutOrder = 1,
             Tooltip = {
@@ -281,6 +282,7 @@ end)                ]], line + 1)
                 local model = insertModel("_Button0", newParent)
                 model.Name = "_Button" .. (highestButton + 1)
                 positionModel(model)
+                TagUtils.OnTagAdded("_Button"):Fire()
     
                 Util.debugWarn("Successfully inserted new Button!")
             end
@@ -297,6 +299,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Zipline")
                 local model = insertModel("Zipline", newParent)
                 positionModel(model)
+                TagUtils.OnTagAdded("Zipline"):Fire()
                 Util.debugWarn("Successfully inserted new Zipline!")
             end
         }, {
@@ -312,6 +315,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Interactable")
                 local model = insertModel("AirTank", newParent)
                 positionModel(model)
+                TagUtils.OnTagAdded("Airtank"):Fire()
                 Util.debugWarn("Successfully inserted new AirTank!")
             end
         }, {
@@ -372,6 +376,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Interactable")
                 local model = insertModel("Walljump", newParent)
                 positionModel(model)
+                TagUtils.OnTagAdded("_WallJump"):Fire()
                 Util.debugWarn("Successfully inserted new Walljump!")
             end
         }, {
@@ -387,6 +392,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Interactable")
                 local model = insertModel("Wallrun", newParent)
                 positionModel(model)
+                TagUtils.OnTagAdded("_WallRun"):Fire()
                 Util.debugWarn("Successfully inserted new Wallrun!")
             end
         }, {
@@ -405,6 +411,7 @@ end)                ]], line + 1)
                 local model = insertModel("_Gas0", newParent)
                 model.Name = "_Gas" .. (highestGas + 1)
                 positionModel(model)
+                TagUtils.OnTagAdded("_Gas"):Fire()
                 Util.debugWarn("Successfully inserted new Gas!")
             end
         }, 

@@ -18,16 +18,15 @@ function ObjectType.new(controller)
 end
 
 function ObjectType:SetAppearance(parts)
-    if ObjectType.AppearanceSet then
-        ObjectType:ClearAppearance()
+    if typeof(parts) == "Instance" then
+        parts = {parts}
     end
+
+    print(parts)
 
     for i, part in pairs(parts) do
         local SelectionBox = Instance.new("SelectionBox")
         local selectionId = self._Maid:GiveTask(SelectionBox)
-        self.Objects[part] = {
-            SelectionBox = SelectionBox
-        }
         SelectionBox.SurfaceColor3 = self.Color:get()
         SelectionBox.Color3 = self.Color:get()
         SelectionBox.LineThickness = 0.04
@@ -65,6 +64,11 @@ function ObjectType:SetAppearance(parts)
                 end
             end))
         end
+
+        self.Objects[part] = {
+            SelectionBox = SelectionBox,
+            MaidIndex = {selectionId, index1, index2}
+        }
     end
     self.AppearanceSet = true
 end
@@ -76,9 +80,15 @@ function ObjectType:UpdateAppearance()
     end
 end
 
-function ObjectType:ClearAppearance()
-    self._Maid:Destroy ()
-    self.AppearanceSet = false
+function ObjectType:ClearAppearance(part: Instance?)
+    if part then
+        for _, index in pairs(self.Objects[part].MaidIndex) do
+            self._Maid[index] = nil
+        end
+    else
+        self._Maid:Destroy()
+        self.AppearanceSet = false
+    end
 end
 
 function ObjectType:Destroy()

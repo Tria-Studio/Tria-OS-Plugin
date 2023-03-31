@@ -54,7 +54,6 @@ local function GetColorButton(name, metadataName, data)
             Size = UDim2.new(0, 15, 0, 15),
             Position = UDim2.new(1, -6, .5, 0),
             AnchorPoint = Vector2.new(1, .5),
-            Name = "_LINE" .. (name.get and name:get() or name),
             BackgroundColor3 = Controller.Color,
             BorderMode = Enum.BorderMode.Inset,
             BorderColor3 = Theme.Border.Default,

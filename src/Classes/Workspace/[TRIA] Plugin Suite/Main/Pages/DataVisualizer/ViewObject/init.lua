@@ -64,6 +64,12 @@ function ViewObject:Enable()
     local PartsWithTag = TagUtil:GetPartsWithTag(self.Tag, self.SubTag)
     self.ObjectHandler:SetAppearance(PartsWithTag)
 
+    self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
+        self.ObjectHandler:SetAppearance(...)
+    end))
+    self._Maid:GiveTask(TagUtil.OnTagRemoved(self.Tag):Connect(function(...)
+        self.ObjectHandler:ClearAppearance(...)
+    end))
     self.Enabled = true
     self.checkState:set(true)
 end

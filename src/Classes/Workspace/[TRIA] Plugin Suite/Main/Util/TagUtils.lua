@@ -11,6 +11,8 @@ local mapDescendants = {}
 local mapDescendantsUpdate = 0
 
 
+local tagAddedSignals = {}
+local tagRemovedSignals = {}
 local tagUtils = {
     OnlyShowUpdate = Value(0)
 }
@@ -266,6 +268,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
     if not newTag then --// Clear tag
         local otherTags = tagUtils:GetPartTags(part, oldTag)
         local currentMap = Util.mapModel:get(false)
+        tagUtils.OnTagRemoved(oldTag):Fire(part)
 
         function methods._Action()
             if isOptimized then
@@ -345,6 +348,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             part.Parent = newParent
         end
 
+        tagUtils.OnTagAdded(newTag):Fire(part)
         local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag] or TagData.dataTypes.addonTags[newTag]
         for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
@@ -468,6 +472,22 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Inst
     end
 
     return partsFound
+end
+
+function tagUtils.OnTagRemoved(tag)
+    if not tagRemovedSignals[tag] then
+        tagRemovedSignals[tag] = Util.Signal.new()
+    end
+
+    return tagRemovedSignals[tag]
+end
+
+function tagUtils.OnTagAdded(tag)
+    if not tagAddedSignals[tag] then
+        tagAddedSignals[tag] = Util.Signal.new()
+    end
+
+    return tagAddedSignals[tag]
 end
 
 return tagUtils
