@@ -21,6 +21,7 @@ Observer(Util.variantFolderChildren):onChange(function()
         table.insert(newTable, {
             LayoutOrder = i,
             TagType = "Parent",
+            SubName = "Variant",
             Name = name,
             DisplayIcon = "rbxassetid://6035067831",
 

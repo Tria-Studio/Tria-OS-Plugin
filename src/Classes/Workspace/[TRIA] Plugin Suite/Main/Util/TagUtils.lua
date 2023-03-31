@@ -430,6 +430,7 @@ function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.T
 end
 
 function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Instance}
+    print(tag, subTag)
     local Map = Util.mapModel:get()
     local Special = Map:FindFirstChild("Special")
     local CheckIfSpecial = {
@@ -444,9 +445,10 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Inst
         Zipline = Special and Special:FindFirstChild("Zipline"),
         Variant = Special and Special:FindFirstChild("Variant"),
     }
-    local InstanceToCheck = CheckIfSpecial[tag] or Map
-    local partsFound = {}
 
+    local InstanceToCheck = CheckIfSpecial[subTag] or CheckIfSpecial[tag] or Map
+    local partsFound = {}
+print(InstanceToCheck)
     if InstanceToCheck == Map and os.time() - mapDescendantsUpdate > 5 then
         mapDescendantsUpdate = os.time()
         mapDescendants = Map:GetDescendants()
@@ -454,8 +456,8 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Inst
 
     if tag == "LowDetail" then
         return InstanceToCheck  and InstanceToCheck:GetDescendants()
-    elseif tag == "Variant" then
-        return InstanceToCheck and InstanceToCheck[subTag]:GetDescendants()
+    elseif subTag == "Variant" then
+        return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants()
     elseif tag == "Zipline" then
         return InstanceToCheck:GetChildren()
     end

@@ -35,6 +35,7 @@ function ViewObject.new(Name, data, color)
     self.TagType = data.TagType
     
     self.Tag = data.Name
+    self.SubTag = data.SubName
     self.Name = Name
     self.Data = data
 
@@ -60,7 +61,7 @@ function ViewObject:Enable()
         return
     end
 
-    local PartsWithTag = TagUtil:GetPartsWithTag(self.Tag)
+    local PartsWithTag = TagUtil:GetPartsWithTag(self.Tag, self.SubTag)
     self.ObjectHandler:SetAppearance(PartsWithTag)
 
     self.Enabled = true
