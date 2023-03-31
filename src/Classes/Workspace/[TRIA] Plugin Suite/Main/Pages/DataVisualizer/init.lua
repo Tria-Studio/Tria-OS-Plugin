@@ -75,6 +75,7 @@ New "Folder" {
 	Name = "DebugObjects",
     Archivable = false,
 }
+Util.MainMaid:GiveTask(Util._DebugView.debugObjectsFolder:get())
 
 Observer(Util._DebugView.activeDebugViews):onChange(function()
     print"ASS"

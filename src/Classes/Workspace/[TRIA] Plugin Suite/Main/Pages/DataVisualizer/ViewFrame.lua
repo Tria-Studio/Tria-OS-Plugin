@@ -62,7 +62,8 @@ local function GetColorButton(name, metadataName, data)
     
             [OnEvent "Activated"] = function()
                 if Util.mapModel:get() and Util.hasSpecialFolder:get() then
-                    Controller.Color:set(ColorWheel:GetColor(Controller.Color:get()) or Controller.Color:get())
+                    local NewColor = ColorWheel:GetColor(Controller.Color:get()) or Controller.Color:get()
+                    Controller:SetColor(NewColor)
                 end
             end,
 

@@ -11,7 +11,6 @@ function ObjectType.new(controller)
     self.AppearanceSet = false
     self.Tag = controller.Name
     self.Color = controller.Color
-    self.Parts = {}
     self.Objects = {}
     self._Maid = Util.Maid.new()
 
@@ -71,10 +70,9 @@ function ObjectType:SetAppearance(parts)
 end
 
 function ObjectType:UpdateAppearance()
-    for i, part in pairs(self.Parts) do
-        local Parts = self.Objects[part]
-        Parts.SelectionBox.Color3 = self.Color:get()
-        Parts.SelectionBox.SurfaceColor3 = self.Color:get()
+    for i, parts in pairs(self.Objects) do
+        parts.SelectionBox.Color3 = self.Color:get()
+        parts.SelectionBox.SurfaceColor3 = self.Color:get()
     end
 end
 
