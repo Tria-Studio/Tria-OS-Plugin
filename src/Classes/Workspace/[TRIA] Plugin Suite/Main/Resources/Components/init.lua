@@ -60,8 +60,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
         local map = Util.mapModel:get()
         local hasSpecial = Util.hasSpecialFolder:get()
         return 
-            if data.Name == "DataVisualizer" then (map ~= nil and hasSpecial)
-            elseif table.find(Pages.pageData.disabledPages, data.Name) then false 
+            if table.find(Pages.pageData.disabledPages, data.Name) then false 
             else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
     end)
 

@@ -227,12 +227,6 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         mapTypes[newMap.ClassName]()
         detectSpecialFolder()
-        
-
-        task.wait()
-        if not Util.hasSpecialFolder:get(false) then
-            Util:ShowMessage(Util._Headers.WARNING_HEADER, "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
-        end
     else
         self:ResetSelection()
     end
