@@ -7,6 +7,10 @@ local PublicTypes = require(Package.PublicTypes)
 
 local Value = Fusion.Value
 
+local mapDescendants = {}
+local mapDescendantsUpdate = 0
+
+
 local tagUtils = {
     OnlyShowUpdate = Value(0)
 }
@@ -425,8 +429,44 @@ function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.T
         or Enum.TriStateBoolean.Unknown
 end
 
-function tagUtils:GetPartsWithTag(tag: string): {[number]: Instance}
-    
+function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Instance}
+    local Map = Util.mapModel:get()
+    local Special = Map:FindFirstChild("Special")
+    local CheckIfSpecial = {
+        LowDetail = Map:FindFirstChild("Detail"),
+        _Show = Special and Special:FindFirstChild("Button"),
+        _Hide = Special and Special:FindFirstChild("Button"),
+        _Fall = Special and Special:FindFirstChild("Button"),
+        _Sound = Special and Special:FindFirstChild("Button"),
+        _Destroy = Special and Special:FindFirstChild("Button"),
+        _Explode = Special and Special:FindFirstChild("Button"),
+        _Button = Special and Special:FindFirstChild("Button"),
+        Zipline = Special and Special:FindFirstChild("Zipline"),
+        Variant = Special and Special:FindFirstChild("Variant"),
+    }
+    local InstanceToCheck = CheckIfSpecial[tag] or Map
+    local partsFound = {}
+
+    if InstanceToCheck == Map and os.time() - mapDescendantsUpdate > 5 then
+        mapDescendantsUpdate = os.time()
+        mapDescendants = Map:GetDescendants()
+    end
+
+    if tag == "LowDetail" then
+        return InstanceToCheck  and InstanceToCheck:GetDescendants()
+    elseif tag == "Variant" then
+        return InstanceToCheck and InstanceToCheck[subTag]:GetDescendants()
+    elseif tag == "Zipline" then
+        return InstanceToCheck:GetChildren()
+    end
+
+    for _, part in pairs(InstanceToCheck == Map and mapDescendants or InstanceToCheck:GetDescendants()) do
+        if tagUtils:PartHasTag(part, tag) then
+            table.insert(partsFound, part)
+        end
+    end
+
+    return partsFound
 end
 
 return tagUtils

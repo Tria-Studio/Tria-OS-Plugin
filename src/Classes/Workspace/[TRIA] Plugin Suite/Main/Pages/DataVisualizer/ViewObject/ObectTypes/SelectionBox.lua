@@ -34,7 +34,8 @@ function ObjectType:SetAppearance(parts)
         SelectionBox.LineThickness = 0.04
         SelectionBox.Transparency = 0.375
         SelectionBox.SurfaceTransparency = .625
-        SelectionBox.Parent = Util.DebugObjectsFolder
+        SelectionBox.Parent = Util._DebugView.debugObjectsFolder:get()
+        SelectionBox.Adornee = part
 
         local index1, index2
         if self.TagType == "Any" then

@@ -143,7 +143,9 @@ return function(name: string, data: PublicTypes.Dictionary)
                     if data.SingleOption then
                         if Controller.Enabled then
                             Controller:Disable()
+                            Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                         else
+                            Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                             Controller:Enable()
                         end
                     else
@@ -153,8 +155,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                         for name, data in pairs(ALlViewObjects) do
                             if CurrentState then
                                 data:Disable()
+                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                             else
                                 data:Enable()
+                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                             end
                         end
                         checkState:set(not CurrentState)
@@ -228,8 +232,10 @@ return function(name: string, data: PublicTypes.Dictionary)
 
                                 if ViewObject.Enabled then
                                     ViewObject:Disable()
+                                    Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                                 else
                                     ViewObject:Enable()
+                                    Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                                 end
 
                                 local CurrentState = GetState(viewObjects[name]:get())

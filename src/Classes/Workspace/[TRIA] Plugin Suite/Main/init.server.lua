@@ -1,4 +1,5 @@
 local ContentProvider = game:GetService("ContentProvider")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
 
 if not plugin then
 	return
@@ -318,14 +319,9 @@ openButton.Click:Connect(function()
 end)
 Util.PluginActive:set(widget.Enabled)
 
-
 if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")
 end
-
-Util.DebugObjectsFolder = Instance.new("Folder")
-Util.DebugObjectsFolder.Parent = widget
-Util.DebugObjectsFolder.Name = "DebugObjects"
 
 plugin.Unloading:Connect(function()
 	Util.toggleAudioPerms(nil)

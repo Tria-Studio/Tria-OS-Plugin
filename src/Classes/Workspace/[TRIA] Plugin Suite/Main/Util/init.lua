@@ -61,6 +61,10 @@ local Util = {
     _Topbar = {
         FreezeFrame = Value(false)
     },
+    _DebugView = {
+        debugObjectsFolder = Value(),
+        activeDebugViews = Value(0)
+    },
     _Message = {
         Text = Value(""),
         Header = Value(""),

@@ -17,6 +17,7 @@ local Observer = Fusion.Observer
 local Value = Fusion.Value
 local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
+local Ref = Fusion.Ref
 
 local PAGE_ACTIVE = Value(false)
 
@@ -56,28 +57,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-local function showPageError()
-    if Util.mapModel:get() then
-        Util:ShowMessage("Feature Unavailable", "View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
-            Pages:ChangePage("Insert")
-        end})
-    end
-end
-
-local function updatePage()
-    local wasActive = PAGE_ACTIVE:get(false)
-    PAGE_ACTIVE:set(Util.hasSpecialFolder:get(false) and Util.mapModel:get(false))
-
-    if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get(false) == "DataVisualizer" then
-        showPageError()
-    end
-end
-
 function frame.OnOpen()
-    if not Util.hasSpecialFolder:get(false) and Util.mapModel:get(false) then
-        showPageError()
-    end
-
     if not plugin:GetSetting("TRIA_HasViewedDebugView") then
         plugin:SetSetting("TRIA_HasViewedDebugView", true)
         Util:ShowMessage("Welcome to Debug View", "With the click of a button, you can view every part, instance, model, etc. of every data type that TRIA.os supports! This feature requires the OptimizedStructure (AKA the 'Special' folder) in order to work.\n\nUsing a featured addon in your map? Some featured addons support Debug View!")
@@ -90,7 +70,17 @@ function frame.OnClose()
     end
 end
 
-Observer(Util.hasSpecialFolder):onChange(updatePage)
-Observer(Util.mapModel):onChange(updatePage)
+New "Folder" {
+	[Ref] = Util._DebugView.debugObjectsFolder,
+	Name = "DebugObjects",
+    Archivable = false,
+}
+
+Observer(Util._DebugView.activeDebugViews):onChange(function()
+    print"ASS"
+    Util._DebugView.debugObjectsFolder:get().Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.Terrain or Util.Widget
+end)
+
+
 
 return frame
