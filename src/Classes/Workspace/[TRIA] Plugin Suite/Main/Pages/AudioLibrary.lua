@@ -111,8 +111,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
 
     if not songLoadData.loaded[soundData.ID] then
-        print("Song was not previously loaded, toggling.")
-        Util.toggleAudioPerms(true)    
+        Util.toggleAudioPerms(true)
     end
 
     sound.SoundId = ""
@@ -123,7 +122,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
         loaded = fetchStatus == Enum.AssetFetchStatus.Success
     end)
     Util.toggleAudioPerms(false)
-    
+
     if loaded then
         songLoadData.loaded[soundData.ID] = true
     end
@@ -244,9 +243,12 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            print("Song loading")
-                            local soundLoaded = loadSound(audio, data)
-                            print(soundLoaded)
+                            local needsLoading = not songLoadData.loaded[data.ID]
+                            local soundLoaded = if needsLoading then loadSound(audio, data) else true
+                            
+                            if soundLoaded then
+                                
+                            end
                         end
                     },
                 }
