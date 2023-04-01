@@ -75,11 +75,15 @@ local songLoadData = {
     currentlyLoading = Value(nil),
 
     loaded = {},
-
 }
 
-local currentSongData = {}
-local currentSongTween = nil
+local songPlayData = {
+    currentlyPlaying = Value(nil),
+    currentTimePosition = Value(0),
+    currentTimeLength = Value(1),
+
+    currentTween = nil
+}
 
 local ITEMS_PER_PAGE = Computed(function(): number
     return frameAbsoluteSize:get() and math.max(1, math.floor((frameAbsoluteSize:get().Y + 32) / 40)) or 12
@@ -147,6 +151,10 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     return loaded
 end
 
+local function ()
+    
+end
+
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
     return Hydrate(Components.ImageButton {
         BackgroundTransparency = 1,
@@ -164,6 +172,11 @@ local function AudioButton(data: audioTableFormat): Instance
 
     local isLoadingCurrentSong = Computed(function()
         return songLoadData.isLoadingSong:get() and songLoadData.currentlyLoading:get() == audio
+    end)
+
+    local isPlayingCurrentSong = Computed(function(): boolean
+        local currentSong = songPlayData.currentlyPlaying:get()
+        return currentSong and currentSong == audio and currentSong.IsPlaying 
     end)
 
     return New "Frame" {
@@ -241,15 +254,14 @@ local function AudioButton(data: audioTableFormat): Instance
                             return 
                                 if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.normal
                                 -- elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.normal
-                                -- elseif isPlaying then BUTTON_ICONS.Pause.normal
+                                elseif isPlayingCurrentSong:get() then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             -- if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
                             --     return Theme.ErrorText.Default:get()
                             -- end
-                            -- return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
-                            return Theme.SubText.Default:get()
+                            return isPlayingCurrentSong:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
                             -- local isLoaded = loadedSongs[data.ID]:get()
@@ -259,7 +271,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             return
                                 if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.hover
                                 -- elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.hover
-                                -- elseif isPlaying then BUTTON_ICONS.Pause.hover
+                                elseif isPlayingCurrentSong:get() then BUTTON_ICONS.Pause.hover
                                 else BUTTON_ICONS.Play.hover
                         end),
 
