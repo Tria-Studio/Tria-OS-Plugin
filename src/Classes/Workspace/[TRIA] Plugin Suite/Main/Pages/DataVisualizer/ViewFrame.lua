@@ -141,7 +141,6 @@ return function(name: string, data: PublicTypes.Dictionary)
                     end
 
                     if data.SingleOption then
-                        print(viewObjects[name])
                         if viewObjects[name].Enabled then
                             viewObjects[name]:Disable()
                             Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
@@ -232,6 +231,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                                         ViewObject:Disable()
                                         Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                                     else
+                                        print(ViewObject.Tag)
                                         ViewObject:Enable()
                                         Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                                     end

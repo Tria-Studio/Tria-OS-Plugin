@@ -119,7 +119,7 @@ return {
         ViewOptions = {
             {
                 TagType = "Any",
-                Name = "WallJump",
+                Name = "_WallJump",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://9468872087",
 
@@ -127,7 +127,7 @@ return {
                 ObjectType = "SelectionBox",
             }, {
                 TagType = "Any",
-                Name = "WallRun",
+                Name = "_WallRun",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6026568215",
                 
@@ -151,7 +151,7 @@ return {
                 ObjectType = "SelectionBox",
             }, {
                 TagType = "NoChild",
-                Name = "Killbrick",
+                Name = "_Kill",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668916",
 
@@ -159,7 +159,7 @@ return {
                 ObjectType = "SelectionBox",
             }, {
                 TagType = "NoChild",
-                Name = "SpeedBooster",
+                Name = "_SpeedBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
 
@@ -167,8 +167,8 @@ return {
                 ObjectType = "SelectionBox",
             }, {
                 TagType = "NoChild",
-                Name = "JumpBooster",
-                LayoutOrder = 6,
+                Name = "_JumpBooster",
+                LayoutOrder = 7,
                 DisplayIcon = "rbxassetid://6034754445",
 
                 Color = Color3.fromRGB(190, 222, 48),
@@ -176,7 +176,7 @@ return {
             }, {
                 TagType = "Any",
                 Name = "AirTank",
-                LayoutOrder = 6,
+                LayoutOrder = 8,
                 DisplayIcon = "rbxassetid://6031068426",
 
                 Color = Color3.fromRGB(41, 184, 232),
@@ -203,7 +203,7 @@ return {
     },
     ZiplineView = {
         TagType = "Any",
-        Name = "_Zipline",
+        Name = "Zipline",
         SingleOption = true,
         DisplayText = "Zipline View",
         DisplayIcon = "rbxassetid://6035067839",
