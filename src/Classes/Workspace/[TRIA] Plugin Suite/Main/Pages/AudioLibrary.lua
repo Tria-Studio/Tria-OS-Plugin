@@ -180,13 +180,13 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 end
 
 local function pauseSong(soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
     currentlyPlaying:Pause()
     songPlayingUpdate:set(songPlayingUpdate:get(false) + 1)
 end
 
 local function resumeSong(soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
     songPlayingUpdate:set(songPlayingUpdate:get(false) + 1)
@@ -245,6 +245,8 @@ local function AudioButton(data: audioTableFormat): Instance
     end)
 
     local isPlayingCurrentSong = Computed(function(): boolean
+        songPlayingUpdate:get()
+        
         local currentSong = songPlayData.currentlyPlaying:get()
         return currentSong and currentSong == audio
     end)
