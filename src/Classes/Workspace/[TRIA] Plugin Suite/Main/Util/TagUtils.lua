@@ -437,7 +437,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Inst
     local Map = Util.mapModel:get()
     local Special = Map:FindFirstChild("Special")
     local CheckIfSpecial = {
-        LowDetail = Map:FindFirstChild("Detail"),
+        _Detail = Map:FindFirstChild("Detail"),
         _Show = Special and Special:FindFirstChild("Button"),
         _Hide = Special and Special:FindFirstChild("Button"),
         _Fall = Special and Special:FindFirstChild("Button"),
@@ -457,12 +457,12 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Inst
         mapDescendants = Map:GetDescendants()
     end
 
-    if tag == "LowDetail" then
-        return InstanceToCheck  and InstanceToCheck:GetDescendants()
+    if tag == "_Detail" then
+        return InstanceToCheck and InstanceToCheck:GetDescendants() or {}
     elseif subTag == "Variant" then
-        return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants()
+        return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants() or {}
     elseif tag == "Zipline" then
-        return InstanceToCheck:GetChildren()
+        return InstanceToCheck:GetChildren() or {}
     end
 
     for _, part in pairs(InstanceToCheck == Map and mapDescendants or InstanceToCheck:GetDescendants()) do

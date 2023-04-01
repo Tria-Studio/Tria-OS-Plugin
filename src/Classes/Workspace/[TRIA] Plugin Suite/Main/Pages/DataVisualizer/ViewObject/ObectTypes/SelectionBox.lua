@@ -4,6 +4,7 @@ local TagUtils = require(Package.Util.TagUtils)
 local Fusion = require(Package.Resources.Fusion)
 
 local Value = Fusion.Value
+local New = Fusion.New
 
 local ObjectType = {}
 ObjectType.__index = ObjectType
@@ -26,15 +27,16 @@ function ObjectType:SetAppearance(parts)
     end
 
     for i, part in pairs(parts) do
-        local SelectionBox = Instance.new("SelectionBox")
+        local SelectionBox = New "SelectionBox" {
+            SurfaceColor3 = self.Color:get(),
+            Color3 = self.Color:get(),
+            LineThickness = 0.05,
+            Transparency = 0.375,
+            SurfaceTransparency = .6,
+            Parent = Util._DebugView.debugObjectsFolder:get(),
+            Adornee = part
+        }
         local selectionId = self._Maid:GiveTask(SelectionBox)
-        SelectionBox.SurfaceColor3 = self.Color:get()
-        SelectionBox.Color3 = self.Color:get()
-        SelectionBox.LineThickness = 0.04
-        SelectionBox.Transparency = 0.375
-        SelectionBox.SurfaceTransparency = .625
-        SelectionBox.Parent = Util._DebugView.debugObjectsFolder:get()
-        SelectionBox.Adornee = part
 
         local index1, index2
         if self.TagType == "Any" then
