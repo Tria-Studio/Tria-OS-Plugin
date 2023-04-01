@@ -111,20 +111,13 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
 end
 
 local function AudioButton(data: audioTableFormat): Instance
-    local sound = PlguinSoundManager:CreateSound()
+    local sound = PluginSoundManager:CreateSound()
     sound.Name = data.Name
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
         Visible = true,
-
-        [Cleanup] = {
-            function()
-                loadingSongs[data.ID]:set(false)
-                task.defer(sound.Destroy, sound)
-            end
-        },
 
         [Children] = {
             New "TextLabel" {
@@ -263,6 +256,77 @@ local function fetchApi()
     end
 end
 
+local function PageKey(data: PublicTypes.Dictionary): Instance
+    return Hydrate(Components.ImageButton {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Active = Util.interfaceActive,
+        BackgroundTransparency = 1,
+        ZIndex = 3,
+        [Children] = Components.Constraints.UIAspectRatio(1),
+    })(data)
+
+end
+
+local function getAudioChildren(): {Instance}
+    local children = {}
+
+    local assets = FILTERED_AUDIO_DATA:get()
+    local itemsPerPage = ITEMS_PER_PAGE:get()
+
+    local totalAssets = #assets
+    local totalPages = math.ceil(totalAssets / itemsPerPage)
+
+    local assetsRemaining = totalAssets
+
+    if #assets == 0 then
+        return {}
+    end
+
+    -- currentSongData.currentAudio:set(nil)
+    -- currentSongData.currentTween:set(nil)
+    -- currentSongData.timePosition:set(0)
+    -- currentSongData.timeLength:set(0)
+
+    for index = 1, totalPages do
+        local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
+
+		local startIndex = ((index - 1) * itemsPerPage) + 1
+		local endIndex = (startIndex + pageAssetCount) - 1
+
+        table.insert(children, New "Frame" {
+            BackgroundTransparency = 1,
+            LayoutOrder = index,
+            Size = UDim2.fromScale(1, 1),
+
+            [Children] = {
+                New "Frame" {
+                    BackgroundTransparency = 1,
+                    Size = UDim2.fromScale(1, 1),
+
+                    [Children] = {
+                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
+                        (function()
+                            local pageChildren = {}
+                            for count = startIndex, endIndex do
+                                table.insert(pageChildren, AudioButton(assets[count]))
+                            end
+                            return pageChildren
+                        end)()
+                    } 
+                }
+            }
+        })
+
+        assetsRemaining -= itemsPerPage
+    end
+
+    --jumpToPage(1)
+    pageData.total:set(totalPages)
+
+    return children
+end
+
+
 local frame = {}
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -273,9 +337,70 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "AudioLib",
 
         [Children] = {
-            Components.PageHeader("Audio Library", 4)
+            Components.PageHeader("Audio Library", 4),
+            Components.SearchBox {
+                Position = UDim2.fromScale(0, 0),
+                Size = UDim2.new(0.5, 0, 0, 29),
+                Placeholder = "Search by Artist",
+                State = searchData.artist
+            },
+
+            Components.SearchBox {
+                Position = UDim2.fromScale(0.5, 0),
+                Size = UDim2.new(0.5, 0, 0, 29),
+                Placeholder = "Search by Name",
+                State = searchData.name
+            },
+
+            
+            New "Frame" { -- Audio Library
+                BackgroundTransparency = 1,
+                Size = UDim2.fromScale(1, 1),
+                Visible = Computed(function(): boolean
+                    return CURRENT_FETCH_STATUS:get() == "Success"
+                end),
+
+                [Children] = {
+                    New "Frame" { -- Main
+                        [Out "AbsoluteSize"] = frameAbsoluteSize, 
+
+                        BackgroundTransparency = 1,
+                        Size = UDim2.fromScale(1, 0.925),
+
+                        [Children] = {
+                            Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                return pageData.total:get() > 1
+                            end))) {
+                                [Ref] = pageLayout
+                            },
+
+                            Computed(getAudioChildren, Fusion.cleanup)
+                        }
+                    },
+                }
+            }
         }
     }
 end
+
+function frame.OnClose()
+    if Util.mapModel:get(false) then
+        fetchApi()
+    end
+end
+
+function frame.OnOpen()
+    if not plugin:GetSetting("TRIA_HasViewedAudioLibrary") then
+        plugin:SetSetting("TRIA_HasViewedAudioLibrary", true)
+        Util:ShowMessage("Welcome to the Audio Library", "Every audio that has been whitelisted by the TRIA staff for use in maps is shown here. If the audio has been created by Roblox or is on this list, it is good for use. \n\nFor information on how to submit your own audios to the library, check out the help page linked in the plugin's description.")
+    end
+end
+
+task.defer(function()
+    if not Util.mapModel:get(false) then
+        Util.MapChanged:Wait()
+    end
+    task.defer(fetchApi)
+end)
 
 return frame
