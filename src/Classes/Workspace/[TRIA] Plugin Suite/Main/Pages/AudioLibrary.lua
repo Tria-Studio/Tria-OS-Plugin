@@ -263,8 +263,9 @@ local function AudioButton(data: audioTableFormat): Instance
 
         [Cleanup] = {
             function()
-                print("Cleanup of sound here")
-            end
+                print("Cleaning")
+            end,
+            audio
         },
 
         [Children] = {
