@@ -13,7 +13,7 @@ local Components = require(Resources.Components)
 
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
-local PlguinSoundManager = require(Package.Util.PluginSoundManager)
+local PluginSoundManager = require(Package.Util.PluginSoundManager)
 local GitUtil = require(Package.Util.GitUtil)
 
 local New = Fusion.New
@@ -27,10 +27,7 @@ local Observer = Fusion.Observer
 local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
-
 type audioTableFormat = {Name: string, Artist: string, ID: number}
-
-local SoundMaid = Util.Maid.new()
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 
@@ -52,6 +49,46 @@ local BUTTON_ICONS = {
         hover = "rbxassetid://12853387151"
     }
 }
+
+local searchData = {
+    name = Value(""),
+    artist = Value("")
+}
+
+local pageData = {
+    current = Value(0),
+    total = Value(0)
+}
+
+local currentSongData = {}
+local currentSongTween = nil
+
+local ITEMS_PER_PAGE = Computed(function(): number
+    return frameAbsoluteSize:get() and math.max(1, math.floor((frameAbsoluteSize:get().Y + 32) / 40)) or 12
+end)
+
+local CURRENT_FETCH_STATUS = Value("Fetching")
+
+local FETCHED_AUDIO_DATA = Value({})
+local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
+    local newData = {}
+
+    local searchedArtist = searchData.artist:get() or ""
+    local searchedName = searchData.name:get() or ""
+
+    for _, tbl in pairs(FETCHED_AUDIO_DATA:get()) do
+        local matches = 
+            if (searchedArtist and #searchedArtist > 0) then tbl.Artist:lower():match(searchedArtist:lower()) ~= nil
+            elseif (searchedName and #searchedName > 0) then tbl.Name:lower():match(searchedName:lower()) ~= nil
+            else true
+
+        if matches then
+            table.insert(newData, tbl)
+        end
+    end
+
+    return newData
+end)
 
 local frame = {}
 
