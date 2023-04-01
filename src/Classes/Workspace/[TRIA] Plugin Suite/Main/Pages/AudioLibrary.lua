@@ -66,7 +66,7 @@ local songLoadData = {
     isLoadingSong = Value(false),
     currentlyLoading = Value(nil),
 
-    loaded = Value({}),
+    loaded = {},
 
 }
 
@@ -123,6 +123,10 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
         loaded = fetchStatus == Enum.AssetFetchStatus.Success
     end)
     Util.toggleAudioPerms(false)
+    
+    if loaded then
+        songLoadData.loaded[soundData.ID] = true
+    end
 
     return loaded
 end
