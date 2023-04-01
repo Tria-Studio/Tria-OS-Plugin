@@ -232,7 +232,7 @@ local function AudioButton(data: audioTableFormat): Instance
 
     local isPlayingCurrentSong = Computed(function(): boolean
         local currentSong = songPlayData.currentlyPlaying:get()
-        return currentSong and currentSong == audio and currentSong.IsPlaying 
+        return currentSong and currentSong == audio
     end)
 
     return New "Frame" {
