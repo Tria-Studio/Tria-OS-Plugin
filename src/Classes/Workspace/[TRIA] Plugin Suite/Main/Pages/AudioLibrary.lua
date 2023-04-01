@@ -188,6 +188,7 @@ local function resumeSong(soundData: audioTableFormat)
     local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
+    fadeSound(currentlyPlaying, "In")
 end
 
 local function stopCurrentTween()
@@ -262,9 +263,6 @@ local function AudioButton(data: audioTableFormat): Instance
         Visible = true,
 
         [Cleanup] = {
-            function()
-                print("Cleaning")
-            end,
             audio
         },
 
