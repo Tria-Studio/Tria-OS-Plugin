@@ -353,32 +353,89 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             },
 
             
-            New "Frame" { -- Audio Library
-                BackgroundTransparency = 1,
-                Size = UDim2.fromScale(1, 1),
-                Visible = Computed(function(): boolean
-                    return CURRENT_FETCH_STATUS:get() == "Success"
-                end),
+            New "Frame" { -- Holder
+                BackgroundColor3 = Theme.TableItem.Default,
+                Position = UDim2.new(0, 0, 0, 30),
+                Size = UDim2.new(1, 0, 1, -100),
+                LayoutOrder = 2,
 
                 [Children] = {
-                    New "Frame" { -- Main
-                        [Out "AbsoluteSize"] = frameAbsoluteSize, 
-
+                    New "Frame" { -- Status Message
                         BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(1, 0.925),
+                        Size = UDim2.fromScale(1, 0.95),
+                        Visible = Computed(function(): boolean
+                            return CURRENT_FETCH_STATUS:get() ~= "Success"
+                        end),
 
                         [Children] = {
-                            Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
-                                return pageData.total:get() > 1
-                            end))) {
-                                [Ref] = pageLayout
+                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 2), Enum.VerticalAlignment.Center),
+                            New "ImageLabel" {
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromOffset(24, 24),
+                                Image = "rbxasset://textures/ui/ErrorIcon.png",
                             },
+                            New "TextLabel" {
+                                AutomaticSize = Enum.AutomaticSize.Y,
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(0.75, 0),
+                                Text = Computed(function(): string
+                                    local fetchStatus = CURRENT_FETCH_STATUS:get()
+                                    return STATUS_ERRORS[fetchStatus] or "N/A"
+                                end),
+                                TextSize = 18,
+                                TextWrapped = true,
+                                TextColor3 = Theme.SubText.Default,
+                                TextXAlignment = Enum.TextXAlignment.Center,
+                                TextYAlignment = Enum.TextYAlignment.Top
+                            },
+                            Components.TextButton {
+                                Active = Util.interfaceActive,
+                                Size = UDim2.fromScale(0.5, 0.05),
+                                BackgroundColor3 = Theme.Button.Default,
+                                Text = "Retry",
 
-                            Computed(getAudioChildren, Fusion.cleanup)
+                                [Children] = {
+                                    Components.Constraints.UICorner(0, 8),
+                                    Components.Constraints.UIStroke(1, Color3.new(), Enum.ApplyStrokeMode.Border)
+                                },
+
+                                [OnEvent "Activated"] = function()
+                                    if not table.find({"Fetching", "Success"}, CURRENT_FETCH_STATUS:get(false)) and Util.mapModel:get() then
+                                        task.spawn(fetchApi)
+                                    end
+                                end
+                            }
                         }
                     },
+
+                    New "Frame" { -- Audio Library
+                        BackgroundTransparency = 1,
+                        Size = UDim2.fromScale(1, 1),
+                        Visible = Computed(function(): boolean
+                            return CURRENT_FETCH_STATUS:get() == "Success"
+                        end),
+
+                        [Children] = {
+                            New "Frame" { -- Main
+                                [Out "AbsoluteSize"] = frameAbsoluteSize, 
+
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(1, 0.925),
+
+                                [Children] = {
+                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                        return pageData.total:get() > 1
+                                    end))) {
+                                        [Ref] = pageLayout
+                                    },
+
+                                    Computed(getAudioChildren, Fusion.cleanup)
+                                }
+                            },
+                        }
+                    }
                 }
-            }
+            },
         }
     }
 end
