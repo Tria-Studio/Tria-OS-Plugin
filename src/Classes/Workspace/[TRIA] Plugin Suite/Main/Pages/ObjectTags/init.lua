@@ -97,7 +97,7 @@ function frame.OnOpen()
 
     if not plugin:GetSetting("TRIA_HasViewedObjectTags") then
         plugin:SetSetting("TRIA_HasViewedObjectTags", true)
-        Util:ShowMessage("Welcome to Ojbect & Event Tags", "This page allows you to edit the object type of any instance within the map. For example, set a part to be a wallrun, and edit its metadata, etc. and so much more!\n\nUsing a featured addon in your map? Some featured addons support Object Tags!")
+        Util:ShowMessage("Welcome to Object & Event Tags", "This page allows you to edit the object type of any instance within the map. For example, set a part to be a wallrun, and edit its metadata, etc. and so much more!\n\nUsing a featured addon in your map? Some featured addons support Object Tags!")
     end
 end
 function frame.OnClose()
