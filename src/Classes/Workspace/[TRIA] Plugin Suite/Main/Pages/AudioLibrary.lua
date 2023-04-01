@@ -114,6 +114,10 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
         Util.toggleAudioPerms(true)
     end
 
+    songLoadData.isLoadingSong:set(true)
+    songLoadData.currentlyLoading:set(sound)
+
+    task.wait()
     sound.SoundId = ""
     task.wait()
     sound.SoundId = "rbxassetid://" .. soundData.ID
@@ -121,12 +125,17 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
         loaded = fetchStatus == Enum.AssetFetchStatus.Success
     end)
+
+    songLoadData.isLoadingSong:set(false)
+    songLoadData.currentlyLoading:set(nil)
+
     Util.toggleAudioPerms(false)
 
     if loaded then
         songLoadData.loaded[soundData.ID] = true
     end
 
+    task.wait()
     return loaded
 end
 
@@ -144,6 +153,10 @@ end
 local function AudioButton(data: audioTableFormat): Instance
     local audio = PluginSoundManager:CreateSound()
     audio.Name = data.Name
+
+    local isLoadingCurrentSong = Computed(function()
+        return songLoadData.isLoadingSong:get() and songLoadData.currentlyLoading:get() == audio
+    end)
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
@@ -217,11 +230,11 @@ local function AudioButton(data: audioTableFormat): Instance
                             -- local isPlaying = isSongPlaying:get()
                             -- local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
 
-                            return BUTTON_ICONS.Play.normal
-                                -- if isLoading then BUTTON_ICONS.Loading.normal
+                            return 
+                                if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.normal
                                 -- elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.normal
                                 -- elseif isPlaying then BUTTON_ICONS.Pause.normal
-                                -- else BUTTON_ICONS.Play.normal
+                                else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
                             -- if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
@@ -235,11 +248,11 @@ local function AudioButton(data: audioTableFormat): Instance
                             -- local isPlaying = isSongPlaying:get()
                             -- local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
 
-                            return BUTTON_ICONS.Play.hover
-                                -- if isLoading then BUTTON_ICONS.Loading.hover
+                            return
+                                if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.hover
                                 -- elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.hover
                                 -- elseif isPlaying then BUTTON_ICONS.Pause.hover
-                                -- else BUTTON_ICONS.Play.hover
+                                else BUTTON_ICONS.Play.hover
                         end),
 
                         [OnEvent "Activated"] = function()
