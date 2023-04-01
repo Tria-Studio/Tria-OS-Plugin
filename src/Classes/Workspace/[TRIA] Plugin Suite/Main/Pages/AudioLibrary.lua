@@ -182,15 +182,15 @@ local function stopCurrentTween()
     local tween = songPlayData.currentTween
     if tween then
         tween:Cancel()
-        songPlayData.currentTween = nil
     end
+    songPlayData.currentTween = nil
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = songPlayData.currentlyPlaying:get(false)
 
     local function update()
-        songPlayData.currentlyPlaying:set(newSound)
+        songPlayData.currentlyPlaying:set(newSound, true)
         task.wait()
     end
 
@@ -226,7 +226,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local audio = PluginSoundManager:CreateSound()
     audio.Name = data.Name
 
-    local isLoadingCurrentSong = Computed(function()
+    local isLoadingCurrentSong = Computed(function(): boolean
         return songLoadData.isLoadingSong:get() and songLoadData.currentlyLoading:get() == audio
     end)
 
@@ -287,7 +287,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             Util.updateMapSetting("Main", "Music", data.ID)
                             ChangeHistoryService:SetWaypoint("Updated map music")
                         end
-                    },{Text = "Nevermind", Callback = function() end})
+                    }, {Text = "Nevermind", Callback = function() end})
                 end
             },
 
