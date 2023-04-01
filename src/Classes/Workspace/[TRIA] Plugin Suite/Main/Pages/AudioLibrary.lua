@@ -30,7 +30,6 @@ local Cleanup = Fusion.Cleanup
 type audioTableFormat = {Name: string, Artist: string, ID: number}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
-
 local BUTTON_ICONS = {
     Pause = {
         normal = "rbxassetid://6026663701",
@@ -49,6 +48,9 @@ local BUTTON_ICONS = {
         hover = "rbxassetid://12853387151"
     }
 }
+
+local frameAbsoluteSize = Value()
+local lastFetchTime = 0
 
 local searchData = {
     name = Value(""),
@@ -89,6 +91,177 @@ local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
 
     return newData
 end)
+
+local STATUS_ERRORS = {
+    ["Fetching"] = "Fetching the latest audio...",
+    ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plugin Settings\" tab.",
+    ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
+    ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
+}
+
+local function SongPlayButton(data: PublicTypes.Dictionary): Instance
+    return Hydrate(Components.ImageButton {
+        BackgroundTransparency = 1,
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        ZIndex = 3,
+        SizeConstraint = Enum.SizeConstraint.RelativeYY,
+
+        [Children] = Components.Constraints.UICorner(1, 0),
+    })(data)
+end
+
+local function AudioButton(data: audioTableFormat): Instance
+    local sound = PlguinSoundManager:CreateSound()
+    sound.Name = data.Name
+
+    return New "Frame" {
+        BackgroundColor3 = Theme.CategoryItem.Default,
+        Size = UDim2.new(1, 0, 0, 36),
+        Visible = true,
+
+        [Cleanup] = {
+            function()
+                loadingSongs[data.ID]:set(false)
+                task.defer(sound.Destroy, sound)
+            end
+        },
+
+        [Children] = {
+            New "TextLabel" {
+                BackgroundTransparency = 1,
+                Size = UDim2.fromScale(0.8, 1),
+                ClipsDescendants = true,
+                Position = UDim2.fromScale(0.005, 0),
+                Text = ("<b>%s</b>\n%s"):format(data.Artist, data.Name),
+                TextColor3 = Theme.MainText.Default,
+                LineHeight = 1.1,
+                RichText = true,
+                TextTruncate = Enum.TextTruncate.AtEnd,
+                TextSize = 15,
+                TextXAlignment = Enum.TextXAlignment.Left,
+
+                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+            },
+
+            Components.TextButton {
+                Size = UDim2.new(0, 32, 0.6, 0),
+                Position = UDim2.new(1, -8, 0.5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                Text = "Use",
+                ZIndex = 3,
+                Font = Enum.Font.SourceSansBold,
+                BackgroundColor3 = Theme.MainButton.Default,
+                TextSize = 15,
+                TextColor3 = Theme.BrightText.Default,
+
+                [Children] = {
+                    Components.Constraints.UICorner(0, 6),
+                    Components.Constraints.UIPadding(UDim.new(0, 2), UDim.new(0, 2), UDim.new(0, 2), UDim.new(0, 2))
+                },
+
+                [OnEvent "Activated"] = function()
+                    Util:ShowMessage("Update map BGM?", "This will update the map BGM to '" .. ("%s - %s"):format(data.Artist, data.Name) .. "', press 'Update' to confirm.", {
+                        Text = "Update",
+                        Callback = function()
+                            Util.debugWarn("Updated map music!")
+                            Util.updateMapSetting("Main", "Music", data.ID)
+                            ChangeHistoryService:SetWaypoint("Updated map music")
+                        end
+                    },{Text = "Nevermind", Callback = function() end})
+                end
+            },
+
+            New "Frame" {
+                AnchorPoint = Vector2.new(0.5, 0),
+                BackgroundTransparency = 1,
+                Size = UDim2.fromScale(0.425, 0.8),
+                Position = UDim2.new(0.7, 0, 0.2, 0),
+
+                [Children] = {
+                    SongPlayButton {
+                        AnchorPoint = Vector2.new(1, 0.5),
+                        Position = UDim2.new(1, -15, 0.35, 0),
+                        Size = UDim2.fromScale(0.7, 0.7),
+                        Image = Computed(function(): string
+                            -- local isLoaded = loadedSongs[data.ID]:get()
+                            -- local isPlaying = isSongPlaying:get()
+                            -- local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
+
+                            return BUTTON_ICONS.Play.normal
+                                -- if isLoading then BUTTON_ICONS.Loading.normal
+                                -- elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.normal
+                                -- elseif isPlaying then BUTTON_ICONS.Pause.normal
+                                -- else BUTTON_ICONS.Play.normal
+                        end),
+                        ImageColor3 = Computed(function(): Color3
+                            -- if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
+                            --     return Theme.ErrorText.Default:get()
+                            -- end
+                            -- return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return Theme.SubText.Default:get()
+                        end),
+                        HoverImage = Computed(function(): string
+                            -- local isLoaded = loadedSongs[data.ID]:get()
+                            -- local isPlaying = isSongPlaying:get()
+                            -- local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
+
+                            return BUTTON_ICONS.Play.hover
+                                -- if isLoading then BUTTON_ICONS.Loading.hover
+                                -- elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.hover
+                                -- elseif isPlaying then BUTTON_ICONS.Pause.hover
+                                -- else BUTTON_ICONS.Play.hover
+                        end),
+
+                        [OnEvent "Activated"] = function()
+                            -- if loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
+                            --     return
+                            -- end
+                            -- updatePlayingSound(sound, data)
+                        end
+                    },
+                }
+            }
+        }
+    }
+end
+
+local function fetchApi()
+    if os.clock() - lastFetchTime < 120 and CURRENT_FETCH_STATUS:get(false) == "Success" then
+        return;
+    end
+    
+    lastFetchTime = os.clock()
+    CURRENT_FETCH_STATUS:set("Fetching")
+    task.wait(0.5)
+
+    local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
+    
+    CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
+    
+    if fired then
+        local newData = {}
+
+        for key, tbl in pairs(result) do
+            table.insert(newData, {
+                ["Name"] = tbl.name or "N/A", 
+                ["ID"] = tbl.id or 0, 
+                ["Artist"] = tbl.artist or "N/A"
+            })
+        end
+
+        table.sort(newData, function(a, b)
+            if a.Artist:lower() == b.Artist:lower() then
+                return a.Name:lower() < b.Name:lower()
+            else
+                return a.Artist:lower() < b.Artist:lower()
+            end
+        end)
+
+        loadedSongs = {}
+        pageData.current:set(#newData > 0 and 1 or 0)
+        FETCHED_AUDIO_DATA:set(newData)
+    end
+end
 
 local frame = {}
 
