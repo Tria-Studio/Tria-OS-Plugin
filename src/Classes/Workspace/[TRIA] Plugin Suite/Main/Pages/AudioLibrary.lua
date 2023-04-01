@@ -59,6 +59,7 @@ end)
 
 local frameAbsoluteSize = Value()
 local lastFetchTime = 0
+local songPlayingUpdate = Value(0)
 
 local searchData = {
     name = Value(""),
@@ -178,6 +179,19 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     fadeSound(newSound, "In")
 end
 
+local function pauseSong(soundData: audioTableFormat)
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    currentlyPlaying:Pause()
+    songPlayingUpdate:set(songPlayingUpdate:get(false) + 1)
+end
+
+local function resumeSong(soundData: audioTableFormat)
+    local currentlyPlaying = currentSongData.currentAudio:get(false)
+    currentlyPlaying.Volume = 0
+    currentlyPlaying:Resume()
+    songPlayingUpdate:set(songPlayingUpdate:get(false) + 1)
+end
+
 local function stopCurrentTween()
     local tween = songPlayData.currentTween
     if tween then
@@ -190,7 +204,7 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = songPlayData.currentlyPlaying:get(false)
 
     local function update()
-        songPlayData.currentlyPlaying:set(newSound, true)
+        songPlayData.currentlyPlaying:set(newSound)
         task.wait()
     end
 
