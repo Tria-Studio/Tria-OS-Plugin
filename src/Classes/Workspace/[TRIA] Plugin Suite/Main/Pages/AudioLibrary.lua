@@ -49,6 +49,14 @@ local BUTTON_ICONS = {
     }
 }
 
+task.spawn(function()
+    for _, t in pairs(BUTTON_ICONS) do
+        for _, imageId in pairs(t) do
+            ContentProvider:PreloadAsync({imageId})
+        end
+    end
+end)
+
 local frameAbsoluteSize = Value()
 local lastFetchTime = 0
 
