@@ -119,6 +119,12 @@ local function AudioButton(data: audioTableFormat): Instance
         Size = UDim2.new(1, 0, 0, 36),
         Visible = true,
 
+        [Cleanup] = {
+            function()
+                print("Cleanup of sound here")
+            end
+        },
+
         [Children] = {
             New "TextLabel" {
                 BackgroundTransparency = 1,
@@ -206,10 +212,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            -- if loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
-                            --     return
-                            -- end
-                            -- updatePlayingSound(sound, data)
+                            print("Song load here")
                         end
                     },
                 }
@@ -281,11 +284,6 @@ local function getAudioChildren(): {Instance}
     if #assets == 0 then
         return {}
     end
-
-    -- currentSongData.currentAudio:set(nil)
-    -- currentSongData.currentTween:set(nil)
-    -- currentSongData.timePosition:set(0)
-    -- currentSongData.timeLength:set(0)
 
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
