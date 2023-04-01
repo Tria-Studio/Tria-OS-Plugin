@@ -59,7 +59,6 @@ end)
 
 local frameAbsoluteSize = Value()
 local lastFetchTime = 0
-local songPlayingUpdate = Value(0)
 
 local searchData = {
     name = Value(""),
@@ -82,6 +81,7 @@ local songPlayData = {
     currentlyPlaying = Value(nil),
     currentTimePosition = Value(0),
     currentTimeLength = Value(1),
+    isPaused = Value(false),
 
     currentTween = nil
 }
@@ -182,14 +182,12 @@ end
 local function pauseSong(soundData: audioTableFormat)
     local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
     currentlyPlaying:Pause()
-    songPlayingUpdate:set(songPlayingUpdate:get(false) + 1)
 end
 
 local function resumeSong(soundData: audioTableFormat)
     local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
-    songPlayingUpdate:set(songPlayingUpdate:get(false) + 1)
 end
 
 local function stopCurrentTween()
@@ -203,24 +201,31 @@ end
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = songPlayData.currentlyPlaying:get(false)
 
-    local function update()
+    local function updateCurrentlyPlaying()
         songPlayData.currentlyPlaying:set(newSound)
+        task.wait()
+    end
+
+    local function updateIsPaused(newValue: boolean)
+        songPlayData.isPaused:set(newValue)
         task.wait()
     end
 
     if not currentAudio then -- No song playing
         stopCurrentTween()
-        update()
+        updateCurrentlyPlaying()
         playSong(newSound, soundData)
     elseif currentAudio == newSound then -- Song being paused/resumed
         if currentAudio.IsPaused then
+            updateIsPaused(false)
             resumeSong(soundData)
         else
+            updateIsPaused(true)
             pauseSong(soundData)
         end
     else -- Song switched while playing
         fadeSound(currentAudio, "Out")
-        update()
+        updateCurrentlyPlaying()
         playSong(newSound, soundData)
     end
 end
@@ -245,10 +250,10 @@ local function AudioButton(data: audioTableFormat): Instance
     end)
 
     local isPlayingCurrentSong = Computed(function(): boolean
-        songPlayingUpdate:get()
-        
         local currentSong = songPlayData.currentlyPlaying:get()
-        return currentSong and currentSong == audio
+        local isPaused = songPlayData.isPaused:get()
+
+        return (not isPaused) and (currentSong and currentSong == audio)
     end)
 
     return New "Frame" {
