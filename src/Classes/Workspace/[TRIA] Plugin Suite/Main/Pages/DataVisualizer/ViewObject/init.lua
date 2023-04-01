@@ -44,7 +44,6 @@ function ViewObject.new(Name, data, color)
 
     self.checkState = Value(false)
     self.Enabled = false
-
     return self
 end
 
@@ -60,6 +59,7 @@ function ViewObject:Enable()
     if self.Enabled then
         return
     end
+
 
     local PartsWithTag = TagUtil:GetPartsWithTag(self.Tag, self.SubTag)
     self.ObjectHandler:SetAppearance(PartsWithTag)

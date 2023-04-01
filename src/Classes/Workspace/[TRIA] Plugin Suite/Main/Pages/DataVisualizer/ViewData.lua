@@ -37,6 +37,7 @@ return {
     LowDetail = {
         TagType = "Parent",
         SingleOption = true,
+        Name = "_Detail",
         DisplayText = "Low Detail View",
         DisplayIcon = "rbxassetid://6034925618",
         LayoutOrder = 1,
@@ -190,6 +191,7 @@ return {
     ButtonView = {
         TagType = "Any",
         SingleOption = true,
+        Name = "_Button",
         DisplayText = "Button View",
         DisplayIcon = "rbxassetid://6026647916",
         LayoutOrder = 4,
@@ -201,6 +203,7 @@ return {
     },
     ZiplineView = {
         TagType = "Any",
+        Name = "_Zipline",
         SingleOption = true,
         DisplayText = "Zipline View",
         DisplayIcon = "rbxassetid://6035067839",

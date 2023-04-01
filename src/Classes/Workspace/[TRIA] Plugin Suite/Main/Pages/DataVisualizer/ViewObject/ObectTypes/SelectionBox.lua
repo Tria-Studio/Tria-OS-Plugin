@@ -1,6 +1,9 @@
 local Package = script.Parent.Parent.Parent.Parent.Parent
 local Util = require(Package.Util)
 local TagUtils = require(Package.Util.TagUtils)
+local Fusion = require(Package.Resources.Fusion)
+
+local Value = Fusion.Value
 
 local ObjectType = {}
 ObjectType.__index = ObjectType
@@ -10,7 +13,7 @@ function ObjectType.new(controller)
 
     self.AppearanceSet = false
     self.Tag = controller.Name
-    self.Color = controller.Color
+    self.Color = controller.Color:get() and controller.Color or Value(Color3.new())
     self.Objects = {}
     self._Maid = Util.Maid.new()
 
@@ -21,8 +24,6 @@ function ObjectType:SetAppearance(parts)
     if typeof(parts) == "Instance" then
         parts = {parts}
     end
-
-    print(parts)
 
     for i, part in pairs(parts) do
         local SelectionBox = Instance.new("SelectionBox")

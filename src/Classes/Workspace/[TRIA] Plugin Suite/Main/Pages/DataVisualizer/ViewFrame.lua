@@ -141,12 +141,13 @@ return function(name: string, data: PublicTypes.Dictionary)
                     end
 
                     if data.SingleOption then
-                        if Controller.Enabled then
-                            Controller:Disable()
+                        print(viewObjects[name])
+                        if viewObjects[name].Enabled then
+                            viewObjects[name]:Disable()
                             Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                         else
                             Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
-                            Controller:Enable()
+                            viewObjects[name]:Enable()
                         end
                     else
                         local ALlViewObjects = viewObjects[name]:get()
@@ -226,20 +227,15 @@ return function(name: string, data: PublicTypes.Dictionary)
                             end) or true,
 
                             [OnEvent "Activated"] = function()
-                                if Util.isPluginFrozen() then
-                                    return
+                                if not Util.isPluginFrozen() then
+                                    if ViewObject.Enabled then
+                                        ViewObject:Disable()
+                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
+                                    else
+                                        ViewObject:Enable()
+                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
+                                    end
                                 end
-
-                                if ViewObject.Enabled then
-                                    ViewObject:Disable()
-                                    Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
-                                else
-                                    ViewObject:Enable()
-                                    Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
-                                end
-
-                                local CurrentState = GetState(viewObjects[name]:get())
-                                checkState:set(CurrentState)
                             end,
 
                             [OnEvent "MouseEnter"] = function()
