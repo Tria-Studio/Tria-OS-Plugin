@@ -119,6 +119,24 @@ local STATUS_ERRORS = {
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
 }
 
+local function fadeSound(sound: Sound, direction: string)
+    if not sound then
+        return
+    end
+
+    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
+    tween:Play()
+    songPlayData.currentTween = tween
+
+    if direction == "Out" then
+        tween.Completed:Connect(function()
+            if tween.PlaybackState ~= Enum.PlaybackState.Cancelled then
+                sound:Stop()
+            end
+        end)
+    end
+end
+
 local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
 
@@ -151,8 +169,18 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     return loaded
 end
 
-local function ()
-    
+local function playSong(newSound: Sound, soundData: audioTableFormat)
+    newSound.Volume = 0
+    newSound.TimePosition = 0
+    newSound:Resume()
+    fadeSound(newSound, "In")
+end
+
+local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
+    local currentAudio = songPlayData.currentlyPlaying:get(false)
+    songPlayData.currentlyPlaying:set(newSound)
+    task.wait()
+    playSong(newSound, soundData)
 end
 
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
