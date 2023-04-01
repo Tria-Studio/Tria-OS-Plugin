@@ -85,6 +85,8 @@ local songPlayData = {
     currentTween = nil
 }
 
+local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+
 local ITEMS_PER_PAGE = Computed(function(): number
     return frameAbsoluteSize:get() and math.max(1, math.floor((frameAbsoluteSize:get().Y + 32) / 40)) or 12
 end)
@@ -304,11 +306,15 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
+                            if songLoadData.isLoadingSong:get(false) then
+                                return
+                            end
+                            
                             local needsLoading = not songLoadData.loaded[data.ID]
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
                             
                             if soundLoaded then
-                                
+                                updatePlayingSound(audio, data)
                             end
                         end
                     },
