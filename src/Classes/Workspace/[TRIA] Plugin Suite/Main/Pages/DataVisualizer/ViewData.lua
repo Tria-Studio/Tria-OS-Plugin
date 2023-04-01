@@ -1,6 +1,43 @@
+local Package = script.Parent.Parent.Parent
+local Fusion = require(Package.Resources.Fusion)
+local Util = require(Package.Util)
+
+local Observer = Fusion.Observer
+local Value = Fusion.Value
+
+local varaints = Value({})
+local nameEvents = Util.Maid.new()
+
+Observer(Util.variantFolderChildren):onChange(function()
+    local newTable = {}
+    nameEvents:DoCleaning()
+
+    for i, variant in pairs(Util.variantFolderChildren:get()) do
+        local name = Value(variant.Name)
+        nameEvents:GiveTask(variant:GetPropertyChangedSignal("Name"):Connect(function()
+            name:set(variant.Name)
+        end))
+
+        table.insert(newTable, {
+            LayoutOrder = i,
+            TagType = "Parent",
+            SubName = "Variant",
+            Name = name,
+            DisplayIcon = "rbxassetid://6035067831",
+
+            Color = Color3.fromHSV((i / #Util.variantFolderChildren:get()), .25,.875),
+            ObjectType = "SelectionBox",
+        })
+    end
+
+    varaints:set(newTable)
+end)
+
 return {
     LowDetail = {
+        TagType = "Parent",
         SingleOption = true,
+        Name = "_Detail",
         DisplayText = "Low Detail View",
         DisplayIcon = "rbxassetid://6034925618",
         LayoutOrder = 1,
@@ -8,7 +45,10 @@ return {
         Tooltip = {
             Header = "",
             Text = ""
-        }
+        },
+
+        Color = Color3.fromRGB(187, 67, 227),
+        ObjectType = "SelectionBox",
     },
     ButtonTags = {
         DisplayText = "Button Tags",
@@ -17,29 +57,53 @@ return {
         LayoutOrder = 2,
         ViewOptions = {
             {
+                TagType = "Any",
                 Name = "_Show",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031075931",
+
+                Color = Color3.fromRGB(51, 162, 48),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "_Hide",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6031075929",
+
+                Color = Color3.fromRGB(75, 52, 156),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "_Fall",
                 LayoutOrder = 3,
-                DisplayIcon = "rbxassetid://6031094674",
+                DisplayIcon = "rbxassetid://12903664425",
+
+                Color = Color3.fromRGB(214, 240, 99),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "_Sound",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026671215",
+
+                Color = Color3.fromRGB(102, 102, 102),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "_Destroy",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668962",
+
+                Color = Color3.fromRGB(135, 40, 40),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "_Explode",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034684949",
+
+                Color = Color3.fromRGB(240, 115, 48),
+                ObjectType = "SelectionBox",
             },
         },
         Tooltip = {
@@ -54,37 +118,69 @@ return {
         LayoutOrder = 3,
         ViewOptions = {
             {
+                TagType = "Any",
                 Name = "WallJump",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://9468872087",
+
+                Color = Color3.fromRGB(180, 180, 180),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "WallRun",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6026568215",
+                
+                Color = Color3.fromRGB(225, 225, 225),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "_Liquid",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://6026568295",
+
+                Color = Color3.fromRGB(60, 60, 220),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "_Gas",
                 LayoutOrder = 4,
-                DisplayIcon = "rbxassetid://6026568295",
+                DisplayIcon = "rbxassetid://6026568253",
+
+                Color = Color3.fromRGB(206, 143, 211),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "NoChild",
                 Name = "Killbrick",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668916",
+
+                Color = Color3.fromRGB(255, 0, 0),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "NoChild",
                 Name = "SpeedBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
+
+                Color = Color3.fromRGB(110, 203, 53),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "NoChild",
                 Name = "JumpBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
+
+                Color = Color3.fromRGB(190, 222, 48),
+                ObjectType = "SelectionBox",
             }, {
+                TagType = "Any",
                 Name = "AirTank",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6031068426",
+
+                Color = Color3.fromRGB(41, 184, 232),
+                ObjectType = "SelectionBox",
             },
         },
         Tooltip = {
@@ -93,7 +189,9 @@ return {
         },
     },
     ButtonView = {
+        TagType = "Any",
         SingleOption = true,
+        Name = "_Button",
         DisplayText = "Button View",
         DisplayIcon = "rbxassetid://6026647916",
         LayoutOrder = 4,
@@ -104,6 +202,8 @@ return {
         }
     },
     ZiplineView = {
+        TagType = "Any",
+        Name = "_Zipline",
         SingleOption = true,
         DisplayText = "Zipline View",
         DisplayIcon = "rbxassetid://6035067839",
@@ -118,7 +218,7 @@ return {
         DisplayText = "Variant View",
         DisplayIcon = "rbxassetid://6022668909",
         LayoutOrder = 6,
-        ViewOptions = {}, --TODO: find a way to have this and the UI update when variants are created and destroyed
+        ViewOptions = varaints,
         Tooltip = {
             Header = "",
             Text = ""
@@ -131,13 +231,21 @@ return {
         LayoutOrder = 7,
         ViewOptions = {
             {
+                TagType = "Any",
                 Name = "_Teleporter",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031082527",
+
+                Color = Color3.fromRGB(255, 255, 255),
+                ObjectType = "SelectionBox"
             }, {
+                TagType = "Any",
                 Name = "_Waterjet",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6022668890",
+
+                Color = Color3.fromRGB(89, 193, 248),
+                ObjectType = "SelectionBox"
             }
         },
         Tooltip = {

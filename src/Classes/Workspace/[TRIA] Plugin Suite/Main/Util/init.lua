@@ -29,6 +29,7 @@ local Util = {
     Widget = nil,
     mapModel = Value(nil),
     hasSpecialFolder = Value(false),
+    variantFolderChildren = Value({}),
 
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
@@ -59,6 +60,10 @@ local Util = {
     },  
     _Topbar = {
         FreezeFrame = Value(false)
+    },
+    _DebugView = {
+        debugObjectsFolder = Value(),
+        activeDebugViews = Value(0)
     },
     _Message = {
         Text = Value(""),
@@ -260,7 +265,7 @@ local function updateButtonsActive()
 end
 
 function Util.updateSelectedParts()
-    if not Util.PluginActive:get() then
+    if not Util.PluginActive:get() or not Util.mapModel:get() then
         return
     end
 

@@ -7,6 +7,12 @@ local PublicTypes = require(Package.PublicTypes)
 
 local Value = Fusion.Value
 
+local mapDescendants = {}
+local mapDescendantsUpdate = 0
+
+
+local tagAddedSignals = {}
+local tagRemovedSignals = {}
 local tagUtils = {
     OnlyShowUpdate = Value(0)
 }
@@ -262,6 +268,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
     if not newTag then --// Clear tag
         local otherTags = tagUtils:GetPartTags(part, oldTag)
         local currentMap = Util.mapModel:get(false)
+        tagUtils.OnTagRemoved(oldTag):Fire(part)
 
         function methods._Action()
             if isOptimized then
@@ -341,6 +348,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             part.Parent = newParent
         end
 
+        tagUtils.OnTagAdded(newTag):Fire(part)
         local tagData = TagData.dataTypes.buttonTags[newTag] or TagData.dataTypes.objectTags[newTag] or TagData.dataTypes.addonTags[newTag]
         for _, metaData in ipairs(tagData.metadata) do
             tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
@@ -352,8 +360,6 @@ end
 
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     local types = {}
-
-    --TODO: try to get these functions as optimized and fast as possible, as this function will be the one thats used the most by a longshot
 
     function types.ButtonTags(): boolean?
         for _, child in ipairs(part:GetChildren()) do
@@ -425,6 +431,63 @@ function tagUtils:PartsHaveTag(parts: {[number]: Instance}, tag: string): Enum.T
     return #parts == numYes and Enum.TriStateBoolean.True
         or numYes == 0 and Enum.TriStateBoolean.False
         or Enum.TriStateBoolean.Unknown
+end
+
+function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Instance}
+    local Map = Util.mapModel:get()
+    local Special = Map:FindFirstChild("Special")
+    local CheckIfSpecial = {
+        LowDetail = Map:FindFirstChild("Detail"),
+        _Show = Special and Special:FindFirstChild("Button"),
+        _Hide = Special and Special:FindFirstChild("Button"),
+        _Fall = Special and Special:FindFirstChild("Button"),
+        _Sound = Special and Special:FindFirstChild("Button"),
+        _Destroy = Special and Special:FindFirstChild("Button"),
+        _Explode = Special and Special:FindFirstChild("Button"),
+        _Button = Special and Special:FindFirstChild("Button"),
+        Zipline = Special and Special:FindFirstChild("Zipline"),
+        Variant = Special and Special:FindFirstChild("Variant"),
+    }
+
+    local InstanceToCheck = CheckIfSpecial[subTag] or CheckIfSpecial[tag] or Map
+    local partsFound = {}
+
+    if InstanceToCheck == Map and os.time() - mapDescendantsUpdate > 5 then
+        mapDescendantsUpdate = os.time()
+        mapDescendants = Map:GetDescendants()
+    end
+
+    if tag == "LowDetail" then
+        return InstanceToCheck  and InstanceToCheck:GetDescendants()
+    elseif subTag == "Variant" then
+        return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants()
+    elseif tag == "Zipline" then
+        return InstanceToCheck:GetChildren()
+    end
+
+    for _, part in pairs(InstanceToCheck == Map and mapDescendants or InstanceToCheck:GetDescendants()) do
+        if tagUtils:PartHasTag(part, tag) then
+            table.insert(partsFound, part)
+        end
+    end
+
+    return partsFound
+end
+
+function tagUtils.OnTagRemoved(tag)
+    if not tagRemovedSignals[tag] then
+        tagRemovedSignals[tag] = Util.Signal.new()
+    end
+
+    return tagRemovedSignals[tag]
+end
+
+function tagUtils.OnTagAdded(tag)
+    if not tagAddedSignals[tag] then
+        tagAddedSignals[tag] = Util.Signal.new()
+    end
+
+    return tagAddedSignals[tag]
 end
 
 return tagUtils

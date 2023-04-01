@@ -1,3 +1,4 @@
+local plugin = plugin or script:FindFirstAncestorWhichIsA("Plugin")
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
@@ -16,12 +17,10 @@ local Observer = Fusion.Observer
 local Value = Fusion.Value
 local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
-
-local PAGE_ACTIVE = Value(false)
-
-local textLabelVisible = Value(true)
+local Ref = Fusion.Ref
 
 local frame = {}
+
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
@@ -31,7 +30,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "DataVisualizer",
 
         [Children] = {
-            Components.PageHeader("Tag Visualization"),
+            Components.PageHeader("Debug View Modes"),
             Components.GradientTextLabel(Computed(function(): boolean
                 local mapModel = Util.mapModel:get()
                 return not Util.hasSpecialFolder:get() and mapModel ~= nil
@@ -40,7 +39,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Text = "Unsupported Map."
             }),
             Components.ScrollingFrame {
-                BackgroundColor3 = Theme.ScrollBarBackground.Default,
+                BackgroundColor3 = Theme.MainBackground.Default,
                 BorderColor3 = Theme.Border.Default,
                 BorderSizePixel = 1,
                 Size = UDim2.new(1, 0, 1, 0),
@@ -57,25 +56,10 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-local function showPageError()
-    Util:ShowMessage("Feature Unavailable", "View Modes only supports maps with OptimizedStructure (aka the \"Special\" folder). You can add this to your map at the insert page.", {Text = "Get OptimizedStructure", Callback = function()
-        Pages:ChangePage("Insert")
-    end})
-end
-
-local function updatePage()
-    local wasActive = PAGE_ACTIVE:get(false)
-    PAGE_ACTIVE:set(Util.hasSpecialFolder:get(false) and Util.mapModel:get(false))
-    textLabelVisible:set(not PAGE_ACTIVE:get(false))
-    
-    if wasActive and not PAGE_ACTIVE:get(false) and Pages.pageData.currentPage:get(false) == "DataVisualizer" then
-        showPageError()
-    end
-end
-
 function frame.OnOpen()
-    if not Util.hasSpecialFolder:get(false) and Util.mapModel:get(false) then
-        showPageError()
+    if not plugin:GetSetting("TRIA_HasViewedDebugView") then
+        plugin:SetSetting("TRIA_HasViewedDebugView", true)
+        Util:ShowMessage("Welcome to Debug View", "With the click of a button, you can view every part, instance, model, etc. of every data type that TRIA.os supports! This feature requires the OptimizedStructure (AKA the 'Special' folder) in order to work.\n\nUsing a featured addon in your map? Some featured addons support Debug View!")
     end
 end
 
@@ -85,7 +69,17 @@ function frame.OnClose()
     end
 end
 
-Observer(Util.hasSpecialFolder):onChange(updatePage)
-Observer(Util.mapModel):onChange(updatePage)
+New "Folder" {
+	[Ref] = Util._DebugView.debugObjectsFolder,
+	Name = "DebugObjects",
+    Archivable = false,
+}
+Util.MainMaid:GiveTask(Util._DebugView.debugObjectsFolder:get())
+
+Observer(Util._DebugView.activeDebugViews):onChange(function()
+    Util._DebugView.debugObjectsFolder:get().Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.Terrain or Util.Widget
+end)
+
+
 
 return frame

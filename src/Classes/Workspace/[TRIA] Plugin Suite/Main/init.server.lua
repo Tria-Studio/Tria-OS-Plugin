@@ -1,4 +1,5 @@
 local ContentProvider = game:GetService("ContentProvider")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
 
 if not plugin then
 	return
@@ -84,7 +85,8 @@ local topbarData = {
 	mousePos = Value(Vector2.new()),
 	hoverVisible = Value(false),
 	hoverSize = Value(Vector2.new(40, 0)),
-	hoveredButton = Value("")
+	hoveredButton = Value(""),
+	hoverIcon = Value("")
 }
 
 local mainFrame = New "Frame" {
@@ -146,7 +148,16 @@ local mainFrame = New "Frame" {
 			end),
 
 			[Children] = {
-				Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4), UDim.new(0, 4)),
+				Components.Constraints.UIPadding(nil, nil, UDim.new(0, 1), UDim.new(0, 2)),
+				New "ImageLabel" {
+					Size = UDim2.fromOffset(20, 20),
+					BackgroundTransparency = 1,
+					ImageColor3 = Theme.MainText.Default,
+					Image = Computed(function()
+						return topbarData.hoverIcon:get()
+					end),
+					ZIndex = 12,
+				},
 				New "TextLabel" {
 					BackgroundTransparency = 1,
 					TextColor3 = Theme.MainText.Default,
@@ -154,6 +165,7 @@ local mainFrame = New "Frame" {
 					Text = Computed(function()
 						return topbarData.hoveredButton:get() or ""
 					end),
+					Position = UDim2.fromOffset(20, 0),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Size = UDim2.fromScale(0, 1),
@@ -203,15 +215,15 @@ local mainFrame = New "Frame" {
 				local index = math.ceil((math.ceil(percent / increment) * increment) * #pages)
 
 				local pageNameToDisplay = {
-					ObjectTags = "Object Tags",
-					DataVisualizer = "Data Visualizer",
-					Settings = "Settings",
+					ObjectTags = "Object & Event Tags",
+					DataVisualizer = "Debug View",
+					Settings = "Map Settings",
 					Scripting = "Scripting",
-					Publish = "Publish",
-					Insert = "Insert",
+					Publish = "Publish & Whitelist",
+					Insert = "Resources",
 					AudioLibrary = "Audio Library"
 				}
-
+				topbarData.hoverIcon:set(MenuData.Buttons[index] and MenuData.Buttons[index].Icon or "")
 				topbarData.mousePos:set(Vector2.new(relativePos.X, relativePos.Y))
 				topbarData.hoveredButton:set(pageNameToDisplay[pages[index]])
 			end,
@@ -306,7 +318,6 @@ openButton.Click:Connect(function()
 	Util.PluginActive:set(widget.Enabled)
 end)
 Util.PluginActive:set(widget.Enabled)
-
 
 if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")

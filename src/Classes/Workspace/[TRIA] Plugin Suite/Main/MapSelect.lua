@@ -10,6 +10,7 @@ local Pages = require(Resources.Components.Pages)
 
 local Util = require(Package.Util)
 
+local Observer = Fusion.Observer
 local Value = Fusion.Value
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
@@ -226,12 +227,6 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         mapTypes[newMap.ClassName]()
         detectSpecialFolder()
-        
-
-        task.wait()
-        if not Util.hasSpecialFolder:get(false) then
-            Util:ShowMessage(Util._Headers.WARNING_HEADER, "The selected map does not use the Optimized Structure model. Some features of this plugin may be unavaliable until your map supports Optimized Structure")
-        end
     else
         self:ResetSelection()
     end
@@ -366,4 +361,12 @@ function MapSelect:ResetSelection()
     end
 end
 
+Observer(Util.hasSpecialFolder):onChange(function()
+    while Util.hasSpecialFolder:get() and Util.mapModel:get() do
+        if #Util.variantFolderChildren:get() ~= #Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren() then
+            Util.variantFolderChildren:set(Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren())
+        end
+        task.wait(.25)
+    end
+end)
 return MapSelect

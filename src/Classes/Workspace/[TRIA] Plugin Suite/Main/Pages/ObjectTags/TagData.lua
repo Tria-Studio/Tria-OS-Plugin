@@ -278,7 +278,7 @@ data.metadataTypes = {
     },
     TeleportNumber = {
         _referenceName = "TeleportNumber",
-        type = "Attribute",
+        type = "EndOfName",
         dataType = "number",
         dataName = "TeleportNumber",
         displayName = "Teleport Number",
@@ -413,7 +413,7 @@ Metadata:
         _Fall = {
             _nameStub = "_Fall",
             DisplayText = "_Fall#",
-            DisplayIcon = "rbxassetid://6031094674",
+            DisplayIcon = "rbxassetid://12903664425",
             LayoutOrder = 3,
             metadata = {
                 {
@@ -584,7 +584,7 @@ Metadata:
             _nameStub = "_Liquid",
             DisplayText = "_Liquid#",
             ActionText = nil,
-            DisplayIcon = "rbxassetid://6026568295",
+            DisplayIcon = "rbxassetid://6026568295", 
             LayoutOrder = 4,
             metadata = {
                 {
@@ -625,8 +625,8 @@ Metadata:
         _Gas = {
             _nameStub = "_Gas",
             DisplayText = "_Gas#",
-            ActionText = nil,
-            DisplayIcon = "rbxassetid://6026568295",
+            ActionText = nil, 
+            DisplayIcon = "rbxassetid://6026568253",
             LayoutOrder = 5,
             metadata = {
                 {
@@ -871,6 +871,7 @@ Metadata:
     },
     addonTags = {
         _Teleporter = {
+            _nameStub = "_Teleporter",
             DisplayText = "_Teleporter",
             ActionText = "_Teleporter",
             DisplayIcon = "rbxassetid://6031082527",

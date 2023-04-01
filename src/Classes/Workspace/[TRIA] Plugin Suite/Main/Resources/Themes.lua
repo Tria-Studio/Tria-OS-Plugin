@@ -119,6 +119,9 @@ local themes = {
     },
     Tooltip = {
         Default = Value(StudioTheme:GetColor(GuideColor.Tooltip))
+    },
+    Light = {
+        Default = Value(StudioTheme:GetColor(GuideColor.Light))
     }
 }
 

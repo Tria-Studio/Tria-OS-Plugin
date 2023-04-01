@@ -19,7 +19,7 @@ local Data = {
 }
 
 local directories = SettingsUtil.Directories
-local buttonTypes = {"Default", "Group"}
+local buttonTypes = {"Default", "Group", "PathChild"}
 
 local function setupButtonFolder(folder: Instance)
 	local buttonProperties = {
@@ -142,17 +142,10 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                 local itemData = data.Data
 
                 local buttonDropdown = SettingsUtil.DirectoryDropdown({
-                    Default = true, 
+                    Default = data.Name ~= "PathChild", 
 					IsSecondary = true,
                     Display = itemName, 
                     LayoutOrder = data.Name == "Default" and 1 or data.Name == "Group" and 2 or 3,
-					HeaderEditable = data.Name ~= "Default" and data.Name ~= "Group",
-                    OnHeaderChange = function(newHeader: string)
-						if not table.find(buttonTypes, newHeader) then
-							return
-						end
-                        folder.Name = newHeader
-                    end
 
                 }, function(isSectionVisible: Fusion.StateObject<boolean>): Instance
                     if buttonVisibleMap[data.ID] then
@@ -165,7 +158,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                         Children = {
                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
                             ForValues(itemData, function(tbl: PublicTypes.Dictionary): Instance
-                                return SettingsUtil.settingOption(tbl.Type, tbl)
+								return SettingsUtil.settingOption(tbl.Type, tbl)
                             end, Fusion.cleanup)
                         }
                     }

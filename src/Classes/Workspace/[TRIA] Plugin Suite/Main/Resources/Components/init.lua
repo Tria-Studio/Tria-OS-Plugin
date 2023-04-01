@@ -60,8 +60,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
         local map = Util.mapModel:get()
         local hasSpecial = Util.hasSpecialFolder:get()
         return 
-            if data.Name == "DataVisualizer" then (map ~= nil and hasSpecial)
-            elseif table.find(Pages.pageData.disabledPages, data.Name) then false 
+            if table.find(Pages.pageData.disabledPages, data.Name) then false 
             else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
     end)
 
@@ -456,7 +455,7 @@ function Components.TooltipImage(data: PublicTypes.Dictionary): Instance?
         Size = UDim2.fromOffset(18, 18),
         Image = "rbxassetid://6026568254",
         HoverImage = "rbxassetid://6026568247",
-        ImageColor3 = Theme.SubText.Default,
+        ImageColor3 = Theme.DimmedText.Default,
 
         [OnEvent "Activated"] = function()
             if not data.Header or not data.Tooltip then
