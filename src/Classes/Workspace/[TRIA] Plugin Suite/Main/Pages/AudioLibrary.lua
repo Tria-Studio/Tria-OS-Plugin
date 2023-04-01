@@ -361,7 +361,9 @@ local function AudioButton(data: audioTableFormat): Instance
                             local needsLoading = not songLoadData.loaded[data.ID]
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
                             
-                            if soundLoaded then
+                            print("Loaded, go")
+                            task.wait(2)
+                            if soundLoaded and audio then
                                 updatePlayingSound(audio, data)
                             end
                         end
