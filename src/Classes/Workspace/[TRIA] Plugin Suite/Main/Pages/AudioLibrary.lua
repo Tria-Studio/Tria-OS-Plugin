@@ -178,11 +178,37 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     fadeSound(newSound, "In")
 end
 
+local function stopCurrentTween()
+    local tween = songPlayData.currentTween
+    if tween then
+        tween:Cancel()
+        songPlayData.currentTween = nil
+    end
+end
+
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = songPlayData.currentlyPlaying:get(false)
-    songPlayData.currentlyPlaying:set(newSound)
-    task.wait()
-    playSong(newSound, soundData)
+
+    local function update()
+        songPlayData.currentlyPlaying:set(newSound)
+        task.wait()
+    end
+
+    if not currentAudio then -- No song playing
+        stopCurrentTween()
+        update()
+        playSong(newSound, soundData)
+    elseif currentAudio == newSound then -- Song being paused/resumed
+        if currentAudio.IsPaused then
+            resumeSong(soundData)
+        else
+            pauseSong(soundData)
+        end
+    else -- Song switched while playing
+        fadeSound(currentAudio, "Out")
+        update()
+        playSong(newSound, soundData)
+    end
 end
 
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
@@ -309,7 +335,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             if songLoadData.isLoadingSong:get(false) then
                                 return
                             end
-                            
+
                             local needsLoading = not songLoadData.loaded[data.ID]
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
                             
