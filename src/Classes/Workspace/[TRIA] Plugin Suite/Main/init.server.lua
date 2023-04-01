@@ -140,8 +140,8 @@ local mainFrame = New "Frame" {
 				return UDim2.fromOffset(
 					math.clamp(
 						(math.floor((pos + absoluteSize.X / (totalPages * 2)) / absoluteSize.X * totalPages + 0.5) - 0.5) * absoluteSize.X / totalPages, 
-						min, 
-						math.max(min + 1, (absoluteSize.X - min))
+						min + 1, 
+						math.max(min + 1, (absoluteSize.X - min)) - 2
 					), 
 					46
 				) 
