@@ -62,6 +62,14 @@ local pageData = {
     total = Value(0)
 }
 
+local songLoadData = {
+    isLoadingSong = Value(false),
+    currentlyLoading = Value(nil),
+
+    loaded = Value({}),
+
+}
+
 local currentSongData = {}
 local currentSongTween = nil
 
@@ -99,6 +107,26 @@ local STATUS_ERRORS = {
     ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
 }
 
+local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
+    local loaded = false
+
+    if not songLoadData.loaded[soundData.ID] then
+        print("Song was not previously loaded, toggling.")
+        Util.toggleAudioPerms(true)    
+    end
+
+    sound.SoundId = ""
+    task.wait()
+    sound.SoundId = "rbxassetid://" .. soundData.ID
+
+    ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
+        loaded = fetchStatus == Enum.AssetFetchStatus.Success
+    end)
+    Util.toggleAudioPerms(false)
+
+    return loaded
+end
+
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
     return Hydrate(Components.ImageButton {
         BackgroundTransparency = 1,
@@ -111,8 +139,8 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
 end
 
 local function AudioButton(data: audioTableFormat): Instance
-    local sound = PluginSoundManager:CreateSound()
-    sound.Name = data.Name
+    local audio = PluginSoundManager:CreateSound()
+    audio.Name = data.Name
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
@@ -212,7 +240,9 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "Activated"] = function()
-                            print("Song load here")
+                            print("Song loading")
+                            local soundLoaded = loadSound(audio, data)
+                            print(soundLoaded)
                         end
                     },
                 }
