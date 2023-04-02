@@ -161,6 +161,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
 
     Util.toggleAudioPerms(false)
 
+    print("Did load", loaded)
     if loaded then
         songLoadData.loaded[soundData.ID] = true
         sound.SoundId = "rbxassetid://" .. soundData.ID
@@ -310,7 +311,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             end
 
                             local needsLoading = not songLoadData.loaded[data.ID]
-                            print(needsLoading)
+                            print("Needs", needsLoading)
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
 
                             if soundLoaded and audio then
