@@ -62,7 +62,7 @@ local Util = {
         FreezeFrame = Value(false)
     },
     _DebugView = {
-        debugObjectsFolder = Value(),
+        debugObjectsFolder = nil,
         activeDebugViews = Value(0)
     },
     _Message = {

@@ -312,6 +312,13 @@ task.spawn(function()
 	ContentProvider:PreloadAsync(images)
 end)
 
+local function CreateDebugViewFolder()
+	local folder = Instance.new("Folder")
+	folder.Name = "__debugview_donottouch"
+	folder.Parent = Util.Widget
+	Util._DebugView.debugObjectsFolder = folder
+	Util.MainMaid:GiveTask(folder)
+end
 
 openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
@@ -319,6 +326,7 @@ openButton.Click:Connect(function()
 
 	if widget.Enabled then
 		MapSelect:AutoSelect()
+		CreateDebugViewFolder()
 	end
 end)
 Util.PluginActive:set(widget.Enabled)
@@ -326,6 +334,7 @@ Util.PluginActive:set(widget.Enabled)
 if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")
 end
+CreateDebugViewFolder()
 
 function UnloadPlugin()
 	widget.Enabled = false

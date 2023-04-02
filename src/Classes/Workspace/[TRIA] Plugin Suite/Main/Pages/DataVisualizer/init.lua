@@ -14,10 +14,8 @@ local ViewData = require(script.ViewData)
 local New = Fusion.New
 local Children = Fusion.Children
 local Observer = Fusion.Observer
-local Value = Fusion.Value
 local ForPairs = Fusion.ForPairs
 local Computed = Fusion.Computed
-local Ref = Fusion.Ref
 
 local frame = {}
 
@@ -69,15 +67,8 @@ function frame.OnClose()
     end
 end
 
-New "Folder" {
-	[Ref] = Util._DebugView.debugObjectsFolder,
-	Name = "DebugObjects",
-    Archivable = false,
-}
-Util.MainMaid:GiveTask(Util._DebugView.debugObjectsFolder:get())
-
 Observer(Util._DebugView.activeDebugViews):onChange(function()
-    Util._DebugView.debugObjectsFolder:get().Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.Terrain or Util.Widget
+    Util._DebugView.debugObjectsFolder.Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.CurrentCamera or Util.Widget
 end)
 
 
