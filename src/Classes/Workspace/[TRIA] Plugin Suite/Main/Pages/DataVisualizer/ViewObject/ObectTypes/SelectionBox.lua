@@ -26,46 +26,57 @@ function ObjectType:SetAppearance(parts)
     if typeof(parts) == "Instance" then
         parts = {parts}
     end
-
+    print(self.TagType)
     for i, part in pairs(parts) do
         local SelectionBox = New "SelectionBox" {
+            Archivable = false,
             SurfaceColor3 = self.Color:get(),
             Color3 = self.Color:get(),
             LineThickness = 0.05,
             Transparency = 0.375,
             SurfaceTransparency = .6,
-            Parent = Util._DebugView.debugObjectsFolder:get(),
+            Parent = Util._DebugView.debugObjectsFolder,
             Adornee = part
         }
         local selectionId = self._Maid:GiveTask(SelectionBox)
 
         local index1, index2
-        print(self.TagType)
+
+        local function ClearMaid()
+            print("cleared")
+            self._Maid[selectionId] = nil
+            self._Maid[index1] = nil
+            self._Maid[index2] = nil
+        end
+
         if self.TagType == "Any" then
             index1 = self._Maid:GiveTask(part.Changed:Connect(function()
                 if not TagUtils:PartHasTag(part, self.Name) then
-                    self._Maid[index1] = nil
-                    self._Maid[selectionId] = nil
+                    ClearMaid()
                 end
             end))
+
+            local tagInstance = TagUtils:GetTagInstance(part, self.Tag)
+            if tagInstance then
+                index2 = self._Maid:GiveTask(tagInstance.Changed:Connect(function()
+                    if not TagUtils:PartHasTag(part, self.Name) then
+                        ClearMaid()
+                    end
+                end))
+            end
         elseif self.TagType == "Child" then
-            index1 = self._Maid:GiveTask(part.ChildAdded:Connect(function()
-                if not TagUtils:PartHasTag(part, self.Name) then
-                    self._Maid[index1] = nil
-                    self._Maid[selectionId] = nil
-                end
-            end))
-            index2 = self._Maid:GiveTask(part.ChildAdded:Connect(function()
-                if not TagUtils:PartHasTag(part, self.Name) then
-                    self._Maid[index2] = nil
-                    self._Maid[selectionId] = nil
-                end
-            end))
+            local tagInstance = TagUtils:GetTagInstance(part, self.Tag)
+            if tagInstance then
+                index1 = self._Maid:GiveTask(tagInstance.Changed:Connect(function()
+                    if not TagUtils:PartHasTag(part, self.Name) then
+                        ClearMaid()
+                    end
+                end))
+            end
         elseif self.TagType == "Parent" then
             index1 = self._Maid:GiveTask(part.AncestryChanged:Connect(function()
                 if not TagUtils:PartHasTag(part, self.Name) then
-                    self._Maid[index1] = nil
-                    self._Maid[selectionId] = nil
+                    ClearMaid()
                 end
             end))
         end

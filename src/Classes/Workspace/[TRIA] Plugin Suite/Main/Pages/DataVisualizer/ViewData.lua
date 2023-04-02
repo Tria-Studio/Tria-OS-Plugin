@@ -57,7 +57,7 @@ return {
         LayoutOrder = 2,
         ViewOptions = {
             {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Show",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031075931",
@@ -65,7 +65,7 @@ return {
                 Color = Color3.fromRGB(51, 162, 48),
                 ObjectType = "SelectionBox",
             }, {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Hide",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6031075929",
@@ -73,7 +73,7 @@ return {
                 Color = Color3.fromRGB(75, 52, 156),
                 ObjectType = "SelectionBox",
             }, {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Fall",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://12903664425",
@@ -81,7 +81,7 @@ return {
                 Color = Color3.fromRGB(214, 240, 99),
                 ObjectType = "SelectionBox",
             }, {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Sound",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026671215",
@@ -89,7 +89,7 @@ return {
                 Color = Color3.fromRGB(102, 102, 102),
                 ObjectType = "SelectionBox",
             }, {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Destroy",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668962",
@@ -97,7 +97,7 @@ return {
                 Color = Color3.fromRGB(135, 40, 40),
                 ObjectType = "SelectionBox",
             }, {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Explode",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034684949",

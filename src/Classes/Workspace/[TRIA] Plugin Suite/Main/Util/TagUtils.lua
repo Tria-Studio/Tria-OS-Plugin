@@ -89,7 +89,7 @@ local defaultMetadataTypes = {
     boolean = Enum.TriStateBoolean.False,
 }
 
-local function getTagInstance(part: Instance, tag: string): Instance | nil
+function tagUtils:GetTagInstance(part: Instance, tag: string): Instance | nil
     if part.Parent ~= game then
         for _, child in ipairs(part:GetChildren()) do
             if string.find(child.Name, tag, 1, true) then
@@ -132,7 +132,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
         end
 
         function types.ChildInstanceValue() 
-            local tagInstance = getTagInstance(part, tag)
+            local tagInstance = tagUtils:GetTagInstance(part, tag)
 
             if newValue ~= 0 then
                 if not tagInstance:FindFirstChild("_Delay") then
@@ -146,7 +146,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
         end
 
         function types.Property()
-            local tagInstance = getTagInstance(part, tag) or part
+            local tagInstance = tagUtils:GetTagInstance(part, tag) or part
 
             if tagInstance then
                 tagInstance[metadata.data._propertyName] = newValue
@@ -154,7 +154,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
         end
 
         function types.EndOfName()
-            local tagInstance = getTagInstance(part, tag) or part
+            local tagInstance = tagUtils:GetTagInstance(part, tag) or part
 
             if tagInstance then
                 tagInstance.Name = (TagData.dataTypes.buttonTags[tag] or TagData.dataTypes.objectTags[tag] or TagData.dataTypes.addonTags[tag])._nameStub .. newValue or 0
@@ -208,7 +208,7 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
     end
 
     function types.ChildInstanceValue(): number?
-        local child = getTagInstance(part, name)
+        local child = tagUtils:GetTagInstance(part, name)
         if child then 
             return child:FindFirstChild("_Delay") and child._Delay.Value
         end
@@ -221,7 +221,7 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
     end
 
     function types.EndOfName() : string
-        local tagInstance = getTagInstance(part, name) or part
+        local tagInstance = tagUtils:GetTagInstance(part, name) or part
         return tagInstance
             and string.sub(tagInstance.Name, #mainData._nameStub + 1)
             or string.sub(part.Name, #mainData._nameStub + 1)
@@ -329,7 +329,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
         function methods.Name()
             verifyFolder()
-            local tagInstance = getTagInstance(part, newTag) or part
+            local tagInstance = tagUtils:GetTagInstance(part, newTag) or part
             tagInstance.Name = string.format("%s%s", newTag, table.find(tagsWithNumbers, newTag) and tostring(Util.getObjectCountWithNameMatch(newTag, nil, true) + 1) or "")
             part.Parent = newParent
         end
