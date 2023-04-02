@@ -43,13 +43,14 @@ function ObjectType:SetAppearance(parts)
         local index1, index2
 
         local function ClearMaid()
-            print("cleared")
             self._Maid[selectionId] = nil
             self._Maid[index1] = nil
             self._Maid[index2] = nil
         end
 
-        if self.TagType == "Any" then
+        local TagTypes = {}
+
+        function TagTypes.Any()
             index1 = self._Maid:GiveTask(part.Changed:Connect(function()
                 if not TagUtils:PartHasTag(part, self.Name) then
                     ClearMaid()
@@ -64,23 +65,41 @@ function ObjectType:SetAppearance(parts)
                     end
                 end))
             end
-        elseif self.TagType == "Child" then
+        end
+
+        function TagTypes.Child()
             local tagInstance = TagUtils:GetTagInstance(part, self.Tag)
             if tagInstance then
-                index1 = self._Maid:GiveTask(tagInstance.Changed:Connect(function()
+                index1 = self._Maid:GiveTask(tagInstance:GetPropertyChangedSignal("Name"):Connect(function()
+                    if not TagUtils:PartHasTag(part, self.Name) then
+                        ClearMaid()
+                    end
+                end))
+                index2 = self._Maid:GiveTask(tagInstance.AncestryChanged:Connect(function()
                     if not TagUtils:PartHasTag(part, self.Name) then
                         ClearMaid()
                     end
                 end))
             end
-        elseif self.TagType == "Parent" then
+        end
+       
+        function TagTypes.Parent()
             index1 = self._Maid:GiveTask(part.AncestryChanged:Connect(function()
                 if not TagUtils:PartHasTag(part, self.Name) then
                     ClearMaid()
                 end
             end))
         end
+        
+        function TagTypes.NoChild()
+            index1 = self._Maid:GiveTask(part:GetAttributeChangedSignal("_action"):Connect(function()
+                if not TagUtils:PartHasTag(part, self.Name) then
+                    ClearMaid()
+                end
+            end))
+        end
 
+        TagTypes[self.TagType]()
         self.Objects[part] = {
             SelectionBox = SelectionBox,
             MaidIndex = {selectionId, index1, index2}

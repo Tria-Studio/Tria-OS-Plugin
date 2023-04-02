@@ -134,7 +134,7 @@ return {
                 Color = Color3.fromRGB(225, 225, 225),
                 ObjectType = "SelectionBox",
             }, {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Liquid",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://6026568295",
@@ -142,7 +142,7 @@ return {
                 Color = Color3.fromRGB(60, 60, 220),
                 ObjectType = "SelectionBox",
             }, {
-                TagType = "Any",
+                TagType = "Child",
                 Name = "_Gas",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026568253",
