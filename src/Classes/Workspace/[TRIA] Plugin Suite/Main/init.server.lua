@@ -141,7 +141,7 @@ local mainFrame = New "Frame" {
 					math.clamp(
 						(math.floor((pos + absoluteSize.X / (totalPages * 2)) / absoluteSize.X * totalPages + 0.5) - 0.5) * absoluteSize.X / totalPages, 
 						min + 1, 
-						math.max(min + 1, (absoluteSize.X - min)) - 2
+						math.max(min + 3, (absoluteSize.X - min)) - 2
 					), 
 					46
 				) 

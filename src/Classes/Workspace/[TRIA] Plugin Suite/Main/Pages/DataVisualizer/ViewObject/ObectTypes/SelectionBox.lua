@@ -14,6 +14,7 @@ function ObjectType.new(controller)
 
     self.AppearanceSet = false
     self.Tag = controller.Name
+    self.TagType = controller.TagType
     self.Color = controller.Color:get() and controller.Color or Value(Color3.new())
     self.Objects = {}
     self._Maid = Util.Maid.new()
@@ -39,6 +40,7 @@ function ObjectType:SetAppearance(parts)
         local selectionId = self._Maid:GiveTask(SelectionBox)
 
         local index1, index2
+        print(self.TagType)
         if self.TagType == "Any" then
             index1 = self._Maid:GiveTask(part.Changed:Connect(function()
                 if not TagUtils:PartHasTag(part, self.Name) then
