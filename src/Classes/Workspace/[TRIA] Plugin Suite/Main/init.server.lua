@@ -316,6 +316,10 @@ end)
 openButton.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
 	Util.PluginActive:set(widget.Enabled)
+
+	if widget.Enabled then
+		MapSelect:AutoSelect()
+	end
 end)
 Util.PluginActive:set(widget.Enabled)
 
