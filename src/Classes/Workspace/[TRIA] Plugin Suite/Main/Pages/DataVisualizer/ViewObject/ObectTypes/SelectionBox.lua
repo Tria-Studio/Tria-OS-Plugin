@@ -42,61 +42,41 @@ function ObjectType:SetAppearance(parts)
 
         local index1, index2
 
-        local function ClearMaid()
-            self._Maid[selectionId] = nil
-            self._Maid[index1] = nil
-            self._Maid[index2] = nil
+        local function UpdatePart()
+            if not TagUtils:PartHasTag(part, self.Name) then
+                self._Maid[selectionId] = nil
+                self._Maid[index1] = nil
+                self._Maid[index2] = nil
+            end
         end
 
         local TagTypes = {}
 
         function TagTypes.Any()
-            index1 = self._Maid:GiveTask(part.Changed:Connect(function()
-                if not TagUtils:PartHasTag(part, self.Name) then
-                    ClearMaid()
-                end
-            end))
+            index1 = self._Maid:GiveTask(part.Changed:Connect(UpdatePart))
 
             local tagInstance = TagUtils:GetTagInstance(part, self.Tag)
             if tagInstance then
-                index2 = self._Maid:GiveTask(tagInstance.Changed:Connect(function()
-                    if not TagUtils:PartHasTag(part, self.Name) then
-                        ClearMaid()
-                    end
-                end))
+                index2 = self._Maid:GiveTask(tagInstance.Changed:Connect(UpdatePart))
+            elseif part:GetAttribute("_action") then
+                index2 = self._Maid:GiveTask(part:GetAttributeChangedSignal("_action"):Connect(UpdatePart))
             end
         end
 
         function TagTypes.Child()
             local tagInstance = TagUtils:GetTagInstance(part, self.Tag)
             if tagInstance then
-                index1 = self._Maid:GiveTask(tagInstance:GetPropertyChangedSignal("Name"):Connect(function()
-                    if not TagUtils:PartHasTag(part, self.Name) then
-                        ClearMaid()
-                    end
-                end))
-                index2 = self._Maid:GiveTask(tagInstance.AncestryChanged:Connect(function()
-                    if not TagUtils:PartHasTag(part, self.Name) then
-                        ClearMaid()
-                    end
-                end))
+                index1 = self._Maid:GiveTask(tagInstance:GetPropertyChangedSignal("Name"):Connect(UpdatePart))
+                index2 = self._Maid:GiveTask(tagInstance.AncestryChanged:Connect(UpdatePart))
             end
         end
        
         function TagTypes.Parent()
-            index1 = self._Maid:GiveTask(part.AncestryChanged:Connect(function()
-                if not TagUtils:PartHasTag(part, self.Name) then
-                    ClearMaid()
-                end
-            end))
+            index1 = self._Maid:GiveTask(part.AncestryChanged:Connect(UpdatePart))
         end
         
         function TagTypes.NoChild()
-            index1 = self._Maid:GiveTask(part:GetAttributeChangedSignal("_action"):Connect(function()
-                if not TagUtils:PartHasTag(part, self.Name) then
-                    ClearMaid()
-                end
-            end))
+            index1 = self._Maid:GiveTask(part:GetAttributeChangedSignal("_action"):Connect(UpdatePart))
         end
 
         TagTypes[self.TagType]()
