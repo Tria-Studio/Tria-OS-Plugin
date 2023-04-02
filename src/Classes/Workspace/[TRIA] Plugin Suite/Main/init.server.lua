@@ -323,11 +323,15 @@ if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")
 end
 
-plugin.Unloading:Connect(function()
+function UnloadPlugin()
+	widget.Enabled = false
 	Util.toggleAudioPerms(nil)
 	Util.PluginActive:set(false)
     MapSelect._Maid:DoCleaning()
     Util.MainMaid:DoCleaning()
     SettingsUtil.SettingMaid:DoCleaning()
 	MapSelect:SetMap(nil)
-end)
+end
+
+widget:BindToClose(UnloadPlugin)
+plugin.Unloading:Connect(UnloadPlugin)
