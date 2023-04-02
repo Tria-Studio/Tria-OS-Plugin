@@ -212,23 +212,7 @@ local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
         task.wait()
     end
 
-    if not currentAudio then -- No song playing
-        stopCurrentTween()
-        updateCurrentlyPlaying()
-        playSong(newSound, soundData)
-    elseif currentAudio == newSound then -- Song being paused/resumed
-        if currentAudio.IsPaused then
-            updateIsPaused(false)
-            resumeSong(soundData)
-        else
-            updateIsPaused(true)
-            pauseSong(soundData)
-        end
-    else -- Song switched while playing
-        fadeSound(currentAudio, "Out")
-        updateCurrentlyPlaying()
-        playSong(newSound, soundData)
-    end
+    playSong(newSound, soundData)
 end
 
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
@@ -263,6 +247,9 @@ local function AudioButton(data: audioTableFormat): Instance
         Visible = true,
 
         [Cleanup] = {
+            function()
+                print("Clean audio")
+            end,
             audio
         },
 
@@ -570,7 +557,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Size = UDim2.fromScale(1, 0.925),
 
                                 [Children] = {
-                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function(): boolean
                                         return pageData.total:get() > 1
                                     end))) {
                                         [Ref] = pageLayout
