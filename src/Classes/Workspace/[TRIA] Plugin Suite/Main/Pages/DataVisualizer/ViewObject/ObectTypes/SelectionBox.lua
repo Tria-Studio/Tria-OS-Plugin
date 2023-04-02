@@ -26,8 +26,11 @@ function ObjectType:SetAppearance(parts)
     if typeof(parts) == "Instance" then
         parts = {parts}
     end
-    print(self.TagType)
+
     for i, part in pairs(parts) do
+        if not part:IsA("BasePart") then
+            continue
+        end
         local SelectionBox = New "SelectionBox" {
             Archivable = false,
             SurfaceColor3 = self.Color:get(),
@@ -38,12 +41,13 @@ function ObjectType:SetAppearance(parts)
             Parent = Util._DebugView.debugObjectsFolder,
             Adornee = part
         }
+        print(SelectionBox:GetFullName())
         local selectionId = self._Maid:GiveTask(SelectionBox)
 
         local index1, index2
 
         local function UpdatePart()
-            if not TagUtils:PartHasTag(part, self.Name) then
+            if not TagUtils:PartHasTag(part, self.Tag) then
                 self._Maid[selectionId] = nil
                 self._Maid[index1] = nil
                 self._Maid[index2] = nil
