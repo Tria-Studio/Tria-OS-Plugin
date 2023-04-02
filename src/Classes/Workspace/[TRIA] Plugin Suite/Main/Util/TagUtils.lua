@@ -149,7 +149,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
             local tagInstance = tagUtils:GetTagInstance(part, tag) or part
 
             if tagInstance then
-                tagInstance[metadata.data._propertyName] = newValue
+                tagInstance[metadata.data._propertyName] = newValue --TODO: this is broken
             end
         end
 
