@@ -16,6 +16,37 @@ local tagRemovedSignals = {}
 local tagUtils = {
     OnlyShowUpdate = Value(0)
 }
+
+local ImmutableTags = {
+    "_WallRun",
+    "_WallJump",
+    "_Liquid",
+    "_Gas",
+    "_Kill",
+    "Zipline",
+    "AirTank",
+}
+local newTagTypes = {
+    _Show = {"ButtonTags"},
+    _Hide = {"ButtonTags"},
+    _Fall = {"ButtonTags"},
+    _Explode = {"ButtonTags"},
+    _Destroy = {"ButtonTags"},
+    _Sound = {"ButtonTags"},
+    _WallRun = {"ObjectTags", "ActionTags"},
+    _WallJump = {"ObjectTags", "ActionTags"},
+    _Liquid = {"ObjectTags"},
+    _Gas = {"ObjectTags"},
+    _SpeedBooster = {"ActionTags"},
+    _JumpBooster = {"ActionTags"},
+    _Kill = {"ActionTags"},
+    Detail = {"DetailTag"},
+    Zipline = {"ModelTags"},
+    _Button = {"ModelTags"},
+    AirTank = {"ModelTags"},
+    _Teleporter = {"AddonTags"},
+    _Waterjet = {"AddonTags"},
+}
 local tagTypes = {
     ButtonTags = { --// Child named tag but button
         "_Show",
@@ -68,7 +99,6 @@ local tagTypes = {
         "_Waterjet"
     }
 }
-
 local tagsWithNumbers = {
     "_Button",
     "_Gas",
@@ -108,6 +138,10 @@ function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
         for key, tag in ipairs(tags) do
             if key ~= "_convert" and tagUtils:PartHasTag(part, tag) and tag ~= excludeTag and not table.find(partTags, tag) then
                 table.insert(partTags, tag)
+
+                if table.find(ImmutableTags, tag) then
+                    return partTags
+                end
             end
         end
     end
@@ -408,8 +442,8 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
         return detailFolder and part:IsDescendantOf(detailFolder)
     end
 
-    for type, tags in pairs(tagTypes) do
-        if table.find(tags, tag) and types[type]() then
+    for _, type in pairs(newTagTypes[tag]) do
+        if types[type]() then
             return true
         end
     end
@@ -465,7 +499,12 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Inst
         return InstanceToCheck:GetChildren() or {}
     end
 
+    local counter = 0
     for _, part in pairs(InstanceToCheck == Map and mapDescendants or InstanceToCheck:GetDescendants()) do
+        counter += 1
+        if counter == 200 then
+            task.wait()
+        end
         if tagUtils:PartHasTag(part, tag) then
             table.insert(partsFound, part)
         end
