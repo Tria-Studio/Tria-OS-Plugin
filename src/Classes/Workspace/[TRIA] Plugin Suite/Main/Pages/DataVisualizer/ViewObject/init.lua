@@ -26,69 +26,127 @@ local ViewObject = {}
 ViewObject.__index = ViewObject
 
 function ViewObject.new(Name, data, color)
-    local self = setmetatable({}, ViewObject)
+	local self = setmetatable({}, ViewObject)
 
-    self._Maid = Util.Maid.new()
-    self.Objects = {}
+	self._Maid = Util.Maid.new()
 
-    self.ObjectType = data.ObjectType or "SelectionBox"
-    self.TagType = data.TagType
-    
-    self.Tag = data.Name
-    self.SubTag = data.SubName
-    self.Name = Name
-    self.Data = data
+	self.ObjectType = data.ObjectType or "SelectionBox"
+	self.TagType = data.TagType
 
-    self.Color = Value(color)
-    self.ObjectHandler = require(script.ObectTypes[self.ObjectType]).new(self)
+	self.Tag = data.Name
+	self.SubTag = data.SubName
+	self.Name = Name
+	self.Data = data
 
-    self.checkState = Value(false)
-    self.Enabled = false
-    return self
+	self.Color = Value(color)
+	self.ObjectHandler = require(script.ObectTypes[self.ObjectType]).new(self)
+
+	self.checkState = Value(false)
+	self.Enabled = false
+	return self
 end
 
 function ViewObject:SetColor(newColor: Color3)
-    self.Color:set(newColor)
+	self.Color:set(newColor)
 
-    if self.Enabled then
-        self.ObjectHandler:UpdateAppearance()
-    end
+	if self.Enabled then
+		self.ObjectHandler:UpdateAppearance()
+	end
 end
 
 function ViewObject:Enable()
-    if self.Enabled then
-        return
+	if self.Enabled then
+		return
+	end
+
+	local function HandleUpdates(part)
+		local MaidIndex = self.ObjectHandler.Objects[part].MaidIndex
+        local index1, index2
+
+		local function UpdatePart()
+			if not TagUtil:PartHasTag(part, self.Tag) then
+				for i, index in pairs(MaidIndex) do
+                    self.ObjectHandler._Maid[index] = nil
+                end
+			end
+		end
+
+		local TagTypes = {}
+
+		function TagTypes.Any()
+			index1 = self._Maid:GiveTask(part.Changed:Connect(UpdatePart))
+
+			local tagInstance = TagUtil:GetTagInstance(part, self.Tag)
+			if tagInstance then
+				index2 = self._Maid:GiveTask(tagInstance.Changed:Connect(UpdatePart))
+			elseif part:GetAttribute("_action") then
+				index2 = self._Maid:GiveTask(part:GetAttributeChangedSignal("_action"):Connect(UpdatePart))
+			end
+		end
+
+		function TagTypes.Child()
+			local tagInstance = TagUtil:GetTagInstance(part, self.Tag)
+			if tagInstance then
+				index1 = self._Maid:GiveTask(tagInstance:GetPropertyChangedSignal("Name"):Connect(UpdatePart))
+				index2 = self._Maid:GiveTask(tagInstance.AncestryChanged:Connect(UpdatePart))
+			end
+		end
+
+		function TagTypes.Parent()
+			index1 = self._Maid:GiveTask(part.AncestryChanged:Connect(UpdatePart))
+		end
+
+		function TagTypes.NoChild()
+			index1 = self._Maid:GiveTask(part:GetAttributeChangedSignal("_action"):Connect(UpdatePart))
+		end
+
+		TagTypes[self.TagType]()
+        table.insert(self.ObjectHandler.Objects[part].MaidIndex, index1)
+        table.insert(self.ObjectHandler.Objects[part].MaidIndex, index2)
+	end
+
+	for i, part in pairs(TagUtil:GetPartsWithTag(self.Tag, self.SubTag)) do
+		if part:IsA("BasePart") then
+			self.ObjectHandler:SetAppearance(part)
+			HandleUpdates(part)
+		end
+	end
+
+	self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
+		self.ObjectHandler:SetAppearance(...)
+		HandleUpdates(...)
+	end))
+	self._Maid:GiveTask(TagUtil.OnTagRemoved(self.Tag):Connect(function(...)
+		self.ObjectHandler:ClearAppearance(...)
+	end))
+	self.Enabled = true
+	self.checkState:set(true)
+
+    while self.Enabled do
+        local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
+        task.wait(3.75 / (math.max(12, studioQuality) / 21))
+
+        for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
+            if part:IsA("BasePart") and not self.ObjectHandler.Objects[part] then
+                self.ObjectHandler:SetAppearance(part)
+                HandleUpdates(part)
+            end
+        end
     end
-
-
-    local PartsWithTag = TagUtil:GetPartsWithTag(self.Tag, self.SubTag)
-    self.ObjectHandler:SetAppearance(PartsWithTag)
-
-    self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
-        self.ObjectHandler:SetAppearance(...)
-    end))
-    self._Maid:GiveTask(TagUtil.OnTagRemoved(self.Tag):Connect(function(...)
-        self.ObjectHandler:ClearAppearance(...)
-    end))
-    self.Enabled = true
-    self.checkState:set(true)
 end
 
 function ViewObject:Disable()
-    if not self.Enabled then
-        return
-    end
-
-    self.ObjectHandler:ClearAppearance()
-    self.Objects = nil
-    self.Enabled = false
-    self.checkState:set(false)
-    self._Maid:DoCleaning()
+	if self.Enabled then
+		self.ObjectHandler:ClearAppearance()
+        self.Enabled = false
+        self.checkState:set(false)
+        self._Maid:DoCleaning()
+	end
 end
 
 function ViewObject:Destroy()
-    self:Disable()
-    self._Maid:DoCleaning()
+	self:Disable()
+	self._Maid:DoCleaning()
 end
 
 return ViewObject
