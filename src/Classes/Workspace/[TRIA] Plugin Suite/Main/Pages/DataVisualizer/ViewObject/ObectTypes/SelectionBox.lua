@@ -22,9 +22,8 @@ function ObjectType:SetAppearance(part)
     local SelectionBox = New "SelectionBox" {
         SurfaceColor3 = self.Color:get(),
         Color3 = self.Color:get(),
-        LineThickness = 0.05,
-        Transparency = 0.375,
-        SurfaceTransparency = .6,
+        LineThickness = 0.03,
+        SurfaceTransparency = .625,
         Parent = Util._DebugView.debugObjectsFolder,
         Adornee = part
     }
