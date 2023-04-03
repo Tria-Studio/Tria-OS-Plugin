@@ -20,7 +20,6 @@ end
 
 function ObjectType:SetAppearance(part)
     local SelectionBox = New "SelectionBox" {
-        Archivable = false,
         SurfaceColor3 = self.Color:get(),
         Color3 = self.Color:get(),
         LineThickness = 0.05,

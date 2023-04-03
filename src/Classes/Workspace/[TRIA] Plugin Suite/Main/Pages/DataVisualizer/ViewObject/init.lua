@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 --[[
     The instance that will be in charge of creating the view mode "object" for a type of thing.
 
@@ -105,13 +106,6 @@ function ViewObject:Enable()
         table.insert(self.ObjectHandler.Objects[part].MaidIndex, index2)
 	end
 
-	for i, part in pairs(TagUtil:GetPartsWithTag(self.Tag, self.SubTag)) do
-		if part:IsA("BasePart") then
-			self.ObjectHandler:SetAppearance(part)
-			HandleUpdates(part)
-		end
-	end
-
 	self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
 		self.ObjectHandler:SetAppearance(...)
 		HandleUpdates(...)
@@ -123,16 +117,24 @@ function ViewObject:Enable()
 	self.checkState:set(true)
 
     task.defer(function()
+        for i, part in pairs(TagUtil:GetPartsWithTag(self.Tag, self.SubTag)) do
+            if part:IsA("BasePart") then
+                self.ObjectHandler:SetAppearance(part)
+                HandleUpdates(part)
+            end
+        end
+
+        task.wait(math.random(1, 12))
+
         while self.Enabled do
             local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
-            task.wait(3.75 / (math.max(12, studioQuality) / 21))
-    
             for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
                 if part:IsA("BasePart") and not self.ObjectHandler.Objects[part] then
                     self.ObjectHandler:SetAppearance(part)
                     HandleUpdates(part)
                 end
             end
+            task.wait(((5 / (math.max(12, studioQuality) / 21)) * (1 + (Util._DebugView.activeDebugViews:get() / 8)) + ((#Players:GetPlayers() == 1 and 10 or 0))))
         end
     end)
 end

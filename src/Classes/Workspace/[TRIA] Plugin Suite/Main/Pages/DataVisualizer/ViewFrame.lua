@@ -151,14 +151,17 @@ return function(name: string, data: PublicTypes.Dictionary)
                     else
                         local ALlViewObjects = viewObjects[name]:get()
                         local CurrentState = GetState(ALlViewObjects)
+                        local count = -1
 
                         for name, data in pairs(ALlViewObjects) do
+                            count += 1
                             if CurrentState then
                                 data:Disable()
                                 Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                             else
                                 data:Enable()
                                 Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
+                                task.wait()
                             end
                         end
                         checkState:set(not CurrentState)

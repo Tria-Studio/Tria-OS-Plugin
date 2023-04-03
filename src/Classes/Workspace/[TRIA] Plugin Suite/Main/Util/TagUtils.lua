@@ -131,8 +131,6 @@ function tagUtils:GetTagInstance(part: Instance, tag: string): Instance | nil
 end
 
 function tagUtils:GetPartTags(part: Instance, excludeTag: string?): {string}
-    -- TODO: see if its possible to efficiently add a system to check the most common types first and the least common last, and to also stop checking if tags are incompatible(not sure if this is "possible")
-    -- TODO: add a system possibly where if a part has an object tag that incompatible with other object tags(ex: most object tags can only have one, so why check every single object tag?)
     local partTags = {}
     for tagType, tags in pairs(tagTypes) do
         for key, tag in ipairs(tags) do
@@ -406,7 +404,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 
     function types.ObjectTags(): boolean?
         local secondary = tagTypes.ObjectTags._convert[tag]
-        if string.find(part.Name, tag, 1, true) or part:FindFirstChild(tag) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
+        if part:FindFirstChild(tag) and string.find(part.Name, tag, 1, true) or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary)) then
             return true
         end
         return false
@@ -439,8 +437,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     function types.DetailTag(): boolean?
-        local currentMap = Util.mapModel:get(false)
-        local detailFolder = currentMap and currentMap:FindFirstChild("Detail")
+        local detailFolder = Util.mapModel:get():FindFirstChild("Detail")
         return detailFolder and part:IsDescendantOf(detailFolder)
     end
 
@@ -504,7 +501,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): {[number]: Inst
     local counter = 0
     for _, part in pairs(InstanceToCheck == Map and mapDescendants or InstanceToCheck:GetDescendants()) do
         counter += 1
-        if counter == 200 then
+        if counter == 100 then
             task.wait()
         end
         if tagUtils:PartHasTag(part, tag) then
