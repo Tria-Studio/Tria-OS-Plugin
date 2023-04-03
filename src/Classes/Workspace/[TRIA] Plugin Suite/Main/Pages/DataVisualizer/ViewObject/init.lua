@@ -122,17 +122,19 @@ function ViewObject:Enable()
 	self.Enabled = true
 	self.checkState:set(true)
 
-    while self.Enabled do
-        local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
-        task.wait(3.75 / (math.max(12, studioQuality) / 21))
-
-        for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
-            if part:IsA("BasePart") and not self.ObjectHandler.Objects[part] then
-                self.ObjectHandler:SetAppearance(part)
-                HandleUpdates(part)
+    task.defer(function()
+        while self.Enabled do
+            local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
+            task.wait(3.75 / (math.max(12, studioQuality) / 21))
+    
+            for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
+                if part:IsA("BasePart") and not self.ObjectHandler.Objects[part] then
+                    self.ObjectHandler:SetAppearance(part)
+                    HandleUpdates(part)
+                end
             end
         end
-    end
+    end)
 end
 
 function ViewObject:Disable()
