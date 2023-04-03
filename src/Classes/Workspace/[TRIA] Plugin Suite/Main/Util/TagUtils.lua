@@ -318,7 +318,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
             elseif newTag == "_Liquid" or newTag == "_Gas" and isOptimized:FindFirstChild("Fluid") then isOptimized.Fluid
             elseif newTag == "_Teleporter" and isOptimized:FindFirstChild("Teleporters") then isOptimized.Teleporters 
             elseif string.find(newTag, "_Waterjet", 1, true) and isOptimized:FindFirstChild("Waterjets") then isOptimized.Waterjets 
-            elseif isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable
+            elseif isOptimized and isOptimized:FindFirstChild("Interactable") then isOptimized.Interactable
             else part.Parent
 
         function methods._Action()
