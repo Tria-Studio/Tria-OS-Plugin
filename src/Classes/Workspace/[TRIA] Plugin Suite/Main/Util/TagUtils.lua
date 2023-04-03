@@ -413,12 +413,14 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
     end
 
     function types.AddonTags(): boolean?
-        return part.Name == tag or string.find(part.Name, tag, 1, true)
+        return string.find(part.Name, tag, 1, true)
     end
 
     function types.ActionTags(): boolean?
         local secondary = tagTypes.ActionTags._convert[tag]
-        if part:GetAttribute("_action") == tag or part:GetAttribute("_action") == secondary or part:GetAttribute("_action") == TagData.dataTypes.objectTags[tag].ActionText then
+        local attribute = part:GetAttribute("_action")
+
+        if attribute == tag or attribute == secondary or attribute == TagData.dataTypes.objectTags[tag].ActionText then
             return true
         end
         return false
