@@ -222,6 +222,8 @@ return {
     },
     VariantView = {
         DisplayText = "Variant View",
+        SubText = "All Variants",
+        AltSubText = "No Variants Found.",
         DisplayIcon = "rbxassetid://6022668909",
         LayoutOrder = 6,
         ViewOptions = varaints,

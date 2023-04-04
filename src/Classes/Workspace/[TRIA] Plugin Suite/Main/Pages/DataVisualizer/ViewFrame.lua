@@ -209,8 +209,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                     Components.Constraints.UIListLayout(),
                     Components.Spacer(data.SingleOption, 0, 2, 1, Theme.ScrollBarBackground.Default),
                     New "TextLabel" {
-                        Text = data.SubText,
-                        Visible = #data.ViewOptions > 0,
+                        Text = Computed(function()
+                            return #(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) > 0 and data.SubText or data.AltSubText or ""
+                        end),
+                        Visible = data.SubText == "All Variants" or #data.ViewOptions > 0,
                         BackgroundColor3 = Theme.MainBackground.Default,
                         BorderColor3 = Theme.Border.Default,
                         BorderSizePixel = 1,
