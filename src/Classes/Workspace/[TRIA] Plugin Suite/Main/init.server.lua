@@ -314,7 +314,8 @@ end)
 
 local function CreateDebugViewFolder()
 	local folder = Instance.new("Folder")
-	folder.Name = "__debugview_donottouch"
+	folder.Name = "__debugview_tria_donttouch"
+	folder.Archivable = false
 	folder.Parent = Util.Widget
 	Util._DebugView.debugObjectsFolder = folder
 	Util.MainMaid:GiveTask(folder)

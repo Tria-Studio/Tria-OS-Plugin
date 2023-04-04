@@ -40,7 +40,7 @@ local newTagTypes = {
 	_SpeedBooster = { "ActionTags" },
 	_JumpBooster = { "ActionTags" },
 	_Kill = { "ActionTags" },
-	Detail = { "DetailTag" },
+	_Detail = { "DetailTag" },
 	Zipline = { "ModelTags" },
 	_Button = { "ModelTags" },
 	AirTank = { "ModelTags" },
@@ -83,7 +83,7 @@ local tagTypes = {
 		},
 	},
 	DetailTag = { --// Parented to the detail folder
-		"Detail",
+		"_Detail",
 	},
 	ModelTags = { --// They are a model named this and stuff
 		"Zipline",
@@ -410,6 +410,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			part.Parent = newParent
 		end
 
+		print(newTag)
 		tagUtils.OnTagAdded(newTag):Fire(part)
 		local tagData = TagData.dataTypes.buttonTags[newTag]
 			or TagData.dataTypes.objectTags[newTag]
@@ -479,7 +480,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 		return detailFolder and part:IsDescendantOf(detailFolder)
 	end
 
-	for _, type in pairs(newTagTypes[tag] or newTagTypes.Detail) do
+	for _, type in pairs(newTagTypes[tag] or newTagTypes._Detail) do
 		if types[type]() then
 			return true
 		end

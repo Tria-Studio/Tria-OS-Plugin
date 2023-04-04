@@ -107,7 +107,9 @@ function ViewObject:Enable()
         table.insert(self.ObjectHandler.Objects[part].MaidIndex, index2)
 	end
 
+	print(self.Tag)
 	self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
+		print("added", self.Tag)
 		if self.ObjectHandler:SetAppearance(...) then
 			HandleUpdates(...)
 		end

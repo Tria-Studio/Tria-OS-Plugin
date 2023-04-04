@@ -713,7 +713,7 @@ Metadata:
     <font size="15"><b>LocatorImage: </b></font>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
             },
         },
-        Detail = {
+        _Detail = {
             DisplayText = "Low Detail",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6034925618",

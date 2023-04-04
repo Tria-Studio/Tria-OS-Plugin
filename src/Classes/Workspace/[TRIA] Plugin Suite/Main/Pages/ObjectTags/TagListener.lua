@@ -109,7 +109,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                 TagUtils:SetPartTag(instance, newState and name, not newState and name)
                             end
                             ChangeHistoryService:SetWaypoint(string.format("Set tag %s on %d part%s to %s", name, #currentlySelected, #currentlySelected == 1 and "" or "s", tostring(newState)))
-                            if partError and name ~= "Detail" then
+                            if partError and name ~= "_Detail" then
                                 Util.debugWarn(string.format("Only BaseParts, Models, Folders, & Attachments can have the tag '%s'. Selected parts which were not a BasePart were ignored.", name))
                                 Util:ShowMessage("Cannot Set Tag", string.format("Only <b>BaseParts</b>, <b>Models</b>, <b>Folders</b>, & <b>Attachments</b> can have the tag <b>'%s'</b>.<br /><br />Selected parts which were not a BasePart were ignored.", name))
                             end

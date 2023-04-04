@@ -282,7 +282,7 @@ end)                ]], line + 1)
                 local model = insertModel("_Button0", newParent)
                 model.Name = "_Button" .. (highestButton + 1)
                 positionModel(model)
-                TagUtils.OnTagAdded("_Button"):Fire()
+                TagUtils.OnTagAdded("_Button"):Fire(model)
     
                 Util.debugWarn("Successfully inserted new Button!")
             end
@@ -299,7 +299,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Zipline")
                 local model = insertModel("Zipline", newParent)
                 positionModel(model)
-                TagUtils.OnTagAdded("Zipline"):Fire()
+                TagUtils.OnTagAdded("Zipline"):Fire(model)
                 Util.debugWarn("Successfully inserted new Zipline!")
             end
         }, {
@@ -315,7 +315,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Interactable")
                 local model = insertModel("AirTank", newParent)
                 positionModel(model)
-                TagUtils.OnTagAdded("Airtank"):Fire()
+                TagUtils.OnTagAdded("Airtank"):Fire(model)
                 Util.debugWarn("Successfully inserted new AirTank!")
             end
         }, {
@@ -376,7 +376,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Interactable")
                 local model = insertModel("Walljump", newParent)
                 positionModel(model)
-                TagUtils.OnTagAdded("_WallJump"):Fire()
+                TagUtils.OnTagAdded("_WallJump"):Fire(model)
                 Util.debugWarn("Successfully inserted new Walljump!")
             end
         }, {
@@ -392,7 +392,7 @@ end)                ]], line + 1)
                 local newParent = getInsertFolder("Interactable")
                 local model = insertModel("Wallrun", newParent)
                 positionModel(model)
-                TagUtils.OnTagAdded("_WallRun"):Fire()
+                TagUtils.OnTagAdded("_WallRun"):Fire(model)
                 Util.debugWarn("Successfully inserted new Wallrun!")
             end
         }, {
@@ -411,7 +411,7 @@ end)                ]], line + 1)
                 local model = insertModel("_Gas0", newParent)
                 model.Name = "_Gas" .. (highestGas + 1)
                 positionModel(model)
-                TagUtils.OnTagAdded("_Gas"):Fire()
+                TagUtils.OnTagAdded("_Gas"):Fire(model)
                 Util.debugWarn("Successfully inserted new Gas!")
             end
         }, 
