@@ -19,6 +19,9 @@ function ObjectType.new(controller)
 end
 
 function ObjectType:SetAppearance(part)
+    if not part:IsA("BasePart") then
+        return
+    end
     local SelectionBox = New "SelectionBox" {
         SurfaceColor3 = self.Color:get(),
         Color3 = self.Color:get(),
@@ -31,6 +34,7 @@ function ObjectType:SetAppearance(part)
         SelectionBox = SelectionBox,
         MaidIndex = {self._Maid:GiveTask(SelectionBox)}
     }
+    return true
 end
 
 function ObjectType:UpdateAppearance()

@@ -108,8 +108,9 @@ function ViewObject:Enable()
 	end
 
 	self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
-		self.ObjectHandler:SetAppearance(...)
-		HandleUpdates(...)
+		if self.ObjectHandler:SetAppearance(...) then
+			HandleUpdates(...)
+		end
 	end))
 	self._Maid:GiveTask(TagUtil.OnTagRemoved(self.Tag):Connect(function(...)
 		self.ObjectHandler:ClearAppearance(...)
@@ -119,8 +120,9 @@ function ViewObject:Enable()
 
     task.defer(function()
         for i, part in pairs(TagUtil:GetPartsWithTag(self.Tag, self.SubTag)) do
-			self.ObjectHandler:SetAppearance(part)
-			HandleUpdates(part)
+			if self.ObjectHandler:SetAppearance(part) then
+				HandleUpdates(part)
+			end
         end
 
         task.wait(math.random(1, 12))
@@ -129,8 +131,9 @@ function ViewObject:Enable()
             local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
             for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
                 if not self.ObjectHandler.Objects[part] then
-                    self.ObjectHandler:SetAppearance(part)
-                    HandleUpdates(part)
+                    if self.ObjectHandler:SetAppearance(part) then
+						HandleUpdates(part)
+					end
                 end
             end
             task.wait(((5 / (math.max(12, studioQuality) / 21)) * (1 + (Util._DebugView.activeDebugViews:get() / 8)) + ((#Players:GetPlayers() == 1 and 10 or 0))))
