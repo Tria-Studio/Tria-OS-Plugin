@@ -46,6 +46,7 @@ local Util = {
     AudioPermsToggled = Signal.new(),
 
     _Addons = {
+        AddonRemoved = Signal.new(),
         hasAddonsWithObjectTags = Value(false),
         hasWaterjet = Value(false),
         hasEasyTP = Value(false)

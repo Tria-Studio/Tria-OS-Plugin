@@ -371,4 +371,5 @@ Observer(Util.hasSpecialFolder):onChange(function()
         task.wait(.25)
     end
 end)
+
 return MapSelect

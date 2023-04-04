@@ -398,6 +398,11 @@ local function updateMapScriptChildren()
         end
     end
 
+    if Util._Addons.hasEasyTP:get() and not newValues.EasyTP then
+        Util._Addons.AddonRemoved:Fire("_Teleporter")
+    elseif Util._Addons.hasWaterjet:get() and not newValues.Waterjets then
+        Util._Addons.AddonRemoved:Fire("_Waterjet")
+    end
     Util._Addons.hasEasyTP:set(newValues.EasyTP)
     Util._Addons.hasWaterjet:set(newValues.Waterjets)
     Util._Addons.hasAddonsWithObjectTags:set(newValues.Waterjets or newValues.EasyTP)
