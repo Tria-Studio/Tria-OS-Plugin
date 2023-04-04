@@ -63,7 +63,8 @@ local Util = {
     },
     _DebugView = {
         debugObjectsFolder = nil,
-        activeDebugViews = Value(0)
+        activeDebugViews = Value(0),
+        viewsActiveUsingAll = 0,
     },
     _Message = {
         Text = Value(""),

@@ -34,6 +34,7 @@ function ViewObject.new(Name, data, color)
 	self.ObjectType = data.ObjectType or "SelectionBox"
 	self.TagType = data.TagType
 
+	self.UsesAll = data.UsesAllInstances
 	self.Tag = data.Name
 	self.SubTag = data.SubName
 	self.Name = Name

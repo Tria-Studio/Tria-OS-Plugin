@@ -23,7 +23,7 @@ function ObjectType:SetAppearance(part)
         SurfaceColor3 = self.Color:get(),
         Color3 = self.Color:get(),
         LineThickness = 0.03,
-        SurfaceTransparency = .625,
+        SurfaceTransparency = .6,
         Parent = Util._DebugView.debugObjectsFolder,
         Adornee = part
     }

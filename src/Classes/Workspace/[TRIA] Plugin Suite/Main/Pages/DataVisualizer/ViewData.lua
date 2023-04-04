@@ -122,6 +122,7 @@ return {
                 Name = "_WallJump",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://9468872087",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(180, 180, 180),
                 ObjectType = "SelectionBox",
@@ -130,6 +131,7 @@ return {
                 Name = "_WallRun",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6026568215",
+                UsesAllInstances = true,
                 
                 Color = Color3.fromRGB(225, 225, 225),
                 ObjectType = "SelectionBox",
@@ -138,6 +140,7 @@ return {
                 Name = "_Liquid",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://6026568295",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(60, 60, 220),
                 ObjectType = "SelectionBox",
@@ -146,6 +149,7 @@ return {
                 Name = "_Gas",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026568253",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(206, 143, 211),
                 ObjectType = "SelectionBox",
@@ -154,6 +158,7 @@ return {
                 Name = "_Kill",
                 LayoutOrder = 5,
                 DisplayIcon = "rbxassetid://6022668916",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(255, 0, 0),
                 ObjectType = "SelectionBox",
@@ -162,6 +167,7 @@ return {
                 Name = "_SpeedBooster",
                 LayoutOrder = 6,
                 DisplayIcon = "rbxassetid://6034754445",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(110, 203, 53),
                 ObjectType = "SelectionBox",
@@ -170,6 +176,7 @@ return {
                 Name = "_JumpBooster",
                 LayoutOrder = 7,
                 DisplayIcon = "rbxassetid://6034754445",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(190, 222, 48),
                 ObjectType = "SelectionBox",
@@ -178,6 +185,7 @@ return {
                 Name = "AirTank",
                 LayoutOrder = 8,
                 DisplayIcon = "rbxassetid://6031068426",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(41, 184, 232),
                 ObjectType = "SelectionBox",
@@ -235,6 +243,7 @@ return {
                 Name = "_Teleporter",
                 LayoutOrder = 1,
                 DisplayIcon = "rbxassetid://6031082527",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(255, 255, 255),
                 ObjectType = "SelectionBox"
@@ -243,6 +252,7 @@ return {
                 Name = "_Waterjet",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6022668890",
+                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(89, 193, 248),
                 ObjectType = "SelectionBox"

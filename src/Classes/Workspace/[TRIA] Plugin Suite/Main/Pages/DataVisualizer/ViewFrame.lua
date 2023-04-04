@@ -142,9 +142,15 @@ return function(name: string, data: PublicTypes.Dictionary)
 
                     if data.SingleOption then
                         if viewObjects[name].Enabled then
+                            if viewObjects[name].UsesAll then
+                                Util._DebugView.viewsActiveUsingAll -= 1
+                            end
                             viewObjects[name]:Disable()
                             Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                         else
+                            if viewObjects[name].UsesAll then
+                                Util._DebugView.viewsActiveUsingAll += 1
+                            end
                             Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                             viewObjects[name]:Enable()
                         end
@@ -156,9 +162,15 @@ return function(name: string, data: PublicTypes.Dictionary)
                         for name, data in pairs(ALlViewObjects) do
                             count += 1
                             if CurrentState then
+                                if data.UsesAll then
+                                    Util._DebugView.viewsActiveUsingAll -= 1
+                                end
                                 data:Disable()
                                 Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                             else
+                                if data.UsesAll then
+                                    Util._DebugView.viewsActiveUsingAll += 1
+                                end
                                 data:Enable()
                                 Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                                 task.wait()
@@ -231,10 +243,15 @@ return function(name: string, data: PublicTypes.Dictionary)
                             [OnEvent "Activated"] = function()
                                 if not Util.isPluginFrozen() then
                                     if ViewObject.Enabled then
+                                        if ViewObject.UsesAll then
+                                            Util._DebugView.viewsActiveUsingAll -= 1
+                                        end
                                         ViewObject:Disable()
                                         Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                                     else
-                                        print(ViewObject.Tag)
+                                        if ViewObject.UsesAll then
+                                            Util._DebugView.viewsActiveUsingAll += 1
+                                        end
                                         ViewObject:Enable()
                                         Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                                     end
