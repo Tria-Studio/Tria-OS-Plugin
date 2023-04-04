@@ -426,6 +426,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 	local types = {}
 
 	function types.ButtonTags(): boolean?
+
 		for _, child in ipairs(part:GetChildren()) do
 			if string.find(child.Name, tag .. "%d") then
 				return true

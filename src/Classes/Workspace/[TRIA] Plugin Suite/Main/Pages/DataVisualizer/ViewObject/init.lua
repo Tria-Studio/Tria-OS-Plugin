@@ -119,10 +119,8 @@ function ViewObject:Enable()
 
     task.defer(function()
         for i, part in pairs(TagUtil:GetPartsWithTag(self.Tag, self.SubTag)) do
-            if part:IsA("BasePart") then
-                self.ObjectHandler:SetAppearance(part)
-                HandleUpdates(part)
-            end
+			self.ObjectHandler:SetAppearance(part)
+			HandleUpdates(part)
         end
 
         task.wait(math.random(1, 12))
@@ -130,7 +128,7 @@ function ViewObject:Enable()
         while self.Enabled do
             local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
             for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
-                if part:IsA("BasePart") and not self.ObjectHandler.Objects[part] then
+                if not self.ObjectHandler.Objects[part] then
                     self.ObjectHandler:SetAppearance(part)
                     HandleUpdates(part)
                 end
