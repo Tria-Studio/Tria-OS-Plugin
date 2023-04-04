@@ -410,17 +410,23 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			part.Parent = newParent
 		end
 
-		print(newTag)
 		tagUtils.OnTagAdded(newTag):Fire(part)
 		local tagData = TagData.dataTypes.buttonTags[newTag]
 			or TagData.dataTypes.objectTags[newTag]
 			or TagData.dataTypes.addonTags[newTag]
-		for _, metaData in ipairs(tagData.metadata) do
-			tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
+		if not tagData._instanceType then
+			for _, metaData in ipairs(tagData.metadata) do
+				tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
+			end
 		end
 	end
 
 	methods[typeof(tagData.ApplyMethod) == "table" and tagData.ApplyMethod[1] or tagData.ApplyMethod]()
+	if tagData._instanceType and newTag then
+		for _, metaData in ipairs(tagData.metadata) do
+			tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
+		end
+	end
 end
 
 function tagUtils:PartHasTag(part: Instance, tag: string): boolean
