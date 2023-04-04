@@ -438,6 +438,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 		local secondary = tagTypes.ObjectTags._convert[tag]
 		if
 			part:FindFirstChild(tag) and string.find(part.Name, tag, 1, true)
+            or (part.Name:find("_Liquid", 1, true) or part.Name:find("_Gas", 1, true)) and string.find(part.Name, tag, 1, true)
 			or secondary and (string.find(part.Name, secondary, 1, true) or part:FindFirstChild(secondary))
 		then
 			return true
@@ -477,7 +478,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 		return detailFolder and part:IsDescendantOf(detailFolder)
 	end
 
-	for _, type in pairs(newTagTypes[tag]) do
+	for _, type in pairs(newTagTypes[tag] or newTagTypes.Detail) do
 		if types[type]() then
 			return true
 		end
@@ -538,7 +539,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 			if counter == 1000 then
 				task.wait()
 			end
-			if tagUtils:PartIsTagged(part) then
+			if tagUtils:IsPartTagged(part) then
 				table.insert(newParts, part)
 			end
 		end
@@ -556,7 +557,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 	end
 
 	local counter = 0
-    local MapToCheck = (InstanceToCheck:GetDescendants() == Map and #mapDescendants > 0 and mapDescendants or Map:GetDescendants())
+    local MapToCheck = (InstanceToCheck == Map and #mapDescendants > 0 and mapDescendants)
 	for _, part in pairs(MapToCheck or InstanceToCheck:GetDescendants()) do
 		counter += 1
 		if counter == 100 then
@@ -570,7 +571,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 	return partsFound
 end
 
-function tagUtils:PartIsTagged(part: Instance): boolean
+function tagUtils:IsPartTagged(part: Instance): boolean
 	if not (part:IsA("BasePart") or part:IsA("Model") or part:IsA("Folder")) then
 		return false
 	end

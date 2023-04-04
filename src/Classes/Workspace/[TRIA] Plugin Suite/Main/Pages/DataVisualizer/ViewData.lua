@@ -140,7 +140,6 @@ return {
                 Name = "_Liquid",
                 LayoutOrder = 3,
                 DisplayIcon = "rbxassetid://6026568295",
-                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(60, 60, 220),
                 ObjectType = "SelectionBox",
@@ -149,7 +148,6 @@ return {
                 Name = "_Gas",
                 LayoutOrder = 4,
                 DisplayIcon = "rbxassetid://6026568253",
-                UsesAllInstances = true,
 
                 Color = Color3.fromRGB(206, 143, 211),
                 ObjectType = "SelectionBox",
