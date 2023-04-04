@@ -104,7 +104,6 @@ function ViewObject:Enable()
 
 		function TagTypes.Addon()
 			index3 = self._Maid:GiveTask(Util._Addons.AddonRemoved:Connect(function(removedTag)
-				print(removedTag, self.Tag)
 				if removedTag == self.Tag then
 					UpdatePart()
 				end

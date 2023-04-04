@@ -551,8 +551,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 				table.insert(newParts, part)
 			end
 		end
-		print("number of instances in map: ", #Map:GetDescendants())
-		print("number of refined instances: ", #newParts)
+		
 		mapDescendants = newParts
 	end
 
