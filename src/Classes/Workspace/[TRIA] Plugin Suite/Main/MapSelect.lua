@@ -276,7 +276,9 @@ function MapSelect:StartMapSelection()
             end
 
             if target then
-                humanoid.Parent = target
+                if #target:GetDescendants() < 10_000 then
+                    humanoid.Parent = target
+                end
 
                 local isMap, text = self:IsTriaMap(target)
                 mapHighlight.FillColor = isMap and Color3.fromRGB(168, 229, 153) or Color3.fromRGB(245, 130, 130)
