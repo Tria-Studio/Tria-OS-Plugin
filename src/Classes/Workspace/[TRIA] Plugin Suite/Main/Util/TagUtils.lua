@@ -616,4 +616,8 @@ function tagUtils.OnTagAdded(tagName: string)
 	return tagAddedSignals[tagName]
 end
 
+Util.MapChanged:Connect(function()
+	mapDescendantsUpdate = 0
+end)
+
 return tagUtils
