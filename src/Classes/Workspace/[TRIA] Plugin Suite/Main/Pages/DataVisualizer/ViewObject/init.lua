@@ -128,6 +128,10 @@ function ViewObject:Enable()
 	self.Enabled = true
 	self.checkState:set(true)
 
+	self._Maid:GiveTask(Util.MapChanged:Connect(function()
+		self:Disable()
+	end))
+
 	if self.Tag == "_Detail" then
 		self._Maid:GiveTask(Util.mapModel:get():FindFirstChild("Detail").Destroying:Connect(function()
 			self:Disable()
