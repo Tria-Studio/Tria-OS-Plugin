@@ -19,28 +19,53 @@ function ObjectType.new(controller)
 end
 
 function ObjectType:SetAppearance(part)
-    if not part:IsA("BasePart") then
-        return
+    local function GetSelectionBox(Part)
+        return New "SelectionBox" {
+            SurfaceColor3 = self.Color:get(),
+            Color3 = self.Color:get(),
+            LineThickness = 0.03,
+            SurfaceTransparency = .6,
+            Parent = Util._DebugView.debugObjectsFolder,
+            Adornee = Part
+        }
     end
-    local SelectionBox = New "SelectionBox" {
-        SurfaceColor3 = self.Color:get(),
-        Color3 = self.Color:get(),
-        LineThickness = 0.03,
-        SurfaceTransparency = .6,
-        Parent = Util._DebugView.debugObjectsFolder,
-        Adornee = part
-    }
     self.Objects[part] = {
-        SelectionBox = SelectionBox,
-        MaidIndex = {self._Maid:GiveTask(SelectionBox)}
+        SelectionBox = {},
+        MaidIndex = {}
     }
+
+    if part:IsA("Model") or part:IsA("Folder") and self.TagType ~= "Parent" then
+        for _, instance in pairs(part:GetDescendants()) do
+            if instance:IsA("BasePart") then
+                local index
+                local selectionBox = GetSelectionBox(instance)
+
+                self._Maid:GiveTask(selectionBox)
+                table.insert(self.Objects[part].SelectionBox, selectionBox)
+                index = self._Maid:GiveTask(instance.AncestryChanged:Connect(function()
+                    if not instance:IsDescendantOf(part) then
+                        self._Maid[index] = nil
+                        selectionBox:Destroy()
+                    end
+                end))
+                table.insert(self.Objects[part].MaidIndex, index)
+            end
+        end
+    elseif part:IsA("BasePart") then
+        local selectionBox = GetSelectionBox(part)
+        table.insert(self.Objects[part].SelectionBox, selectionBox)
+        self._Maid:GiveTask(selectionBox)
+    end
+
     return true
 end
 
 function ObjectType:UpdateAppearance()
     for i, parts in pairs(self.Objects) do
-        parts.SelectionBox.Color3 = self.Color:get()
-        parts.SelectionBox.SurfaceColor3 = self.Color:get()
+        for _, SelectionBox in pairs(parts.SelectionBox) do
+            parts.SelectionBox.Color3 = self.Color:get()
+            parts.SelectionBox.SurfaceColor3 = self.Color:get()
+        end
     end
 end
 
