@@ -37,7 +37,6 @@ function ObjectType:SetAppearance(part)
         MaidIndex = {}
     }
 
-    print(self.TagType)
     if (part:IsA("Model") or part:IsA("Folder")) and self.TagType ~= "Parent" then
         local references = {}
         local function ProcessPart(partToProcess)
