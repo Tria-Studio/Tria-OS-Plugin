@@ -11,6 +11,7 @@ ObjectType.__index = ObjectType
 function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)
 
+    self.TagType = controller.TagType
     self.Visible = false
     self.Color = controller.Color:get() and controller.Color or Value(Color3.new())
     self.Objects = {}
@@ -36,7 +37,8 @@ function ObjectType:SetAppearance(part)
         MaidIndex = {}
     }
 
-    if part:IsA("Model") or part:IsA("Folder") and self.TagType ~= "Parent" then
+    print(self.TagType)
+    if (part:IsA("Model") or part:IsA("Folder")) and self.TagType ~= "Parent" then
         local references = {}
         local function ProcessPart(partToProcess)
             local index
