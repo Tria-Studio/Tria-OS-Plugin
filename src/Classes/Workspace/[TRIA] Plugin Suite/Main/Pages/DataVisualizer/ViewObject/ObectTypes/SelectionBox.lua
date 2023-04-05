@@ -11,6 +11,7 @@ ObjectType.__index = ObjectType
 function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)
 
+    self.Visible = false
     self.Color = controller.Color:get() and controller.Color or Value(Color3.new())
     self.Objects = {}
     self._Maid = Util.Maid.new()
@@ -19,6 +20,7 @@ function ObjectType.new(controller)
 end
 
 function ObjectType:SetAppearance(part)
+    self.Visible = true
     local function GetSelectionBox(Part)
         return New "SelectionBox" {
             SurfaceColor3 = self.Color:get(),
@@ -35,22 +37,43 @@ function ObjectType:SetAppearance(part)
     }
 
     if part:IsA("Model") or part:IsA("Folder") and self.TagType ~= "Parent" then
-        for _, instance in pairs(part:GetDescendants()) do
-            if instance:IsA("BasePart") then
-                local index
-                local selectionBox = GetSelectionBox(instance)
+        local references = {}
+        local function ProcessPart(partToProcess)
+            local index
+                local selectionBox = GetSelectionBox(partToProcess)
 
                 self._Maid:GiveTask(selectionBox)
                 table.insert(self.Objects[part].SelectionBox, selectionBox)
-                index = self._Maid:GiveTask(instance.AncestryChanged:Connect(function()
-                    if not instance:IsDescendantOf(part) then
+                index = self._Maid:GiveTask(partToProcess.AncestryChanged:Connect(function()
+                    if not partToProcess:IsDescendantOf(part) then
                         self._Maid[index] = nil
                         selectionBox:Destroy()
                     end
                 end))
+                table.insert(references, partToProcess)
                 table.insert(self.Objects[part].MaidIndex, index)
+        end
+        for _, instance in pairs(part:GetDescendants()) do
+            if instance:IsA("BasePart") then
+                ProcessPart(instance)
             end
         end
+        task.spawn(function()
+            task.wait(5)
+            while self.Visible do
+                local newReferences = {}
+                for _, instance in pairs(part:GetDescendants()) do
+                    if instance:IsA("BasePart") then
+                        if not table.find(references, instance) then
+                            ProcessPart(instance)
+                        end
+                        table.insert(newReferences, instance)
+                    end
+                end
+                references = newReferences
+                task.wait(5)
+            end
+        end)
     elseif part:IsA("BasePart") then
         local selectionBox = GetSelectionBox(part)
         table.insert(self.Objects[part].SelectionBox, selectionBox)
@@ -75,7 +98,9 @@ function ObjectType:ClearAppearance(part: Instance?)
             self._Maid[index] = nil
         end
     else
+        self.Visible = false
         self._Maid:Destroy()
+        self.Objects = {}
     end
 end
 
