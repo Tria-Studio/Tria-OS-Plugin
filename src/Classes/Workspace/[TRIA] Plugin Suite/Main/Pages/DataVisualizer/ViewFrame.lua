@@ -148,6 +148,9 @@ return function(name: string, data: PublicTypes.Dictionary)
                             viewObjects[name]:Disable()
                             Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                         else
+                            if name == "LowDetail" and not Util.mapModel:get():FindFirstChild("Detail") then
+                                return
+                            end
                             if viewObjects[name].UsesAll then
                                 Util._DebugView.viewsActiveUsingAll += 1
                             end
@@ -168,9 +171,6 @@ return function(name: string, data: PublicTypes.Dictionary)
                                 data:Disable()
                                 Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
                             else
-                                if data.UsesAll then
-                                    Util._DebugView.viewsActiveUsingAll += 1
-                                end
                                 data:Enable()
                                 Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
                                 task.wait()

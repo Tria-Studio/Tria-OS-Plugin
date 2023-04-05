@@ -128,6 +128,12 @@ function ViewObject:Enable()
 	self.Enabled = true
 	self.checkState:set(true)
 
+	if self.Tag == "_Detail" then
+		self._Maid:GiveTask(Util.mapModel:get():FindFirstChild("Detail").Destroying:Connect(function()
+			self:Disable()
+		end))
+	end
+
     task.defer(function()
         for i, part in pairs(TagUtil:GetPartsWithTag(self.Tag, self.SubTag)) do
 			if self.ObjectHandler:SetAppearance(part) then
@@ -138,6 +144,10 @@ function ViewObject:Enable()
         task.wait(math.random(1, 12))
 
         while self.Enabled do
+			if self.Tag == "_Detail" and not Util.mapModel:get():FindFirstChild("Detail") then
+				self:Disable()
+				break
+			end
             local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
             for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
                 if not self.ObjectHandler.Objects[part] then
