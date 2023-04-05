@@ -364,7 +364,7 @@ function MapSelect:ResetSelection()
 end
 
 Observer(Util.hasSpecialFolder):onChange(function()
-    while Util.hasSpecialFolder:get() and Util.mapModel:get() do
+    while Util.hasSpecialFolder:get() and Util.mapModel:get() and Util.mapModel:get().Special:FindFirstChild("Variant") do
         if #Util.variantFolderChildren:get() ~= #Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren() then
             Util.variantFolderChildren:set(Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren())
         end
