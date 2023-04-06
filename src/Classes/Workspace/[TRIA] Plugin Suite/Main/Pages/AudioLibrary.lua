@@ -210,6 +210,8 @@ end
 
 
 local function playSong(newSound: Sound, soundData: audioTableFormat)
+    SoundMaid:DoCleaning()
+
     newSound.Volume = 0
     newSound.TimePosition = 0
     newSound:Resume()
@@ -218,11 +220,27 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     songPlayData.isPaused:set(false)
     songPlayData.currentlyPlaying:set(newSound, true)
     songPlayData.currentSongData:set(soundData)
-    songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
+    
+    SoundMaid:GiveTask(newSound.Ended:Connect(function()
+        songPlayData.currentTimePosition:set(0)
+        songPlayData.currentlyPlaying:set(nil)
+        Util._Slider.isUsingSlider:set(false)
+    end))
 
-    newSound:GetPropertyChangedSignal("TimeLength"):Once(function()
-        songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
-    end)
+    SoundMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+        if newSound ~= nil 
+            and newSound.IsLoaded 
+            and newSound.IsPlaying
+            and not Util._Slider.isUsingSlider:get(false) 
+        then
+            songPlayData.currentTimePosition:set(songPlayData.currentTimePosition:get(false) + deltaTime)
+        end
+    end))
+
+    currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+    SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
+        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+    end))
 end
 
 local function stopCurrentTween()
@@ -291,26 +309,12 @@ local function AudioButton(data: audioTableFormat): Instance
         return (not isPaused) and (currentSong and currentSong == audio)
     end)
 
-    --[[
-        songPlayData.currentTimePosition:set(0)
-        songPlayData.currentTimeLength:set(newSound.TimeLength)
-    ]]
-
-    local connections = {}
-
-    table.insert(connections, audio:GetPropertyChangedSignal("TimePosition"):Connect(function()
-        if isPlayingCurrentSong:get(false) then
-            songPlayData.currentTimePosition:set(audio.TimePosition)
-        end
-    end))
-
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
         Visible = true,
 
         [Cleanup] = {
-            connections
             -- audio
         },
 
