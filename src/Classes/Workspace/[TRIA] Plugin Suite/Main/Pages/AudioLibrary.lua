@@ -179,7 +179,22 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
-    playSong(newSound, soundData)
+    local currentAudio = songPlayData.currentlyPlaying:get(false)
+
+    if not currentAudio then -- No song playing
+        stopCurrentTween()
+        playSong(newSound, soundData)
+    elseif currentAudio == newSound then -- Song being paused/resumed
+        if currentAudio.IsPaused then
+            resumeSong(soundData)
+        else
+            pauseSong(soundData)
+        end
+    else -- Song switched while playing
+        fadeSound(currentAudio, "Out")
+        task.wait()
+        playSong(newSound, soundData)
+    end
 end
 
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
