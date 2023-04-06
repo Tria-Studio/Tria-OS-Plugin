@@ -185,7 +185,11 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
 
     --== DO NOT TOUCH THIS ==--
     task.wait()
-    Util.toggleAudioPerms(false)
+    task.delay(1, function()
+        if Util.AudioPerms then
+            Util.toggleAudioPerms(false)
+        end
+    end)
     songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean[loaded and "True" or "False"])
     return loaded
 end
