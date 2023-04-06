@@ -164,7 +164,6 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
 
     task.delay(5, function()
         if not loaded then
-            print("Timing out")
             timeout = true
             LoadEvent:Fire()
         end
@@ -173,7 +172,6 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     task.spawn(function()
         task.wait(5.5)
         ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
-            print(fetchStatus, timeout)
             loaded = (fetchStatus == Enum.AssetFetchStatus.Success) and not timeout
         end)
     
@@ -418,17 +416,13 @@ local function AudioButton(data: audioTableFormat): Instance
                         end),
 
                         [OnEvent "MouseButton1Down"] = function()
-                            print("Clicked")
                             if songLoadData.isLoadingSong:get(false) then
                                 return
                             end
 
                             local needsLoading = songLoadData.loaded[data.ID]:get() ~= Enum.TriStateBoolean.True
-                            print("Needs", needsLoading)
-
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
                             if soundLoaded and audio then
-                                print("Updating")
                                 updatePlayingSound(audio, data)
                             end  
                         end
@@ -539,7 +533,6 @@ local function getAudioChildren(): {Instance}
 
     jumpToPage(1)
     pageData.total:set(totalPages)
-    print("Created")
 
     return children
 end
