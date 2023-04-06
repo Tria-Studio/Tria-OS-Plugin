@@ -10,10 +10,13 @@ local widget = plugin:CreateDockWidgetPluginGui("SoundPlayer", DockWidgetPluginG
 widget.Name = "TRIA_soundManager"
 widget.Title = "PluginSoundManager"
 
+local soundFrame = Instance.new("Frame")
+soundFrame.Parent = widget
+
 function PluginSoundManager:CreateSound(): Sound
 	local newSound = Instance.new("Sound")
 	newSound.Looped = false
-	newSound.Parent = widget
+	newSound.Parent = soundFrame
 
 	return newSound
 end

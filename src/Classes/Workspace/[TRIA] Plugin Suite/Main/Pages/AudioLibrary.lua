@@ -143,6 +143,7 @@ end
 local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
 
+    if true then return end
     if not songLoadData.loaded[soundData.ID] then
         Util.toggleAudioPerms(true)
     end
@@ -154,7 +155,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     task.wait()
 
     ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
-        print(assetId, fetchStatus)
+        print(fetchStatus)
         loaded = fetchStatus == Enum.AssetFetchStatus.Success
     end)
 
@@ -306,6 +307,19 @@ local function AudioButton(data: audioTableFormat): Instance
                         --         elseif isPlayingCurrentSong:get() then BUTTON_ICONS.Pause.hover
                         --         else BUTTON_ICONS.Play.hover
                         -- end),
+
+                        [OnEvent "MouseButton1Down"] = function()
+                            print("Clicked")
+                            if songLoadData.isLoadingSong:get(false) then
+                                return
+                            end
+
+                            local needsLoading = not songLoadData.loaded[data.ID]
+                            print("Needs", needsLoading)
+
+                            local soundLoaded = if needsLoading then loadSound(audio, data) else true
+                            
+                        end
 
                         -- [OnEvent "Activated"] = function()
                         --     print("Clicked")
