@@ -207,7 +207,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound:Resume()
     fadeSound(newSound, "In")
 
-    songPlayData.currentAudio:set(newSound)
+    songPlayData.currentlyPlaying:set(newSound)
 end
 
 local function stopCurrentTween()
