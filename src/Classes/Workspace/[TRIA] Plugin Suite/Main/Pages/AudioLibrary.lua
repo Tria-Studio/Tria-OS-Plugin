@@ -83,7 +83,7 @@ local songPlayData = {
     currentlyPlaying = Value(nil),
     currentTimePosition = Value(0),
     currentTimeLength = Value(1),
-    currentSongData = Value({}),
+    currentSongData = Value({Name = "", Artist = ""}),
     isPaused = Value(false),
 
     currentTween = nil
