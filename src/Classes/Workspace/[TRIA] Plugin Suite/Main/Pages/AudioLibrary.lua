@@ -117,8 +117,7 @@ local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
             table.insert(newData, tbl)
         end
     end
-
-    print(#FETCHED_AUDIO_DATA:get(false), #newData)
+    
     return newData
 end)
 
@@ -498,7 +497,6 @@ local function getAudioChildren(): {Instance}
         return {}
     end
 
-    print(totalPages)
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
 
