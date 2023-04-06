@@ -215,6 +215,8 @@ return {
         DisplayIcon = "rbxassetid://6035067839",
         LayoutOrder = 5,
         ViewOptions = {},
+        ObjectType = "Zipline",
+
         Tooltip = {
             Header = "",
             Text = ""
