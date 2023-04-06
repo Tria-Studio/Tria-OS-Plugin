@@ -178,6 +178,14 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     fadeSound(newSound, "In")
 end
 
+local function stopCurrentTween()
+    local tween = songPlayData.currentTween
+    if tween then
+        tween:Cancel()
+        songPlayData.currentTween = nil
+    end
+end
+
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
     local currentAudio = songPlayData.currentlyPlaying:get(false)
 
