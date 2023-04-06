@@ -21,29 +21,36 @@ end
 function ObjectType:SetAppearance(part)
     self.Objects[part] = {
         Zipline = {},
-        MaidIndex = {}
+        MaidIndex = {},
+        BasePart = part
     }
     local success, data = ZiplineGenerator:generate(part, self.Color)
 
     if success then
         self.Objects[part].Zipline = data.Rope
         table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(data.Rope))
+
+        table.insert(self.Objects[part].MaidIndex, part:FindFirstChildOfClass("Configuration").AttributeChanged:Connect(function()
+            self:UpdateAppearance(part)
+        end))
     end
 
     return true
 end
 
-function ObjectType:UpdateAppearance()
-    for i, parts in pairs(self.Objects) do
-        for _, SelectionBox in pairs(parts.SelectionBox) do
-            parts.SelectionBox.Color3 = self.Color:get()
-            parts.SelectionBox.SurfaceColor3 = self.Color:get()
-        end
+function ObjectType:UpdateAppearance(part)
+    local parts = self.Objects[part]
+    local Config = parts.BasePart:FindFirstChildOfClass("Configuration")
+
+    for  _, Part in pairs(parts.Zipline:GetChildren()) do
+        Part.Material = Enum.Material[Config:GetAttribute("Material") or "Plastic"]
+        Part.Color = Config:GetAttribute("Color") or Color3.new
+        Part.Size = Vector3.new(Config:GetAttribute("Width"), Config:GetAttribute("Width"), Part.Size.Z)
     end
 end
 
 function ObjectType:ClearAppearance(part: Instance?)
-    if part then
+    if part then    
         for _, index in pairs(self.Objects[part].MaidIndex) do
             self._Maid[index] = nil
         end
