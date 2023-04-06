@@ -23,6 +23,7 @@ function RopeFuncs.createPoint(point: Vector3, nextPoint: Vector3, parent: Insta
 	local width = custom.Width or customizationDefault.Width
 
 	local part = Instance.new("Part")
+	part.Locked = true
 	part.Material = custom.Material or customizationDefault.Material
 	part.Color = custom.Color or customizationDefault.Color
 	part.Anchored = true
