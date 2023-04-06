@@ -306,6 +306,7 @@ end
 local function AudioButton(data: audioTableFormat): Instance
     local audio = PluginSoundManager:CreateSound()
     audio.Name = data.Name
+    songLoadData.loaded[data.ID] = Value(Enum.TriStateBoolean.Unknown)
 
     local isLoadingCurrentSong = Computed(function(): boolean
         return songLoadData.isLoadingSong:get() and songLoadData.currentlyLoading:get() == audio
@@ -321,8 +322,6 @@ local function AudioButton(data: audioTableFormat): Instance
     local isCurrentSongLoaded = Computed(function(): boolean
         return songLoadData.loaded[data.ID]:get(false) ~= Enum.TriStateBoolean.True
     end)
-
-    songLoadData.loaded[data.ID] = Value(Enum.TriStateBoolean.Unknown)
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
