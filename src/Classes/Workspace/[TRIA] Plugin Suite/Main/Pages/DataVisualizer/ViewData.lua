@@ -12,20 +12,20 @@ Observer(Util.variantFolderChildren):onChange(function()
     local newTable = {}
     nameEvents:DoCleaning()
 
-    for index, variant in pairs(Util.variantFolderChildren:get(false)) do
+    for i, variant in pairs(Util.variantFolderChildren:get()) do
         local name = Value(variant.Name)
         nameEvents:GiveTask(variant:GetPropertyChangedSignal("Name"):Connect(function()
             name:set(variant.Name)
         end))
 
         table.insert(newTable, {
-            LayoutOrder = index,
+            LayoutOrder = i,
             TagType = "Parent",
             SubName = "Variant",
             Name = name,
             DisplayIcon = "rbxassetid://6035067831",
 
-            Color = Color3.fromHSV((index / #Util.variantFolderChildren:get(false)), 0.25, 0.875),
+            Color = Color3.fromHSV((i / #Util.variantFolderChildren:get()), 0.25,0.875),
             ObjectType = "SelectionBox",
         })
     end
