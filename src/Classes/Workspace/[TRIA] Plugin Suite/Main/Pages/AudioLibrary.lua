@@ -118,6 +118,7 @@ local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
         end
     end
 
+    print(#FETCHED_AUDIO_DATA:get(false), #newData)
     return newData
 end)
 
@@ -489,7 +490,7 @@ local function getAudioChildren(): {Instance}
     local itemsPerPage = ITEMS_PER_PAGE:get()
 
     local totalAssets = #assets
-    local totalPages = math.ceil(totalAssets / math.min(itemsPerPage, 1))
+    local totalPages = math.ceil(totalAssets / math.max(itemsPerPage, 1))
 
     local assetsRemaining = totalAssets
 
@@ -497,6 +498,7 @@ local function getAudioChildren(): {Instance}
         return {}
     end
 
+    print(totalPages)
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
 
