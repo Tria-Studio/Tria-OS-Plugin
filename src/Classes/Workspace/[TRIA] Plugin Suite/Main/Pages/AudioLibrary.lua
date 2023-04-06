@@ -206,6 +206,8 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound.TimePosition = 0
     newSound:Resume()
     fadeSound(newSound, "In")
+
+    songPlayData.currentAudio:set(newSound)
 end
 
 local function stopCurrentTween()
@@ -217,20 +219,19 @@ local function stopCurrentTween()
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
-    local currentAudio = songPlayData.currentlyPlaying:get(false)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
 
-    if not currentAudio then -- No song playing
+    if not currentlyPlaying then -- No song playing
         stopCurrentTween()
         playSong(newSound, soundData)
-    elseif currentAudio == newSound then -- Song being paused/resumed
-        if currentAudio.IsPaused then
+    elseif currentlyPlaying == newSound then -- Song being paused/resumed
+        if currentlyPlaying.IsPaused then
             resumeSong(soundData)
         else
             pauseSong(soundData)
         end
     else -- Song switched while playing
-        fadeSound(currentAudio, "Out")
-        task.wait()
+        fadeSound(currentlyPlaying, "Out")
         playSong(newSound, soundData)
     end
 end
