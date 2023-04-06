@@ -337,7 +337,7 @@ local function AudioButton(data: audioTableFormat): Instance
         Visible = true,
 
         [Cleanup] = {
-            -- audio
+            audio
         },
 
         [Children] = {
@@ -651,9 +651,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         [Ref] = pageLayout
                                     },
 
-                                    Computed(getAudioChildren, function(child)
-                                        warn("Should clean", child)                                        
-                                    end)
+                                    Computed(getAudioChildren, Fusion.cleanup)
                                 }
                             },
                         }
