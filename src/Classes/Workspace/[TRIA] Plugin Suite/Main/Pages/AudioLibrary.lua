@@ -319,8 +319,8 @@ local function AudioButton(data: audioTableFormat): Instance
         return (not isPaused) and (currentSong and currentSong == audio)
     end)
 
-    local isCurrentSongLoaded = Computed(function(): boolean
-        return songLoadData.loaded[data.ID]:get(false) ~= Enum.TriStateBoolean.True
+    local isSongNotLoaded = Computed(function(): boolean
+        return songLoadData.loaded[data.ID]:get() == Enum.TriStateBoolean.False
     end)
 
     return New "Frame" {
@@ -391,7 +391,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         Image = Computed(function(): string
                             return 
                                 if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.normal
-                                elseif not isCurrentSongLoaded:get() then BUTTON_ICONS.Error.normal
+                                elseif isSongNotLoaded:get() then BUTTON_ICONS.Error.normal
                                 elseif isPlayingCurrentSong:get() then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
@@ -404,7 +404,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         HoverImage = Computed(function(): string
                             return
                                 if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.hover
-                                elseif not isCurrentSongLoaded:get() then BUTTON_ICONS.Error.hover
+                                elseif isSongNotLoaded:get() then BUTTON_ICONS.Error.hover
                                 elseif isPlayingCurrentSong:get() then BUTTON_ICONS.Pause.hover
                                 else BUTTON_ICONS.Play.hover
                         end),
@@ -415,7 +415,7 @@ local function AudioButton(data: audioTableFormat): Instance
                                 return
                             end
 
-                            local needsLoading = not isCurrentSongLoaded:get(false)
+                            local needsLoading = isSongNotLoaded:get(false)
                             print("Needs", needsLoading)
 
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
