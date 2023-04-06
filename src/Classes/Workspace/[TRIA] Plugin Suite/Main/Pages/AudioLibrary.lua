@@ -188,6 +188,7 @@ local function pauseSong(soundData: audioTableFormat)
     end
     currentlyPlaying:Pause()
     songPlayData.currentlyPlaying:set(currentlyPlaying, true)
+    songPlayData.isPaused:set(true)
 end
 
 local function resumeSong(soundData: audioTableFormat)
@@ -198,6 +199,7 @@ local function resumeSong(soundData: audioTableFormat)
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
     songPlayData.currentlyPlaying:set(currentlyPlaying, true)
+    songPlayData.isPaused:set(false)
     fadeSound(currentlyPlaying, "In")
 end
 
