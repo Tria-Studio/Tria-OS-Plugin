@@ -25,7 +25,7 @@ Observer(Util.variantFolderChildren):onChange(function()
             Name = name,
             DisplayIcon = "rbxassetid://6035067831",
 
-            Color = Color3.fromHSV((i / #Util.variantFolderChildren:get()), .25,.875),
+            Color = Color3.fromHSV((i / #Util.variantFolderChildren:get()), 0.25,0.875),
             ObjectType = "SelectionBox",
         })
     end

@@ -52,8 +52,8 @@ local function GetColorButton(name, metadataName, data)
                 return Util.mapModel:get() and Util.hasSpecialFolder:get()
             end),
             Size = UDim2.new(0, 15, 0, 15),
-            Position = UDim2.new(1, -6, .5, 0),
-            AnchorPoint = Vector2.new(1, .5),
+            Position = UDim2.new(1, -6, 0.5, 0),
+            AnchorPoint = Vector2.new(1, 0.5),
             BackgroundColor3 = Controller.Color,
             BorderMode = Enum.BorderMode.Inset,
             BorderColor3 = Theme.Border.Default,
@@ -68,8 +68,8 @@ local function GetColorButton(name, metadataName, data)
 
             [Children] = New "Frame" {
                 Size = UDim2.new(0, 2, 0, 25),
-                AnchorPoint = Vector2.new(1, .5),
-                Position = UDim2.new(0, -5, .5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                Position = UDim2.new(0, -5, 0.5, 0),
                 BackgroundColor3 = Theme.Border.Default,
                 Visible = not data
             }

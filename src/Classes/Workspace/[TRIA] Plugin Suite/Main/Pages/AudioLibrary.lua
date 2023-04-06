@@ -663,7 +663,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         [Children] = {
                             New "TextLabel" {
                                 BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(.6, 1),
+                                Size = UDim2.fromScale(0.6, 1),
                                 Position = UDim2.fromScale(0.0, 0),
                                 Text = Computed(function(): string
                                     local currentData = songPlayData.currentSongData:get()
