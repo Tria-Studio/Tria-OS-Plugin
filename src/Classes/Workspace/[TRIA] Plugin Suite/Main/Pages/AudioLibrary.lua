@@ -60,6 +60,8 @@ end)
 local SoundMaid = Util.Maid.new()
 
 local frameAbsoluteSize = Value()
+local pageLayout = Value()
+
 local lastFetchTime = 0
 
 local searchData = {
@@ -222,6 +224,20 @@ local function stopCurrentTween()
         tween:Cancel()
         songPlayData.currentTween = nil
     end
+end
+
+local function jumpToPage(pageNumber: number)
+    local newPage = math.clamp(pageNumber, 1, math.max(1, pageData.total:get(false)))
+    local uiLayout = pageLayout:get(false)
+
+    if uiLayout then
+        uiLayout:JumpToIndex(newPage - 1)
+        pageData.current:set(newPage)
+    end
+end
+
+local function incrementPage(increment: number)
+    jumpToPage(pageData.current:get(false) + increment)
 end
 
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
@@ -485,7 +501,7 @@ local function getAudioChildren(): {Instance}
         assetsRemaining -= itemsPerPage
     end
 
-    --jumpToPage(1)
+    jumpToPage(1)
     pageData.total:set(totalPages)
     print("Created")
 
@@ -682,7 +698,118 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Size = UDim2.new(1, 0, 0, 2)
                             },
                         }
-                    }
+                    },
+
+                    New "Frame" { -- Page Cycler
+                        BackgroundColor3 = Theme.RibbonTab.Default,
+                        AnchorPoint = Vector2.new(0, 1),
+                        Size = UDim2.new(1, 0, 0, 36),
+                        Position = UDim2.fromScale(0, 1),
+                        ZIndex = 3,
+
+                        [Children] = {
+                            PageKey { -- Skip to first page
+                                LayoutOrder = 1,
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Image = "rbxassetid://4458877936",
+                                Rotation = 180,
+                                Position = UDim2.fromScale(0.1, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+                                
+                                [OnEvent "Activated"] = function()
+                                    jumpToPage(1)
+                                end
+                            },
+                            
+                            PageKey { -- Skip one page left
+                                Image = "rbxassetid://6031094687",
+                                LayoutOrder = 2,
+                                Rotation = 90,
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Position = UDim2.fromScale(0.3, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+                                [OnEvent "Activated"] = function()
+                                    incrementPage(-1)
+                                end
+                            },
+                            
+                            New "TextBox" {
+                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                BackgroundTransparency = 1,
+                                LayoutOrder = 3,
+                                PlaceholderColor3 = Color3.fromRGB(120, 120, 120),
+                                PlaceholderText = Computed(function(): string
+                                    return ("Page %d/%d"):format(pageData.current:get(), pageData.total:get())
+                                end),
+                                TextColor3 = Theme.MainText.Default,
+                                TextXAlignment = Enum.TextXAlignment.Center,
+                                TextSize = 16,
+                                Font = Enum.Font.SourceSansSemibold,
+                                Position = UDim2.fromScale(0.5, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+                                ZIndex = 3,
+
+                                [Ref] = textboxObject,
+
+                                [OnEvent "FocusLost"] = function() 
+                                    local textbox = textboxObject:get(false)
+                                    if not textbox then
+                                        return
+                                    end 
+
+                                    local enteredText = textbox.Text
+                                    if not enteredText then
+                                        return
+                                    end 
+
+                                    local pageNumber = tonumber(enteredText)
+                                    if pageNumber then
+                                        textbox.Text = ""
+                                        jumpToPage(pageNumber)
+                                    end
+                                end
+                            },
+
+                            PageKey { -- Skip one page right
+                                LayoutOrder = 4,
+                                Image = "rbxassetid://6031094687",
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Rotation = -90,
+                                Position = UDim2.fromScale(0.7, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+
+                                [OnEvent "Activated"] = function()
+                                    incrementPage(1)
+                                end
+                            },
+
+                            PageKey { -- Skip to end page
+                                LayoutOrder = 5,
+                                Image = "rbxassetid://4458877936",
+                                Position = UDim2.fromScale(0.9, 0.5),
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+
+                                [OnEvent "Activated"] = function()
+                                    jumpToPage(pageData.total:get(false))
+                                end
+                            },
+
+                            New "Frame" { -- Line
+                                BackgroundColor3 = Theme.Border.Default,
+                                Position = UDim2.new(0, 0, 0, -2),
+                                Size = UDim2.new(1, 0, 0, 2)
+                            },
+                        }
+                    },
                 }
             },
         }
