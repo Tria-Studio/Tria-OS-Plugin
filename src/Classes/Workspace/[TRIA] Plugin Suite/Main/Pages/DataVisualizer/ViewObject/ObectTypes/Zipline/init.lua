@@ -30,9 +30,9 @@ function ObjectType:SetAppearance(part)
         self.Objects[part].Zipline = data.Rope
         table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(data.Rope))
 
-        table.insert(self.Objects[part].MaidIndex, part:FindFirstChildOfClass("Configuration").AttributeChanged:Connect(function()
+        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part:FindFirstChildOfClass("Configuration").AttributeChanged:Connect(function()
             self:UpdateAppearance(part)
-        end))
+        end)))
     end
 
     return true
