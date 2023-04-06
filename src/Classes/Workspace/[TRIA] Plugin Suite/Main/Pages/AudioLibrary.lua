@@ -320,25 +320,10 @@ local function AudioButton(data: audioTableFormat): Instance
                                 updatePlayingSound(audio, data)
                             end  
                         end
-
-                        -- [OnEvent "Activated"] = function()
-                        --     print("Clicked")
-                        --     if songLoadData.isLoadingSong:get(false) then
-                        --         return
-                        --     end
-
-                        --     local needsLoading = not songLoadData.loaded[data.ID]
-                        --     print("Needs", needsLoading)
-                        --     local soundLoaded = if needsLoading then loadSound(audio, data) else true
-
-                        --     if soundLoaded and audio then
-                        --         print("Updating")
-                        --         updatePlayingSound(audio, data)
-                        --     end
-                        -- end
                     },
                 }
             }
+            
         }
     }
 end
