@@ -64,6 +64,7 @@ local frameAbsoluteSize = Value()
 local pageLayout = Value()
 
 local lastFetchTime = 0
+local songLoadSession = 0
 
 local searchData = {
     name = Value(""),
@@ -152,6 +153,9 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
     local timeout = false
 
+    songLoadSession += 1
+    local currentSession = songLoadSession
+
     if songLoadData.loaded[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
         Util.toggleAudioPerms(true)
     end
@@ -185,7 +189,11 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
 
     --== DO NOT TOUCH THIS ==--
     task.wait()
-    Util.toggleAudioPerms(false)
+    task.delay(1, function()
+        if Util.AudioPerms and currentSession == songLoadSession then
+            Util.toggleAudioPerms(false)
+        end
+    end)
     songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean[loaded and "True" or "False"])
     return loaded
 end
