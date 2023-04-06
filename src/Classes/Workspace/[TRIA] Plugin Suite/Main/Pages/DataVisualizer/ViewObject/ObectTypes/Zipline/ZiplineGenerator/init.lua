@@ -58,14 +58,8 @@ function ZiplineService:generate(rope: Model): (boolean, {} | nil)
 		return false, "No _action attribute!"
 	end
 
-	local positions, totalLength = RopeFuncs.generateRope(ropeModel, customizationFolder, unpack(points))
-
-	local firstPoint, lastPoint = points[1], points[#points]
-
-	data.ZiplineStart = points[1]
-	data.Positions = positions
-	data.Length = totalLength
-
+	ropeModel.WorldPivot = rope.WorldPivot
+	RopeFuncs.generateRope(ropeModel, customizationFolder, unpack(points))
 	ropeModel.Parent = Util._DebugView.debugObjectsFolder
 	return true, data
 end

@@ -28,9 +28,13 @@ function RopeFuncs.createPoint(point: Vector3, nextPoint: Vector3, parent: Insta
 	part.Anchored = true
 	part.CanCollide = false
 	part.Size = Vector3.new(width, width, distance)
+
 	part.CFrame = CFrame.lookAt(point, nextPoint, Vector3.new(0, 1, 0)) * CFrame.new(0, 0, -distance / 2)
 	part.Parent = parent
 
+	if point == nextPoint then
+		part:Destroy()
+	end
 	return part
 end
 
