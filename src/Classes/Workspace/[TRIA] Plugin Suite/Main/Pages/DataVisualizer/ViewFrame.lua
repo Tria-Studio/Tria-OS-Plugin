@@ -48,7 +48,7 @@ local function GetColorButton(name, metadataName, data)
 
     if Controller.Color:get() then
         return New "TextButton" {
-            AutoButtonColor = Computed(function()
+            AutoButtonColor = Computed(function(): TremoloSoundEffect
                 return Util.mapModel:get() and Util.hasSpecialFolder:get()
             end),
             Size = UDim2.new(0, 15, 0, 15),
@@ -110,7 +110,7 @@ return function(name: string, data: PublicTypes.Dictionary)
     end
 
     return New "Frame" {
-        Visible = name == "AddonView" and Computed(function()
+        Visible = name == "AddonView" and Computed(function(): boolean
             return Util._Addons.hasAddonsWithObjectTags:get() ~= false
         end) or true,
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -209,7 +209,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                     Components.Constraints.UIListLayout(),
                     Components.Spacer(data.SingleOption, 0, 2, 1, Theme.ScrollBarBackground.Default),
                     New "TextLabel" {
-                        Text = Computed(function()
+                        Text = Computed(function(): string
                             return #(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) > 0 and data.SubText or data.AltSubText or ""
                         end),
                         Visible = data.SubText == "All Variants" or #data.ViewOptions > 0,
@@ -238,7 +238,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             Font = Enum.Font.SourceSansSemibold,
                             TextSize = 15,
                             TextXAlignment = Enum.TextXAlignment.Left,
-                            Visible = name == "AddonView" and Computed(function()
+                            Visible = name == "AddonView" and Computed(function(): boolean
                                 return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get() ~= false
                             end) or true,
 

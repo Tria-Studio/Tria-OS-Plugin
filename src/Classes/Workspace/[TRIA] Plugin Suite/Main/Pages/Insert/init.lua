@@ -253,7 +253,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     end), {
                                         AnchorPoint = Vector2.new(0.5, 0.5),
                                         Position = UDim2.fromScale(0.5, 0.5),
-                                        Size = Computed(function()
+                                        Size = Computed(function(): UDim2
                                             local size = AddonFrameSize:get() or Vector2.new()
                                             return UDim2.fromOffset(size.X, size.Y)
                                         end),

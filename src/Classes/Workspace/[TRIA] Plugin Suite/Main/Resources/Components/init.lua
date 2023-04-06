@@ -64,7 +64,7 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
             else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
     end)
 
-    local colors = Computed(function()
+    local colors = Computed(function(): {Color3}
         local multiplier = pageActive:get() and 1 or 0.6
         local newStartColor = Color3.new(startColor.R * multiplier, startColor.G * multiplier, startColor.B * multiplier)
         local newEndColor = Color3.new(endColor.R * multiplier, endColor.G * multiplier, endColor.B * multiplier)
