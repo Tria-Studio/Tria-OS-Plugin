@@ -168,10 +168,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                                     Util._DebugView.viewsActiveUsingAll -= 1
                                 end
                                 data:Disable()
-                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
+                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) - 1)
                             else
                                 data:Enable()
-                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
+                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) + 1)
                                 task.wait()
                             end
                         end
@@ -224,7 +224,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                     ForValues(not data.SingleOption and viewObjects[name] or {}, function(ViewObject: PublicTypes.Dictionary): Instance
                         local metadata = ViewObject.Data
                         local dataValue = ViewObject.checkState
-                        local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get())  
+                        local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get(false))  
 
                         return New "TextButton" {
                             BackgroundColor3 = BackgroundColor,
@@ -248,35 +248,35 @@ return function(name: string, data: PublicTypes.Dictionary)
                                             Util._DebugView.viewsActiveUsingAll -= 1
                                         end
                                         ViewObject:Disable()
-                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
+                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) - 1)
                                     else
                                         if ViewObject.UsesAll then
                                             Util._DebugView.viewsActiveUsingAll += 1
                                         end
                                         ViewObject:Enable()
-                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
+                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) + 1)
                                     end
                                 end
                             end,
 
                             [OnEvent "MouseEnter"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.Mid.Default:get())
+                                    BackgroundColor:set(Theme.Mid.Default:get(false))
                                 end
                             end,
                             [OnEvent "MouseLeave"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.ScrollBarBackground.Default:get())
+                                    BackgroundColor:set(Theme.ScrollBarBackground.Default:get(false))
                                 end
                             end,
                             [OnEvent "MouseButton1Down"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.Light.Default:get())
+                                    BackgroundColor:set(Theme.Light.Default:get(false))
                                 end
                             end,
                             [OnEvent "MouseButton1Up"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.Mid.Default:get())
+                                    BackgroundColor:set(Theme.Mid.Default:get(false))
                                 end
                             end,
 
@@ -296,7 +296,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             }
                         }
                     end, Fusion.cleanup),
-                    Components.Spacer(data.SingleOption, #(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) + 2, 2, 1, Theme.ScrollBarBackground.Default),   
+                    Components.Spacer(data.SingleOption, #(data.ViewOptions.get and data.ViewOptions:get(false) or data.ViewOptions) + 2, 2, 1, Theme.ScrollBarBackground.Default),   
                 }
             },
         }
