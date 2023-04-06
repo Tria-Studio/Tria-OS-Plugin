@@ -704,7 +704,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             },
 
                             SongPlayButton {
-                                Position = UDim2.fromScale(0.4, 0.3),
+                                Position = UDim2.fromScale(0.415, 0.3),
                                 Size = UDim2.fromScale(0.5, 0.5),
                                 Image = Computed(function(): string
                                     return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
