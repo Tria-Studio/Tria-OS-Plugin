@@ -57,6 +57,8 @@ task.spawn(function()
     end
 end)
 
+local SoundMaid = Util.Maid.new()
+
 local frameAbsoluteSize = Value()
 local lastFetchTime = 0
 
@@ -493,6 +495,10 @@ end
 local frame = {}
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
+    local isSongPlaying = Computed(function(): boolean
+        return songPlayData.currentlyPlaying:get() and (not songPlayData.isPaused:get())
+    end)
+
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.TableItem.Default,
@@ -598,6 +604,83 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 }
                             },
                         }
+                    },
+
+                    New "Frame" { -- Now playing
+                        BackgroundColor3 = Theme.RibbonTab.Default,
+                        AnchorPoint = Vector2.new(0, 1),
+                        Size = UDim2.new(1, 0, 0, 36),
+                        Position = Spring(Computed(function(): UDim2
+                            return UDim2.new(0, 0, 1, if songPlayData.currentlyPlaying:get() then -38 else 0)
+                        end), 20),
+
+                        [Children] = {
+                            New "TextLabel" {
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(.6, 1),
+                                Position = UDim2.fromScale(0.0, 0),
+                                Text = Computed(function(): string
+                                    local currentData = songPlayData.songData:get()
+                                    return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
+                                end),
+                                TextColor3 = Theme.MainText.Default,
+                                LineHeight = 1.1,
+                                RichText = true,
+                                ClipsDescendants = true,
+                                TextTruncate = Enum.TextTruncate.AtEnd,
+                                TextSize = 15,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+
+                                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+                            },
+
+                            Components.Slider {
+                                Value = songPlayData.timePosition,
+                                Min = Value(0),
+                                Max = songPlayData.timeLength,
+                                Position = UDim2.fromScale(0.7, 0.275),
+                                Size = UDim2.fromScale(0.5, 0.2),
+                                Increment = 1,
+                            },
+
+                            New "TextLabel" {
+                                BackgroundTransparency = 1,
+                                Position = UDim2.new(0.45, 0, 0.5, 2),
+                                Size = UDim2.fromScale(0.5, 0.25),
+                                TextSize = 14,
+                                Text = Computed(function(): string
+                                    return ("%s/%s"):format(
+                                        Util.secondsToTime(songPlayData.timePosition:get()), 
+                                        Util.secondsToTime(songPlayData.timeLength:get())
+                                    )
+                                end),
+                                TextColor3 = Theme.MainText.Default,
+                            },
+
+                            SongPlayButton {
+                                Position = UDim2.fromScale(0.4, 0.3),
+                                Size = UDim2.fromScale(0.5, 0.5),
+                                Image = Computed(function(): string
+                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
+                                end),
+                                ImageColor3 = Computed(function(): Color3
+                                    return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                HoverImage = Computed(function(): string
+                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
+                                end),
+
+                                [OnEvent "Activated"] = function()
+                                    updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.songData:get(false))
+                                end
+                            },
+
+                            New "Frame" { -- Line
+                                BackgroundColor3 = Theme.Border.Default,
+                                Position = UDim2.new(0, 0, 0, -2),
+                                Size = UDim2.new(1, 0, 0, 2)
+                            },
+                        }
                     }
                 }
             },
@@ -606,6 +689,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 function frame.OnClose()
+    SoundMaid:DoCleaning()
     if Util.mapModel:get(false) then
         fetchApi()
     end
