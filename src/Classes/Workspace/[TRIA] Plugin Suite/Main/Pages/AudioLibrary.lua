@@ -198,16 +198,16 @@ local function AudioButton(data: audioTableFormat): Instance
     local audio = PluginSoundManager:CreateSound()
     audio.Name = data.Name
 
-    local isLoadingCurrentSong = Computed(function(): boolean
-        return songLoadData.isLoadingSong:get() and songLoadData.currentlyLoading:get() == audio
-    end)
+    -- local isLoadingCurrentSong = Computed(function(): boolean
+    --     return songLoadData.isLoadingSong:get() and songLoadData.currentlyLoading:get() == audio
+    -- end)
 
-    local isPlayingCurrentSong = Computed(function(): boolean
-        local currentSong = songPlayData.currentlyPlaying:get()
-        local isPaused = songPlayData.isPaused:get()
+    -- local isPlayingCurrentSong = Computed(function(): boolean
+    --     local currentSong = songPlayData.currentlyPlaying:get()
+    --     local isPaused = songPlayData.isPaused:get()
 
-        return (not isPaused) and (currentSong and currentSong == audio)
-    end)
+    --     return (not isPaused) and (currentSong and currentSong == audio)
+    -- end)
 
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
@@ -277,6 +277,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         AnchorPoint = Vector2.new(1, 0.5),
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
+                        Image = BUTTON_ICONS.Play.normal,
                         -- Image = Computed(function(): string
                         --     -- local isLoaded = loadedSongs[data.ID]:get()
                         --     -- local isPlaying = isSongPlaying:get()
@@ -306,21 +307,21 @@ local function AudioButton(data: audioTableFormat): Instance
                         --         else BUTTON_ICONS.Play.hover
                         -- end),
 
-                        [OnEvent "Activated"] = function()
-                            print("Clicked")
-                            if songLoadData.isLoadingSong:get(false) then
-                                return
-                            end
+                        -- [OnEvent "Activated"] = function()
+                        --     print("Clicked")
+                        --     if songLoadData.isLoadingSong:get(false) then
+                        --         return
+                        --     end
 
-                            local needsLoading = not songLoadData.loaded[data.ID]
-                            print("Needs", needsLoading)
-                            local soundLoaded = if needsLoading then loadSound(audio, data) else true
+                        --     local needsLoading = not songLoadData.loaded[data.ID]
+                        --     print("Needs", needsLoading)
+                        --     local soundLoaded = if needsLoading then loadSound(audio, data) else true
 
-                            if soundLoaded and audio then
-                                print("Updating")
-                                updatePlayingSound(audio, data)
-                            end
-                        end
+                        --     if soundLoaded and audio then
+                        --         print("Updating")
+                        --         updatePlayingSound(audio, data)
+                        --     end
+                        -- end
                     },
                 }
             }
@@ -384,7 +385,7 @@ local function getAudioChildren(): {Instance}
     local itemsPerPage = ITEMS_PER_PAGE:get()
 
     local totalAssets = #assets
-    local totalPages = math.ceil(totalAssets / itemsPerPage)
+    local totalPages = math.ceil(totalAssets / math.min(itemsPerPage, 1))
 
     local assetsRemaining = totalAssets
 
@@ -535,7 +536,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         [Ref] = pageLayout
                                     },
 
-                                    Computed(getAudioChildren, Fusion.cleanup)
+                                    Computed(getAudioChildren, function(child)
+                                        warn("Should clean", child)                                        
+                                    end)
                                 }
                             },
                         }
