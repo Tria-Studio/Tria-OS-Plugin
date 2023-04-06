@@ -18,14 +18,13 @@ local ForValues = Fusion.ForValues
 local OnEvent = Fusion.OnEvent
 
 local viewObjects = {}
-
 Util.MapChanged:Connect(function()
-    if Util.mapModel:get() then
+    if Util.mapModel:get(false) then
         return
     end
 
     for name, state in pairs(viewObjects) do
-        local value = state.get and state:get() or state
+        local value = state.get and state:get(false) or state
 
         if not value.Name then
             for _, ViewObject in pairs(value) do
@@ -41,12 +40,12 @@ local function GetColorButton(name, metadataName, data)
     if data and not data.SingleOption then
         return
     end
-    local Controller = viewObjects[name].get and viewObjects[name]:get() or viewObjects[name]
+    local Controller = viewObjects[name].get and viewObjects[name]:get(false) or viewObjects[name]
     if metadataName then
         Controller = Controller[metadataName]
     end
 
-    if Controller.Color:get() then
+    if Controller.Color:get(false) then
         return New "TextButton" {
             AutoButtonColor = Computed(function(): TremoloSoundEffect
                 return Util.mapModel:get() and Util.hasSpecialFolder:get()
@@ -60,8 +59,8 @@ local function GetColorButton(name, metadataName, data)
             BorderSizePixel = 2,
     
             [OnEvent "Activated"] = function()
-                if Util.mapModel:get() and Util.hasSpecialFolder:get() then
-                    local NewColor = ColorWheel:GetColor(Controller.Color:get()) or Controller.Color:get()
+                if Util.mapModel:get(false) and Util.hasSpecialFolder:get(false) then
+                    local NewColor = ColorWheel:GetColor(Controller.Color:get(false)) or Controller.Color:get(false)
                     Controller:SetColor(NewColor)
                 end
             end,
@@ -85,13 +84,13 @@ return function(name: string, data: PublicTypes.Dictionary)
         checkState = Controller.checkState
     else
         if viewObjects[name] and viewObjects[name].get then
-            for metadataName, viewObject in pairs(viewObjects[name]:get()) do --// destroy them all because THIS WAS THE SOLUTION SOHDSFJKFHDJKSHFSKJLFHSDLKJHFL
+            for metadataName, viewObject in pairs(viewObjects[name]:get(false)) do --// destroy them all because THIS WAS THE SOLUTION SOHDSFJKFHDJKSHFSKJLFHSDLKJHFL
                 viewObject:Destroy()
             end
         end
         viewObjects[name] = {}
 
-        for _, metadata in pairs(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) do
+        for _, metadata in pairs(data.ViewOptions.get and data.ViewOptions:get(false) or data.ViewOptions) do
             Controller = ViewObject.new(metadata.Name, metadata, metadata.Color)
             viewObjects[name][metadata.Name] = Controller
         end
@@ -146,23 +145,23 @@ return function(name: string, data: PublicTypes.Dictionary)
                                 Util._DebugView.viewsActiveUsingAll -= 1
                             end
                             viewObjects[name]:Disable()
-                            Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
+                            Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) - 1)
                         else
-                            if name == "LowDetail" and not Util.mapModel:get():FindFirstChild("Detail") then
+                            if name == "LowDetail" and not Util.mapModel:get(false):FindFirstChild("Detail") then
                                 return
                             end
                             if viewObjects[name].UsesAll then
                                 Util._DebugView.viewsActiveUsingAll += 1
                             end
-                            Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
+                            Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) + 1)
                             viewObjects[name]:Enable()
                         end
                     else
-                        local ALlViewObjects = viewObjects[name]:get()
-                        local CurrentState = GetState(ALlViewObjects)
+                        local AllViewObjects = viewObjects[name]:get(false)
+                        local CurrentState = GetState(AllViewObjects)
                         local count = -1
 
-                        for name, data in pairs(ALlViewObjects) do
+                        for name, data in pairs(AllViewObjects) do
                             count += 1
                             if CurrentState then
                                 if data.UsesAll then
