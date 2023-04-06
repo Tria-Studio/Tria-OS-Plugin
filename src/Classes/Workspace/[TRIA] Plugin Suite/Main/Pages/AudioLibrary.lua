@@ -170,7 +170,6 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     end)
 
     task.spawn(function()
-        task.wait(5.5)
         ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
             loaded = (fetchStatus == Enum.AssetFetchStatus.Success) and not timeout
         end)
