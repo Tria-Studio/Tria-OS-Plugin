@@ -237,9 +237,9 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
         end
     end))
 
-    currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+    songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
     SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
-        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
+        songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
     end))
 end
 
