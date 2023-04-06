@@ -177,14 +177,15 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
             loaded = (fetchStatus == Enum.AssetFetchStatus.Success) and not timeout
         end)
     
-        songLoadData.isLoadingSong:set(false)
-        songLoadData.currentlyLoading:set(nil)
         if not timeout then
             LoadEvent:Fire()
         end
     end)
 
     LoadEvent:Wait()
+    songLoadData.isLoadingSong:set(false)
+    songLoadData.currentlyLoading:set(nil)
+
     --== DO NOT TOUCH THIS ==--
     task.wait()
     Util.toggleAudioPerms(false)
