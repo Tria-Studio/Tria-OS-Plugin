@@ -147,6 +147,8 @@ local function fadeSound(sound: Sound, direction: string)
 end
 
 local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
+    local LoadEvent = Util.Signal.new()
+
     local loaded = false
     local timeout = false
 
@@ -160,21 +162,26 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     sound.SoundId = "rbxassetid://" .. soundData.ID
     task.wait()
 
-    ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
-        print(fetchStatus)
-        loaded = fetchStatus == Enum.AssetFetchStatus.Success
+    task.delay(5, function()
+        if not loaded then
+            timeout = true
+        end
     end)
 
-    songLoadData.isLoadingSong:set(false)
-    songLoadData.currentlyLoading:set(nil)
+    task.spawn(function()
+        ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
+            print(fetchStatus, timeout)
+            loaded = (fetchStatus == Enum.AssetFetchStatus.Success) and not timeout
+        end)
+    
+        songLoadData.isLoadingSong:set(false)
+        songLoadData.currentlyLoading:set(nil)
+    end)
 
     --== DO NOT TOUCH THIS ==--
     task.wait()
     Util.toggleAudioPerms(false)
-
-    if loaded then
-        songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean.True)
-    end
+    songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean[loaded and "True" or "False"])
     return loaded
 end
 
