@@ -161,6 +161,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     songLoadData.isLoadingSong:set(false)
     songLoadData.currentlyLoading:set(nil)
 
+    --== DO NOT TOUCH THIS ==--
     task.wait()
     Util.toggleAudioPerms(false)
 
@@ -196,7 +197,7 @@ local function resumeSong(soundData: audioTableFormat)
     end
     currentlyPlaying.Volume = 0
     currentlyPlaying:Resume()
-    songPlayData.currentlyPlaying:set(currentlyPlaying)
+    songPlayData.currentlyPlaying:set(currentlyPlaying, true)
     fadeSound(currentlyPlaying, "In")
 end
 
