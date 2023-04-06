@@ -636,9 +636,9 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             },
 
                             Components.Slider {
-                                Value = songPlayData.timePosition,
+                                Value = songPlayData.currentTimePosition,
                                 Min = Value(0),
-                                Max = songPlayData.timeLength,
+                                Max = songPlayData.currentTimeLength,
                                 Position = UDim2.fromScale(0.7, 0.275),
                                 Size = UDim2.fromScale(0.5, 0.2),
                                 Increment = 1,
@@ -651,8 +651,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 TextSize = 14,
                                 Text = Computed(function(): string
                                     return ("%s/%s"):format(
-                                        Util.secondsToTime(songPlayData.timePosition:get()), 
-                                        Util.secondsToTime(songPlayData.timeLength:get())
+                                        Util.secondsToTime(songPlayData.currentTimePosition:get()), 
+                                        Util.secondsToTime(songPlayData.currentTimeLength:get())
                                     )
                                 end),
                                 TextColor3 = Theme.MainText.Default,
