@@ -190,13 +190,19 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     return loaded
 end
 
+local function resetSongData()
+    songPlayData.currentTimePosition:set(0)
+    songPlayData.currentlyPlaying:set(nil)
+    Util._Slider.isUsingSlider:set(false)
+end
+
 local function stopSong()
     local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
     if not currentlyPlaying then
         return
     end
     fadeSound(currentlyPlaying, "Out")
-    songPlayData.currentlyPlaying:set(nil)
+    resetSongData()
 end
 
 local function pauseSong(soundData: audioTableFormat)
@@ -221,7 +227,6 @@ local function resumeSong(soundData: audioTableFormat)
     fadeSound(currentlyPlaying, "In")
 end
 
-
 local function playSong(newSound: Sound, soundData: audioTableFormat)
     SoundMaid:DoCleaning()
 
@@ -235,11 +240,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     songPlayData.currentlyPlaying:set(newSound, true)
     songPlayData.currentSongData:set(soundData)
     
-    SoundMaid:GiveTask(newSound.Ended:Connect(function()
-        songPlayData.currentTimePosition:set(0)
-        songPlayData.currentlyPlaying:set(nil)
-        Util._Slider.isUsingSlider:set(false)
-    end))
+    SoundMaid:GiveTask(newSound.Ended:Connect(resetSongData))
 
     SoundMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
         if newSound ~= nil 
@@ -497,6 +498,7 @@ local function getAudioChildren(): {Instance}
         return {}
     end
 
+    resetSongData()
     for index = 1, totalPages do
         local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
 
@@ -716,6 +718,21 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                                 [OnEvent "Activated"] = function()
                                     updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.currentSongData:get(false))
+                                end
+                            },
+
+                            Components.ImageButton {
+                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                BorderSizePixel = 0,
+                                BackgroundTransparency = 1,
+                                Position = UDim2.fromScale(0.975, 0.3),
+                                Size = UDim2.fromScale(0.4, 0.4),
+                                Image = "rbxasset://textures/StudioSharedUI/clear.png",
+                                HoverImage = "rbxasset://textures/StudioSharedUI/clear-hover.png",
+                                SizeConstraint = Enum.SizeConstraint.RelativeYY,
+
+                                [OnEvent "Activated"] = function()
+                                    stopSong()
                                 end
                             },
 
