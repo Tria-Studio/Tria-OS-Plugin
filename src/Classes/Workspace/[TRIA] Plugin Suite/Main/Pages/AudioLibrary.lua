@@ -83,6 +83,7 @@ local songPlayData = {
     currentlyPlaying = Value(nil),
     currentTimePosition = Value(0),
     currentTimeLength = Value(1),
+    currentSongData = {}
     isPaused = Value(false),
 
     currentTween = nil
@@ -620,7 +621,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Size = UDim2.fromScale(.6, 1),
                                 Position = UDim2.fromScale(0.0, 0),
                                 Text = Computed(function(): string
-                                    local currentData = songPlayData.songData:get()
+                                    local currentData = songPlayData.currentSongData:get()
                                     return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
                                 end),
                                 TextColor3 = Theme.MainText.Default,
@@ -671,7 +672,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 end),
 
                                 [OnEvent "Activated"] = function()
-                                    updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.songData:get(false))
+                                    updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.currentSongData:get(false))
                                 end
                             },
 
