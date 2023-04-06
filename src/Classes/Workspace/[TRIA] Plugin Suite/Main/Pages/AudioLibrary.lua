@@ -380,14 +380,17 @@ local function AudioButton(data: audioTableFormat): Instance
                 },
 
                 [OnEvent "Activated"] = function()
-                    Util:ShowMessage("Update map BGM?", "This will update the map BGM to '" .. ("%s - %s"):format(data.Artist, data.Name) .. "', press 'Update' to confirm.", {
-                        Text = "Update",
-                        Callback = function()
-                            Util.debugWarn("Updated map music!")
-                            Util.updateMapSetting("Main", "Music", data.ID)
-                            ChangeHistoryService:SetWaypoint("Updated map music")
-                        end
-                    }, {Text = "Nevermind", Callback = function() end})
+                    Util:ShowMessage("Update map BGM?", 
+                        ("This will update the map BGM to <font color='rgb(207, 174, 0)'>%s - %s</font>, press <font color='rgb(7, 184, 4)'>Update</font> to confirm"):format(data.Artist, data.Name), 
+                        {
+                            Text = "Update",
+                            Callback = function()
+                                Util.debugWarn("Updated map music!")
+                                Util.updateMapSetting("Main", "Music", data.ID)
+                                ChangeHistoryService:SetWaypoint("Updated map music")
+                            end
+                        }, {Text = "Nevermind", Callback = function() end}
+                    )
                 end
             },
 
