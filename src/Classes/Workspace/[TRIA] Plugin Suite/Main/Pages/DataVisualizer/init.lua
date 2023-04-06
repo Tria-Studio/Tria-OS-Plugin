@@ -68,7 +68,7 @@ function frame.OnClose()
 end
 
 Observer(Util._DebugView.activeDebugViews):onChange(function()
-    Util._DebugView.debugObjectsFolder.Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.CurrentCamera or Util.Widget
+    Util._DebugView.debugObjectsFolder.Parent = Util._DebugView.activeDebugViews:get(false) ~= 0 and workspace.CurrentCamera or Util.Widget
 end)
 
 
