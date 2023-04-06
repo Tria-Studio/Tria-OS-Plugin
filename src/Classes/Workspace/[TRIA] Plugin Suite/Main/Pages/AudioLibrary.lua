@@ -164,11 +164,14 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
 
     task.delay(5, function()
         if not loaded then
+            print("Timing out")
             timeout = true
+            LoadEvent:Fire()
         end
     end)
 
     task.spawn(function()
+        task.wait(5.5)
         ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
             print(fetchStatus, timeout)
             loaded = (fetchStatus == Enum.AssetFetchStatus.Success) and not timeout
@@ -176,8 +179,12 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     
         songLoadData.isLoadingSong:set(false)
         songLoadData.currentlyLoading:set(nil)
+        if not timeout then
+            LoadEvent:Fire()
+        end
     end)
 
+    LoadEvent:Wait()
     --== DO NOT TOUCH THIS ==--
     task.wait()
     Util.toggleAudioPerms(false)
@@ -396,10 +403,10 @@ local function AudioButton(data: audioTableFormat): Instance
                                 else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            -- if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
-                            --     return Theme.ErrorText.Default:get()
-                            -- end
-                            return isPlayingCurrentSong:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return
+                                if isSongNotLoaded:get() then Theme.ErrorText.Default:get()
+                                elseif isPlayingCurrentSong:get() then Theme.MainButton.Default:get()
+                                else Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
                             return
@@ -415,7 +422,7 @@ local function AudioButton(data: audioTableFormat): Instance
                                 return
                             end
 
-                            local needsLoading = isSongNotLoaded:get(false)
+                            local needsLoading = songLoadData.loaded[data.ID]:get() ~= Enum.TriStateBoolean.True
                             print("Needs", needsLoading)
 
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
