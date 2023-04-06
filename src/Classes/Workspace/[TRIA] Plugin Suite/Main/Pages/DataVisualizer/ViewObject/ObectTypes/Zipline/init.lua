@@ -40,6 +40,10 @@ end
 
 function ObjectType:UpdateAppearance(part)
     local parts = self.Objects[part]
+    if not parts then
+        return
+    end
+
     local Config = parts.BasePart:FindFirstChildOfClass("Configuration")
 
     for  _, Part in pairs(parts.Zipline:GetChildren()) do
