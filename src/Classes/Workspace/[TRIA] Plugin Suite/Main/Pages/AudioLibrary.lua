@@ -148,8 +148,9 @@ end
 
 local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
+    local timeout = false
 
-    if not songLoadData.loaded[soundData.ID] then
+    if songLoadData.loaded[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
         Util.toggleAudioPerms(true)
     end
 
@@ -172,7 +173,7 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     Util.toggleAudioPerms(false)
 
     if loaded then
-        songLoadData.loaded[soundData.ID] = true
+        songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean.True)
     end
     return loaded
 end
@@ -310,6 +311,8 @@ local function AudioButton(data: audioTableFormat): Instance
         return (not isPaused) and (currentSong and currentSong == audio)
     end)
 
+    songLoadData.loaded[data.ID] = Value(Enum.TriStateBoolean.Unknown)
+
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
@@ -410,7 +413,7 @@ local function AudioButton(data: audioTableFormat): Instance
                                 return
                             end
 
-                            local needsLoading = not songLoadData.loaded[data.ID]
+                            local needsLoading = songLoadData.loaded[data.ID]:get(false) == Enum.TriStateBoolean.False
                             print("Needs", needsLoading)
 
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
