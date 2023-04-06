@@ -171,6 +171,36 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     return loaded
 end
 
+local function stopSong()
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    fadeSound(currentlyPlaying, "Out")
+    songPlayData.currentlyPlaying:set(nil)
+end
+
+local function pauseSong(soundData: audioTableFormat)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    currentlyPlaying:Pause()
+    songPlayData.currentlyPlaying:set(currentlyPlaying, true)
+end
+
+local function resumeSong(soundData: audioTableFormat)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    currentlyPlaying.Volume = 0
+    currentlyPlaying:Resume()
+    songPlayData.currentlyPlaying:set(currentlyPlaying)
+    fadeSound(currentlyPlaying, "In")
+end
+
+
 local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound.Volume = 0
     newSound.TimePosition = 0
