@@ -218,6 +218,7 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     fadeSound(newSound, "In")
 
     songPlayData.isPaused:set(false)
+    songPlayData.currentTimePosition:set(0)
     songPlayData.currentlyPlaying:set(newSound, true)
     songPlayData.currentSongData:set(soundData)
     
