@@ -13,7 +13,7 @@ local Components = require(Resources.Components)
 
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
-local PlguinSoundManager = require(Package.Util.PluginSoundManager)
+local PluginSoundManager = require(Package.Util.PluginSoundManager)
 local GitUtil = require(Package.Util.GitUtil)
 
 local New = Fusion.New
@@ -27,13 +27,10 @@ local Observer = Fusion.Observer
 local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
-
+local OnChange = Fusion.OnChange
 type audioTableFormat = {Name: string, Artist: string, ID: number}
 
-local SoundMaid = Util.Maid.new()
-
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
-
 local BUTTON_ICONS = {
     Pause = {
         normal = "rbxassetid://6026663701",
@@ -53,11 +50,20 @@ local BUTTON_ICONS = {
     }
 }
 
-local frame = {}
+task.spawn(function()
+    for _, t in pairs(BUTTON_ICONS) do
+        for _, imageId in pairs(t) do
+            ContentProvider:PreloadAsync({imageId})
+        end
+    end
+end)
 
-local songPlayingUpdate = Value(0)
+local SoundMaid = Util.Maid.new()
+
 local frameAbsoluteSize = Value()
 local pageLayout = Value()
+
+local lastFetchTime = 0
 
 local searchData = {
     name = Value(""),
@@ -69,22 +75,22 @@ local pageData = {
     total = Value(0)
 }
 
-local currentSongData = {
-    currentAudio = Value(nil),
-    currentTween = Value(nil),
+local songLoadData = {
+    isLoadingSong = Value(false),
+    currentlyLoading = Value(nil),
 
-    songData = Value({Name = "", Artist = ""}),
-
-    timePosition = Value(0),
-    timeLength = Value(0)
+    loaded = {},
 }
 
-local loadedSongs = {}
-local loadingSongs = {}
-local isLoading = Value(false)
+local songPlayData = {
+    currentlyPlaying = Value(nil),
+    currentTimePosition = Value(0),
+    currentTimeLength = Value(1),
+    currentSongData = Value({Name = "", Artist = ""}),
+    isPaused = Value(false),
 
-local currentLoadSession = 0
-local lastFetchTime = 0
+    currentTween = nil
+}
 
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
@@ -129,7 +135,7 @@ local function fadeSound(sound: Sound, direction: string)
 
     local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
-    currentSongData.currentTween:set(tween)
+    songPlayData.currentTween = tween
 
     if direction == "Out" then
         tween.Completed:Connect(function()
@@ -137,6 +143,125 @@ local function fadeSound(sound: Sound, direction: string)
                 sound:Stop()
             end
         end)
+    end
+end
+
+local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
+    local LoadEvent = Util.Signal.new()
+
+    local loaded = false
+    local timeout = false
+
+    if songLoadData.loaded[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
+        Util.toggleAudioPerms(true)
+    end
+
+    songLoadData.isLoadingSong:set(true)
+    songLoadData.currentlyLoading:set(sound)
+
+    sound.SoundId = "rbxassetid://" .. soundData.ID
+    task.wait()
+
+    task.delay(5, function()
+        if not loaded then
+            timeout = true
+            LoadEvent:Fire()
+        end
+    end)
+
+    task.spawn(function()
+        ContentProvider:PreloadAsync({sound}, function(assetId: number, fetchStatus: Enum.AssetFetchStatus)
+            loaded = (fetchStatus == Enum.AssetFetchStatus.Success) and not timeout
+        end)
+    
+        if not timeout then
+            LoadEvent:Fire()
+        end
+    end)
+
+    LoadEvent:Wait()
+    songLoadData.isLoadingSong:set(false)
+    songLoadData.currentlyLoading:set(nil)
+
+    --== DO NOT TOUCH THIS ==--
+    task.wait()
+    Util.toggleAudioPerms(false)
+    songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean[loaded and "True" or "False"])
+    return loaded
+end
+
+local function stopSong()
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    fadeSound(currentlyPlaying, "Out")
+    songPlayData.currentlyPlaying:set(nil)
+end
+
+local function pauseSong(soundData: audioTableFormat)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    currentlyPlaying:Pause()
+    songPlayData.currentlyPlaying:set(currentlyPlaying, true)
+    songPlayData.isPaused:set(true)
+end
+
+local function resumeSong(soundData: audioTableFormat)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
+    if not currentlyPlaying then
+        return
+    end
+    currentlyPlaying.Volume = 0
+    currentlyPlaying:Resume()
+    songPlayData.currentlyPlaying:set(currentlyPlaying, true)
+    songPlayData.isPaused:set(false)
+    fadeSound(currentlyPlaying, "In")
+end
+
+
+local function playSong(newSound: Sound, soundData: audioTableFormat)
+    SoundMaid:DoCleaning()
+
+    newSound.Volume = 0
+    newSound.TimePosition = 0
+    newSound:Resume()
+    fadeSound(newSound, "In")
+
+    songPlayData.isPaused:set(false)
+    songPlayData.currentTimePosition:set(0)
+    songPlayData.currentlyPlaying:set(newSound, true)
+    songPlayData.currentSongData:set(soundData)
+    
+    SoundMaid:GiveTask(newSound.Ended:Connect(function()
+        songPlayData.currentTimePosition:set(0)
+        songPlayData.currentlyPlaying:set(nil)
+        Util._Slider.isUsingSlider:set(false)
+    end))
+
+    SoundMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
+        if newSound ~= nil 
+            and newSound.IsLoaded 
+            and newSound.IsPlaying
+            and not Util._Slider.isUsingSlider:get(false) 
+        then
+            songPlayData.currentTimePosition:set(songPlayData.currentTimePosition:get(false) + deltaTime)
+        end
+    end))
+
+    songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
+    SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
+        songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
+    end))
+end
+
+local function stopCurrentTween()
+    local tween = songPlayData.currentTween
+    if tween then
+        tween:Cancel()
+        songPlayData.currentTween = nil
     end
 end
 
@@ -154,181 +279,20 @@ local function incrementPage(increment: number)
     jumpToPage(pageData.current:get(false) + increment)
 end
 
-local function stopSong()
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
-    if not currentlyPlaying then
-        return
-    end
-    fadeSound(currentlyPlaying, "Out")
-    currentSongData.currentAudio:set(nil)
-end
-
-local function pauseSong(soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
-    if not currentlyPlaying then
-        return
-    end
-    currentlyPlaying:Pause()
-    songPlayingUpdate:set(songPlayingUpdate:get() + 1)
-    currentSongData.currentAudio:set(currentlyPlaying, true)
-end
-
-local function resumeSong(soundData: audioTableFormat)
-    local currentlyPlaying = currentSongData.currentAudio:get(false)
-    if not currentlyPlaying then
-        return
-    end
-    currentlyPlaying.Volume = 0
-    currentSongData.currentAudio:set(currentlyPlaying)
-    currentlyPlaying:Resume()
-    songPlayingUpdate:set(songPlayingUpdate:get() + 1)
-    fadeSound(currentlyPlaying, "In")
-end
-
-local function playSong(newSound: Sound, soundData: audioTableFormat)
-    currentLoadSession += 1
-    local currentId = currentLoadSession 
-    SoundMaid:DoCleaning()
-
-    if loadedSongs[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
-        Util.toggleAudioPerms(true)
-        task.delay(0.125, function()
-            Util.toggleAudioPerms(nil)
-        end)
-    end
-    isLoading:set(true)
-    loadingSongs[soundData.ID]:set(true)
-    
-    newSound.SoundId = ""
-    task.wait()
-    newSound.SoundId = "rbxassetid://" .. soundData.ID
-
-    local function updateLoaded()
-        loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.True)
-        loadingSongs[soundData.ID]:set(false)
-
-        task.defer(function()
-            if soundData.ID == currentSongData.songData:get().ID then
-                Util.toggleAudioPerms(nil)
-                task.wait(2)
-                isLoading:set(false)
-            end
-        end)
-    end
-
-    local function playAudioInstance()
-        if currentLoadSession ~= currentId then
-            return
-        end
-
-        newSound.Volume = 0
-        newSound.TimePosition = 0
-        newSound:Resume()
-        fadeSound(newSound, "In")
-
-        loadingSongs[soundData.ID]:set(false)
-        currentSongData.timePosition:set(0)
-        currentSongData.songData:set(soundData)
-        currentSongData.currentAudio:set(newSound)
-
-        SoundMaid:GiveTask(newSound.Ended:Connect(function()
-            currentSongData.timePosition:set(0)
-            currentSongData.currentAudio:set(nil)
-            Util._Slider.isUsingSlider:set(false)
-        end))
-
-        SoundMaid:GiveTask(RunService.Heartbeat:Connect(function(deltaTime: number)
-            if newSound ~= nil 
-                and newSound.IsLoaded 
-                and newSound.IsPlaying
-                and not Util._Slider.isUsingSlider:get(false) 
-            then
-                currentSongData.timePosition:set(currentSongData.timePosition:get(false) + deltaTime)
-            end
-        end))
-
-        currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
-        SoundMaid:GiveTask(newSound:GetPropertyChangedSignal("TimeLength"):Connect(function()
-            currentSongData.timeLength:set(math.max(newSound.TimeLength, 0.1))
-        end))
-    end
-    
-    if loadedSongs[soundData.ID]:get() and newSound.TimeLength > 0 then
-        task.defer(function()
-            updateLoaded()
-            playAudioInstance()
-        end)
-        return
-    end
-
-    local loaded = false
-    task.delay(5, function()
-        if not loaded then
-            currentLoadSession += 1
-            loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
-            loadingSongs[soundData.ID]:set(false)
-            task.defer(Util.toggleAudioPerms)
-            task.wait()
-            isLoading:set(false)
-        end
-    end)
-    
-    ContentProvider:PreloadAsync({newSound}, function(assetId, FetchStatus)
-        if currentLoadSession ~= currentId then
-            return
-        end
-        if FetchStatus == Enum.AssetFetchStatus.Success then
-            if not newSound.IsLoaded then
-                newSound.Loaded:Wait()
-            end
-            task.defer(function()
-                updateLoaded()
-                playAudioInstance()
-                loaded = true
-            end)
-        else
-            task.defer(function()
-                currentLoadSession += 1
-                loadedSongs[soundData.ID]:set(Enum.TriStateBoolean.False)
-                loadingSongs[soundData.ID]:set(false)
-                task.defer(Util.toggleAudioPerms)
-                task.wait(2)
-                isLoading:set(false)
-                loaded = true
-            end)
-        end
-    end)
-end
-
-local function stopCurrentTween()
-    local tween = currentSongData.currentTween:get(false)
-    if tween then
-        tween:Cancel()
-        currentSongData.currentTween:set(nil)
-    end
-end
-
 local function updatePlayingSound(newSound: Sound, soundData: audioTableFormat)
-    if isLoading:get() then
-        return
-    end
-    local currentAudio = currentSongData.currentAudio:get(false)
+    local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
 
-    if not currentAudio then -- No song playing
+    if not currentlyPlaying then -- No song playing
         stopCurrentTween()
         playSong(newSound, soundData)
-    elseif currentAudio == newSound then -- Song being paused/resumed
-        isLoading:set(true)
-        if currentAudio.IsPaused then
+    elseif currentlyPlaying == newSound then -- Song being paused/resumed
+        if currentlyPlaying.IsPaused then
             resumeSong(soundData)
         else
             pauseSong(soundData)
         end
-        task.wait(1)
-        isLoading:set(false)
     else -- Song switched while playing
-        fadeSound(currentAudio, "Out")
-        task.wait()
+        fadeSound(currentlyPlaying, "Out")
         playSong(newSound, soundData)
     end
 end
@@ -345,18 +309,23 @@ local function SongPlayButton(data: PublicTypes.Dictionary): Instance
 end
 
 local function AudioButton(data: audioTableFormat): Instance
-    local sound = PlguinSoundManager:CreateSound()
-    sound.Name = data.Name
+    local audio = PluginSoundManager:CreateSound()
+    audio.Name = data.Name
+    songLoadData.loaded[data.ID] = Value(Enum.TriStateBoolean.Unknown)
 
-    if not loadedSongs[data.ID] then
-        loadedSongs[data.ID] = Value(Enum.TriStateBoolean.Unknown)
-        loadingSongs[data.ID] = Value(false)
-    end
+    local isLoadingCurrentSong = Computed(function(): boolean
+        return songLoadData.isLoadingSong:get() and songLoadData.currentlyLoading:get() == audio
+    end)
 
-    local isSongPlaying = Computed(function(): boolean
-        songPlayingUpdate:get()
-        local currentSong = currentSongData.currentAudio:get()
-        return currentSong and currentSong == sound and currentSong.IsPlaying 
+    local isPlayingCurrentSong = Computed(function(): boolean
+        local currentSong = songPlayData.currentlyPlaying:get()
+        local isPaused = songPlayData.isPaused:get()
+
+        return (not isPaused) and (currentSong and currentSong == audio)
+    end)
+
+    local isSongNotLoaded = Computed(function(): boolean
+        return songLoadData.loaded[data.ID]:get() == Enum.TriStateBoolean.False
     end)
 
     return New "Frame" {
@@ -365,10 +334,7 @@ local function AudioButton(data: audioTableFormat): Instance
         Visible = true,
 
         [Cleanup] = {
-            function()
-                loadingSongs[data.ID]:set(false)
-                task.defer(sound.Destroy, sound)
-            end
+            audio
         },
 
         [Children] = {
@@ -412,7 +378,7 @@ local function AudioButton(data: audioTableFormat): Instance
                             Util.updateMapSetting("Main", "Music", data.ID)
                             ChangeHistoryService:SetWaypoint("Updated map music")
                         end
-                    },{Text = "Nevermind", Callback = function() end})
+                    }, {Text = "Nevermind", Callback = function() end})
                 end
             },
 
@@ -428,115 +394,43 @@ local function AudioButton(data: audioTableFormat): Instance
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
                         Image = Computed(function(): string
-                            local isLoaded = loadedSongs[data.ID]:get()
-                            local isPlaying = isSongPlaying:get()
-                            local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
-
                             return 
-                                if isLoading then BUTTON_ICONS.Loading.normal
-                                elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.normal
-                                elseif isPlaying then BUTTON_ICONS.Pause.normal
+                                if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.normal
+                                elseif isSongNotLoaded:get() then BUTTON_ICONS.Error.normal
+                                elseif isPlayingCurrentSong:get() then BUTTON_ICONS.Pause.normal
                                 else BUTTON_ICONS.Play.normal
                         end),
                         ImageColor3 = Computed(function(): Color3
-                            if loadedSongs[data.ID] and loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
-                                return Theme.ErrorText.Default:get()
-                            end
-                            return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                            return
+                                if isSongNotLoaded:get() then Theme.ErrorText.Default:get()
+                                elseif isPlayingCurrentSong:get() then Theme.MainButton.Default:get()
+                                else Theme.SubText.Default:get()
                         end),
                         HoverImage = Computed(function(): string
-                            local isLoaded = loadedSongs[data.ID]:get()
-                            local isPlaying = isSongPlaying:get()
-                            local isLoading = (not loadingSongs[data.ID]) or loadingSongs[data.ID]:get()
-
                             return
-                                if isLoading then BUTTON_ICONS.Loading.hover
-                                elseif isLoaded == Enum.TriStateBoolean.False then BUTTON_ICONS.Error.hover
-                                elseif isPlaying then BUTTON_ICONS.Pause.hover
+                                if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.hover
+                                elseif isSongNotLoaded:get() then BUTTON_ICONS.Error.hover
+                                elseif isPlayingCurrentSong:get() then BUTTON_ICONS.Pause.hover
                                 else BUTTON_ICONS.Play.hover
                         end),
 
-                        [OnEvent "Activated"] = function()
-                            if loadedSongs[data.ID]:get() == Enum.TriStateBoolean.False then
+                        [OnEvent "MouseButton1Down"] = function()
+                            if songLoadData.isLoadingSong:get(false) then
                                 return
                             end
-                            updatePlayingSound(sound, data)
+
+                            local needsLoading = songLoadData.loaded[data.ID]:get() ~= Enum.TriStateBoolean.True
+                            local soundLoaded = if needsLoading then loadSound(audio, data) else true
+                            if soundLoaded and audio then
+                                updatePlayingSound(audio, data)
+                            end  
                         end
                     },
                 }
             }
+            
         }
     }
-end
-
-local function PageKey(data: PublicTypes.Dictionary): Instance
-    return Hydrate(Components.ImageButton {
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        Active = Util.interfaceActive,
-        BackgroundTransparency = 1,
-        ZIndex = 3,
-        [Children] = Components.Constraints.UIAspectRatio(1),
-    })(data)
-
-end
-
-local function getAudioChildren(): {Instance}
-    local children = {}
-
-    local assets = FILTERED_AUDIO_DATA:get()
-    local itemsPerPage = ITEMS_PER_PAGE:get()
-
-    local totalAssets = #assets
-    local totalPages = math.ceil(totalAssets / itemsPerPage)
-
-    local assetsRemaining = totalAssets
-
-    if #assets == 0 then
-        return {}
-    end
-
-    currentSongData.currentAudio:set(nil)
-    currentSongData.currentTween:set(nil)
-    currentSongData.timePosition:set(0)
-    currentSongData.timeLength:set(0)
-
-    for index = 1, totalPages do
-        local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
-
-		local startIndex = ((index - 1) * itemsPerPage) + 1
-		local endIndex = (startIndex + pageAssetCount) - 1
-
-        table.insert(children, New "Frame" {
-            BackgroundTransparency = 1,
-            LayoutOrder = index,
-            Size = UDim2.fromScale(1, 1),
-
-            [Children] = {
-                New "Frame" {
-                    BackgroundTransparency = 1,
-                    Size = UDim2.fromScale(1, 1),
-
-                    [Children] = {
-                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
-                        (function()
-                            local pageChildren = {}
-                            for count = startIndex, endIndex do
-                                table.insert(pageChildren, AudioButton(assets[count]))
-                            end
-                            return pageChildren
-                        end)()
-                    } 
-                }
-            }
-        })
-
-        assetsRemaining -= itemsPerPage
-    end
-
-    jumpToPage(1)
-    pageData.total:set(totalPages)
-
-    return children
 end
 
 local function fetchApi()
@@ -577,14 +471,80 @@ local function fetchApi()
     end
 end
 
+local function PageKey(data: PublicTypes.Dictionary): Instance
+    return Hydrate(Components.ImageButton {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Active = Util.interfaceActive,
+        BackgroundTransparency = 1,
+        ZIndex = 3,
+        [Children] = Components.Constraints.UIAspectRatio(1),
+    })(data)
+
+end
+
+local function getAudioChildren(): {Instance}
+    local children = {}
+
+    local assets = FILTERED_AUDIO_DATA:get()
+    local itemsPerPage = ITEMS_PER_PAGE:get()
+
+    local totalAssets = #assets
+    local totalPages = math.ceil(totalAssets / math.max(itemsPerPage, 1))
+
+    local assetsRemaining = totalAssets
+
+    if #assets == 0 then
+        return {}
+    end
+
+    for index = 1, totalPages do
+        local pageAssetCount = assetsRemaining > itemsPerPage and itemsPerPage or assetsRemaining
+
+		local startIndex = ((index - 1) * itemsPerPage) + 1
+		local endIndex = (startIndex + pageAssetCount) - 1
+
+        table.insert(children, New "Frame" {
+            BackgroundTransparency = 1,
+            LayoutOrder = index,
+            Size = UDim2.fromScale(1, 1),
+
+            [Children] = {
+                New "Frame" {
+                    BackgroundTransparency = 1,
+                    Size = UDim2.fromScale(1, 1),
+
+                    [Children] = {
+                        Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
+                        (function()
+                            local pageChildren = {}
+                            for count = startIndex, endIndex do
+                                table.insert(pageChildren, AudioButton(assets[count]))
+                            end
+                            return pageChildren
+                        end)()
+                    } 
+                }
+            }
+        })
+
+        assetsRemaining -= itemsPerPage
+    end
+
+    jumpToPage(1)
+    pageData.total:set(totalPages)
+
+    return children
+end
+
+
+local frame = {}
+
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local textboxObject = Value()
     local isSongPlaying = Computed(function(): boolean
-        songPlayingUpdate:get()
-        local currentSong = currentSongData.currentAudio:get()
-        return currentSong and currentSong.IsPlaying 
+        return songPlayData.currentlyPlaying:get() and (not songPlayData.isPaused:get())
     end)
-    
+
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.TableItem.Default,
@@ -607,10 +567,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 State = searchData.name
             },
 
+            
             New "Frame" { -- Holder
                 BackgroundColor3 = Theme.TableItem.Default,
-                Position = UDim2.new(0, 0, 0, 30),
-                Size = UDim2.new(1, 0, 1, -100),
+                Position = UDim2.new(0, 0, 0, 36),
+                Size = UDim2.new(1, 0, 1, -36),
                 LayoutOrder = 2,
 
                 [Children] = {
@@ -664,7 +625,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                     New "Frame" { -- Audio Library
                         BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(1, 1),
+                        Size = UDim2.new(1, 0, 1, -72),
                         Visible = Computed(function(): boolean
                             return CURRENT_FETCH_STATUS:get() == "Success"
                         end),
@@ -677,7 +638,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Size = UDim2.fromScale(1, 0.925),
 
                                 [Children] = {
-                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function()
+                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function(): boolean
                                         return pageData.total:get() > 1
                                     end))) {
                                         [Ref] = pageLayout
@@ -687,212 +648,204 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 }
                             },
                         }
-                    }
-                }
-            },
-
-            New "Frame" { -- Now playing
-                BackgroundColor3 = Theme.RibbonTab.Default,
-                AnchorPoint = Vector2.new(0, 1),
-                Size = UDim2.new(1, 0, 0, 36),
-                Position = Spring(Computed(function(): UDim2
-                    return UDim2.new(0, 0, 1, if currentSongData.currentAudio:get() then -38 else 0)
-                end), 20),
-
-                [Children] = {
-                    New "TextLabel" {
-                        BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(.6, 1),
-                        Position = UDim2.fromScale(0.0, 0),
-                        Text = Computed(function(): string
-                            local currentData = currentSongData.songData:get()
-                            return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
-                        end),
-                        TextColor3 = Theme.MainText.Default,
-                        LineHeight = 1.1,
-                        RichText = true,
-                        ClipsDescendants = true,
-                        TextTruncate = Enum.TextTruncate.AtEnd,
-                        TextSize = 15,
-                        TextXAlignment = Enum.TextXAlignment.Left,
-
-                        [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
                     },
 
-                    Components.Slider {
-                        Value = currentSongData.timePosition,
-                        Min = Value(0),
-                        Max = currentSongData.timeLength,
-                        Position = UDim2.fromScale(0.7, 0.275),
-                        Size = UDim2.fromScale(0.5, 0.2),
-                        Increment = 1,
+                    New "Frame" { -- Now playing
+                        BackgroundColor3 = Theme.RibbonTab.Default,
+                        AnchorPoint = Vector2.new(0, 1),
+                        Size = UDim2.new(1, 0, 0, 36),
+                        Position = Spring(Computed(function(): UDim2
+                            return UDim2.new(0, 0, 1, if songPlayData.currentlyPlaying:get() then -38 else 0)
+                        end), 20),
+
+                        [Children] = {
+                            New "TextLabel" {
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromScale(.6, 1),
+                                Position = UDim2.fromScale(0.0, 0),
+                                Text = Computed(function(): string
+                                    local currentData = songPlayData.currentSongData:get()
+                                    return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
+                                end),
+                                TextColor3 = Theme.MainText.Default,
+                                LineHeight = 1.1,
+                                RichText = true,
+                                ClipsDescendants = true,
+                                TextTruncate = Enum.TextTruncate.AtEnd,
+                                TextSize = 15,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+
+                                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+                            },
+
+                            Components.Slider {
+                                Value = songPlayData.currentTimePosition,
+                                Min = Value(0),
+                                Max = songPlayData.currentTimeLength,
+                                Position = UDim2.fromScale(0.7, 0.275),
+                                Size = UDim2.fromScale(0.5, 0.2),
+                                Increment = 1,
+                            },
+
+                            New "TextLabel" {
+                                BackgroundTransparency = 1,
+                                Position = UDim2.new(0.45, 0, 0.5, 2),
+                                Size = UDim2.fromScale(0.5, 0.25),
+                                TextSize = 14,
+                                Text = Computed(function(): string
+                                    return ("%s/%s"):format(
+                                        Util.secondsToTime(songPlayData.currentTimePosition:get()), 
+                                        Util.secondsToTime(songPlayData.currentTimeLength:get())
+                                    )
+                                end),
+                                TextColor3 = Theme.MainText.Default,
+                            },
+
+                            SongPlayButton {
+                                Position = UDim2.fromScale(0.4, 0.3),
+                                Size = UDim2.fromScale(0.5, 0.5),
+                                Image = Computed(function(): string
+                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
+                                end),
+                                ImageColor3 = Computed(function(): Color3
+                                    return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                HoverImage = Computed(function(): string
+                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
+                                end),
+
+                                [OnEvent "Activated"] = function()
+                                    updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.currentSongData:get(false))
+                                end
+                            },
+
+                            New "Frame" { -- Line
+                                BackgroundColor3 = Theme.Border.Default,
+                                Position = UDim2.new(0, 0, 0, -2),
+                                Size = UDim2.new(1, 0, 0, 2)
+                            },
+                        }
                     },
 
-                    New "TextLabel" {
-                        BackgroundTransparency = 1,
-                        Position = UDim2.new(0.45, 0, 0.5, 2),
-                        Size = UDim2.fromScale(0.5, 0.25),
-                        TextSize = 14,
-                        Text = Computed(function(): string
-                            return ("%s/%s"):format(
-                                Util.secondsToTime(currentSongData.timePosition:get()), 
-                                Util.secondsToTime(currentSongData.timeLength:get())
-                            )
-                        end),
-                        TextColor3 = Theme.MainText.Default,
-                    },
-
-                    SongPlayButton {
-                        Position = UDim2.fromScale(0.4, 0.3),
-                        Size = UDim2.fromScale(0.5, 0.5),
-                        Image = Computed(function(): string
-                            return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
-                        end),
-                        ImageColor3 = Computed(function(): Color3
-                            return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
-                        end),
-                        HoverImage = Computed(function(): string
-                            return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
-                        end),
-
-                        [OnEvent "Activated"] = function()
-                            if loadedSongs[currentSongData.songData:get().ID]:get() == Enum.TriStateBoolean.False then
-                                return
-                            end
-                            updatePlayingSound(currentSongData.currentAudio:get(false), currentSongData.songData:get(false))
-                        end
-                    },
-
-                    New "Frame" { -- Line
-                        BackgroundColor3 = Theme.Border.Default,
-                        Position = UDim2.new(0, 0, 0, -2),
-                        Size = UDim2.new(1, 0, 0, 2)
-                    },
-                }
-            },
-
-            New "Frame" { -- Page Cycler
-                BackgroundColor3 = Theme.RibbonTab.Default,
-                AnchorPoint = Vector2.new(0, 1),
-                Size = UDim2.new(1, 0, 0, 36),
-                Position = UDim2.fromScale(0, 1),
-                ZIndex = 3,
-
-                [Children] = {
-                    PageKey { -- Skip to first page
-                        LayoutOrder = 1,
-                        ImageColor3 = Computed(function(): Color3
-                            return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
-                        end),
-                        Image = "rbxassetid://4458877936",
-                        Rotation = 180,
-                        Position = UDim2.fromScale(0.1, 0.5),
-                        Size = UDim2.new(0.2, -5, 1, -5),
-                        
-                        [OnEvent "Activated"] = function()
-                            jumpToPage(1)
-                        end
-                    },
-                    
-                    PageKey { -- Skip one page left
-                        Image = "rbxassetid://6031094687",
-                        LayoutOrder = 2,
-                        Rotation = 90,
-                        ImageColor3 = Computed(function(): Color3
-                            return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
-                        end),
-                        Position = UDim2.fromScale(0.3, 0.5),
-                        Size = UDim2.new(0.2, -5, 1, -5),
-                        [OnEvent "Activated"] = function()
-                            incrementPage(-1)
-                        end
-                    },
-                    
-                    New "TextBox" {
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        BackgroundTransparency = 1,
-                        LayoutOrder = 3,
-                        PlaceholderColor3 = Color3.fromRGB(120, 120, 120),
-                        PlaceholderText = Computed(function(): string
-                            return ("Page %d/%d"):format(pageData.current:get(), pageData.total:get())
-                        end),
-                        TextColor3 = Theme.MainText.Default,
-                        TextXAlignment = Enum.TextXAlignment.Center,
-                        TextSize = 16,
-                        Font = Enum.Font.SourceSansSemibold,
-                        Position = UDim2.fromScale(0.5, 0.5),
-                        Size = UDim2.new(0.2, -5, 1, -5),
+                    New "Frame" { -- Page Cycler
+                        BackgroundColor3 = Theme.RibbonTab.Default,
+                        AnchorPoint = Vector2.new(0, 1),
+                        Size = UDim2.new(1, 0, 0, 36),
+                        Position = UDim2.fromScale(0, 1),
                         ZIndex = 3,
 
-                        [Ref] = textboxObject,
+                        [Children] = {
+                            PageKey { -- Skip to first page
+                                LayoutOrder = 1,
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Image = "rbxassetid://4458877936",
+                                Rotation = 180,
+                                Position = UDim2.fromScale(0.1, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+                                
+                                [OnEvent "Activated"] = function()
+                                    jumpToPage(1)
+                                end
+                            },
+                            
+                            PageKey { -- Skip one page left
+                                Image = "rbxassetid://6031094687",
+                                LayoutOrder = 2,
+                                Rotation = 90,
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == 1 and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Position = UDim2.fromScale(0.3, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+                                [OnEvent "Activated"] = function()
+                                    incrementPage(-1)
+                                end
+                            },
+                            
+                            New "TextBox" {
+                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                BackgroundTransparency = 1,
+                                LayoutOrder = 3,
+                                PlaceholderColor3 = Color3.fromRGB(120, 120, 120),
+                                PlaceholderText = Computed(function(): string
+                                    return ("Page %d/%d"):format(pageData.current:get(), pageData.total:get())
+                                end),
+                                TextColor3 = Theme.MainText.Default,
+                                TextXAlignment = Enum.TextXAlignment.Center,
+                                TextSize = 16,
+                                Font = Enum.Font.SourceSansSemibold,
+                                Position = UDim2.fromScale(0.5, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
+                                ZIndex = 3,
 
-                        [OnEvent "FocusLost"] = function() 
-                            local textbox = textboxObject:get(false)
-                            if not textbox then
-                                return
-                            end 
+                                [Ref] = textboxObject,
 
-                            local enteredText = textbox.Text
-                            if not enteredText then
-                                return
-                            end 
+                                [OnEvent "FocusLost"] = function() 
+                                    local textbox = textboxObject:get(false)
+                                    if not textbox then
+                                        return
+                                    end 
 
-                            local pageNumber = tonumber(enteredText)
-                            if pageNumber then
-                                textbox.Text = ""
-                                jumpToPage(pageNumber)
-                            end
-                        end
-                    },
+                                    local enteredText = textbox.Text
+                                    if not enteredText then
+                                        return
+                                    end 
 
-                    PageKey { -- Skip one page right
-                        LayoutOrder = 4,
-                        Image = "rbxassetid://6031094687",
-                        ImageColor3 = Computed(function(): Color3
-                            return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
-                        end),
-                        Rotation = -90,
-                        Position = UDim2.fromScale(0.7, 0.5),
-                        Size = UDim2.new(0.2, -5, 1, -5),
+                                    local pageNumber = tonumber(enteredText)
+                                    if pageNumber then
+                                        textbox.Text = ""
+                                        jumpToPage(pageNumber)
+                                    end
+                                end
+                            },
 
-                        [OnEvent "Activated"] = function()
-                            incrementPage(1)
-                        end
-                    },
+                            PageKey { -- Skip one page right
+                                LayoutOrder = 4,
+                                Image = "rbxassetid://6031094687",
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Rotation = -90,
+                                Position = UDim2.fromScale(0.7, 0.5),
+                                Size = UDim2.new(0.2, -5, 1, -5),
 
-                    PageKey { -- Skip to end page
-                        LayoutOrder = 5,
-                        Image = "rbxassetid://4458877936",
-                        Position = UDim2.fromScale(0.9, 0.5),
-                        ImageColor3 = Computed(function(): Color3
-                            return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
-                        end),
-                        Size = UDim2.new(0.2, -5, 1, -5),
+                                [OnEvent "Activated"] = function()
+                                    incrementPage(1)
+                                end
+                            },
 
-                        [OnEvent "Activated"] = function()
-                            jumpToPage(pageData.total:get(false))
-                        end
-                    },
+                            PageKey { -- Skip to end page
+                                LayoutOrder = 5,
+                                Image = "rbxassetid://4458877936",
+                                Position = UDim2.fromScale(0.9, 0.5),
+                                ImageColor3 = Computed(function(): Color3
+                                    return pageData.current:get() == pageData.total:get() and Theme.DimmedText.Default:get() or Theme.SubText.Default:get()
+                                end),
+                                Size = UDim2.new(0.2, -5, 1, -5),
 
-                    New "Frame" { -- Line
-                        BackgroundColor3 = Theme.Border.Default,
-                        Position = UDim2.new(0, 0, 0, -2),
-                        Size = UDim2.new(1, 0, 0, 2)
+                                [OnEvent "Activated"] = function()
+                                    jumpToPage(pageData.total:get(false))
+                                end
+                            },
+
+                            New "Frame" { -- Line
+                                BackgroundColor3 = Theme.Border.Default,
+                                Position = UDim2.new(0, 0, 0, -2),
+                                Size = UDim2.new(1, 0, 0, 2)
+                            },
+                        }
                     },
                 }
             },
-
         }
     }
 end
 
 function frame.OnClose()
-    stopSong()
     SoundMaid:DoCleaning()
-    if currentSongData.currentAudio:get() and loadingSongs[currentSongData.currentAudio:get()]:get() or isLoading:get() then
-        task.defer(Util.toggleAudioPerms)
-    end
-    if Util.mapModel:get() then
+    if Util.mapModel:get(false) then
         fetchApi()
     end
 end
@@ -905,17 +858,17 @@ function frame.OnOpen()
 end
 
 task.defer(function()
-    if not Util.mapModel:get() then
+    if not Util.mapModel:get(false) then
         Util.MapChanged:Wait()
     end
     task.defer(fetchApi)
 end)
 
-Observer(currentSongData.timePosition):onChange(function()
+Observer(songPlayData.currentTimePosition):onChange(function()
     if Util._Slider.isUsingSlider:get(false) then
-        local currentlyPlaying = currentSongData.currentAudio:get(false)
+        local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
         if currentlyPlaying then
-            currentlyPlaying.TimePosition = currentSongData.timePosition:get(false)
+            currentlyPlaying.TimePosition = songPlayData.currentTimePosition:get(false)
         end
     end
 end)
