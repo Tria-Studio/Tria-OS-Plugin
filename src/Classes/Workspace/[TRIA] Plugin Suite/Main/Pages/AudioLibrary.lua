@@ -117,7 +117,7 @@ local FILTERED_AUDIO_DATA = Computed(function(): {audioTableFormat}
             table.insert(newData, tbl)
         end
     end
-    
+
     return newData
 end)
 
