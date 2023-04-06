@@ -143,7 +143,6 @@ end
 local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
 
-    if true then return end
     if not songLoadData.loaded[soundData.ID] then
         Util.toggleAudioPerms(true)
     end
@@ -162,14 +161,13 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     songLoadData.isLoadingSong:set(false)
     songLoadData.currentlyLoading:set(nil)
 
+    task.wait()
     Util.toggleAudioPerms(false)
 
     print("Did load", loaded)
     if loaded then
         songLoadData.loaded[soundData.ID] = true
     end
-
-    task.wait()
     return loaded
 end
 
@@ -318,7 +316,10 @@ local function AudioButton(data: audioTableFormat): Instance
                             print("Needs", needsLoading)
 
                             local soundLoaded = if needsLoading then loadSound(audio, data) else true
-                            
+                            if soundLoaded and audio then
+                                print("Updating")
+                                updatePlayingSound(audio, data)
+                            end  
                         end
 
                         -- [OnEvent "Activated"] = function()
