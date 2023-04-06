@@ -3,7 +3,10 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 local ZiplineService = {}
+local Package = script.Parent.Parent.Parent.Parent.Parent.Parent
 local RopeFuncs = require(script.RopeFuncs)
+local Util = require(Package.Util)
+
 
 function ZiplineService:generate(rope: Model): (boolean, {} | nil)
 	local ropeModel = Instance.new("Model")
@@ -63,6 +66,7 @@ function ZiplineService:generate(rope: Model): (boolean, {} | nil)
 	data.Positions = positions
 	data.Length = totalLength
 
+	ropeModel.Parent = Util._DebugView.debugObjectsFolder
 	return true, data
 end
 

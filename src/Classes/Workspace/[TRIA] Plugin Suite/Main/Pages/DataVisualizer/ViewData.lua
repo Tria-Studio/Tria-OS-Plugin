@@ -211,7 +211,7 @@ return {
         TagType = "Any",
         Name = "Zipline",
         SingleOption = true,
-        DisplayText = "Zipline View",
+        DisplayText = "Zipline Preview",
         DisplayIcon = "rbxassetid://6035067839",
         LayoutOrder = 5,
         ViewOptions = {},
