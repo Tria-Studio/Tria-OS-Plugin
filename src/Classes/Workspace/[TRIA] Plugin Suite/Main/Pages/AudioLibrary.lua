@@ -170,7 +170,6 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     task.wait()
     Util.toggleAudioPerms(false)
 
-    print("Did load", loaded)
     if loaded then
         songLoadData.loaded[soundData.ID] = true
     end
