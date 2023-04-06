@@ -27,6 +27,7 @@ local Observer = Fusion.Observer
 local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
+local OnChange = Fusion.OnChange
 type audioTableFormat = {Name: string, Artist: string, ID: number}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
@@ -214,7 +215,14 @@ local function playSong(newSound: Sound, soundData: audioTableFormat)
     newSound:Resume()
     fadeSound(newSound, "In")
 
-    songPlayData.currentlyPlaying:set(newSound)
+    songPlayData.isPaused:set(false)
+    songPlayData.currentlyPlaying:set(newSound, true)
+    songPlayData.currentSongData:set(soundData)
+    songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
+
+    newSound:GetPropertyChangedSignal("TimeLength"):Once(function()
+        songPlayData.currentTimeLength:set(math.max(newSound.TimeLength, 0.1))
+    end)
 end
 
 local function stopCurrentTween()
@@ -283,15 +291,26 @@ local function AudioButton(data: audioTableFormat): Instance
         return (not isPaused) and (currentSong and currentSong == audio)
     end)
 
+    --[[
+        songPlayData.currentTimePosition:set(0)
+        songPlayData.currentTimeLength:set(newSound.TimeLength)
+    ]]
+
+    local connections = {}
+
+    table.insert(connections, audio:GetPropertyChangedSignal("TimePosition"):Connect(function()
+        if isPlayingCurrentSong:get(false) then
+            songPlayData.currentTimePosition:set(audio.TimePosition)
+        end
+    end))
+
     return New "Frame" {
         BackgroundColor3 = Theme.CategoryItem.Default,
         Size = UDim2.new(1, 0, 0, 36),
         Visible = true,
 
         [Cleanup] = {
-            function()
-                print("Clean audio")
-            end,
+            connections
             -- audio
         },
 
@@ -540,8 +559,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             
             New "Frame" { -- Holder
                 BackgroundColor3 = Theme.TableItem.Default,
-                Position = UDim2.new(0, 0, 0, 30),
-                Size = UDim2.new(1, 0, 1, -100),
+                Position = UDim2.new(0, 0, 0, 36),
+                Size = UDim2.new(1, 0, 1, -36),
                 LayoutOrder = 2,
 
                 [Children] = {
@@ -595,7 +614,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                     New "Frame" { -- Audio Library
                         BackgroundTransparency = 1,
-                        Size = UDim2.fromScale(1, 1),
+                        Size = UDim2.new(1, 0, 1, -72),
                         Visible = Computed(function(): boolean
                             return CURRENT_FETCH_STATUS:get() == "Success"
                         end),
@@ -834,6 +853,15 @@ task.defer(function()
         Util.MapChanged:Wait()
     end
     task.defer(fetchApi)
+end)
+
+Observer(songPlayData.currentTimePosition):onChange(function()
+    if Util._Slider.isUsingSlider:get(false) then
+        local currentlyPlaying = songPlayData.currentlyPlaying:get(false)
+        if currentlyPlaying then
+            currentlyPlaying.TimePosition = songPlayData.currentTimePosition:get(false)
+        end
+    end
 end)
 
 return frame
