@@ -540,6 +540,7 @@ end
 local frame = {}
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
+    local textboxObject = Value()
     local isSongPlaying = Computed(function(): boolean
         return songPlayData.currentlyPlaying:get() and (not songPlayData.isPaused:get())
     end)
