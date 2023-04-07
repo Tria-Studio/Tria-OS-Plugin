@@ -873,6 +873,8 @@ end
 
 function frame.OnClose()
     SoundMaid:DoCleaning()
+    stopSong()
+    resetSongData()
     if Util.mapModel:get(false) then
         fetchApi()
     end
