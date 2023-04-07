@@ -1,3 +1,5 @@
+local Selection = game:GetService("Selection")
+
 local Package = script.Parent.Parent.Parent.Parent.Parent
 local Util = require(Package.Util)
 local ZiplineGenerator = require(script.ZiplineGenerator)
@@ -43,6 +45,55 @@ function ObjectType:SetAppearance(part)
                 self:ClearAppearance(part)
             end
         end)))
+
+        local function HandlePoint(point)
+            
+            local function AncestorsSelected()
+                local Selected = Selection:Get()
+                local SelectedPart = point.Parent
+                
+                repeat
+                    if table.find(Selected, SelectedPart) then
+                        return true
+                    end
+                    SelectedPart = SelectedPart.Parent
+                until SelectedPart == workspace
+                return false
+            end
+            self._Maid:GiveTask(point:GetPropertyChangedSignal("Name"):Connect(function()
+                self:ClearAppearance(part)
+                self:SetAppearance(part)
+            end))
+            local debounce = false
+            self._Maid:GiveTask(point:GetPropertyChangedSignal("CFrame"):Connect(function()
+                if not debounce and table.find(Selection:Get(), point) and not AncestorsSelected() then
+                    debounce = true
+
+                    repeat
+                        local firstPos = point.CFrame
+                        task.wait(.125)
+                    until point.CFrame == firstPos
+
+                    self:ClearAppearance(part)
+                    self:SetAppearance(part)
+                    debounce = false
+                end
+            end))
+        end
+
+        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part.ChildAdded:Connect(function(newPart)
+            if tonumber(newPart.Name) and newPart:IsA("BasePart") then
+                self:ClearAppearance(part)
+                self:SetAppearance(part)
+            end
+            HandlePoint(newPart)
+        end)))
+
+        for _, part in pairs(part:GetChildren()) do
+            if part:IsA("BasePart") then
+                HandlePoint(part)
+            end
+        end
 
         return true
     end
