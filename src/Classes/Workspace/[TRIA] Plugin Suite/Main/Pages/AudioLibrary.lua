@@ -79,7 +79,6 @@ local pageData = {
 local songLoadData = {
     isLoadingSong = Value(false),
     currentlyLoading = Value(nil),
-
     loaded = {},
 }
 
@@ -89,7 +88,6 @@ local songPlayData = {
     currentTimeLength = Value(1),
     currentSongData = Value({Name = "", Artist = ""}),
     isPaused = Value(false),
-
     currentTween = nil
 }
 
