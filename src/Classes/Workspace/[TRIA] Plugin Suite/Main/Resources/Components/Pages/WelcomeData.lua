@@ -6,9 +6,9 @@ return {
 	},
 
 	["DataVisualizer"] = {
-		Setting = "",
-		Title = "", 
-		Description = ""
+		Setting = "DebugView",
+		Title = "Welcome to Debug View", 
+		Description = "With the click of a button, you can view every part, instance, model, etc. of every data type that TRIA.os supports! This feature requires the OptimizedStructure (AKA the 'Special' folder) in order to work.\n\nUsing a featured addon in your map? Some featured addons support Debug View!"
 	},
 
 	-- ["Settings"] = {

@@ -54,13 +54,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     }
 end
 
-function frame.OnOpen()
-    if not plugin:GetSetting("TRIA_HasViewedDebugView") then
-        plugin:SetSetting("TRIA_HasViewedDebugView", true)
-        Util:ShowMessage("Welcome to Debug View", "With the click of a button, you can view every part, instance, model, etc. of every data type that TRIA.os supports! This feature requires the OptimizedStructure (AKA the 'Special' folder) in order to work.\n\nUsing a featured addon in your map? Some featured addons support Debug View!")
-    end
-end
-
 function frame.OnClose()
     if Pages.pageData.currentPage:get(false) == "DataVisualizer" then
         Util.CloseMessage() 

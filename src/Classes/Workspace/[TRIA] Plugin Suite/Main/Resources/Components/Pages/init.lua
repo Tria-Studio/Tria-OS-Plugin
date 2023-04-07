@@ -36,7 +36,14 @@ local function updatePageNum(pageName: string)
 end
 
 local function showPageWelcome(pageName: string)
-    
+    local pageWelcomeData = welcomeData[pageName]
+    if pageWelcomeData then
+        local settingName = "TRIA_HasViewed-" .. pageWelcomeData.Setting
+        if not plugin:GetSetting(settingName) then
+            plugin:SetSetting(settingName, true)
+            Util:ShowMessage(pageWelcomeData.Title, pageWelcomeData.Description)
+        end
+    end
 end
 
 function PageHandler:ChangePage(newPage: string)
