@@ -1,10 +1,6 @@
 local Package = script.Parent.Parent.Parent.Parent.Parent
 local Util = require(Package.Util)
-local Fusion = require(Package.Resources.Fusion)
 local ZiplineGenerator = require(script.ZiplineGenerator)
-
-local Value = Fusion.Value
-local New = Fusion.New
 
 local ObjectType = {}
 ObjectType.__index = ObjectType
@@ -28,8 +24,8 @@ function ObjectType:SetAppearance(part)
 
     if success then
         self.Objects[part].Zipline = data.Rope
-        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(data.Rope))
 
+        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(data.Rope))
         table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part:FindFirstChildOfClass("Configuration").AttributeChanged:Connect(function()
             self:UpdateAppearance(part)
         end)))
