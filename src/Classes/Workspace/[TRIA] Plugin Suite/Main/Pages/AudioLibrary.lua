@@ -184,17 +184,17 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     end)
 
     LoadEvent:Wait()
+    songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean[loaded and "True" or "False"])
     songLoadData.isLoadingSong:set(false)
     songLoadData.currentlyLoading:set(nil)
 
     --== DO NOT TOUCH THIS ==--
-    task.wait()
     task.delay(1, function()
         if Util.AudioPerms and currentSession == songLoadSession then
             Util.toggleAudioPerms(false)
         end
     end)
-    songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean[loaded and "True" or "False"])
+    
     return loaded
 end
 
