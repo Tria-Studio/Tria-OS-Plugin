@@ -43,7 +43,7 @@ function ObjectType:SetAppearance(part)
             local index
                 local selectionBox = GetSelectionBox(partToProcess)
 
-                self._Maid:GiveTask(selectionBox)
+                table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(selectionBox))
                 table.insert(self.Objects[part].SelectionBox, selectionBox)
                 index = self._Maid:GiveTask(partToProcess.AncestryChanged:Connect(function()
                     if not partToProcess:IsDescendantOf(part) then
@@ -87,14 +87,18 @@ end
 function ObjectType:UpdateAppearance()
     for i, parts in pairs(self.Objects) do
         for _, SelectionBox in pairs(parts.SelectionBox) do
-            parts.SelectionBox.Color3 = self.Color:get()
-            parts.SelectionBox.SurfaceColor3 = self.Color:get()
+            SelectionBox.Color3 = self.Color:get()
+            SelectionBox.SurfaceColor3 = self.Color:get()
         end
     end
 end
 
 function ObjectType:ClearAppearance(part: Instance?)
     if part then
+        for _, SelectionBox in pairs(self.Objects[part].SelectionBox) do
+            SelectionBox:Destroy()
+        end
+
         for _, index in pairs(self.Objects[part].MaidIndex) do
             self._Maid[index] = nil
         end
