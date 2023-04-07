@@ -7,6 +7,7 @@ local PublicTypes = require(Package.PublicTypes)
 local Signal = require(Package.Util.Signal)
 
 local Value = Fusion.Value
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local PageHandler = {
     pageChanged = Signal.new(),
@@ -41,7 +42,7 @@ local function showPageWelcome(pageName: string)
         local settingName = "TRIA_HasViewed-" .. pageWelcomeData.Setting
         if not plugin:GetSetting(settingName) then
             plugin:SetSetting(settingName, true)
-            Util:ShowMessage(pageWelcomeData.Title, pageWelcomeData.Description)
+            require(Package.Util):ShowMessage(pageWelcomeData.Title, pageWelcomeData.Description)
         end
     end
 end
