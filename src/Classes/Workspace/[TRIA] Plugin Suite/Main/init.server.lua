@@ -312,7 +312,7 @@ task.spawn(function()
 	ContentProvider:PreloadAsync(images)
 end)
 
-local function CreateDebugViewFolder()
+local function createDebugViewFolder()
 	local folder = Instance.new("Folder")
 	folder.Name = "__debugview_tria_donttouch"
 	folder.Archivable = false
@@ -327,7 +327,7 @@ openButton.Click:Connect(function()
 
 	if widget.Enabled then
 		MapSelect:AutoSelect()
-		CreateDebugViewFolder()
+		createDebugViewFolder()
 	end
 end)
 Util.PluginActive:set(widget.Enabled)
@@ -335,7 +335,7 @@ Util.PluginActive:set(widget.Enabled)
 if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")
 end
-CreateDebugViewFolder()
+createDebugViewFolder()
 
 function UnloadPlugin()
 	widget.Enabled = false
