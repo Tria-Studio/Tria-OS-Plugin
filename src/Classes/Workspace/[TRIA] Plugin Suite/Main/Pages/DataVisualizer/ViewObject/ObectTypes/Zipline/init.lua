@@ -72,7 +72,7 @@ function ObjectType:SetAppearance(part)
 
                     repeat
                         local firstPos = point.CFrame
-                        task.wait(.125)
+                        task.wait()
                     until point.CFrame == firstPos
 
                     self:ClearAppearance(part)
