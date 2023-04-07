@@ -35,9 +35,9 @@ return {
 	-- 	Description = ""
 	-- },
 
-	-- ["AudioLibrary"] = {
-	-- 	Setting = "",
-	-- 	Title = "", 
-	-- 	Description = ""
-	-- }
+	["AudioLibrary"] = {
+		Setting = "AudioLibrary",
+		Title = "Welcome to the Audio Library", 
+		Description = "Every audio that has been whitelisted by the TRIA staff for use in maps is shown here. If the audio has been created by Roblox or is on this list, it is good for use. \n\nFor information on how to submit your own audios to the library, check out the help page linked in the plugin's description."
+	}
 }
