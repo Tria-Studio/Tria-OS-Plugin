@@ -339,7 +339,12 @@ local function AudioButton(data: audioTableFormat): Instance
     end)
 
     return New "Frame" {
-        BackgroundColor3 = Theme.CategoryItem.Default,
+        BackgroundColor3 = Spring(Computed(function(): Color3
+            local defaultColor = Theme.CategoryItem.Default:get(false)
+            local colorMultiplier = if isPlayingCurrentSong:get() then 0.75 else 1
+
+            return Color3.new(defaultColor.R * colorMultiplier, defaultColor.G * colorMultiplier, defaultColor.B * colorMultiplier)
+        end), 15),
         Size = UDim2.new(1, 0, 0, 36),
         Visible = true,
 
