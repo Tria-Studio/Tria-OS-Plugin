@@ -27,7 +27,7 @@ local Observer = Fusion.Observer
 local Spring = Fusion.Spring
 local Out = Fusion.Out
 local Cleanup = Fusion.Cleanup
-local OnChange = Fusion.OnChange
+
 type audioTableFormat = {Name: string, Artist: string, ID: number}
 
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
