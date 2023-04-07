@@ -38,9 +38,14 @@ function ObjectType:SetAppearance(part)
             self:ClearAppearance(part)
             self:SetAppearance(part)
         end)))
-    end
+        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part.AncestryChanged:Connect(function()
+            if not self.Parent then
+                self:ClearAppearance(part)
+            end
+        end)))
 
-    return true
+        return true
+    end
 end
 
 function ObjectType:UpdateAppearance(part)

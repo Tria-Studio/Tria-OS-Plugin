@@ -138,8 +138,18 @@ function ViewObject:Enable()
 		end))
 	end
 
+	local parts, UsesSpecialFolder = TagUtil:GetPartsWithTag(self.Tag, self.SubTag)
+	if UsesSpecialFolder then
+		self._Maid:GiveTask(UsesSpecialFolder.ChildAdded:Connect(function(part)
+			task.wait()
+			if self.ObjectHandler:SetAppearance(part) then
+				HandleUpdates(part)
+			end
+		end))
+	end
+
     task.defer(function()
-        for i, part in pairs(TagUtil:GetPartsWithTag(self.Tag, self.SubTag)) do
+        for i, part in pairs(parts) do
 			if self.ObjectHandler:SetAppearance(part) then
 				HandleUpdates(part)
 			end

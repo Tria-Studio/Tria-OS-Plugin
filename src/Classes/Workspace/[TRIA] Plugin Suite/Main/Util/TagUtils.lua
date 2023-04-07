@@ -556,11 +556,11 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 	end
 
 	if tag == "_Detail" then
-		return InstanceToCheck and InstanceToCheck:GetDescendants() or {}
+		return InstanceToCheck and InstanceToCheck:GetDescendants() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	elseif subTag == "Variant" then
-		return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants() or {}
+		return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	elseif tag == "Zipline" then
-		return InstanceToCheck:GetChildren() or {}
+		return InstanceToCheck:GetChildren() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	end
 
 	local counter = 0
@@ -575,7 +575,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 		end
 	end
 
-	return partsFound
+	return partsFound, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 end
 
 function tagUtils:IsPartTagged(part: Instance): boolean
