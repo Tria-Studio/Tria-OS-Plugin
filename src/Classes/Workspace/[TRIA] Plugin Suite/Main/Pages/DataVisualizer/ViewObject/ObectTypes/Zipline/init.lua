@@ -60,12 +60,13 @@ function ObjectType:SetAppearance(part)
                 until SelectedPart == workspace
                 return false
             end
-            self._Maid:GiveTask(point:GetPropertyChangedSignal("Name"):Connect(function()
+
+            table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(point:GetPropertyChangedSignal("Name"):Connect(function()
                 self:ClearAppearance(part)
                 self:SetAppearance(part)
-            end))
+            end)))
             local debounce = false
-            self._Maid:GiveTask(point:GetPropertyChangedSignal("CFrame"):Connect(function()
+            table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(point:GetPropertyChangedSignal("CFrame"):Connect(function()
                 if not debounce and table.find(Selection:Get(), point) and not AncestorsSelected() then
                     debounce = true
 
@@ -78,7 +79,7 @@ function ObjectType:SetAppearance(part)
                     self:SetAppearance(part)
                     debounce = false
                 end
-            end))
+            end)))
         end
 
         table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part.ChildAdded:Connect(function(newPart)
