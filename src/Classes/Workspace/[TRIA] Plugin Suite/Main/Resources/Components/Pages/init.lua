@@ -89,7 +89,7 @@ function PageHandler:NewPage(data: PublicTypes.Dictionary): Instance
         if newPageData.onOpen then
             task.spawn(newPageData.onOpen)
         end
-        showPageWelcome(data.Name)
+        task.defer(showPageWelcome, data.Name)
     end
 
     return newPageData.Frame
