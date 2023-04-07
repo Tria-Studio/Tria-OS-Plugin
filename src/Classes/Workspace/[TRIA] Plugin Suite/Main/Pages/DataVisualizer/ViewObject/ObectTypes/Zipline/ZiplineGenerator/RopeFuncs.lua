@@ -24,7 +24,12 @@ function RopeFuncs.createPoint(point: Vector3, nextPoint: Vector3, parent: Insta
 
 	local part = Instance.new("Part")
 	part.Locked = true
-	part.Material = custom.Material or customizationDefault.Material
+	local success = pcall(function()
+		part.Material = custom.Material or customizationDefault.Material
+	end)
+	if not success then
+		part.Material = customizationDefault.Material
+	end
 	part.Color = custom.Color or customizationDefault.Color
 	part.Anchored = true
 	part.CanCollide = false

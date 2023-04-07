@@ -57,7 +57,9 @@ function ObjectType:UpdateAppearance(part)
     local Config = parts.BasePart:FindFirstChildOfClass("Configuration")
 
     for  _, Part in pairs(parts.Zipline:GetChildren()) do
-        Part.Material = Enum.Material[Config:GetAttribute("Material") or "Plastic"]
+        if Enum.Material[Config:GetAttribute("Material") or "Plastic"] then
+            Part.Material = Enum.Material[Config:GetAttribute("Material") or "Plastic"]
+        end
         Part.Color = Config:GetAttribute("Color") or Color3.new
         Part.Size = Vector3.new(Config:GetAttribute("Width"), Config:GetAttribute("Width"), Part.Size.Z)
     end
