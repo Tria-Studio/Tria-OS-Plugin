@@ -313,10 +313,16 @@ task.spawn(function()
 end)
 
 local function createDebugViewFolder()
+	if Util._DebugView.debugObjectsFolder then
+		Util._DebugView.debugObjectsFolder:Destroy()
+		Util._DebugView.debugObjectsFolder = nil
+	end
+	
 	local folder = Instance.new("Folder")
 	folder.Name = "__debugview_tria_donttouch"
 	folder.Archivable = false
 	folder.Parent = Util.Widget
+
 	Util._DebugView.debugObjectsFolder = folder
 	Util.MainMaid:GiveTask(folder)
 end
