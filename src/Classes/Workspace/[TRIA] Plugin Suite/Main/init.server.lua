@@ -338,7 +338,7 @@ if not MapSelect:AutoSelect() then
 end
 createDebugViewFolder()
 
-function UnloadPlugin()
+function unloadPlugin()
 	widget.Enabled = false
 	Util.toggleAudioPerms(nil)
 	Util.PluginActive:set(false)
@@ -348,5 +348,5 @@ function UnloadPlugin()
 	MapSelect:SetMap(nil)
 end
 
-widget:BindToClose(UnloadPlugin)
-plugin.Unloading:Connect(UnloadPlugin)
+widget:BindToClose(unloadPlugin)
+plugin.Unloading:Connect(unloadPlugin)
