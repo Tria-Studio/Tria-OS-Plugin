@@ -880,13 +880,6 @@ function frame.OnClose()
     end
 end
 
-function frame.OnOpen()
-    if not plugin:GetSetting("TRIA_HasViewedAudioLibrary") then
-        plugin:SetSetting("TRIA_HasViewedAudioLibrary", true)
-        Util:ShowMessage("Welcome to the Audio Library", "Every audio that has been whitelisted by the TRIA staff for use in maps is shown here. If the audio has been created by Roblox or is on this list, it is good for use. \n\nFor information on how to submit your own audios to the library, check out the help page linked in the plugin's description.")
-    end
-end
-
 task.defer(function()
     if not Util.mapModel:get(false) then
         Util.MapChanged:Wait()
