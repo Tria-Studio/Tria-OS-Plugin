@@ -52,9 +52,11 @@ function ZiplineService:generate(rope: Model): (boolean, {} | nil)
 	end
 	points = RopeFuncs.sortPointsArray(points)
 	if #points < 2 then
+		ropeModel:Destroy()
 		return false, "Not enough points!"
 	end
 	if points[1]:GetAttribute("_action") ~= "Zipline" then
+		ropeModel:Destroy()
 		return false, "No _action attribute!"
 	end
 

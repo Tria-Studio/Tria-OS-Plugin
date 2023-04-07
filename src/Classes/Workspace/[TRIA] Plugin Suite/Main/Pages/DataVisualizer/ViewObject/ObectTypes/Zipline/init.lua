@@ -30,10 +30,13 @@ function ObjectType:SetAppearance(part)
             self:UpdateAppearance(part)
         end)))
         table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part:GetPropertyChangedSignal("WorldPivot"):Connect(function()
-            print"move"
             self.Objects[part].Zipline:PivotTo(self.Objects[part].BasePart:GetPivot())
             task.wait()
             self.Objects[part].Zipline:PivotTo(self.Objects[part].BasePart:GetPivot())
+        end)))
+        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part.ChildRemoved:Connect(function()
+            self:ClearAppearance(part)
+            self:SetAppearance(part)
         end)))
     end
 
