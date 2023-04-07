@@ -29,8 +29,14 @@ local PageHandler = {
     }
 }
 
+local welcomeData = require(script.WelcomeData)
+
 local function updatePageNum(pageName: string)
     PageHandler._currentPageNum:set(table.find(PageHandler._PageOrder, pageName))
+end
+
+local function showPageWelcome(pageName: string)
+    
 end
 
 function PageHandler:ChangePage(newPage: string)
@@ -53,6 +59,7 @@ function PageHandler:ChangePage(newPage: string)
     if self.pageData.pages[newPage].onOpen then
         self.pageData.pages[newPage].onOpen()
     end
+    showPageWelcome(newPage)
 end
 
 function PageHandler:NewPage(data: PublicTypes.Dictionary): Instance
@@ -74,6 +81,7 @@ function PageHandler:NewPage(data: PublicTypes.Dictionary): Instance
         if newPageData.onOpen then
             task.spawn(newPageData.onOpen)
         end
+        showPageWelcome(data.Name)
     end
 
     return newPageData.Frame
