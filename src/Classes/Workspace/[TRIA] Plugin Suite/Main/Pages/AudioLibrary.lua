@@ -64,6 +64,7 @@ local frameAbsoluteSize = Value()
 local pageLayout = Value()
 
 local lastFetchTime = 0
+local songLoadSession = 0
 
 local searchData = {
     name = Value(""),
@@ -152,6 +153,9 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
     local loaded = false
     local timeout = false
 
+    songLoadSession += 1
+    local currentSession = songLoadSession
+
     if songLoadData.loaded[soundData.ID]:get(false) ~= Enum.TriStateBoolean.True then
         Util.toggleAudioPerms(true)
     end
@@ -185,7 +189,11 @@ local function loadSound(sound: Sound, soundData: audioTableFormat): boolean
 
     --== DO NOT TOUCH THIS ==--
     task.wait()
-    Util.toggleAudioPerms(false)
+    task.delay(1, function()
+        if Util.AudioPerms and currentSession == songLoadSession then
+            Util.toggleAudioPerms(false)
+        end
+    end)
     songLoadData.loaded[soundData.ID]:set(Enum.TriStateBoolean[loaded and "True" or "False"])
     return loaded
 end
@@ -372,14 +380,17 @@ local function AudioButton(data: audioTableFormat): Instance
                 },
 
                 [OnEvent "Activated"] = function()
-                    Util:ShowMessage("Update map BGM?", "This will update the map BGM to '" .. ("%s - %s"):format(data.Artist, data.Name) .. "', press 'Update' to confirm.", {
-                        Text = "Update",
-                        Callback = function()
-                            Util.debugWarn("Updated map music!")
-                            Util.updateMapSetting("Main", "Music", data.ID)
-                            ChangeHistoryService:SetWaypoint("Updated map music")
-                        end
-                    }, {Text = "Nevermind", Callback = function() end})
+                    Util:ShowMessage("Update map BGM?", 
+                        ("This will update the map BGM to <font color='rgb(207, 174, 0)'>%s - %s</font>, press <font color='rgb(7, 184, 4)'>Update</font> to confirm"):format(data.Artist, data.Name), 
+                        {
+                            Text = "Update",
+                            Callback = function()
+                                Util.debugWarn("Updated map music!")
+                                Util.updateMapSetting("Main", "Music", data.ID)
+                                ChangeHistoryService:SetWaypoint("Updated map music")
+                            end
+                        }, {Text = "Nevermind", Callback = function() end}
+                    )
                 end
             },
 
@@ -663,7 +674,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         [Children] = {
                             New "TextLabel" {
                                 BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(.6, 1),
+                                Size = UDim2.fromScale(0.6, 1),
                                 Position = UDim2.fromScale(0.0, 0),
                                 Text = Computed(function(): string
                                     local currentData = songPlayData.currentSongData:get()
@@ -704,7 +715,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             },
 
                             SongPlayButton {
-                                Position = UDim2.fromScale(0.4, 0.3),
+                                Position = UDim2.fromScale(0.415, 0.3),
                                 Size = UDim2.fromScale(0.5, 0.5),
                                 Image = Computed(function(): string
                                     return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal

@@ -153,7 +153,7 @@ local mainFrame = New "Frame" {
 					Size = UDim2.fromOffset(20, 20),
 					BackgroundTransparency = 1,
 					ImageColor3 = Theme.MainText.Default,
-					Image = Computed(function()
+					Image = Computed(function(): string
 						return topbarData.hoverIcon:get()
 					end),
 					ZIndex = 12,
@@ -162,7 +162,7 @@ local mainFrame = New "Frame" {
 					BackgroundTransparency = 1,
 					TextColor3 = Theme.MainText.Default,
 					AutomaticSize = Enum.AutomaticSize.X,
-					Text = Computed(function()
+					Text = Computed(function(): string
 						return topbarData.hoveredButton:get() or ""
 					end),
 					Position = UDim2.fromOffset(20, 0),

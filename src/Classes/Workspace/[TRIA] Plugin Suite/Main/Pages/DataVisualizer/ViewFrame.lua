@@ -48,12 +48,12 @@ local function GetColorButton(name, metadataName, data)
 
     if Controller.Color:get() then
         return New "TextButton" {
-            AutoButtonColor = Computed(function()
+            AutoButtonColor = Computed(function(): TremoloSoundEffect
                 return Util.mapModel:get() and Util.hasSpecialFolder:get()
             end),
             Size = UDim2.new(0, 15, 0, 15),
-            Position = UDim2.new(1, -6, .5, 0),
-            AnchorPoint = Vector2.new(1, .5),
+            Position = UDim2.new(1, -6, 0.5, 0),
+            AnchorPoint = Vector2.new(1, 0.5),
             BackgroundColor3 = Controller.Color,
             BorderMode = Enum.BorderMode.Inset,
             BorderColor3 = Theme.Border.Default,
@@ -68,8 +68,8 @@ local function GetColorButton(name, metadataName, data)
 
             [Children] = New "Frame" {
                 Size = UDim2.new(0, 2, 0, 25),
-                AnchorPoint = Vector2.new(1, .5),
-                Position = UDim2.new(0, -5, .5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                Position = UDim2.new(0, -5, 0.5, 0),
                 BackgroundColor3 = Theme.Border.Default,
                 Visible = not data
             }
@@ -110,7 +110,7 @@ return function(name: string, data: PublicTypes.Dictionary)
     end
 
     return New "Frame" {
-        Visible = name == "AddonView" and Computed(function()
+        Visible = name == "AddonView" and Computed(function(): boolean
             return Util._Addons.hasAddonsWithObjectTags:get() ~= false
         end) or true,
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -169,10 +169,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                                     Util._DebugView.viewsActiveUsingAll -= 1
                                 end
                                 data:Disable()
-                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
+                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) - 1)
                             else
                                 data:Enable()
-                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
+                                Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) + 1)
                                 task.wait()
                             end
                         end
@@ -209,7 +209,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                     Components.Constraints.UIListLayout(),
                     Components.Spacer(data.SingleOption, 0, 2, 1, Theme.ScrollBarBackground.Default),
                     New "TextLabel" {
-                        Text = Computed(function()
+                        Text = Computed(function(): string
                             return #(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) > 0 and data.SubText or data.AltSubText or ""
                         end),
                         Visible = data.SubText == "All Variants" or #data.ViewOptions > 0,
@@ -225,7 +225,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                     ForValues(not data.SingleOption and viewObjects[name] or {}, function(ViewObject: PublicTypes.Dictionary): Instance
                         local metadata = ViewObject.Data
                         local dataValue = ViewObject.checkState
-                        local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get())  
+                        local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get(false))  
 
                         return New "TextButton" {
                             BackgroundColor3 = BackgroundColor,
@@ -238,7 +238,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             Font = Enum.Font.SourceSansSemibold,
                             TextSize = 15,
                             TextXAlignment = Enum.TextXAlignment.Left,
-                            Visible = name == "AddonView" and Computed(function()
+                            Visible = name == "AddonView" and Computed(function(): boolean
                                 return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get() ~= false
                             end) or true,
 
@@ -249,35 +249,35 @@ return function(name: string, data: PublicTypes.Dictionary)
                                             Util._DebugView.viewsActiveUsingAll -= 1
                                         end
                                         ViewObject:Disable()
-                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
+                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) - 1)
                                     else
                                         if ViewObject.UsesAll then
                                             Util._DebugView.viewsActiveUsingAll += 1
                                         end
                                         ViewObject:Enable()
-                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() + 1)
+                                        Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) + 1)
                                     end
                                 end
                             end,
 
                             [OnEvent "MouseEnter"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.Mid.Default:get())
+                                    BackgroundColor:set(Theme.Mid.Default:get(false))
                                 end
                             end,
                             [OnEvent "MouseLeave"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.ScrollBarBackground.Default:get())
+                                    BackgroundColor:set(Theme.ScrollBarBackground.Default:get(false))
                                 end
                             end,
                             [OnEvent "MouseButton1Down"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.Light.Default:get())
+                                    BackgroundColor:set(Theme.Light.Default:get(false))
                                 end
                             end,
                             [OnEvent "MouseButton1Up"] = function()
                                 if not Util.isPluginFrozen() then
-                                    BackgroundColor:set(Theme.Mid.Default:get())
+                                    BackgroundColor:set(Theme.Mid.Default:get(false))
                                 end
                             end,
 
@@ -297,7 +297,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             }
                         }
                     end, Fusion.cleanup),
-                    Components.Spacer(data.SingleOption, #(data.ViewOptions.get and data.ViewOptions:get() or data.ViewOptions) + 2, 2, 1, Theme.ScrollBarBackground.Default),   
+                    Components.Spacer(data.SingleOption, #(data.ViewOptions.get and data.ViewOptions:get(false) or data.ViewOptions) + 2, 2, 1, Theme.ScrollBarBackground.Default),   
                 }
             },
         }

@@ -478,7 +478,7 @@ If you generate a new key, your old key will become invalid and you will need to
                             TextColor3 = Theme.MainText.Default,
                             TextWrapped = true,
                             BackgroundTransparency = 1,
-                            Text = Computed(function()
+                            Text = Computed(function(): string
                                 return if apiData.submittedApiKey:get()
                                     then '<u>Status:</u> <font color="rgb(25,255,0)"><b> Submitted</b></font>' 
                                     else '<u>Status:</u> <font color="rgb(255,75,0)"><b> Not Submitted</b></font>'

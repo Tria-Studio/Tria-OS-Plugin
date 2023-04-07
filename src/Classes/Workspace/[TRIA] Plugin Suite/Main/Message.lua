@@ -114,7 +114,7 @@ return New "Frame" { --// Message
 						Util.CloseMessage()
 					end,
 
-					BackgroundColor3 = Computed(function()
+					BackgroundColor3 = Computed(function(): Color3
 						return Util._Message.Option2:get() and Util._Message.Option2:get().BackgroundColor3 or Theme.Button.Default
 					end)
 				}, 10)

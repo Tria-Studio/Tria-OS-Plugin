@@ -368,7 +368,7 @@ Observer(Util.hasSpecialFolder):onChange(function()
         if #Util.variantFolderChildren:get() ~= #Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren() then
             Util.variantFolderChildren:set(Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren())
         end
-        task.wait(.25)
+        task.wait(0.25)
     end
 end)
 
