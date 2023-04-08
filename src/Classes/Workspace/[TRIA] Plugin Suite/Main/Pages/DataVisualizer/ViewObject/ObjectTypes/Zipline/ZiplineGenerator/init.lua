@@ -2,13 +2,12 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
 -- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-local ZiplineService = {}
+local Generator = {}
 local Package = script.Parent.Parent.Parent.Parent.Parent.Parent
 local RopeFuncs = require(script.RopeFuncs)
 local Util = require(Package.Util)
 
-
-function ZiplineService:generate(rope: Model): (boolean, {} | nil)
+function Generator:generate(rope: Model): (boolean, {} | nil | string)
 	local ropeModel = Instance.new("Model")
 	ropeModel.Name = "ZiplineModel"
 
@@ -41,4 +40,4 @@ function ZiplineService:generate(rope: Model): (boolean, {} | nil)
 	return true, data
 end
 
-return ZiplineService
+return Generator

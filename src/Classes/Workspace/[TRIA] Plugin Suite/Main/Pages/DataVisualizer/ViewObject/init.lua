@@ -41,7 +41,7 @@ function ViewObject.new(Name, data, color)
 	self.Data = data
 
 	self.Color = Value(color)
-	self.ObjectHandler = require(script.ObectTypes[self.ObjectType]).new(self)
+	self.ObjectHandler = require(script.ObjectTypes[self.ObjectType]).new(self)
 
 	self.checkState = Value(false)
 	self.Enabled = false
