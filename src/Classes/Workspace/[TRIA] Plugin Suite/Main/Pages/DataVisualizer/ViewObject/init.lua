@@ -66,7 +66,7 @@ function ViewObject:Enable()
         local index1, index2, index3
 
 		local function UpdatePart()
-			if not TagUtil:PartHasTag(part, self.Tag) or self.TagType == "Addon" then
+			if not TagUtil:PartHasTag(part, self.Tag) or not part:IsDescendantOf(Util.mapModel:get()) then
 				for i, index in pairs(MaidIndex) do
                     self.ObjectHandler._Maid[index] = nil
                 end

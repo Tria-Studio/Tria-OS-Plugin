@@ -257,8 +257,7 @@ return {
                 DisplayIcon = "rbxassetid://6022668890",
                 UsesAllInstances = true,
 
-                Color = Color3.fromRGB(89, 193, 248),
-                ObjectType = "SelectionBox"
+                ObjectType = "Waterjet"
             }
         },
         Tooltip = {

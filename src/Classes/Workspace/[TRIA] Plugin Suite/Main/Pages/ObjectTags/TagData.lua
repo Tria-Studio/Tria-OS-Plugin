@@ -325,15 +325,6 @@ data.metadataTypes = {
         displayName = "Enabled",
         default = true,
     },
-    EmissionFace = {
-        _referenceName = "EmissionFace",
-        type = "Attribute",
-        dataType = "dropdown",
-        dropdownType = "NormalId",
-        dataName = "EmissionFace",
-        displayName = "Emission Face",
-        default = "front",
-    },
     FanShape = {
         _referenceName = "FanShape",
         type = "Attribute",
