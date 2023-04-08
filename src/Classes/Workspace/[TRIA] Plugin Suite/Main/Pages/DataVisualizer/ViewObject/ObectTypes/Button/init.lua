@@ -21,17 +21,18 @@ function ObjectType.new(controller)
 end
 
 function ObjectType:SetAppearance(part)
+    local Marker = script.Marker:Clone()
     if not part.Name:find("_Button") then
         return
     end
     local ButtonSettings = Util.mapModel:get().Settings.Button
     self.Objects[part] = {
-        Marker = script.Marker:Clone(),
+        Marker = Marker,
         MaidIndex = {}
     }
-    self.Objects[part].Marker.Parent = Util._DebugView.debugObjectsFolder
-    self.Objects[part].Marker.Adornee = part
-    self.Objects[part].Marker.Enabled = true
+    Marker.Parent = Util._DebugView.debugObjectsFolder
+    Marker.Adornee = part
+    Marker.Enabled = true
 
     local function UpdateButton(button)
         local Marker = self.Objects[button].Marker
@@ -63,15 +64,6 @@ function ObjectType:SetAppearance(part)
     table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part:GetPropertyChangedSignal("Name"):Connect(function()
         UpdateButton(part)
     end)))
-
-    --[[
-        create button gui
-         - update based on butotn name
-         - update color based on button type OR buttons override colors
-         - update button icon
-        
-    ]]
-
 
     return true
 end
