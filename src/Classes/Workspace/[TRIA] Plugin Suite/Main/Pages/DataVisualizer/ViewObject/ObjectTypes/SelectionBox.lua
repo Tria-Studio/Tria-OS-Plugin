@@ -11,6 +11,7 @@ ObjectType.__index = ObjectType
 function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)
 
+    self.Tag = controller.Tag
     self.TagType = controller.TagType
     self.Visible = false
     self.Color = controller.Color:get() and controller.Color or Value(Color3.new())
@@ -23,15 +24,26 @@ end
 function ObjectType:SetAppearance(part)
     self.Visible = true
     local function GetSelectionBox(Part)
-        return New "SelectionBox" {
-            SurfaceColor3 = self.Color:get(),
-            Color3 = self.Color:get(),
-            LineThickness = 0.03,
-            SurfaceTransparency = 0.6,
-            Parent = Util._DebugView.debugObjectsFolder,
-            Adornee = Part
-        }
+        if self.Tag == "AirTank" then
+            return New "SelectionSphere" {
+                SurfaceColor3 = self.Color:get(),
+                Color3 = self.Color:get(),
+                SurfaceTransparency = 0.6,
+                Parent = Util._DebugView.debugObjectsFolder,
+                Adornee = Part
+            }
+        else
+            return New "SelectionBox" {
+                SurfaceColor3 = self.Color:get(),
+                Color3 = self.Color:get(),
+                LineThickness = 0.03,
+                SurfaceTransparency = 0.6,
+                Parent = Util._DebugView.debugObjectsFolder,
+                Adornee = Part
+            }
+        end
     end
+        
     self.Objects[part] = {
         SelectionBox = {},
         MaidIndex = {}
