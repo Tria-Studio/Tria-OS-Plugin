@@ -104,7 +104,7 @@ for _, fan in ipairs(fans:GetChildren()) do
 	emitter.Rate = fan.Size.X * fan.Size.Y / 144 * 32
 	emitter.Enabled = isEnabled
 	emitter.Name = "FanParticleEmitter"
-	emitter.Texture = "rbxassetid://" .. particleId
+	emitter.Texture = "rbxassetid://" .. (particleId == "default" and "rbxassetid://1249690853" or particleId)
 	emitter.Shape = Enum.ParticleEmitterShape[fanShape == "Cylinder" and "Disc" or "Box"]
 	emitter.EmissionDirection = Enum.NormalId.Front
 	emitter.Parent = fan
