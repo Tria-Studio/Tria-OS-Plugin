@@ -85,7 +85,7 @@ return {
     FanShape = function(): {PublicTypes.Dictionary}
         return {
             {Value = "Square"},
-            {Value = "Circle"}
+            {Value = "Cylinder"}
         }
     end
 }
