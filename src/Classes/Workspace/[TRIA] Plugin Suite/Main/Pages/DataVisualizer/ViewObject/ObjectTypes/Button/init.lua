@@ -33,6 +33,8 @@ function ObjectType:SetAppearance(part)
     Marker.Parent = Util._DebugView.debugObjectsFolder
     Marker.Adornee = part
     Marker.Enabled = true
+    
+    table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(Marker))
 
     local function UpdateButton(button)
         local Marker = self.Objects[button].Marker
