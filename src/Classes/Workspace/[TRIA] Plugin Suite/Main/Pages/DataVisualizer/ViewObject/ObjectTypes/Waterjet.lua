@@ -29,13 +29,14 @@ function ObjectType:SetAppearance(part)
     local function UpdateEmitter(waterjet)
         local speed = waterjet:GetAttribute("FanSpeed") or 32
         local distance = waterjet:GetAttribute("Distance") or 24
+        local bubbleId = waterjet:GetAttribute("BubbleParticle") or "1249690853"
         local ParticleEmitter = self.Objects[waterjet].EmitterPart:FindFirstChildOfClass("ParticleEmitter")
 
         ParticleEmitter.Size = NumberSequence.new{NumberSequenceKeypoint.new(0, 0.5, 0.15), NumberSequenceKeypoint.new(1, 0.35, 0.15)}
         ParticleEmitter.Speed = NumberRange.new(speed, speed)
         ParticleEmitter.Lifetime = NumberRange.new(distance / speed, distance / speed)
         ParticleEmitter.Rate = waterjet.Size.X * waterjet.Size.Y / 144 * 32
-        ParticleEmitter.Texture = waterjet:GetAttribute("BubbleParticle") == "default" and "rbxassetid://1249690853" or "rbxassetid://" .. waterjet:GetAttribute("BubbleParticle")
+        ParticleEmitter.Texture = bubbleId == "default" and "rbxassetid://1249690853" or "rbxassetid://" .. bubbleId
         ParticleEmitter.Shape = Enum.ParticleEmitterShape[waterjet:GetAttribute("FanShape") == "Cylinder" and "Disc" or "Box"]
     end
 
