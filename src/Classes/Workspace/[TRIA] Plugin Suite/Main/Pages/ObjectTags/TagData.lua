@@ -610,7 +610,7 @@ You can specify the oxygen depletion, default color, and splash sound with custo
 Metadata:
     <font size="15"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
     <font size="15"><b>Type: </b></font> Determines if the liquid is water, lava, etc.
-    <font size="15"><b>Meshless: </b></font>Determines whether or not the liquid is visible on all 6 faces, instead of just one face.]]
+    <font size="15"><b>Meshless: </b></font>Determines whether or not the liquid is visible on all 6 faces, instead of just the <b>top face</b>.]]
             },
         },
         _Gas = {
