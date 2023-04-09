@@ -42,6 +42,10 @@ function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.Stat
     local mouseInside = Value(false)
     local settingFrame = Value()
 
+    Util.ThemeChanged:Connect(function()
+        backgroundColor:set(Theme.MainBackground.Default:get(false))
+    end)
+
     return New "Frame" {
         [Ref] = settingFrame,
 

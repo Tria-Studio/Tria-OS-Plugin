@@ -31,6 +31,9 @@ local Util = {
     hasSpecialFolder = Value(false),
     variantFolderChildren = Value({}),
 
+    ThemeChanged = Signal.new(),
+    _ThemeUpdate = Value(0),
+
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
     MapMaid = Maid.new(),

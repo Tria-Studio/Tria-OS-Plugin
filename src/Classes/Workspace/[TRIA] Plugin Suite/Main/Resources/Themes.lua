@@ -1,4 +1,5 @@
 local Fusion = require(script.Parent.Fusion)
+local Util = require(script.Parent.Parent.Util)
 
 local Value = Fusion.Value
 
@@ -132,6 +133,8 @@ settings().Studio.ThemeChanged:Connect(function()
             themes[name][key]:set(StudioTheme:GetColor(GuideColor[name], GuideModifier[key]))
         end
     end
+    Util.ThemeChanged:Fire()
+    Util._ThemeUpdate:set(Util._ThemeUpdate:get() + 1)
 end)
 
 return themes

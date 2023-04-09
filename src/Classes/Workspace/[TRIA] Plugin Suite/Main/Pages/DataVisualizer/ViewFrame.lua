@@ -227,6 +227,10 @@ return function(name: string, data: PublicTypes.Dictionary)
                         local dataValue = ViewObject.checkState
                         local BackgroundColor = Value(Theme.ScrollBarBackground.Default:get(false))  
 
+                        Util.ThemeChanged:Connect(function()
+                            BackgroundColor:set(Theme.ScrollBarBackground.Default:get(false))
+                        end)
+
                         return New "TextButton" {
                             BackgroundColor3 = BackgroundColor,
                             BorderColor3 = Theme.Border.Default,

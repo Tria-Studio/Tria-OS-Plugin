@@ -338,13 +338,16 @@ local function AudioButton(data: audioTableFormat): Instance
         return songLoadData.loaded[data.ID]:get() == Enum.TriStateBoolean.False
     end)
 
-    return New "Frame" {
-        BackgroundColor3 = Spring(Computed(function(): Color3
-            local defaultColor = Theme.CategoryItem.Default:get(false)
-            local colorMultiplier = if isPlayingCurrentSong:get() then 0.75 else 1
+    local BackgroundColorSpring = Spring(Computed(function(): Color3
+        Util._ThemeUpdate:get()
+        local defaultColor = Theme.CategoryItem.Default:get(false)
+        local colorMultiplier = if isPlayingCurrentSong:get() then 0.75 else 1
 
-            return Color3.new(defaultColor.R * colorMultiplier, defaultColor.G * colorMultiplier, defaultColor.B * colorMultiplier)
-        end), 15),
+        return Color3.new(defaultColor.R * colorMultiplier, defaultColor.G * colorMultiplier, defaultColor.B * colorMultiplier)
+    end), 15)
+
+    return New "Frame" {
+        BackgroundColor3 = BackgroundColorSpring,
         Size = UDim2.new(1, 0, 0, 36),
         Visible = true,
 
