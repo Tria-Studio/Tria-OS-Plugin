@@ -122,7 +122,6 @@ local Util = {
         ERROR_HEADER = "<font color='rgb(196, 108, 100)'>Error</font>",
         WARNING_HEADER = "<font color='rgb(245, 193, 51)'>Warning</font>",
         DEBUG_HEADER = "<font color='rgb(100, 100, 100)'>Plugin Debug Menu</font>",
-        WIP_HEADER = "<font color='rgb(145, 195, 255)'>Work In Progress</font>"
     },
     _Errors = {
         HTTP_ERROR = "<font color='rgb(180, 180, 180)'>HTTP Error</font>",
@@ -132,7 +131,7 @@ local Util = {
     _DEBUG = {
         PLUGIN_VERSION = "0.5-dev",
         IS_RELEASE = false,
-        
+
         _HttpPing = Value("Pinging..."),
         _Fps = Value(0),
         _SuggesterResponse = Value("Waiting..."),
