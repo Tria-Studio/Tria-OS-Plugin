@@ -66,7 +66,7 @@ local function showDebug()
 <b>Github Status</b>: %s
 				]]):format(
 					Util._DEBUG.PLUGIN_VERSION,
-					Util._DEBUG.IS_RELEASE,
+					tostring(Util._DEBUG.IS_RELEASE),
 					Util.secondsToTime(Util._DEBUG._Uptime:get()),
 					Util._DEBUG._Fps:get(), 
 					Util._DEBUG._HttpPing:get(),
