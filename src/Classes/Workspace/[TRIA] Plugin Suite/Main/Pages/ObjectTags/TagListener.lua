@@ -237,7 +237,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         AnchorPoint = Vector2.new(0, 0.5),
                                                         Position = UDim2.new(0, textXBounds + (sizeSubtract or 0), 0.5, 0),
                                                         TextXAlignment = Enum.TextXAlignment.Left,
-                                                        Text = textOverride and textOverride or dataValue:get(),
+                                                        Text = textOverride and textOverride or tostring(dataValue:get()),
 
                                                         [Ref] = textValue,
                                                         [OnEvent "FocusLost"] = function()
