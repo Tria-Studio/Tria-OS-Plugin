@@ -735,7 +735,7 @@ Metadata:
                     isFullSize = false,
                 }, {
                     data = data.metadataTypes.ZiplineJumpable,
-                    location = 3,
+                    location = 4,
                     isFullSize = true,
                 }, {
                     data = data.metadataTypes.ZiplineColor,
@@ -751,8 +751,8 @@ Metadata:
                     isFullSize = true,
                 },   {
                     data = data.metadataTypes.ZiplineSparkle,
-                    location = 11,
-                    isFullSize = true,
+                    location = 3,
+                    isFullSize = false,
                 },
             },
             ApplyMethod = nil,
