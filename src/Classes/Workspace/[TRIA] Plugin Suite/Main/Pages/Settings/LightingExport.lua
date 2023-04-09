@@ -52,6 +52,17 @@ local function exportLighting()
             Util.debugWarn(("Failed to set lighting setting '%s'"):format(tostring(settingToChange)))
         end
     end
+
+	for _, LightObject in pairs(Lighting:GetChildren()) do
+		if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") then
+			LightObject.Parent = nil
+		end
+	end
+
+	for _, NewLighting in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
+		local Clone = NewLighting:Clone()
+		Clone.Parent = Lighting
+	end
 	ChangeHistoryService:SetWaypoint("Exported lighting from map to Lighting")
 end
 
@@ -72,6 +83,17 @@ local function importLighting()
         end
     end
 	
+	for _, LightObject in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
+		if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") then
+			LightObject.Parent = nil
+		end
+	end
+
+	for _, NewLighting in pairs(Lighting:GetChildren()) do
+		local Clone = NewLighting:Clone()
+		Clone.Parent = Util.mapModel:get().Settings.Lighting
+	end
+
 	ChangeHistoryService:SetWaypoint("Imported lighting from Lighting to map")
 end
 
@@ -105,7 +127,7 @@ function frame:GetUI(): Instance
 	
 					Util:ShowMessage(
 						"Export to lighting?", 
-						"This will export the current lighting settings into your game's lighting system.", 
+						"This will export the current lighting settings into your game's lighting system, and override all lighting instances in Lighting.", 
 						option1, 
 						option2
 					)
@@ -128,7 +150,7 @@ function frame:GetUI(): Instance
 	
 					Util:ShowMessage(
 						"Import from lighting?", 
-						"This will import the current lighting settings from your game into the map's settings.", 
+						"This will import the current lighting settings from your game into the map's settings and override all lighting instances.", 
 						option1, 
 						option2
 					)
