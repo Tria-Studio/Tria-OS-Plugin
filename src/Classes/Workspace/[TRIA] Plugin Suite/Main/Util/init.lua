@@ -171,8 +171,8 @@ end
 
 function Util.CloseMessage()
     Util:ToggleInterface(true)
-    self._Message.Active = false
-    self.MessageClosed:Fire()
+    Util._Message.Active = false
+    Util.MessageClosed:Fire()
     Util._Message.Text:set("")
     Util._Message.Header:set("")
     Util._Message.Option1:set({})
