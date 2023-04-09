@@ -205,7 +205,10 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
                                             (function(): Instance
-                                                local dataValue = Value(TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName) or "")
+                                                local value, notExists = TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName)
+                                                value = value or ""
+
+                                                local dataValue = Value(metadataType.data.dataType == "color" and notExists and "" or value)
                                                 if dataValue:get(false) == Enum.TriStateBoolean.False then
                                                     dataValue:set(false)
                                                 end
@@ -227,7 +230,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                     ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(false), #Util._Selection.selectedParts:get(false) == 1 and "" or "s", tostring(stringTagValue)))
                                                 end
 
-                                                function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?): Instance
+                                                function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?, isColor: boolean?): Instance
                                                     local textValue = Value()
                                                     local children = extraChild or {}
                                                     table.insert(children, Components.Constraints.UIPadding(nil, nil, UDim.new(0, 4)))
@@ -288,7 +291,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         end
                                                     }}, Computed(function(): string
                                                             return dataValue:get() == "" and "" or Util.parseTextColor3(dataValue:get())
-                                                    end))
+                                                    end), true)
                                                 end
 
                                                 function types.dropdown(): Instance

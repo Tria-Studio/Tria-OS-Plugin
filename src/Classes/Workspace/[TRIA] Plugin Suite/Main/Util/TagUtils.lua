@@ -240,7 +240,8 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
 	local types = {}
 
 	function types.Attribute(): any
-		return part:GetAttribute(data.dataName) or defaultMetadataTypes[data.dataType]
+		local value = part:GetAttribute(data.dataName)
+		return value or defaultMetadataTypes[data.dataType], not value
 	end
 
 	function types.ConfigAttribute(): any
@@ -267,18 +268,24 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
 			or string.sub(part.Name, #mainData._nameStub + 1)
 	end
 
-	return types[data.type]()
+	local value, doesNotExist = types[data.type]()
+	return value, doesNotExist
 end
 
 function tagUtils:GetSelectedMetadataValue(name: string, tag: string): any
 	local metaDataData = TagData.metadataTypes[tag]
 	local firstValue
 	local numHas = 0
+	local numNoExist = 0
 
 	for _, part: Instance in ipairs(Util._Selection.selectedParts:get()) do
-		local tagData = tagUtils:GetPartMetaData(part, name, tag)
+		local tagData, notExists = tagUtils:GetPartMetaData(part, name, tag)
+
 		if firstValue == nil and tagData ~= nil then
 			firstValue = tagData
+		end
+		if notExists then
+			numNoExist += 1
 		end
 		if tagData == firstValue and tagData ~= nil then
 			numHas += 1
@@ -287,9 +294,11 @@ function tagUtils:GetSelectedMetadataValue(name: string, tag: string): any
 		end
 	end
 
-	return if numHas == #Util._Selection.selectedParts:get()
-		then firstValue == false and Enum.TriStateBoolean.False or firstValue
-		else metaDataData.hideWhenNil and "" or defaultMetadataTypes[TagData.metadataTypes[tag].dataType]
+	if numHas == #Util._Selection.selectedParts:get() then
+		return firstValue == false and Enum.TriStateBoolean.False or firstValue, numHas == numNoExist
+	else
+		return metaDataData.hideWhenNil and "" or defaultMetadataTypes[TagData.metadataTypes[tag].dataType], numHas == numNoExist
+	end
 end
 
 function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
