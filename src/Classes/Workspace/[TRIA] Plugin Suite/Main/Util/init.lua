@@ -393,7 +393,6 @@ end
 
 function Util.toggleAudioPerms(enabled: boolean)
     if Util.AudioPerms ~= enabled then
-	    warn("Updating universe id (" .. tostring(enabled) .. "),", enabled and 2330396164 or oldUniverseId)
 	    game:SetUniverseId(enabled and 2330396164 or oldUniverseId)
 	    game:SetPlaceId(enabled and 6311279644 or oldPlaceId)
 	    Util.AudioPerms = enabled
