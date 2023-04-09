@@ -763,7 +763,7 @@ Metadata:
                 Header = "Ziplines",
                 Text = [[Ziplines are an interactive way to allow for people to travel from point A to point B in a map. Zipline ropes can be previewed with View Modes!
 
-Ziplines support custom 'Sparkle's! Insert a ParticleEmitter named '_Sparkle' into the 'Configuration' Instance to customize it!
+Ziplines support custom 'Sparkle's! Insert a ParticleEmitter named <b>'_Sparkle'</b> into the 'Configuration' Instance to customize it!
 
 Metadata:
     <font size="15"><b>Momentum: </b></font>Determines whether or not you continue moving in the direction that you exited the zipline.
