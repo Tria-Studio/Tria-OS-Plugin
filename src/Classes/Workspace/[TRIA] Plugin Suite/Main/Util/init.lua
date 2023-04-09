@@ -34,6 +34,7 @@ local Util = {
     MapChanged = Signal.new(),
     MainMaid = Maid.new(),
     MapMaid = Maid.new(),
+    MessageClosed = Signal.new(),
 
     _pageChanged = Signal.new(),
     _currentPageNum = Value(1),
@@ -68,6 +69,7 @@ local Util = {
         viewsActiveUsingAll = 0,
     },
     _Message = {
+        Active = Value(false),
         Text = Value(""),
         Header = Value(""),
         Option1 = Value({}),
@@ -167,6 +169,8 @@ end
 
 function Util.CloseMessage()
     Util:ToggleInterface(true)
+    self._Message.Active:set(false)
+    self.MessageClosed:Fire()
     Util._Message.Text:set("")
     Util._Message.Header:set("")
     Util._Message.Option1:set({})
@@ -175,6 +179,7 @@ end
 
 function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
     self:ToggleInterface(false)
+    self._Message.Active:set(true)
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = "Ok", Callback = Util.CloseMessage})
