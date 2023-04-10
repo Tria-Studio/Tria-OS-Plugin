@@ -130,7 +130,6 @@ function ViewObject:Enable()
 
 	self._Maid:GiveTask(Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
 		if not Util._DebugView.debugObjectsFolder.Parent then
-			print"deleted"
 			self:Disable()
 		end
 	end))
