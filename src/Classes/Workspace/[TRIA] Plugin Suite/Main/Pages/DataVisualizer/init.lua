@@ -61,6 +61,13 @@ function frame.OnClose()
 end
 
 Observer(Util._DebugView.activeDebugViews):onChange(function()
+    if not Util._DebugView.debugObjectsFolder then
+        local folder = Instance.new("Folder")
+        folder.Name = "__debugview_tria_donttouch"
+        folder.Archivable = false
+        Util.MainMaid:GiveTask(folder)
+        Util._DebugView.debugObjectsFolder = folder
+    end
     Util._DebugView.debugObjectsFolder.Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.CurrentCamera or Util.Widget
 end)
 

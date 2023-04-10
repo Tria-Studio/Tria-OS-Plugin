@@ -117,9 +117,7 @@ function ViewObject:Enable()
         table.insert(self.ObjectHandler.Objects[part].MaidIndex, index3)
 	end
 
-	print(self.Tag)
 	self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
-		print(self.Tag, ...)
 		if self.ObjectHandler:SetAppearance(...) then
 			HandleUpdates(...)
 		end
@@ -130,6 +128,9 @@ function ViewObject:Enable()
 	self.Enabled = true
 	self.checkState:set(true)
 
+	self._Maid:GiveTask(Util._DebugView.debugObjectsFolder.Destroying:Connect(function()
+		self:Disable()
+	end))
 	self._Maid:GiveTask(Util.MapChanged:Connect(function()
 		self:Disable()
 	end))
