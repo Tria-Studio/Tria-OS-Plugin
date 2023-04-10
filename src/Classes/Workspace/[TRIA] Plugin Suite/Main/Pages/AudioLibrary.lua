@@ -263,6 +263,7 @@ end
 
 local function SongPlayButton(data: PublicTypes.Dictionary): Instance
     return Hydrate(Components.ImageButton {
+        Active = Util.interfaceActive,
         BackgroundTransparency = 1,
         AnchorPoint = Vector2.new(0.5, 0.5),
         ZIndex = 3,
@@ -338,6 +339,7 @@ local function AudioButton(data: audioTableFormat): Instance
             },
 
             Components.TextButton {
+                Active = Util.interfaceActive,
                 Size = UDim2.new(0, 32, 0.6, 0),
                 Position = UDim2.new(1, -8, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
@@ -402,6 +404,10 @@ local function AudioButton(data: audioTableFormat): Instance
 
                         [OnEvent "MouseButton1Down"] = function()
                             if songLoadData.isLoadingSong:get(false) then
+                                return
+                            end
+
+                            if not Util.interfaceActive:get(false) then
                                 return
                             end
 

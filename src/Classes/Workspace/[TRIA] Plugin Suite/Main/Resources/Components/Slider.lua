@@ -47,6 +47,17 @@ return function (data: PublicTypes.Dictionary): {Instance}
         end
     end
 
+    local function onMove()
+        if not Util.interfaceActive:get(false) then
+            return
+        end
+        
+        if Util._Slider.isUsingSlider:get(false) and Util._Slider.currentSlider:get(false) == sliderButton:get(false) then
+            local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
+            updateSliderValue(mousePos)
+        end
+    end
+
     local sliderFrame = New "ImageButton" {
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = data.Position,
@@ -59,6 +70,10 @@ return function (data: PublicTypes.Dictionary): {Instance}
         [Out "AbsoluteSize"] = absoluteSize,
 
         [OnEvent "MouseButton1Down"] = function()
+            if not Util.interfaceActive:get(false) then
+                return
+            end
+
             local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
             Util._Slider.isUsingSlider:set(true)
             updateSliderValue(mousePos)
@@ -66,10 +81,7 @@ return function (data: PublicTypes.Dictionary): {Instance}
         end,
 
         [OnEvent "MouseMoved"] = function()
-            if Util._Slider.isUsingSlider:get(false) and Util._Slider.currentSlider:get(false) == sliderButton:get(false) then
-                local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
-                updateSliderValue(mousePos)
-            end
+            onMove()
         end,
 
         [Children] = {
@@ -102,10 +114,7 @@ return function (data: PublicTypes.Dictionary): {Instance}
                         end,
 
                         [OnEvent "MouseMoved"] = function()
-                            if Util._Slider.isUsingSlider:get(false) and Util._Slider.currentSlider:get(false) == sliderButton:get(false) then
-                                local mousePos = absolutePosition:get(false) - Util.Widget:GetRelativeMousePosition()
-                                updateSliderValue(mousePos)
-                            end
+                            onMove()
                         end,
                     }
                 },
