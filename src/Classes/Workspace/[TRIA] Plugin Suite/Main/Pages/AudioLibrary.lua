@@ -561,7 +561,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                     New "Frame" { -- Audio Library
                         BackgroundTransparency = 1,
-                        Size = UDim2.new(1, 0, 1, -36),
+                        Size = UDim2.new(1, 0, 1, -42),
                         Visible = Computed(function(): boolean
                             return CURRENT_FETCH_STATUS:get() == "Success"
                         end),
@@ -571,11 +571,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 [Out "AbsoluteSize"] = frameAbsoluteSize, 
 
                                 BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(1, 0.925),
+                                Size = UDim2.fromScale(1, 1),
 
                                 [Children] = {
                                     Components.ScrollingFrame({
-                                        BackgroundTransparency = 0.75,
+                                        BackgroundTransparency = 1,
                                         BackgroundColor3 = Color3.new(1, 1, 1),
                                         Size = UDim2.fromScale(1, 1),
 
