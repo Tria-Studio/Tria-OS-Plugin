@@ -89,7 +89,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                             local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name] or TagData.dataTypes.addonTags[name]
                             if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
                                 Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br />See the Insert page to add these map components to your map.", name), {
-                                    Text = "Show me",
+                                    Text = "Take me there",
                                     Callback = function()
                                         Pages:ChangePage("Insert")
                                     end

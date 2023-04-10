@@ -160,7 +160,7 @@ end)                ]], line + 1)
 
                 if not Util.hasSpecialFolder:get(false) then
                     Util:ShowMessage("Cannot Insert Addon", "This addon requires your map to support the Optimized Structure (Folder named 'Special'). You can add the special folder under the 'Insert' tab.", {
-                        Text = "Show me",
+                        Text = "Take me there",
                         Callback = function()
                             Pages:ChangePage("Insert")
                         end

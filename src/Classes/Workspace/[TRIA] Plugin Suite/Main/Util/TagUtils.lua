@@ -192,8 +192,8 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
 
 		function types.EndOfName()
 			local tagInstance = tagUtils:GetTagInstance(part, tag) or part
-
-			if tagInstance then
+			
+			if tagInstance and (tagInstance:IsA("ValueBase") or not table.find(newTagTypes[tag], "ButtonTags")) then
 				tagInstance.Name = (
 					TagData.dataTypes.buttonTags[tag]
 					or TagData.dataTypes.objectTags[tag]
@@ -388,6 +388,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
 		function methods.Name()
 			verifyFolder()
+
 			local tagInstance = tagUtils:GetTagInstance(part, newTag) or part
 			tagInstance.Name = string.format(
 				"%s%s",
