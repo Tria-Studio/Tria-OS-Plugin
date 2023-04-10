@@ -466,7 +466,7 @@ local function getScrollChildren(): {Instance}
 
     resetSongData()
     for index = 1, #assets do
-        table.insert(pageChildren, AudioButton(assets[index]))
+        table.insert(children, AudioButton(assets[index]))
     end
 
     return children
