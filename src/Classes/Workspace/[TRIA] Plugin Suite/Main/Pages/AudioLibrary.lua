@@ -718,4 +718,10 @@ Observer(songPlayData.currentTimePosition):onChange(function()
     end
 end)
 
+Observer(Util.interfaceActive):onChange(function()
+    if not Util.interfaceActive:get() then
+        stopSong()
+    end
+end)
+
 return frame
