@@ -192,8 +192,9 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
 
 		function types.EndOfName()
 			local tagInstance = tagUtils:GetTagInstance(part, tag) or part
-			
-			if tagInstance and (tagInstance:IsA("ValueBase") or not table.find(newTagTypes[tag], "ButtonTags")) then
+			print(tagInstance)
+
+			if tagInstance and ((tagInstance:IsA("ValueBase") or tagInstance:IsA("Sound")) or not table.find(newTagTypes[tag], "ButtonTags")) then
 				tagInstance.Name = (
 					TagData.dataTypes.buttonTags[tag]
 					or TagData.dataTypes.objectTags[tag]
