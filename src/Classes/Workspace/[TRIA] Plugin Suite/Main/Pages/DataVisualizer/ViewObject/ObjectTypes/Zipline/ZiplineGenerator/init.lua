@@ -7,10 +7,7 @@ local Package = script.Parent.Parent.Parent.Parent.Parent.Parent
 local RopeFuncs = require(script.RopeFuncs)
 local Util = require(Package.Util)
 
-function Generator:generate(rope: Model): (boolean, {} | nil | string)
-	local ropeModel = Instance.new("Model")
-	ropeModel.Name = "ZiplineModel"
-
+function Generator:generate(rope: Model, ropeModel): (boolean, {} | nil | string)
 	local customizationFolder = rope:FindFirstChild("Customization")
 	local data = {
 		Rope = ropeModel,

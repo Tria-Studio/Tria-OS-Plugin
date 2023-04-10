@@ -4,6 +4,7 @@
 
 local RopeFuncs = {}
 local Bezier = require(script.Parent:WaitForChild("Bezier"))
+local PartCache = require(script.Parent.Parent.Parent.Parent.Parent.Parent.Parent.Util.PartCache)
 
 local customizationDefault = {
 	Material = "Neon",
@@ -22,8 +23,8 @@ function RopeFuncs.createPoint(point: Vector3, nextPoint: Vector3, parent: Insta
 	local distance = (nextPoint - point).Magnitude
 	local width = custom.Width or customizationDefault.Width
 
-	local part = Instance.new("Part")
-	part.Locked = true
+	local part = PartCache:GetObject("ZiplineCache")
+
 	local success = pcall(function()
 		part.Material = custom.Material or customizationDefault.Material
 	end)
@@ -31,8 +32,6 @@ function RopeFuncs.createPoint(point: Vector3, nextPoint: Vector3, parent: Insta
 		part.Material = customizationDefault.Material
 	end
 	part.Color = custom.Color or customizationDefault.Color
-	part.Anchored = true
-	part.CanCollide = false
 	part.Size = Vector3.new(width, width, distance)
 
 	part.CFrame = CFrame.lookAt(point, nextPoint, Vector3.new(0, 1, 0)) * CFrame.new(0, 0, -distance / 2)

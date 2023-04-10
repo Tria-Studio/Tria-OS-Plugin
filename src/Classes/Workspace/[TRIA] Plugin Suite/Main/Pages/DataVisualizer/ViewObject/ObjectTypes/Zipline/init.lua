@@ -3,6 +3,7 @@ local Selection = game:GetService("Selection")
 local Package = script.Parent.Parent.Parent.Parent.Parent
 local Util = require(Package.Util)
 local ZiplineGenerator = require(script.ZiplineGenerator)
+local PartCache = require(Package.Util.PartCache)
 
 local ObjectType = {}
 ObjectType.__index = ObjectType
@@ -17,17 +18,17 @@ function ObjectType.new(controller)
 end
 
 function ObjectType:SetAppearance(part)
-    self.Objects[part] = {
-        Zipline = nil,
-        MaidIndex = {},
-        BasePart = part
-    }
-    local success, data = ZiplineGenerator:generate(part, self.Color)
+    if not self.Objects[part] then
+        self.Objects[part] = {
+            Zipline = Instance.new("Model"),
+            MaidIndex = {},
+            BasePart = part
+        }
+    end
+    local success, data = ZiplineGenerator:generate(part, self.Objects[part].Zipline)
 
     if success then
         self.Objects[part].Zipline = data.Rope
-
-        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(data.Rope))
         table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part:FindFirstChildOfClass("Configuration").AttributeChanged:Connect(function()
             self:UpdateAppearance(part)
         end)))
@@ -77,6 +78,8 @@ function ObjectType:SetAppearance(part)
 
                     self:ClearAppearance(part)
                     self:SetAppearance(part)
+                    task.wait()
+                    task.wait()
                     debounce = false
                 end
             end)))
@@ -118,13 +121,25 @@ function ObjectType:UpdateAppearance(part)
 end
 
 function ObjectType:ClearAppearance(part: Instance?)
-    if part then    
+    if part then
+        for _, object in pairs(self.Objects[part].Zipline:GetChildren()) do
+            PartCache:CacheObject("ZiplineCache", object)
+        end
         for _, index in pairs(self.Objects[part].MaidIndex) do
             self._Maid[index] = nil
         end
     else
+        for _, viewobject in pairs(self.Objects) do
+            if viewobject.Zipline then
+	            for _, object in pairs(viewobject.Zipline:GetChildren()) do
+	                PartCache:CacheObject("ZiplineCache", object)
+				end
+				viewobject.Zipline:Destroy()
+			end
+        end
         self._Maid:Destroy()
         self.Objects = {}
+        PartCache:RemoveCache("ZiplineCache")
     end
 end
 
