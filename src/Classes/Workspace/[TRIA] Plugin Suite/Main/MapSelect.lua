@@ -276,7 +276,7 @@ function MapSelect:StartMapSelection()
             end
 
             if target then
-                if #target:GetDescendants() < 10_000 then
+                if #target:GetDescendants() < 1_000 then
                     humanoid.Parent = target
                 end
 
