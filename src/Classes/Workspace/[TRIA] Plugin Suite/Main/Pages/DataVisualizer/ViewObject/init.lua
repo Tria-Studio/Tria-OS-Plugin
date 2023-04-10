@@ -1,20 +1,4 @@
 local Players = game:GetService("Players")
---[[
-    The instance that will be in charge of creating the view mode "object" for a type of thing.
-
-    CALLS:
-
-    new() - creates it
-
-    objectType - variable for the type of object its tracking
-    _maid - internal cleanup for all instances and  events related to enable()
-
-    setcolor() - updates the color used for visualization
-    enable() - starts visualization
-    disable() - stops visualization and clears all objects related to it
-
-    destroy() - destroys it (will be used for variants)
-]]
 
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
@@ -130,16 +114,18 @@ function ViewObject:Enable()
 
 	self._Maid:GiveTask(Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
 		if not Util._DebugView.debugObjectsFolder.Parent then
-			self:Disable()
+			self:Disable(true)
 		end
 	end))
 	self._Maid:GiveTask(Util.MapChanged:Connect(function()
-		self:Disable()
+		self:Disable(true)
 	end))
 
 	if self.Tag == "_Detail" then
-		self._Maid:GiveTask(Util.mapModel:get():FindFirstChild("Detail").Destroying:Connect(function()
-			self:Disable()
+		self._Maid:GiveTask(Util.mapModel:get():FindFirstChild("Detail").AncestryChanged:Connect(function()
+			if not Util.mapModel:get():FindFirstChild("Detail") then
+				self:Disable(true)
+			end
 		end))
 	end
 
@@ -164,7 +150,7 @@ function ViewObject:Enable()
 
         while self.Enabled do
 			if self.Tag == "_Detail" and not Util.mapModel:get():FindFirstChild("Detail") then
-				self:Disable()
+				self:Disable(true)
 				break
 			end
             local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
@@ -180,12 +166,15 @@ function ViewObject:Enable()
     end)
 end
 
-function ViewObject:Disable()
+function ViewObject:Disable(override)
 	if self.Enabled then
 		self.ObjectHandler:ClearAppearance()
         self.Enabled = false
         self.checkState:set(false)
         self._Maid:DoCleaning()
+		if override then
+			Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get() - 1)
+		end
 	end
 end
 
