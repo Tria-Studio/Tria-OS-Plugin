@@ -1,4 +1,3 @@
-local plugin = plugin or script:FindFirstAncestorWhichIsA("Plugin")
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 

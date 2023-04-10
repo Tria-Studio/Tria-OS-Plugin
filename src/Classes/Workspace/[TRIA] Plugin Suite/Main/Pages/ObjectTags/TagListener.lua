@@ -205,13 +205,28 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         [Children] = {
                                             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 8)),
                                             (function(): Instance
-                                                local value, notExists = TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName)
-                                                value = value or ""
+                                                local value, notExists
+                                                local dataValue
 
-                                                local dataValue = Value(metadataType.data.dataType == "color" and notExists and "" or value)
-                                                if dataValue:get(false) == Enum.TriStateBoolean.False then
-                                                    dataValue:set(false)
+                                                local function UpdateValue()
+                                                    value, notExists = TagUtils:GetSelectedMetadataValue(name, metadataType.data._referenceName)
+                                                    value = value or ""
+                                                    
+                                                    if dataValue then
+                                                        dataValue:set(metadataType.data.dataType == "color" and notExists and "" or value)
+                                                    else
+                                                        dataValue = Value(metadataType.data.dataType == "color" and notExists and "" or value)
+                                                    end
+                                                    
+                                                    if dataValue:get(false) == Enum.TriStateBoolean.False then
+                                                        dataValue:set(false)
+                                                    end
                                                 end
+                                                UpdateValue()
+                                                TagUtils.OnTagAdded(name):Connect(function()
+                                                    task.wait()
+                                                    UpdateValue()
+                                                end)
 
                                                 local textSize = TextService:GetTextSize(metadataType.data.displayName, 15, Enum.Font.SourceSansSemibold, frameSize:get())
                                                 local textXBounds = textSize and textSize.X + 8 or 0
@@ -240,7 +255,9 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         AnchorPoint = Vector2.new(0, 0.5),
                                                         Position = UDim2.new(0, textXBounds + (sizeSubtract or 0), 0.5, 0),
                                                         TextXAlignment = Enum.TextXAlignment.Left,
-                                                        Text = textOverride and textOverride or tostring(dataValue:get()),
+                                                        Text = Computed(function()
+                                                            return textOverride and textOverride:get() or tostring(dataValue:get())
+                                                        end),
 
                                                         [Ref] = textValue,
                                                         [OnEvent "FocusLost"] = function()
