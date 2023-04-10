@@ -303,11 +303,22 @@ local function AudioButton(data: audioTableFormat): Instance
     return New "Frame" {
         BackgroundColor3 = BackgroundColorSpring,
         Size = UDim2.new(1, 0, 0, 36),
-        Visible = true,
+        Visible = Computed(function()
+            local searchedArtist = searchData.artist:get()
+            local searchedName = searchData.name:get()
 
-        [Cleanup] = {
-            audio
-        },
+            local matches = true
+            if searchedArtist and #searchedArtist > 0 and not data.Artist:lower():match(searchedArtist:lower()) then
+                matches = false
+            end
+            if searchedName and #searchedName > 0 and not data.Name:lower():match(searchedName:lower()) then
+                matches = false
+            end
+
+            return matches
+        end),
+
+        [Cleanup] = {audio},
 
         [Children] = {
             New "TextLabel" {
@@ -445,7 +456,7 @@ local function fetchApi()
     end
 end
 
-local function getAudioChildren(): {Instance}
+local function getScrollChildren(): {Instance}
     local children = {}
     local assets = FETCHED_AUDIO_DATA:get()
 
@@ -569,7 +580,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                         Size = UDim2.fromScale(1, 1),
 
                                         [Children] = {
-                                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4))
+                                            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
+                                            Computed(getScrollChildren, Fusion.cleanup)
                                         }
                                     }, false)
                                 }
