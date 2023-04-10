@@ -596,7 +596,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         Position = Spring(Computed(function(): UDim2
                             return UDim2.new(0, 0, 1, if songPlayData.currentlyPlaying:get() then 0 else 38)
                         end), 20),
-                        ZIndex = -1,
 
                         [Children] = {
                             New "TextLabel" {
@@ -613,8 +612,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 ClipsDescendants = true,
                                 TextTruncate = Enum.TextTruncate.AtEnd,
                                 TextSize = 15,
-                                TextXAlignment = Enum.TextXAlignment.Left,
-                                ZIndex = -1,
+                                TextXAlignment = Enum.TextXAlignment.Left, 
 
                                 [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
                             },
@@ -626,7 +624,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Position = UDim2.fromScale(0.675, 0.275),
                                 Size = UDim2.fromScale(0.5, 0.2),
                                 Increment = 1,
-                                ZIndex = -1,
                             },
 
                             New "TextLabel" {
@@ -641,7 +638,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     )
                                 end),
                                 TextColor3 = Theme.MainText.Default,
-                                ZIndex = -1,
                             },
 
                             SongPlayButton {
@@ -656,7 +652,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 HoverImage = Computed(function(): string
                                     return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
                                 end),
-                                ZIndex = -1,
+                                ZIndex = 1,
 
                                 [OnEvent "Activated"] = function()
                                     updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.currentSongData:get(false))
@@ -672,7 +668,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Image = "rbxasset://textures/StudioSharedUI/clear.png",
                                 HoverImage = "rbxasset://textures/StudioSharedUI/clear-hover.png",
                                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
-                                ZIndex = -1,
 
                                 [OnEvent "Activated"] = function()
                                     stopSong()
@@ -683,7 +678,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 BackgroundColor3 = Theme.Border.Default,
                                 Position = UDim2.new(0, 0, 0, -2),
                                 Size = UDim2.new(1, 0, 0, 2),
-                                ZIndex = -1,
                             },
                         }
                     }

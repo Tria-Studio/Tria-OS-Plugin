@@ -54,7 +54,6 @@ return function (data: PublicTypes.Dictionary): {Instance}
         BackgroundColor3 = Theme.Mid.Default,
         ImageTransparency = 1,
         Visible = if data.Visible then data.Visible else true,
-        ZIndex = data.ZIndex or 1,
 
         [Out "AbsolutePosition"] = absolutePosition,
         [Out "AbsoluteSize"] = absoluteSize,
@@ -79,7 +78,6 @@ return function (data: PublicTypes.Dictionary): {Instance}
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 BackgroundColor3 = Theme.DimmedText.Default,
                 Position = sliderPosition,
-
                 Size = UDim2.fromScale(1.75, 1.75),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
                 ZIndex = 2,
