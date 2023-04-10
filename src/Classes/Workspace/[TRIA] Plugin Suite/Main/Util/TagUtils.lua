@@ -413,7 +413,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 				"%s%s",
 				newTag,
 				table.find(tagsWithNumbers, newTag)
-						and tostring(Util.getObjectCountWithNameMatch(newTag, nil, true) + 1)
+						and not table.find(newTagTypes[newTag], "ButtonTags") and tostring(Util.getObjectCountWithNameMatch(newTag, nil, true) + 1) or "1"
 					or ""
 			)
 			newChild.Parent = part
