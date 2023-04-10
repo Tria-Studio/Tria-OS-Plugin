@@ -341,7 +341,7 @@ local function AudioButton(data: audioTableFormat): Instance
     local BackgroundColorSpring = Spring(Computed(function(): Color3
         Util._ThemeUpdate:get()
         local defaultColor = Theme.CategoryItem.Default:get(false)
-        local colorMultiplier = if isPlayingCurrentSong:get() then 0.75 else 1
+        local colorMultiplier = if isPlayingCurrentSong:get() then 1.125 else 1
 
         return Color3.new(defaultColor.R * colorMultiplier, defaultColor.G * colorMultiplier, defaultColor.B * colorMultiplier)
     end), 15)
@@ -704,7 +704,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Value = songPlayData.currentTimePosition,
                                 Min = Value(0),
                                 Max = songPlayData.currentTimeLength,
-                                Position = UDim2.fromScale(0.7, 0.275),
+                                Position = UDim2.fromScale(0.675, 0.275),
                                 Size = UDim2.fromScale(0.5, 0.2),
                                 Increment = 1,
                             },
@@ -724,7 +724,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             },
 
                             SongPlayButton {
-                                Position = UDim2.fromScale(0.415, 0.3),
+                                Position = UDim2.fromScale(0.375, 0.3),
                                 Size = UDim2.fromScale(0.5, 0.5),
                                 Image = Computed(function(): string
                                     return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
@@ -745,7 +745,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 BorderSizePixel = 0,
                                 BackgroundTransparency = 1,
-                                Position = UDim2.fromScale(0.975, 0.3),
+                                Position = UDim2.fromScale(0.96, 0.3),
                                 Size = UDim2.fromScale(0.4, 0.4),
                                 Image = "rbxasset://textures/StudioSharedUI/clear.png",
                                 HoverImage = "rbxasset://textures/StudioSharedUI/clear-hover.png",
