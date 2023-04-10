@@ -72,7 +72,7 @@ function SettingsUtil.updateStateValue(currentValue: any, newValue: any, tbl: Pu
     end
     if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
         tbl.Errored:set(true)
-        tbl.Value:set(if tbl.Fallback then tbl.Fallback else "")
+        tbl.Value:set(if tbl.Fallback ~= nil then tbl.Fallback else "")
         Util.debugWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
     else
         tbl.Errored:set(false)

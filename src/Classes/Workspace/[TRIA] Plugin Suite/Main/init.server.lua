@@ -245,6 +245,7 @@ local mainFrame = New "Frame" {
 			BackgroundColor3 = Theme.Titlebar.Default,
 			BorderColor3 = Theme.Border.Default,
 			BorderSizePixel = 1,
+			ZIndex = 2,
 
 			[Children] = {
 				New "TextLabel" {
@@ -254,6 +255,7 @@ local mainFrame = New "Frame" {
 					Position = UDim2.new(0, 4, 0.5, 0),
 					Text = "Selected Map:",
 					TextColor3 = Theme.TitlebarText.Default,
+					ZIndex = 2,
 				},
 				Components.TextButton {
 					Size = UDim2.new(1, -100, 1, -6),
@@ -261,6 +263,7 @@ local mainFrame = New "Frame" {
 					Text = MapSelect.selectTextState,
 					TextColor3 = MapSelect.selectTextColor,
 					BackgroundColor3 = Theme.InputFieldBackground.Default,
+					ZIndex = 2,
 
 					[OnEvent "Activated"] = function()
 						MapSelect:StartMapSelection()
@@ -274,6 +277,7 @@ local mainFrame = New "Frame" {
 					ImageColor3 = MapSelect.selectCancelColor,
 					BorderSizePixel = 1,
 					BorderColor3 = Theme.Border.Default,
+					ZIndex = 2,
 
 					[OnEvent "Activated"] = function()
 						if MapSelect.selectingMap:get(false) then
