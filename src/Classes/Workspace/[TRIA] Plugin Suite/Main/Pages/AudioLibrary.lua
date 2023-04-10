@@ -93,10 +93,6 @@ local songPlayData = {
 
 local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
-local ITEMS_PER_PAGE = Computed(function(): number
-    return frameAbsoluteSize:get() and math.max(1, math.floor((frameAbsoluteSize:get().Y + 32) / 40)) or 12
-end)
-
 local CURRENT_FETCH_STATUS = Value("Fetching")
 
 local FETCHED_AUDIO_DATA = Value({})
@@ -660,13 +656,11 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 Size = UDim2.fromScale(1, 0.925),
 
                                 [Children] = {
-                                    Hydrate(Components.Constraints.UIPageLayout(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, UDim.new(0, 4), Computed(function(): boolean
-                                        return pageData.total:get() > 1
-                                    end))) {
-                                        [Ref] = pageLayout
-                                    },
-
-                                    Computed(getAudioChildren, Fusion.cleanup)
+                                    Components.ScrollingFrame({
+                                        BackgroundTransparency = 0.75,
+                                        BackgroundColor3 = Color3.new(1, 1, 1),
+                                        Size = UDim2.fromScale(1, 1)
+                                    }, false)
                                 }
                             },
                         }
