@@ -54,6 +54,7 @@ return function (data: PublicTypes.Dictionary): {Instance}
         BackgroundColor3 = Theme.Mid.Default,
         ImageTransparency = 1,
         Visible = if data.Visible then data.Visible else true,
+        ZIndex = data.ZIndex or 1,
 
         [Out "AbsolutePosition"] = absolutePosition,
         [Out "AbsoluteSize"] = absoluteSize,
