@@ -117,7 +117,9 @@ function ViewObject:Enable()
         table.insert(self.ObjectHandler.Objects[part].MaidIndex, index3)
 	end
 
+	print(self.Tag)
 	self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)
+		print(self.Tag, ...)
 		if self.ObjectHandler:SetAppearance(...) then
 			HandleUpdates(...)
 		end
@@ -142,7 +144,7 @@ function ViewObject:Enable()
 	if UsesSpecialFolder then
 		self._Maid:GiveTask(UsesSpecialFolder.ChildAdded:Connect(function(part)
 			task.wait()
-			if self.ObjectHandler:SetAppearance(part) then
+			if TagUtil:PartHasTag(part, self.Tag) and not self.ObjectHandler.Objects[part] and self.ObjectHandler:SetAppearance(part) then
 				HandleUpdates(part)
 			end
 		end))
