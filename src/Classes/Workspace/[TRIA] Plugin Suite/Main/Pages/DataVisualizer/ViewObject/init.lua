@@ -128,8 +128,11 @@ function ViewObject:Enable()
 	self.Enabled = true
 	self.checkState:set(true)
 
-	self._Maid:GiveTask(Util._DebugView.debugObjectsFolder.Destroying:Connect(function()
-		self:Disable()
+	self._Maid:GiveTask(Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
+		if not Util._DebugView.debugObjectsFolder.Parent then
+			print"deleted"
+			self:Disable()
+		end
 	end))
 	self._Maid:GiveTask(Util.MapChanged:Connect(function()
 		self:Disable()
