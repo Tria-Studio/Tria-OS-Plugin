@@ -77,9 +77,8 @@ function ObjectType:SetAppearance(part)
                     until point.CFrame == firstPos
 
                     self:ClearAppearance(part)
+                    task.wait()
                     self:SetAppearance(part)
-                    task.wait()
-                    task.wait()
                     debounce = false
                 end
             end)))

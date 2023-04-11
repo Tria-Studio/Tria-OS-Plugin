@@ -98,8 +98,14 @@ function RopeFuncs.generateRope(rope: Model, customization: Configuration?, ...)
 	end
 
 	local totalLength = 0
+	local num = 0
 
 	for i = 1, #finalPositionTable - 1 do
+		-- num += 1
+		-- if num % math.floor(#finalPositionTable / 5) == 0 then
+		-- 	num = 0
+		-- 	task.wait()
+		-- end
 		local point, nextPoint = finalPositionTable[i], finalPositionTable[i + 1]
 		RopeFuncs.createPoint(point, nextPoint, rope, custom)
 
