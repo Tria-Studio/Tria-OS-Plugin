@@ -5,7 +5,6 @@ local Pages = Resources.Parent.Pages
 local Fusion = require(Resources.Fusion)
 local PublicTypes = require(Package.PublicTypes)
 local Signal = require(Package.Util.Signal)
-local Util = require(Package.Util)
 
 local Value = Fusion.Value
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
@@ -42,10 +41,6 @@ local function showPageWelcome(pageName: string)
     if pageWelcomeData then
         local settingName = "TRIA_HasViewed-" .. pageWelcomeData.Setting
         if not plugin:GetSetting(settingName) then
-            task.wait(.05)
-            if Util.currentPage ~= pageName then
-                return
-            end
             plugin:SetSetting(settingName, true)
             require(Package.Util):ShowMessage(pageWelcomeData.Title, pageWelcomeData.Description)
         end
@@ -72,7 +67,12 @@ function PageHandler:ChangePage(newPage: string)
     if self.pageData.pages[newPage].onOpen then
         self.pageData.pages[newPage].onOpen()
     end
-    showPageWelcome(newPage)
+
+    task.delay(.05, function()
+        if self.pageData.currentPage.currentPage:get() == newPage then
+            showPageWelcome(newPage)
+        end
+    end)
 end
 
 function PageHandler:NewPage(data: PublicTypes.Dictionary): Instance
