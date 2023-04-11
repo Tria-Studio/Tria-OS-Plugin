@@ -1,102 +1,28 @@
 -- Created by Taveple 11/12/2022
 -- Updated 08/04/2023
 
---[[
-	This module aims to solve the issue of needing large amount of parts to be spawned in at once by pre-creating them
-	and making it easier to be pulled and used when needed. I have compiled as many methods as I could think of,
-	let me know if you can think of any more or find any bugs and message me on devforum. 
-	
-	!!
-		Models are not recommended for object caching as they can contain many parts. However, I have still 
-		provided support for it.
-	!!
-	
-	
-	vv All Functions vv
-	
-	
-	- Setup -
-	
-	
-	- This function creates a new cache of objects to be used, the main function in this module. It also returns the data key for the Cache.
-		CreateCache(CacheName: string, TemplateObject: Instance, StartAmount, RegistryAmount: number, NameObjectsInNumericalOrder: boolean): table
-	
-	- This function will remove any cache you create using CreateCache.
-		RemoveCache(CacheName: string, CacheKey: table)
-	
-	- This function will remove all caches created.
-		CleanupAllCaches()
-	
-	
-	- Usage - 
-	
-	
-	- This function will get a random or specific object from the list of cached objects. If the cache is running lower than the registry amount, it will generate more objects.
-		GetObject(CacheName: string): Instance
-	
-	- This function will cache the object that was pulled out of the cache list.
-		CacheObject(CacheName: string, InstanceObject: Instance)
-	
-	- This function will cache all objects.
-		CacheAllObjects(CacheName: string)
-	
-	- This function will generate more objects based on the registry amount set.
-		NewRegistry(CacheName: string)
-	
-	- This function will remove a specific amount of random objects from the cache.
-		RemoveFromCache(CacheName: string, Amount: number)
-]]
-
-----------------
---- Services ---
-----------------
-
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 
------------------
---- Constants ---
------------------
-
--- Forced error message if anything goes wrong.
 local ErrorMessage = "Unable to perform task with cache."
 
--- Moves the object out of render distance when object isnt in use.
 local FarCFrame = CFrame.new(0,10e8,0)
 
--- Going above 200 is not recommended.
-local GeneralCacheCap = 20_000
-
--- The string length if you choose to have objects be a random ID.
+local GeneralCacheCap = 2500
 local LengthOfRandomID = 6
-
--- The name of the folder in which the other modules get parented to.
 local MainCacheFolderName = "ObjectCaches"
+local CacheFolderParentLocation = workspace.CurrentCamera
 
--- You can change this to whatever you want, I like to put objects to ignore in terrain.
-local CacheFolderParentLocation = workspace.Terrain
-
--- If you want to add more to this module, you can add more template types with this.
-local TemplateTypeAllowList = {
-	"Part",
-	"MeshPart",
-	"Model",
-}
-
---------------------
---- Module Setup ---
---------------------
+local TemplateTypeAllowList = {"Part"}
 
 local Handler, Cache = {}, {}
 Cache.__index = Cache
 
--- Handler functions is what other scripts will be able to access.
 Handler.Caches = {}
 
 local MainCacheFolder
 
--- Create the cache, I used a table for the info to avoid repeating variables.
-function Cache.new(...)
+function Cache.new(...) -- Create the cache, I used a table for the info to avoid repeating variables.
 	local Data = {...}
 	return setmetatable({
 		CacheName = Data[1],
@@ -108,10 +34,6 @@ function Cache.new(...)
 		Objects = {},
 	}, Cache)
 end
-
----------------
---- Methods ---
----------------
 
 -- Generates a random ID, used for naming objects.
 local function GenerateID(Length: number): string -- Generates random ID
@@ -217,7 +139,6 @@ function Handler:GetObject(CacheName: string): Instance
 	
 	local CachedObjects = Handler:GetObjects(CacheName, "Cached")
 	local InstanceObject = CachedObjects[1]
-	print(Handler.Caches[CacheName].TotalCacheSize)
 	
 	if #CachedObjects <= CacheKey.RegistryAmount then 
 		Handler:NewRegistry(CacheName)
