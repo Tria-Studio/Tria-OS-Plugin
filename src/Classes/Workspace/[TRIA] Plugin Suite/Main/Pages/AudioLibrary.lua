@@ -457,7 +457,6 @@ local function fetchApi()
             end
         end)
 
-        loadedSongs = {}
         FETCHED_AUDIO_DATA:set(newData)
     end
 end
@@ -482,7 +481,6 @@ end
 local frame = {}
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
-    local textboxObject = Value()
     local isSongPlaying = Computed(function(): boolean
         return songPlayData.currentlyPlaying:get() and (not songPlayData.isPaused:get())
     end)
@@ -577,122 +575,123 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 [Out "AbsoluteSize"] = frameAbsoluteSize, 
 
                                 BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(1, 1),
+                                Size = UDim2.new(1, 0, 1, 42),
+                                ClipsDescendants = true,
 
                                 [Children] = {
                                     Components.ScrollingFrame({
                                         BackgroundTransparency = 1,
                                         BackgroundColor3 = Color3.new(1, 1, 1),
-                                        Size = UDim2.new(1, 0, 1, 42),
+                                        Size = UDim2.fromScale(1, 1),
 
                                         [Children] = {
+                                            Components.Constraints.UIPadding(nil, UDim.new(0, 44)),
                                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
                                             Computed(getScrollChildren, Fusion.cleanup)
                                         }
-                                    }, false)
+                                    }, false),
+                                    New "Frame" { -- Now playing
+                                        BackgroundColor3 = Theme.RibbonTab.Default,
+                                        AnchorPoint = Vector2.new(0, 1),
+                                        Size = UDim2.new(1, 0, 0, 36),
+                                        Position = Spring(Computed(function(): UDim2
+                                            return UDim2.new(0, 0, 1, if songPlayData.currentlyPlaying:get() then 0 else 38)
+                                        end), 20),
+                                        ZIndex = 4,
+
+                                        [Children] = {
+                                            New "TextLabel" {
+                                                BackgroundTransparency = 1,
+                                                Size = UDim2.fromScale(0.6, 1),
+                                                Position = UDim2.fromScale(0.0, 0),
+                                                Text = Computed(function(): string
+                                                    local currentData = songPlayData.currentSongData:get()
+                                                    return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
+                                                end),
+                                                TextColor3 = Theme.MainText.Default,
+                                                LineHeight = 1.1,
+                                                ZIndex = 4,
+                                                RichText = true,
+                                                ClipsDescendants = true,
+                                                TextTruncate = Enum.TextTruncate.AtEnd,
+                                                TextSize = 15,
+                                                TextXAlignment = Enum.TextXAlignment.Left, 
+
+                                                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
+                                            },
+
+                                            Components.Slider {
+                                                Value = songPlayData.currentTimePosition,
+                                                Min = Value(0),
+                                                Max = songPlayData.currentTimeLength,
+                                                Position = UDim2.fromScale(0.675, 0.275),
+                                                Size = UDim2.fromScale(0.5, 0.2),
+                                                Increment = 1,
+                                                ZIndex = 4,
+                                            },
+
+                                            New "TextLabel" {
+                                                BackgroundTransparency = 1,
+                                                Position = UDim2.new(0.45, 0, 0.5, 2),
+                                                Size = UDim2.fromScale(0.5, 0.25),
+                                                TextSize = 14,
+                                                Text = Computed(function(): string
+                                                    return ("%s/%s"):format(
+                                                        Util.secondsToTime(songPlayData.currentTimePosition:get()), 
+                                                        Util.secondsToTime(songPlayData.currentTimeLength:get())
+                                                    )
+                                                end),
+                                                ZIndex = 4,
+                                                TextColor3 = Theme.MainText.Default,
+                                            },
+
+                                            SongPlayButton {
+                                                Position = UDim2.fromScale(0.375, 0.3),
+                                                Size = UDim2.fromScale(0.5, 0.5),
+                                                Image = Computed(function(): string
+                                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
+                                                end),
+                                                ImageColor3 = Computed(function(): Color3
+                                                    return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
+                                                end),
+                                                HoverImage = Computed(function(): string
+                                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
+                                                end),
+                                                ZIndex = 4,
+
+                                                [OnEvent "Activated"] = function()
+                                                    updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.currentSongData:get(false))
+                                                end
+                                            },
+
+                                            Components.ImageButton {
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+                                                BorderSizePixel = 0,
+                                                BackgroundTransparency = 1,
+                                                Position = UDim2.fromScale(0.96, 0.3),
+                                                Size = UDim2.fromScale(0.4, 0.4),
+                                                Image = "rbxasset://textures/StudioSharedUI/clear.png",
+                                                HoverImage = "rbxasset://textures/StudioSharedUI/clear-hover.png",
+                                                SizeConstraint = Enum.SizeConstraint.RelativeYY,
+                                                ZIndex = 4,
+
+                                                [OnEvent "Activated"] = function()
+                                                    stopSong()
+                                                end
+                                            },
+
+                                            New "Frame" { -- Line
+                                                BackgroundColor3 = Theme.Border.Default,
+                                                Position = UDim2.new(0, 0, 0, -2),
+                                                ZIndex = 4,
+                                                Size = UDim2.new(1, 0, 0, 2),
+                                            },
+                                        }
+                                    }
                                 }
                             },
                         }
                     },
-
-                    New "Frame" { -- Now playing
-                        BackgroundColor3 = Theme.RibbonTab.Default,
-                        AnchorPoint = Vector2.new(0, 1),
-                        Size = UDim2.new(1, 0, 0, 36),
-                        Position = Spring(Computed(function(): UDim2
-                            return UDim2.new(0, 0, 1, if songPlayData.currentlyPlaying:get() then 0 else 38)
-                        end), 20),
-                        ZIndex = 4,
-
-                        [Children] = {
-                            New "TextLabel" {
-                                BackgroundTransparency = 1,
-                                Size = UDim2.fromScale(0.6, 1),
-                                Position = UDim2.fromScale(0.0, 0),
-                                Text = Computed(function(): string
-                                    local currentData = songPlayData.currentSongData:get()
-                                    return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
-                                end),
-                                TextColor3 = Theme.MainText.Default,
-                                LineHeight = 1.1,
-                                ZIndex = 4,
-                                RichText = true,
-                                ClipsDescendants = true,
-                                TextTruncate = Enum.TextTruncate.AtEnd,
-                                TextSize = 15,
-                                TextXAlignment = Enum.TextXAlignment.Left, 
-
-                                [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
-                            },
-
-                            Components.Slider {
-                                Value = songPlayData.currentTimePosition,
-                                Min = Value(0),
-                                Max = songPlayData.currentTimeLength,
-                                Position = UDim2.fromScale(0.675, 0.275),
-                                Size = UDim2.fromScale(0.5, 0.2),
-                                Increment = 1,
-                                ZIndex = 4,
-                            },
-
-                            New "TextLabel" {
-                                BackgroundTransparency = 1,
-                                Position = UDim2.new(0.45, 0, 0.5, 2),
-                                Size = UDim2.fromScale(0.5, 0.25),
-                                TextSize = 14,
-                                Text = Computed(function(): string
-                                    return ("%s/%s"):format(
-                                        Util.secondsToTime(songPlayData.currentTimePosition:get()), 
-                                        Util.secondsToTime(songPlayData.currentTimeLength:get())
-                                    )
-                                end),
-                                ZIndex = 4,
-                                TextColor3 = Theme.MainText.Default,
-                            },
-
-                            SongPlayButton {
-                                Position = UDim2.fromScale(0.375, 0.3),
-                                Size = UDim2.fromScale(0.5, 0.5),
-                                Image = Computed(function(): string
-                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
-                                end),
-                                ImageColor3 = Computed(function(): Color3
-                                    return isSongPlaying:get() and Theme.MainButton.Default:get() or Theme.SubText.Default:get()
-                                end),
-                                HoverImage = Computed(function(): string
-                                    return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
-                                end),
-                                ZIndex = 4,
-
-                                [OnEvent "Activated"] = function()
-                                    updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.currentSongData:get(false))
-                                end
-                            },
-
-                            Components.ImageButton {
-                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                BorderSizePixel = 0,
-                                BackgroundTransparency = 1,
-                                Position = UDim2.fromScale(0.96, 0.3),
-                                Size = UDim2.fromScale(0.4, 0.4),
-                                Image = "rbxasset://textures/StudioSharedUI/clear.png",
-                                HoverImage = "rbxasset://textures/StudioSharedUI/clear-hover.png",
-                                SizeConstraint = Enum.SizeConstraint.RelativeYY,
-                                ZIndex = 4,
-
-                                [OnEvent "Activated"] = function()
-                                    stopSong()
-                                end
-                            },
-
-                            New "Frame" { -- Line
-                                BackgroundColor3 = Theme.Border.Default,
-                                Position = UDim2.new(0, 0, 0, -2),
-                                ZIndex = 4,
-                                Size = UDim2.new(1, 0, 0, 2),
-                            },
-                        }
-                    }
                 }
             },
         }
