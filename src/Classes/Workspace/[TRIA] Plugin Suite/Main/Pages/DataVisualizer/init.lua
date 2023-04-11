@@ -68,7 +68,9 @@ Observer(Util._DebugView.activeDebugViews):onChange(function()
         Util.MainMaid:GiveTask(folder)
         Util._DebugView.debugObjectsFolder = folder
     end
-    Util._DebugView.debugObjectsFolder.Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.CurrentCamera or Util.Widget
+    if Util._DebugView.debugObjectsFolder.Parent then
+		Util._DebugView.debugObjectsFolder.Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.CurrentCamera or Util.Widget
+	end
 end)
 
 
