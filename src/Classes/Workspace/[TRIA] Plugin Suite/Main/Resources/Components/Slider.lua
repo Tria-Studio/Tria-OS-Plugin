@@ -62,6 +62,7 @@ return function (data: PublicTypes.Dictionary): {Instance}
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = data.Position,
         Size = data.Size,
+        ZIndex = data.ZIndex,
         BackgroundColor3 = Theme.Mid.Default,
         ImageTransparency = 1,
         Visible = if data.Visible then data.Visible else true,
@@ -92,7 +93,7 @@ return function (data: PublicTypes.Dictionary): {Instance}
                 Position = sliderPosition,
                 Size = UDim2.fromScale(1.75, 1.75),
                 SizeConstraint = Enum.SizeConstraint.RelativeYY,
-                ZIndex = 2,
+                ZIndex = (data.ZIndex or 1) + 1,
                 AutoButtonColor = true,
 
                 [Ref] = sliderButton,
@@ -105,6 +106,7 @@ return function (data: PublicTypes.Dictionary): {Instance}
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         Position = UDim2.new(0.5, 0, 0.5, 0),
                         BackgroundTransparency = 1,
+                        ZIndex = (data.ZIndex or 1) + 2,
 
                         Visible = Util._Slider.isUsingSlider,
 
@@ -133,6 +135,7 @@ return function (data: PublicTypes.Dictionary): {Instance}
             New "Frame" {
                 BackgroundColor3 = Theme.MainButton.Default,
                 Size = backFrameSize,
+                ZIndex = data.ZIndex,
 
                 [Children] = Constraints.UICorner(0, 8)
             },
