@@ -56,7 +56,7 @@ function RopeFuncs.generateRope(rope: Model, customization: Configuration?, ...)
 	local dist = math.floor(totalDistance / 2)
 	dist = dist < 40 and 40 or dist
 
-	local segments = totalDistance
+	local segments = math.ceil(totalDistance / 3)
 	local increment = (1 / segments)
 	local finalPositionTable = table.create(segments)
 
@@ -75,7 +75,6 @@ function RopeFuncs.generateRope(rope: Model, customization: Configuration?, ...)
 	end
 
 	local lookup = Bezier.createLookup(segments, unpack(pointPositions))
-
 	table.insert(finalPositionTable, points[1].Position)
 	for t = 0, 0.999, increment do
 		table.insert(finalPositionTable, Bezier.calculate(math.clamp(t + increment, 0, 1), lookup, pointPositions))
@@ -97,15 +96,9 @@ function RopeFuncs.generateRope(rope: Model, customization: Configuration?, ...)
 		custom = {}
 	end
 
-	local totalLength = 0
-	local num = 0
+	local totalLength = 1
 
 	for i = 1, #finalPositionTable - 1 do
-		-- num += 1
-		-- if num % math.floor(#finalPositionTable / 5) == 0 then
-		-- 	num = 0
-		-- 	task.wait()
-		-- end
 		local point, nextPoint = finalPositionTable[i], finalPositionTable[i + 1]
 		RopeFuncs.createPoint(point, nextPoint, rope, custom)
 

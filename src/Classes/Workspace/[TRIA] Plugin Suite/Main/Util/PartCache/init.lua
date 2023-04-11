@@ -4,13 +4,15 @@
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 
+local Util = require(script.Parent)
+
 local ErrorMessage = "Unable to perform task with cache."
 
 local FarCFrame = CFrame.new(0,10e8,0)
 
 local GeneralCacheCap = 2500
 local LengthOfRandomID = 6
-local MainCacheFolderName = "ObjectCaches"
+local MainCacheFolderName = "__object__caches__tria"
 local CacheFolderParentLocation = workspace.CurrentCamera
 
 local TemplateTypeAllowList = {"Part"}
@@ -52,7 +54,8 @@ local function CreateCacheFolder(NewFolderName: string, RecursiveCall: boolean):
 	CacheFolder = Instance.new("Folder")
 	CacheFolder.Name = NewFolderName
 	CacheFolder.Parent = (RecursiveCall and CacheFolderParentLocation) or MainCacheFolder
-	
+	Util.MapMaid:GiveTask(CacheFolder)
+
 	return CacheFolder
 end
 
@@ -160,16 +163,7 @@ function Handler:CacheObject(CacheName: string, InstanceObject: Instance)
 	assert(CacheKey or InstanceObject, ErrorMessage)
 	
 	CacheKey.Objects[InstanceObject] = true
-	
-	-- Double check to prevent errors.
-	if InstanceObject:IsA("Part") or InstanceObject:IsA("MeshPart") then
-		InstanceObject.Anchored = true
-		InstanceObject.CFrame = FarCFrame
-		
-	elseif InstanceObject:IsA("Model") and InstanceObject.PrimaryPart ~= nil then
-		InstanceObject.PrimaryPart.Anchored = true
-		InstanceObject:PivotTo(FarCFrame)
-	end
+	InstanceObject.CFrame = FarCFrame
 end
 
 -- Caches all objects being used.

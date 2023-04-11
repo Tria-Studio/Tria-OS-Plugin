@@ -66,7 +66,6 @@ function ObjectType:SetAppearance(part)
                 self:ClearAppearance(part)
                 self:SetAppearance(part)
             end)))
-            local debounce = false
             table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(point:GetPropertyChangedSignal("CFrame"):Connect(function()
                 if not debounce and table.find(Selection:Get(), point) and not AncestorsSelected() then
                     debounce = true
