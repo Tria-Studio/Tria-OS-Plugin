@@ -98,6 +98,20 @@ return function(name: string, data: PublicTypes.Dictionary)
 
         viewObjects[name] = Value(viewObjects[name])
         checkState = Value(false)
+
+
+        task.delay(1, function()
+            Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
+                if not Util._DebugView.debugObjectsFolder.Parent then
+                    checkState:set(false)
+                end
+            end)
+            Util.MapChanged:Connect(function()
+                checkState:set(false)
+            end)
+        end)
+
+        -- update it here so i dont forget
     end
 
     local function GetState(Objects)
@@ -261,6 +275,13 @@ return function(name: string, data: PublicTypes.Dictionary)
                                         ViewObject:Enable()
                                         Util._DebugView.activeDebugViews:set(Util._DebugView.activeDebugViews:get(false) + 1)
                                     end
+                                    for name, data in pairs(viewObjects[name]:get()) do
+                                        if not data.Enabled then
+                                            checkState:set(false)
+                                            return
+                                        end
+                                    end 
+                                    checkState:set(true)
                                 end
                             end,
 
