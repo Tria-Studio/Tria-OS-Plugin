@@ -134,7 +134,7 @@ local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: s
             [OnEvent "Activated"] = function()
                 ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
     
-                if not Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
+                if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                     return;
                 end
     
