@@ -583,7 +583,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                     Components.ScrollingFrame({
                                         BackgroundTransparency = 1,
                                         BackgroundColor3 = Color3.new(1, 1, 1),
-                                        Size = UDim2.fromScale(1, 1),
+                                        Size = UDim2.new(1, 0, 1, 42),
 
                                         [Children] = {
                                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, nil, UDim.new(0, 4)),
