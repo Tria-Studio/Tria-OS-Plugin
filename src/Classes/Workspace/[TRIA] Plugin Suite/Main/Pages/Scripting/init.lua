@@ -174,16 +174,16 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center),
                     Components.FrameHeader("About MapScript", 1, nil, nil, nil),
                     Components.Spacer(false, 2, 6, nil),
-                    Components.BasicTextLabel([[The MapScript is the main script in which most of a maps scripting takes place. 
-                        
-All maps must have a MapScript in order to be loaded and ran, however not all of a maps scripting needs to be done in the MapScript.]], 3, Theme.TableItem.Default),
+                    Components.BasicTextLabel([[The MapScript is the main script in which most of a maps functionallity happens.
+                    
+You can have as many scripts as you want, but you must have a main MapScript. The MapScript is required to allow maps to load and run.]], 3, Theme.TableItem.Default),
                     Components.Spacer(false, 4, 6, nil),
 
                     Components.FrameHeader("About LocalMapScript", 5, nil, nil, nil),
                     Components.Spacer(false, 6, 6, nil),
                     Components.BasicTextLabel([[The LocalMapScript is a client-sided script which runs when players load into the game.
 
-You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>not</b> clone to spectators (unlike EffectScript)]], 7, Theme.TableItem.Default),
+You do not need to use LocalMapScript, however it is useful for creating client-sided effects which will only be seen by ingame players. LocalMapScript does <b>NOT</b> replicate to spectators.]], 7, Theme.TableItem.Default),
                     Components.Spacer(false, 8, 9, nil),
 
                     GetScriptButton(hasScripts.LocalMapScript, "LocalMapScript", 9),
@@ -191,9 +191,9 @@ You do not need to use LocalMapScript, however it is useful for creating client-
 
                     Components.FrameHeader("About EffectScript", 11, nil, nil, nil),
                     Components.Spacer(false, 12, 6, nil),
-                    Components.BasicTextLabel([[The EffectScript is a localscript which allows your code to be replicated to other spectators.
+                    Components.BasicTextLabel([[The EffectScript is a localscript which allows your code to be replicated to other spectators, which will provide a better experience for players spectating your map.
 
-The EffectScript can communicate with the server using RemoteEvents and gets cloned to the player's PlayerGui.]], 13, Theme.TableItem.Default),
+EffectScript communicates with the server / MapScript using RemoteEvents and gets cloned to the player's PlayerGui, meaning that it does not get deleted when the player dies.]], 13, Theme.TableItem.Default),
                     Components.Spacer(false, 14, 9, nil),
 
                     GetScriptButton(hasScripts.EffectScript, "EffectScript", 15),
