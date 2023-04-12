@@ -142,7 +142,7 @@ local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: s
     
                 local newScript = Instance.new("LocalScript")
                 newScript.Name = scriptName
-                newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map"
+                newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map" .. (scriptName == "EffectScript" and "\n\n-- For more information and examples on how EffectScript works, visit:\n-- https://github.com/Tria-Studio/Tria-OS-Docs/blob/main/EffectScript.md")
                 newScript.Enabled = false
                 newScript.Parent = currentMap
     
