@@ -510,8 +510,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             
             New "Frame" { -- Holder
                 BackgroundColor3 = Theme.TableItem.Default,
-                Position = UDim2.new(0, 0, 0, 36),
-                Size = UDim2.new(1, 0, 1, -36),
+                Position = UDim2.new(0, 0, 0, 30),
+                Size = UDim2.new(1, 0, 1, -30),
                 LayoutOrder = 2,
 
                 [Children] = {
