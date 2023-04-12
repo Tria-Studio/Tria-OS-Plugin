@@ -2,7 +2,11 @@ return {
     ["ObjectTags"] = {
 		Setting = "ObjectTags",
 		Title = "Object & Event Tags Overview", 
-		Description = "This page allows you to edit the object type of any instance within the map. For example, set a part to be a wallrun, and edit its metadata, etc. and so much more!\n\nUsing a featured addon in your map? Some featured addons support Object Tags!"
+		Description = [[This page allows you to edit the object type of instances in your maps into any game object supported by TRIA.os. For example, set a part to be a wallrun, and edit its metadata, etc. and so much more!
+
+Get started with this by selecting parts/models inside the map, and clicking the desired tag you want to change it to. Selecting parts that already have it allows you to alter its metadata!
+		
+Using a featured addon in your map? Some featured addons support Object Tags!]]
 	},
 
 	["DataVisualizer"] = {

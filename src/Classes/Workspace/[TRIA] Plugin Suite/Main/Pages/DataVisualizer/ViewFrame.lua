@@ -1,3 +1,5 @@
+local RunService = game:GetService("RunService")
+
 local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
 
@@ -101,6 +103,9 @@ return function(name: string, data: PublicTypes.Dictionary)
 
 
         task.delay(1, function()
+            if RunService:IsStudio() and not RunService:IsRunning() then
+                return
+            end
             Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
                 if not Util._DebugView.debugObjectsFolder.Parent then
                     checkState:set(false)
