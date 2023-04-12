@@ -9,5 +9,6 @@ return {
 
 for i, player: Player in pairs(currentPlayers) do  
 	-- Code here will run for all players in the round  
+	print(player.Name .. " is in the round and alive!")
 end  ]],
 }

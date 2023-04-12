@@ -5,5 +5,10 @@ return {
 	Documentation = {
 		value = "Calling this function will make the player survive without needing to touch the ExitRegion."
 	},
-	CodeSample = "MapLib:Survive(MapLib:GetPlayers()[1])  ",
+	CodeSample = [[-- causes all player mid-round to survive the round  
+local PlayersInRound = MapLib:GetPlayers()  
+	
+for _, Player: Player in pairs(PlayersInRound) do  
+	MapLib:Survive(Player)  
+end	]],
 }
