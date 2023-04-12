@@ -575,7 +575,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 [Out "AbsoluteSize"] = frameAbsoluteSize, 
 
                                 BackgroundTransparency = 1,
-                                Size = UDim2.new(1, 0, 1, 42),
+                                Size = UDim2.new(1, 0, 1, 41),
                                 ClipsDescendants = true,
 
                                 [Children] = {
