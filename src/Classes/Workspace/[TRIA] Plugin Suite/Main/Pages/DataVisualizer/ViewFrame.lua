@@ -103,7 +103,7 @@ return function(name: string, data: PublicTypes.Dictionary)
 
 
         task.delay(1, function()
-            if RunService:IsStudio() and not RunService:IsRunning() then
+            if RunService:IsRunning() then
                 return
             end
             Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
