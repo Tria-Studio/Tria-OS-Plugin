@@ -149,18 +149,13 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			documentation = suggestionData.Documentation,
 			codeSample = suggestionData.CodeSample,
 			preselect = true,
-			
+			tags = (treeIndex == "Methods" or suggestionData.IsFunction) and {
+				Enum.CompletionItemTag.AddParens, 
+				Enum.CompletionItemTag.PutCursorInParens
+			} or {},
 			textEdit = AutocompleteUtil.buildReplacement(
 				request.position, 
-				(
-					responseData.text 
-					.. (
-						(treeIndex == "Methods" or suggestionData.IsFunction) 
-						and "(" .. table.concat(suggestionData.AutocompleteArgs, ", ") .. ")" 
-						or ""
-					)
-					.. responseData.afterCursor
-				),
+				responseData.text,
 				#responseData.beforeCursor,
 				#responseData.afterCursor,
 				responseData.alreadyTyped
