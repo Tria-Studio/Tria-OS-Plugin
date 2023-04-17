@@ -71,11 +71,11 @@ local function OptionFrame(props: PublicTypes.Dictionary): Instance
                 [Children] = {
                     Components.Checkbox(16, UDim2.new(0, 8, 0.5, 0), Vector2.new(0, 0.5), enabled),
                     New "TextLabel" {
-                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        AnchorPoint = Vector2.new(0, 0.5),
                         BackgroundTransparency = 1,
                         LayoutOrder = 2,
-                        Position = UDim2.new(0.275, 20, 0.5, 0),
-                        Size = UDim2.fromScale(0.5, 1),
+                        Position = UDim2.new(0, 30, 0.5, 0),
+                        Size = UDim2.fromScale(.75, 1),
                         Text = props.Text,
                         TextColor3 = props.TextColor3 or Theme.MainText.Default,
                         TextXAlignment = Enum.TextXAlignment.Left,
