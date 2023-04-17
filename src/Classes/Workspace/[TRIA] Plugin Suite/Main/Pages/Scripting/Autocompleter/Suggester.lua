@@ -173,9 +173,9 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 					addResponse({
 						label = name,
-						kind = index == "Methods" and Enum.CompletionItemKind.Function or Enum.CompletionItemKind.Property,
+						kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
 						data = data,
-						text = name, 
+						text = name,
 						beforeCursor = beforeCursor,
 						afterCursor = afterCursor,
 						alreadyTyped = isIndexer and 0 or #lastToken
