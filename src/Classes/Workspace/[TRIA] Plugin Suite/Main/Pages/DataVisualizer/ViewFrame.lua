@@ -103,13 +103,12 @@ return function(name: string, data: PublicTypes.Dictionary)
 
 
         task.delay(1, function()
-            if not Util._DebugView.debugObjectsFolder or RunService:IsRunning() then
-                return
-            end
-            Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
-                if not Util._DebugView.debugObjectsFolder.Parent then
-                    checkState:set(false)
-                end
+            pcall(function()
+                Util._DebugView.debugObjectsFolder.AncestryChanged:Connect(function()
+                    if not Util._DebugView.debugObjectsFolder.Parent then
+                        checkState:set(false)
+                    end
+                end)
             end)
             Util.MapChanged:Connect(function()
                 checkState:set(false)
