@@ -724,7 +724,8 @@ Observer(songPlayData.currentTimePosition):onChange(function()
 end)
 
 Observer(Util.interfaceActive):onChange(function()
-    if not Util.interfaceActive:get() then
+    print(Util._Message.Active)
+    if not Util.interfaceActive:get() and not Util._Message.Active then
         stopSong()
     end
 end)

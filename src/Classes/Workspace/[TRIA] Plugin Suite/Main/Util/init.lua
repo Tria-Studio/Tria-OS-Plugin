@@ -173,8 +173,8 @@ function Util:ToggleInterface(value: boolean)
 end
 
 function Util.CloseMessage()
-    Util:ToggleInterface(true)
     Util._Message.Active = false
+    Util:ToggleInterface(true)
     Util.MessageClosed:Fire()
     Util._Message.Text:set("")
     Util._Message.Header:set("")
@@ -183,8 +183,8 @@ function Util.CloseMessage()
 end
 
 function Util:ShowMessage(header: string, text: string, option1: any?, option2: any?)
-    self:ToggleInterface(false)
     self._Message.Active = true
+    self:ToggleInterface(false)
     self._Message.Text:set(text)
     self._Message.Header:set(header)
     self._Message.Option1:set(option1 or {Text = "Ok", Callback = Util.CloseMessage})
