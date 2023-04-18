@@ -75,7 +75,7 @@ local function OptionFrame(props: PublicTypes.Dictionary): Instance
                         BackgroundTransparency = 1,
                         LayoutOrder = 2,
                         Position = UDim2.new(0, 30, 0.5, 0),
-                        Size = UDim2.fromScale(.75, 1),
+                        Size = UDim2.fromScale(0.75, 1),
                         Text = props.Text,
                         TextColor3 = props.TextColor3 or Theme.MainText.Default,
                         TextXAlignment = Enum.TextXAlignment.Left,

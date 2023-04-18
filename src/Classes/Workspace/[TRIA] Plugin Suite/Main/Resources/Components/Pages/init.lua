@@ -68,7 +68,7 @@ function PageHandler:ChangePage(newPage: string)
         self.pageData.pages[newPage].onOpen()
     end
 
-    task.delay(.05, function()
+    task.delay(0.05, function()
         if self.pageData.currentPage:get() == newPage then
             showPageWelcome(newPage)
         end
