@@ -49,17 +49,22 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
     end
 
     local settings2: Instance? = newMap:FindFirstChild("Settings")
+    local other_folder
 
     if not ignoreChecks then
         local settings1 = newMap:FindFirstChild("MapInfo")
-        if settings1 and settings1:FindFirstChild("Lighting")and settings1:FindFirstChild("Audio") and settings1:FindFirstChild("Creator")
+        if settings1 and settings1:FindFirstChild("Lighting") and settings1:FindFirstChild("Audio") and settings1:FindFirstChild("Creator")
         and settings1:FindFirstChild("Difficulty") and settings1:FindFirstChild("MapImage") and settings1:FindFirstChild("MapName") then
             score_1 += 0.5
+            other_folder = true
         end
     
-        if settings2 and settings2:FindFirstChild("Rescue") and settings2:FindFirstChild("BGM") and settings2:FindFirstChild("MaxTime")
-        and settings2:FindFirstChild("Difficulty") and settings2:FindFirstChild("MapImage") and settings2:FindFirstChild("MapName") then
+        if 
+            settings2 and(settings2:FindFirstChild("Rescue") or settings2:FindFirstChild("RescueCutscene")) and (settings2:FindFirstChild("BGM") or settings2:FindFirstChild("BGMs")) and settings2:FindFirstChild("MaxTime")
+            and settings2:FindFirstChild("Difficulty") and settings2:FindFirstChild("MapImage") and settings2:FindFirstChild("MapName")
+        then
             score_2 += 0.5
+            other_folder = true
         end
     end
 
@@ -77,10 +82,10 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
     --// other checks
 
     if not ignoreChecks then
-        if newMap:FindFirstChild("ExitWall") and newMap:FindFirstChild("MapPreviewCamera") then
+        if newMap:FindFirstChild("ExitWall") and newMap:FindFirstChild("MapPreviewCamera") and other_folder then
             score_1 += 0.25
         end
-        if newMap:FindFirstChild("WalkspeedBooster", true) or newMap:FindFirstChild("TeleporterA1", true) and newMap:FindFirstChild("TeleporterA2", true) then
+        if other_folder and newMap:FindFirstChild("TeleporterA1", true) and newMap:FindFirstChild("TeleporterA2", true) then
             score_1 += 0.125
         end
 
@@ -90,19 +95,19 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
 
 
         local instructions = newMap:FindFirstChild("MapInstructions")
-        if instructions.Source:find("LB Map Kit") and instructions.Source:find("Liquid Breakout") then
+        if instructions and instructions.Source:find("LB Map Kit") and instructions.Source:find("Liquid Breakout") then
             score_2 += 0.125
         end
 
         local mapScript = newMap:FindFirstChild("EventScript")
-        if mapScript.Source:find("https://devforum.roblox.com/t/fe2cm-map-making-kit/2249987") then
+        if mapScript and mapScript.Source:find("https://devforum.roblox.com/t/fe2cm-map-making-kit/2249987") then
             score_2 += 0.125
         end
 
         if newMap:FindFirstChild("Intro") and newMap:FindFirstChild("Intro"):IsA("Model") then
             score_2 += 0.125
         end
-        if newMap:FindFirstChild("OST_List") or newMap:FindFirstChild("BGMLists") and (newMap.BGMLists:FindFirstChild("FE2Classic") or newMap.BGMLists:FindFirstChild("LiquidBreakout")) then
+        if newMap:FindFirstChild("BGMLists") and (newMap.BGMLists:FindFirstChild("FE2Classic") or newMap.BGMLists:FindFirstChild("LiquidBreakout")) then
             score_2 += 0.125
         end
         
