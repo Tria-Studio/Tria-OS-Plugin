@@ -84,21 +84,42 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
             score_1 += 0.125
         end
 
+        if newMap:FindFirstChild("Features") and newMap.Features:FindFirstChild("StunObjects") and newMap.Features:FindFirstChild("Interactives") and newMap.Features:FindFirstChild("Buttons") and newMap.Features:FindFirstChild("Triggers") then
+            score_2 += 0.25
+        end
+
+
+        local instructions = newMap:FindFirstChild("MapInstructions")
+        if instructions.Source:find("LB Map Kit") and instructions.Source:find("Liquid Breakout") then
+            score_2 += 0.125
+        end
+
+        local mapScript = newMap:FindFirstChild("EventScript")
+        if mapScript.Source:find("https://devforum.roblox.com/t/fe2cm-map-making-kit/2249987") then
+            score_2 += 0.125
+        end
+
         if newMap:FindFirstChild("Intro") and newMap:FindFirstChild("Intro"):IsA("Model") then
             score_2 += 0.125
         end
-        if newMap:FindFirstChild("OST_List") or newMap:FindFirstChild("_Variants", true) then
+        if newMap:FindFirstChild("OST_List") or newMap:FindFirstChild("BGMLists") and (newMap.BGMLists:FindFirstChild("FE2Classic") or newMap.BGMLists:FindFirstChild("LiquidBreakout")) then
             score_2 += 0.125
         end
+        
+        local model = newMap:FindFirstChild("_Variants", true)
+        if model and  model:IsA("Model") then
+            score_2 += 0.125
+        end
+
         if newMap:FindFirstChild("EndPole", true) and newMap:FindFirstChild("EndPole", true):FindFirstChild("RopePiece")
         and newMap:FindFirstChild("StartPole", true) and newMap:FindFirstChild("StartPole", true):FindFirstChild("RopePiece") then
             score_2 += 0.125
         end
-    end
+    end 
 
      if newMap:IsA("Model") or newMap:IsA("Workspace") then
         if score_1 > 0.875 or score_2 > 1 then
-            return false, "Unknown map type detected. Please make sure this map is a TRIA.os map as this plugin only supports TRIA.os map development."
+            return false, "Unknown map detected. This plugin is designed to aid TRIA.os development."
         end
 
         if not newMap:FindFirstChild("Spawn", true) then
