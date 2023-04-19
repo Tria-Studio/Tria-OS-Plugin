@@ -114,8 +114,6 @@ return function(name: string, data: PublicTypes.Dictionary)
                 checkState:set(false)
             end)
         end)
-
-        -- update it here so i dont forget
     end
 
     local function GetState(Objects)

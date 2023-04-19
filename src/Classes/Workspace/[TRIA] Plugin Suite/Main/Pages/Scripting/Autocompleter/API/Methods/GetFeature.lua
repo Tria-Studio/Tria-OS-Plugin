@@ -7,10 +7,7 @@ return {
 	},
 	CodeSample = [[
 AVALIABLE_FEATURES = {
-	"Skills", -- Interact with the skills (sliding, etc.) that the map uses
-	"Settings", -- Get local player settings (ex. level of detail)
-}
-
--- Get the Skills feature
-local Skills = MapLib:GetFeature(\"Skills\")]],
+	"Skills", -- Interact with the skills (sliding, etc.) that the map uses  
+	"Settings", -- Get local player settings (ex. level of detail)  
+}  ]],
 }
