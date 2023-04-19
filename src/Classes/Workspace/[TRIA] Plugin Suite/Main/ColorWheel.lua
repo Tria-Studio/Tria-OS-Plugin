@@ -244,6 +244,7 @@ function ColorWheel:GetUI(): Instance
                     },
                     Components.MiniTopbar { --// Top bar
                         Text = "Select Color",
+                        ZIndex = 10,
                         Callback = function()
                             chosenColor:set(nil)
                             colorChosen:Fire()
