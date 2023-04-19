@@ -128,11 +128,11 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
         end
 
         if not newMap:FindFirstChild("Spawn", true) then
-            return false, "No spawn point found. Add a part named 'Spawn', and add it into the Special folder. "
+            return false, "No spawn point found. Add a part named 'Spawn', and add it into the Special folder or map model. "
         end
 
         if not newMap:FindFirstChild("ExitRegion", true) then
-            return false, "No ExitRegion found. Add a part named 'ExitRegion', and add it into the Special folder. "
+            return false, "No ExitRegion found. Add a part named 'ExitRegion', and add it into the Special folder or map model. "
         end
 
         if not hasMapScript then
