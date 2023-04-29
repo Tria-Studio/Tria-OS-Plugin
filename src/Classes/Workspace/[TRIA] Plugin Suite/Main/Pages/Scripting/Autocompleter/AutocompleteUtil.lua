@@ -182,7 +182,7 @@ function Util.traverseBranchList(current: {}, branchList: { string }): (boolean,
 	end
 
 	for _, branch in ipairs(branchList) do
-		if current.Branches ~= nil then
+		if current.Branches ~= nil and typeof(current.Branches) == "table" then
 			if current.Branches[branch] then
 				current = current.Branches[branch]
 				branchName = branch
@@ -224,6 +224,9 @@ function Util.splitStringParameters(str: string): {string}
 	end
 	if current ~= "" then
 		table.insert(splits, current)
+	end
+	for k, _ in pairs(splits) do
+		splits[k] = splits[k]:sub(2, -2)
 	end
 	return splits
 end
