@@ -5,7 +5,8 @@ return {
 		local features = {
 			["Skills"] = {"ToggleSliding"},
 		}
-		if #params > 0 then
+		print("PARAMS" ,params)
+		if params and #params > 0 then
 			return features[params[1]]
 		end
 		return nil

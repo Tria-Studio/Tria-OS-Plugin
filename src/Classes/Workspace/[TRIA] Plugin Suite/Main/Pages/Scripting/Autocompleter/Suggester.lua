@@ -164,6 +164,25 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			)
 		})
 	end
+
+	local function updateParameters(branchName: string)
+		local parameterMatch = nil
+		local fullLine = line .. afterCursor
+
+		for name, match in fullLine:gmatch(PARAM_MATCH) do
+			if name == branchName then
+				parameterMatch = {
+					Name = name, 
+					Match = match:sub(-1) == ")" and match:sub(1, -2) or match
+				}
+			end
+		end
+
+		if parameterMatch then
+			local params = AutocompleteUtil.splitStringParameters(parameterMatch.Match)
+			branchParams[branchName] = if #params > 0 then params else nil
+		end
+	end
 	
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
 		local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
@@ -186,8 +205,8 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 					end
 				end
 			elseif typeof(current.Branches) == "function" then
+				updateParameters(branchName)
 				local suggestions = current.Branches(branchParams[branchName])
-				print(branchName, suggestions)
 			end
 		end
 	end
@@ -201,22 +220,8 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		if isInParameters then
 			local matches = {}
 			local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
-			
-			local parameterMatch = nil
 
-			for name, match in fullLine:gmatch(PARAM_MATCH) do
-				if name == branchName then
-					parameterMatch = {
-						Name = name, 
-						Match = match:sub(-1) == ")" and match:sub(1, -2) or match
-					}
-				end
-			end
-
-			if parameterMatch then
-				local params = AutocompleteUtil.splitStringParameters(parameterMatch.Match)
-				branchParams[branchName] = if #params > 0 then params else nil
-			end
+			updateParameters(branchName)
 		else
 			suggestResponses(branches, entryIndex, tokenList)
 		end
