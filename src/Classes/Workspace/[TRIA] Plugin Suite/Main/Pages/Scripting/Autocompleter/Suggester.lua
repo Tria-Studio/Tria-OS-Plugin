@@ -243,7 +243,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 						label = param,
 						kind = Enum.CompletionItemKind.Property,
 						data = {},
-						text = '"' .. param .. '")',
+						text = param .. ')',
 						beforeCursor = beforeCursor,
 						afterCursor = afterCursor,
 						alreadyTyped = isIndexer and 0 or #lastToken

@@ -20,7 +20,7 @@ MapLib:GetFeature("Skills"):ToggleSliding(true)
 		end
 		return nil
 	end,
-	Parameters = {"Skills", "Settings"},
+	Parameters = {"\"Skills\"", "\"Settings\""},
 	Documentation = {
 		value = "Allows you to get a specific Feature from the MapLib"
 	},
