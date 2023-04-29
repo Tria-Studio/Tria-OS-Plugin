@@ -5,6 +5,7 @@ return {
 		local features = {
 			["Skills"] = {
 				["ToggleSliding"] = {
+					Parameters = {"true", "false"},
 					Documentation = {
 						value = "Toggles sliding"
 					},
