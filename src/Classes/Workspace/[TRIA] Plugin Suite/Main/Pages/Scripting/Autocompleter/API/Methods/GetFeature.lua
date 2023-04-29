@@ -2,6 +2,7 @@ local possibleBranches = {
 	["Skills"] = {
 		["ToggleSliding"] = {
 			Name = "ToggleSliding",
+			MaxParams = 1,
 			Parameters = {"true", "false"},
 			Documentation = {
 				value = "Toggles sliding"
@@ -16,6 +17,7 @@ local possibleBranches = {
 		["GetSetting"] = {
 			Name = "GetSetting",
 			Parameters = {},
+			MaxParams = 0,
 			Documentation = {
 				value = "Retrieves a setting"
 			},
