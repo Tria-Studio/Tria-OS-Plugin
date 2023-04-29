@@ -49,7 +49,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 
 	-- Return Case 2: No map selected
-
 	if not Util.mapModel:get(false) then
 		return response
 	end
