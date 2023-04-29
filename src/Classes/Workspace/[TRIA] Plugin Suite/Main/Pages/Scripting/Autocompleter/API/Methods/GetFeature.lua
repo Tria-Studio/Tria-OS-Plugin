@@ -1,6 +1,7 @@
 return {
 	AutocompleteArgs = {"featureName"},
 	Name = "GetFeature",
+	PossibleBranches = {["ToggleSliding"] = true},
 	Branches = function(params)
 		local features = {
 			["Skills"] = {
