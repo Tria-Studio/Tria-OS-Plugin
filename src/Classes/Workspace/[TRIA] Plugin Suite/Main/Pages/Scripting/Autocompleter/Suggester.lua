@@ -34,6 +34,8 @@ local INLINE_FUNCTION = `function%({ANY_CHAR}%)?%s*$`
 local MAPLIB_IDEN = `local {ARGS_MATCH} = game.GetMapLib:Invoke%(%)%(%)`
 local CALLBACK_NAME = "__MapLibCompletion"
  
+local branchParams = {}
+
 local function stringToTreeIndex(input: string): string
 	return input == ":" and "Methods" or "Properties"
 end
@@ -166,21 +168,25 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
 		local reachedEnd, current, _ = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
 		if current and current.Branches and not reachedEnd then
-			for name, data in pairs(current.Branches) do
-				local lastToken = lineTokens[#lineTokens].value
-				local isIndexer = lastToken == ":" or lastToken == "."
-
-				if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
-					addResponse({
-						label = name,
-						kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
-						data = data,
-						text = name,
-						beforeCursor = beforeCursor,
-						afterCursor = afterCursor,
-						alreadyTyped = isIndexer and 0 or #lastToken
-					}, index)
+			if typeof(current.Branches) == "table" then
+				for name, data in pairs(current.Branches) do
+					local lastToken = lineTokens[#lineTokens].value
+					local isIndexer = lastToken == ":" or lastToken == "."
+	
+					if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
+						addResponse({
+							label = name,
+							kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
+							data = data,
+							text = name,
+							beforeCursor = beforeCursor,
+							afterCursor = afterCursor,
+							alreadyTyped = isIndexer and 0 or #lastToken
+						}, index)
+					end
 				end
+			elseif typeof(current.Branches) == "function" then
+				print("Suggest with params")
 			end
 		end
 	end
@@ -208,7 +214,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 			if parameterMatch then
 				local params = AutocompleteUtil.splitStringParameters(parameterMatch.Match)
-				print(params)
+				branchParams[branchName] = if #params > 0 then params else nil
 			end
 		else
 			suggestResponses(branches, entryIndex, tokenList)

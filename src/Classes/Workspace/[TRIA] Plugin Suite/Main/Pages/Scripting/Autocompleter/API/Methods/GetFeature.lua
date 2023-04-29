@@ -1,7 +1,10 @@
 return {
 	AutocompleteArgs= {"featureName"},
 	Name = "GetFeature",
-	Branches = nil,
+	Branches = function(params)
+		
+	end,
+	Parameters = {"Skills", "Settings"},
 	Documentation = {
 		value = "Allows you to get a specific Feature from the MapLib"
 	},
