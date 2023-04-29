@@ -166,7 +166,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 	
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
-		local reachedEnd, current, _ = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
+		local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
 		if current and current.Branches and not reachedEnd then
 			if typeof(current.Branches) == "table" then
 				for name, data in pairs(current.Branches) do
@@ -186,7 +186,8 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 					end
 				end
 			elseif typeof(current.Branches) == "function" then
-				print("Suggest with params")
+				local suggestions = current.Branches(branchParams[branchName])
+				print(branchName, suggestions)
 			end
 		end
 	end
