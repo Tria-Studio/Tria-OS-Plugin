@@ -112,7 +112,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			table.insert(newArgs, arg)
 		end
 		AutocompleteData[index].Branches[funcName] = {
-			AutocompleteArgs= newArgs,
+			AutocompleteArgs = newArgs,
 			Name = funcName,
 			IsFunction = isFunction,
 			Branches = nil
@@ -207,7 +207,18 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			elseif typeof(current.Branches) == "function" then
 				updateParameters(branchName)
 				local suggestions = current.Branches(branchParams[branchName])
-				print(suggestions)
+				
+				for name, data in ipairs(suggestions) do
+					addResponse({
+						label = name,
+						kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
+						data = data,
+						text = name,
+						beforeCursor = beforeCursor,
+						afterCursor = afterCursor,
+						alreadyTyped = isIndexer and 0 or #lastToken
+					}, index)
+				end
 			end
 		end
 	end

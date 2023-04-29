@@ -1,9 +1,18 @@
 return {
-	AutocompleteArgs= {"featureName"},
+	AutocompleteArgs = {"featureName"},
 	Name = "GetFeature",
 	Branches = function(params)
 		local features = {
-			["Skills"] = {"ToggleSliding"},
+			["Skills"] = {
+				["ToggleSliding"] = {
+					Documentation = {
+						value = "Toggles sliding"
+					},
+					CodeSample = [[
+
+					]]
+				}
+			},
 		}
 		if params and #params > 0 then
 			return features[params[1]]

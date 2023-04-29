@@ -1,5 +1,5 @@
 return {
-	AutocompleteArgs= {""},
+	AutocompleteArgs = {""},
 	Name = "GetPlayers",
 	Branches = nil,
 	Documentation = {

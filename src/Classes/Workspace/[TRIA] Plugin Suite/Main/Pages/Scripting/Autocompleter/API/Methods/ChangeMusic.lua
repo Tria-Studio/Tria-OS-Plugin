@@ -1,5 +1,5 @@
 return {
-	AutocompleteArgs= {"musicId", "volume", "startTick"},
+	AutocompleteArgs = {"musicId", "volume", "startTick"},
 	Name = "ChangeMusic",
 	Branches = nil,
 	Documentation = {

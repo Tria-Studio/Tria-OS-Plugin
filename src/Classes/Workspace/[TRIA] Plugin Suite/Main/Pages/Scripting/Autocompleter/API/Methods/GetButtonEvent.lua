@@ -1,5 +1,5 @@
 return {
-	AutocompleteArgs= {"buttonNumber"},
+	AutocompleteArgs = {"buttonNumber"},
 	Name = "GetButtonEvent",
 	Documentation = {
 		value = "Get's a specific buttons events which allow you to detect when it is activated"
@@ -15,7 +15,7 @@ print("Button 2 was activated!")  ]],
 	
 	Branches = {
 		["Connect"] = {
-			AutocompleteArgs= {"function()\n\nend"},
+			AutocompleteArgs = {"function()\n\nend"},
 			Name = "Connect",
 			Branches = nil,
 			
@@ -27,14 +27,14 @@ print("Button 2 was activated!")  ]],
 MapLib:GetButtonEvent(1):Connect(function(player)  
 	print("Button 1 was activated!")  
 
-	-- sets the liquid type to 'lava' and then moves the part up when button 1 is activated  
+	-- Sets the liquid type to 'lava' and then moves the part up when button 1 is activated  
 	MapLib:SetLiquidType(Map.Special.Fluid._Liquid3, "lava")  
 	task.wait(0.5)  
 	MapLib:Move(Map.Special.Fluid._Liquid3, Vector3.new(0, 40, 0), 7)  
 end)  ]],
 		},
 		["Wait"] = {
-			AutocompleteArgs= {""},
+			AutocompleteArgs = {""},
 			Name = "Wait",
 			Branches = nil,
 			

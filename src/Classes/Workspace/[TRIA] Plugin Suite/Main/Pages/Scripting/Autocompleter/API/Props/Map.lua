@@ -1,5 +1,5 @@
 return {
-	AutocompleteArgs= {""},
+	AutocompleteArgs = {""},
 	Name = "map",
 	Branches = nil,
 	

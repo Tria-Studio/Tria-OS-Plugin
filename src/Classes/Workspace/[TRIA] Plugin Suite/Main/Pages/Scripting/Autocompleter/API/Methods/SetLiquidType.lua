@@ -1,5 +1,5 @@
 return {
-	AutocompleteArgs= {"liquid", "liquidType"},
+	AutocompleteArgs = {"liquid", "liquidType"},
 	Name = "SetLiquidType",
 	Branches = nil,
 	Documentation = {

@@ -1,5 +1,5 @@
 return {
-	AutocompleteArgs= {"object", "movement", "duration"},
+	AutocompleteArgs = {"object", "movement", "duration"},
 	Name = "Move",
 	Branches = nil,
 	Documentation = {
