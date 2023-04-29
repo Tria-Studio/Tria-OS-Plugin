@@ -9,11 +9,12 @@ return {
 						value = "Toggles sliding"
 					},
 					CodeSample = [[
-					MapLib:GetFeature("Skills"):ToggleSliding(true)	
+MapLib:GetFeature("Skills"):ToggleSliding(true)	
 					]]
 				}
 			},
 		}
+		
 		if params and #params > 0 then
 			return features[params[1]]
 		end

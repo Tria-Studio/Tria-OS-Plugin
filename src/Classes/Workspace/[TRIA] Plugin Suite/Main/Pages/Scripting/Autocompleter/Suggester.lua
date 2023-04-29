@@ -187,11 +187,11 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
 		local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
 		if current and current.Branches and not reachedEnd then
+			local lastToken = lineTokens[#lineTokens].value
+			local isIndexer = lastToken == ":" or lastToken == "."
+
 			if typeof(current.Branches) == "table" then
 				for name, data in pairs(current.Branches) do
-					local lastToken = lineTokens[#lineTokens].value
-					local isIndexer = lastToken == ":" or lastToken == "."
-	
 					if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 						addResponse({
 							label = name,
@@ -210,7 +210,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				
 				print(suggestions)
 				if suggestions then
-					for name, data in ipairs(suggestions) do
+					for name, data in pairs(suggestions) do
 						addResponse({
 							label = name,
 							kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
