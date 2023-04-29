@@ -198,18 +198,21 @@ end
 
 function Util.splitStringParameters(str: string): {string}
 	local splits = {}
-	local nestCount = 0
+	
+	local nestCount1 = 0
+	local nestCount2 = 0
+	
 	local current = ""
 
 	for count = 1, #str do
 		local currentChar = str:sub(count, count)
 		local ignore = false
-
-		if currentChar:match("[\"(]") then
-			nestCount += 1
-		elseif currentChar:match("[\")]") then
-			nestCount = math.max(nestCount - 1, 0)
-		elseif currentChar == "," and nestCount == 0 then
+		
+		if currentChar:match("\"") then
+			nestCount1 = if nestCount1 == 0 then nestCount1 + 1 else math.max(nestCount1 - 1, 0)
+		elseif currentChar:match("'") then
+			nestCount2 = if nestCount2 == 0 then nestCount2 + 1 else math.max(nestCount2 - 1, 0)
+		elseif currentChar == "," and (nestCount1 + nestCount2) == 0 then
 			table.insert(splits, current)
 			current = ""
 			ignore = true
