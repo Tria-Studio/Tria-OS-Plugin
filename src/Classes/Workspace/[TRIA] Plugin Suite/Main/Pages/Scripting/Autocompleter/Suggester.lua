@@ -208,16 +208,19 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				updateParameters(branchName)
 				local suggestions = current.Branches(branchParams[branchName])
 				
-				for name, data in ipairs(suggestions) do
-					addResponse({
-						label = name,
-						kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
-						data = data,
-						text = name,
-						beforeCursor = beforeCursor,
-						afterCursor = afterCursor,
-						alreadyTyped = isIndexer and 0 or #lastToken
-					}, index)
+				print(suggestions)
+				if suggestions then
+					for name, data in ipairs(suggestions) do
+						addResponse({
+							label = name,
+							kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
+							data = data,
+							text = name,
+							beforeCursor = beforeCursor,
+							afterCursor = afterCursor,
+							alreadyTyped = isIndexer and 0 or #lastToken
+						}, index)
+					end
 				end
 			end
 		end
