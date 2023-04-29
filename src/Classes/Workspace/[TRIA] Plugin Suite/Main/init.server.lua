@@ -351,7 +351,6 @@ function unloadPlugin()
     MapSelect._Maid:DoCleaning()
     Util.MainMaid:DoCleaning()
     SettingsUtil.SettingMaid:DoCleaning()
-	MapSelect:SetMap(nil)
 end
 
 widget:BindToClose(unloadPlugin)
