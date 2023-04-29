@@ -184,10 +184,8 @@ function Util.traverseBranchList(current: {}, branchList: { string }): (boolean,
 	for _, branch in ipairs(branchList) do
 		local currentBranches = {}
 		if typeof(current.Branches) == "table" then
-			print("Using normal branches")
 			currentBranches = current.Branches
 		else
-			print("Using possible")
 			currentBranches = current.PossibleBranches
 		end
 
