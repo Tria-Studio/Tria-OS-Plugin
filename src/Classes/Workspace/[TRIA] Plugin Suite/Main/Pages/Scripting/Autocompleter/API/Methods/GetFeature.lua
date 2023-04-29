@@ -48,7 +48,7 @@ return {
 			},
 		}
 		
-		if params and #params > 0 then
+		if params and #params < 1 then
 			return features[params[1]]
 		end
 		return nil
