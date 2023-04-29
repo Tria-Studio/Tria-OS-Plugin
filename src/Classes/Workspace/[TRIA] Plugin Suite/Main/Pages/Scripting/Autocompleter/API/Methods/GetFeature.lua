@@ -5,7 +5,6 @@ return {
 		local features = {
 			["Skills"] = {"ToggleSliding"},
 		}
-		print("PARAMS" ,params)
 		if params and #params > 0 then
 			return features[params[1]]
 		end

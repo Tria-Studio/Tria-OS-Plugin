@@ -207,6 +207,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			elseif typeof(current.Branches) == "function" then
 				updateParameters(branchName)
 				local suggestions = current.Branches(branchParams[branchName])
+				print(suggestions)
 			end
 		end
 	end
