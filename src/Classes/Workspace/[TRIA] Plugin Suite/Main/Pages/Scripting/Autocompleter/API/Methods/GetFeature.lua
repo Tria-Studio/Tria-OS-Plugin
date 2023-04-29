@@ -9,7 +9,7 @@ return {
 						value = "Toggles sliding"
 					},
 					CodeSample = [[
-
+					MapLib:GetFeature("Skills"):ToggleSliding(true)	
 					]]
 				}
 			},
