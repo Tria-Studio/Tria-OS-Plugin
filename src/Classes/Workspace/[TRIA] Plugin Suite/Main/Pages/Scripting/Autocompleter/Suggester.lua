@@ -236,7 +236,8 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
 
 			updateParameters(branchName)
-			if current and current.Parameters and #branchParams[branchName] < current.MaxParams then
+
+			if current and current.Parameters and not (#branchParams[branchName] > current.MaxParams) then
 				for _, param in ipairs(current.Parameters) do
 					addResponse({
 						label = param,
