@@ -2,7 +2,13 @@ return {
 	AutocompleteArgs= {"featureName"},
 	Name = "GetFeature",
 	Branches = function(params)
-		
+		local features = {
+			["Skills"] = {"ToggleSliding"},
+		}
+		if #params > 0 then
+			return features[params[1]]
+		end
+		return nil
 	end,
 	Parameters = {"Skills", "Settings"},
 	Documentation = {
