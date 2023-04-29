@@ -186,8 +186,31 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		end
 	end
 
-	local function suggestParameterResponses()
-		
+	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
+		local lastToken = tokenList[#tokenList].value
+		local fullLine = line .. afterCursor
+
+		local isInParameters = #branches > 0 and fullLine:match(PARAM_MATCH) and not (lastToken == ":" or lastToken == ".")
+
+		if isInParameters then
+			local matches = {}
+			local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
+			
+			local parameterMatch = nil
+
+			for name, match in fullLine:gmatch(PARAM_MATCH) do
+				if name == branchName then
+					parameterMatch = {Name = name, Match = match:sub(-1) == ")" and match:sub(1, -2) or match}
+				end
+			end
+
+			if parameterMatch then
+				local params = AutocompleteUtil.splitStringParameters(parameterMatch.Match)
+				print(params)
+			end
+		else
+			suggestResponses(branches, entryIndex, tokenList)
+		end
 	end
 
 	local function suggestAll(index: string, tokens: {AutocompleteTypes.Token})
@@ -195,7 +218,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		for k in pairs(AutocompleteData[index].Branches) do
 			table.insert(allVariables, k)
 		end
-		suggestResponses({}, index, tokens)
+		suggest({}, index, tokens)
 	end
 
 	if AutocompleteUtil.tokenMatches(tokens[1], "space") then
@@ -295,7 +318,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				AutocompleteUtil.flipArray(allBranches)
 				if #allBranches > 0 then
 					local _, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(lineTokens)
-					suggestResponses(allBranches, treeEntryIndex, lineTokens)
+					suggest(allBranches, treeEntryIndex, lineTokens)
 				end
 			end
 		end
@@ -321,7 +344,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		-- Match Case 5: Normal line
 		if table.find(prefixes, tokens[1].value) then
 			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
-			suggestResponses(branches, treeEntryIndex, tokens)
+			suggest(branches, treeEntryIndex, tokens)
 		end
 	end
 	
