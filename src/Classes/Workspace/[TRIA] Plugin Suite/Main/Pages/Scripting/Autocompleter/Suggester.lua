@@ -157,7 +157,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			} or {},
 			textEdit = AutocompleteUtil.buildReplacement(
 				request.position, 
-				responseData.text .. ")",
+				responseData.text,
 				#responseData.beforeCursor,
 				#responseData.afterCursor,
 				responseData.alreadyTyped
