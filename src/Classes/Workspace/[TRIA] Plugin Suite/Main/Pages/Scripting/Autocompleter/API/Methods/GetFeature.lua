@@ -48,11 +48,12 @@ return {
 			},
 		}
 		
-		if params and #params < 1 then
+		if params then
 			return features[params[1]]
 		end
 		return nil
 	end,
+	MaxParams = 1,
 	Parameters = {"\"Skills\"", "\"Settings\""},
 	Documentation = {
 		value = "Allows you to get a specific Feature from the MapLib"
