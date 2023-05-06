@@ -202,7 +202,10 @@ end
 function Handler:RemoveCache(CacheName: string, CacheKey: table)
 	CacheKey = CacheKey or Handler.Caches[CacheName]
 	CacheName = CacheName or CacheKey.CacheName
-	assert(CacheKey, ErrorMessage)
+	
+	if not CacheKey then
+		return
+	end
 
 	local CacheFolder = CacheKey.CacheFolder
 	
