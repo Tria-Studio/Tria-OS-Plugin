@@ -475,6 +475,12 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 		if attribute == tag or attribute == secondary or attribute == TagData.dataTypes.objectTags[tag].ActionText then
 			return true
 		end
+
+		local objectTag = part:FindFirstChild(tag)
+		if objectTag and objectTag:IsA("ValueBase") then
+			return true
+		end
+
 		return false
 	end
 
