@@ -217,7 +217,7 @@ local mainFrame = New "Frame" {
 				local index = math.ceil((math.ceil(percent / increment) * increment) * #pages)
 
 				local pageNameToDisplay = {
-					ObjectTags = "Object & Event Tags",
+					ObjectTags = "Event & Item Tags",
 					DataVisualizer = "Debug View",
 					Settings = "Map Settings",
 					Scripting = "Scripting",

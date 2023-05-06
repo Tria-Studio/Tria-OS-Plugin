@@ -1,7 +1,7 @@
 return {
     ["ObjectTags"] = {
 		Setting = "ObjectTags",
-		Title = "Object & Event Tags Overview", 
+		Title = "Event & Item Tags Overview", 
 		Description = [[This page allows you to edit the object type of instances in your maps into any game object supported by TRIA.os. For example, set a part to be a wallrun, and edit its metadata, etc. and so much more!
 
 Get started with this by selecting parts/models inside the map, and clicking the desired tag you want to change it to. Selecting parts that already have it allows you to alter its metadata!

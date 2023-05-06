@@ -262,7 +262,7 @@ return {
         },
         Tooltip = {
             Header = "Map Addons View",
-            Text = "Because the selected map has map addons that support Object & Button Tags, those tags can be visualized below."
+            Text = "Because the selected map has map addons that support Event & Item Tags, those tags can be visualized below."
         }
     },
 }
