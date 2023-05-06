@@ -142,7 +142,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                 local itemData = data.Data
 
                 local buttonDropdown = SettingsUtil.DirectoryDropdown({
-                    Default = data.Name ~= "PathChild", 
+                    Default = data.Name == "Default", 
 					IsSecondary = true,
                     Display = itemName, 
                     LayoutOrder = data.Name == "Default" and 1 or data.Name == "Group" and 2 or 3,
