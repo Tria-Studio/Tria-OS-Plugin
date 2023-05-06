@@ -343,6 +343,32 @@ data.metadataTypes = {
         displayName = "Bubble Particle",
         default = "default",
     },
+
+    WallrunSync = {
+        _referenceName = "WallrunSync",
+        type = nil,
+        dataType = "button",
+        dataName = "Sync Visuals with Speed",
+        displayName = nil,
+
+        callback = function()
+            local Util = require(script.Parent.Parent.Parent.Util)
+            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
+
+            for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
+                if TagUtils:PartHasTag(part, "_WallRun") then
+                    local Beam = part:FindFirstChildOfClass("Beam")
+
+                    if Beam and Beam.TextureMode ~= Enum.TextureMode.Stretch then
+                        local speed = part:GetAttribute("Speed")
+                        local length = Beam.TextureLength
+                        
+                        Beam.TextureSpeed = -(length/speed)^-1
+                    end
+                end
+            end
+        end
+    }
 }
 
 data.dataTypes = {
@@ -535,6 +561,10 @@ Metadata:
                     data = data.metadataTypes.Momentum,
                     location = 2,
                     isFullSize = false,
+                }, {
+                    data = data.metadataTypes.WallrunSync,
+                    location = 3,
+                    isFullSize = true,
                 },
             },
             ApplyMethod = {

@@ -196,7 +196,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         end),
                                         Size = UDim2.new(metadataType.isFullSize and 1 or 0.5, 0, 0, 22),
                                         Position = UDim2.new(metadataType.location % 2 == 1 and 0 or 0.5, 0, 0, (math.ceil(metadataType.location / 2) - 1) * 22),
-                                        Text = metadataType.data.displayName .. ":",
+                                        Text = metadataType.data.displayName and metadataType.data.displayName .. ":",
                                         TextColor3 = Theme.MainText.Default,
                                         Font = Enum.Font.SourceSansSemibold,
                                         TextSize = 15,
@@ -228,7 +228,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                     UpdateValue()
                                                 end)
 
-                                                local textSize = TextService:GetTextSize(metadataType.data.displayName, 15, Enum.Font.SourceSansSemibold, frameSize:get())
+                                                local textSize = TextService:GetTextSize(metadataType.data.displayName or "", 15, Enum.Font.SourceSansSemibold, frameSize:get())
                                                 local textXBounds = textSize and textSize.X + 8 or 0
                                                 local types = {}
 
@@ -322,6 +322,23 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                             end
                                                         }
                                                     }, dataValue)
+                                                end
+
+                                                function types.button(): Instance
+                                                    return New "TextButton" {
+                                                        Size = UDim2.new(1, 3, 1, -6),
+                                                        Position = UDim2.fromOffset(-6, 2),
+                                                        BackgroundColor3 = Theme.Button.Pressed,
+                                                        BorderColor3 = Theme.Border.Default,
+                                                        BorderSizePixel = 3,
+                                                        AutoButtonColor = true,
+                                                        Text = metadataType.data.dataName,
+                                                        TextColor3 = Theme.MainText.Default,
+                                                        Font = Enum.Font.SourceSansSemibold,
+                                                        TextSize = 15,
+
+                                                        [OnEvent "Activated"] = metadataType.data.callback
+                                                    }
                                                 end
 
                                                 local value = types[metadataType.data.dataType]()

@@ -268,7 +268,7 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
 			or string.sub(part.Name, #mainData._nameStub + 1)
 	end
 
-	local value, doesNotExist = types[data.type]()
+	local value, doesNotExist = data.type and types[data.type]()
 	return value, doesNotExist
 end
 
