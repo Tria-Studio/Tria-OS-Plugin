@@ -234,7 +234,7 @@ end)                ]], line + 1)
         }, {
             Name = "Mesh & Texture Kit",
             Creator = "SwatCombat11 & fxrezful",
-            Icon = "rbxassetid://13369913947",
+            Icon = "rbxassetid://13369979422",
             LayoutOrder = 5,
             Tooltip = {
                 Header = "Mesh & Textures Kit",
@@ -250,6 +250,7 @@ end)                ]], line + 1)
                 for _, part in pairs(model:GetChildren()) do
                     part.Parent = newFolder
                 end
+                newFolder.Name = "[INSERTED] - Mesh & Textures Kit"
                 newFolder.Parent = workspace
 
                 model:Destroy()
