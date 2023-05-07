@@ -247,7 +247,7 @@ end)                ]], line + 1)
                 positionModel(model)
                 local newFolder = Instance.new("Folder")
 
-                for _, part in pairs(model:GetChildren) do
+                for _, part in pairs(model:GetChildren()) do
                     part.Parent = newFolder
                 end
                 newFolder.Parent = workspace
