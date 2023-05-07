@@ -70,7 +70,7 @@ return {
             LayoutOrder = 1,
             Tooltip = {
                 Header = "TUNE",
-                Tooltip = "tune tooltip"
+                Tooltip = "Admin panel designed for TRIA.os to make testing maps as simple as possible. \n\nNow with the abillity to implement it directly into maps and automatically fire commands, Tune can make map testing a piece of cake!"
             },
     
             InsertFunction = function()
@@ -230,6 +230,26 @@ end)                ]], line + 1)
                 demo.Parent = currentMap.Special.Waterjets
 
                 Util.debugWarn("Successfully inserted Waterjets!")
+            end
+        }, {
+            Name = "Mesh & Texture Kit",
+            Creator = "SwatCombat11 & fxrezful",
+            Icon = "rbxassetid://12581662208",
+            LayoutOrder = 5,
+            Tooltip = {
+                Header = "Mesh & Textures Kit",
+                Tooltip = "Community made models and textures for use in maps!"
+            },
+    
+            InsertFunction = function()
+                ChangeHistoryService:SetWaypoint("Inserting mesh kit")
+                local model = insertModel("ModelKit", nil)
+                positionModel(model)
+                model.JumpMeasurement.Parent = workspace
+                model.FallMeasurement.Parent = workspace
+                model:Destroy()
+                Util.debugWarn("Successfully inserted Mesh & Textures Kit addon!")
+                ChangeHistoryService:SetWaypoint("Inserted mesh kit")
             end
         },
     },
