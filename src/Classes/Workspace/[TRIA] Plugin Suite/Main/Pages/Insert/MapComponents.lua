@@ -65,7 +65,7 @@ return {
     Addons = {
         {
             Name = "Tune",
-            Creator = "@Ethan76167",
+            Creator = "Ethan76167",
             Icon = "rbxassetid://12570661206",
             LayoutOrder = 1,
             Tooltip = {
@@ -113,7 +113,7 @@ end)                ]], line + 1)
             end
         }, {
             Name = "Jump Measurement",
-            Creator = "@TechnocraticAviation",
+            Creator = "TechnocraticAviation",
             Icon = "rbxassetid://12581662208",
             LayoutOrder = 3,
             Tooltip = {
@@ -139,7 +139,7 @@ end)                ]], line + 1)
             end
         }, {
             Name = "",
-            Creator = "@grif_0",
+            Creator = "not_grif",
             Icon = "rbxassetid://12581932576",
             LayoutOrder = 2,
             Tooltip = {
@@ -192,7 +192,7 @@ end)                ]], line + 1)
             end
         },  {
             Name = "",
-            Creator = "@grif_0 + Kris",
+            Creator = "not_grif + Kris",
             Icon = "rbxassetid://12710132659",
             LayoutOrder = 2,
             Tooltip = {
