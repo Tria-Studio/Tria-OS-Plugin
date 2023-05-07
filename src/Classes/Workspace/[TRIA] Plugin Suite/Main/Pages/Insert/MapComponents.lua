@@ -234,7 +234,7 @@ end)                ]], line + 1)
         }, {
             Name = "Mesh & Texture Kit",
             Creator = "SwatCombat11 & fxrezful",
-            Icon = "rbxassetid://12581662208",
+            Icon = "rbxassetid://13369913947",
             LayoutOrder = 5,
             Tooltip = {
                 Header = "Mesh & Textures Kit",
