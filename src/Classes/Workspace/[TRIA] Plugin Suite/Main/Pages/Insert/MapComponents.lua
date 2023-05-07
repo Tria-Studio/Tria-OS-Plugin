@@ -245,8 +245,13 @@ end)                ]], line + 1)
                 ChangeHistoryService:SetWaypoint("Inserting mesh kit")
                 local model = insertModel("ModelKit", nil)
                 positionModel(model)
-                model.JumpMeasurement.Parent = workspace
-                model.FallMeasurement.Parent = workspace
+                local newFolder = Instance.new("Folder")
+
+                for _, part in pairs(model:GetChildren) do
+                    part.Parent = newFolder
+                end
+                newFolder.Parent = workspace
+
                 model:Destroy()
                 Util.debugWarn("Successfully inserted Mesh & Textures Kit addon!")
                 ChangeHistoryService:SetWaypoint("Inserted mesh kit")
