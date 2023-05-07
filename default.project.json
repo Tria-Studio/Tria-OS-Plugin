@@ -9,8 +9,7 @@
       "$path": "src/Classes/Workspace",
       "$ignoreUnknownInstances": true,
       "$properties": {
-        "AllowThirdPartySales": true,
-        "CollisionGroups": "Default^0^-1\\Characters^1^-3"
+        "AllowThirdPartySales": true
       }
     }
   }
