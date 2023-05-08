@@ -111,6 +111,13 @@ local tagsWithNumbers = {
 	"_Sound",
 	"_Waterjet",
 }
+local tagsBypassParent = {
+	"_Kill",
+	"_WallRun",
+	"_WallJump",
+	"_SpeedBooster",
+	"_JumpBooster",
+}
 
 local defaultMetadataTypes = {
 	number = 0,
@@ -326,7 +333,9 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 				verifyFolder()
 			end
 			part:SetAttribute("_action", nil)
-			part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
+			if not table.find(tagsBypassParent, oldTag) then
+				part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
+			end
 		end
 
 		function methods.Name()
@@ -334,7 +343,9 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 				verifyFolder()
 			end
 			part.Name = part.ClassName
-			part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
+			if not table.find(tagsBypassParent, oldTag) then
+				part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
+			end
 		end
 
 		function methods.DetailParent()
@@ -351,7 +362,9 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 					child.Parent = nil
 				end
 			end
-			part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
+			if not table.find(tagsBypassParent, oldTag) then
+				part.Parent = if isOptimized and #otherTags == 0 then currentMap.Geometry else part.Parent
+			end
 		end
 
 		local tagData = TagData.dataTypes.buttonTags[oldTag]
@@ -366,7 +379,8 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			methods[method]()
 		end
 	else --// Assign new tag
-		local newParent = if isOptimized
+		local newParent = if table.find(tagsBypassParent, newTag) then part.Parent 
+			elseif isOptimized
 				and table.find(tagTypes.ButtonTags, newTag)
 				and isOptimized:FindFirstChild("Button")
 			then isOptimized.Button
