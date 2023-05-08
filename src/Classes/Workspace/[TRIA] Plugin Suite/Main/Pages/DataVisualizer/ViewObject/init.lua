@@ -161,7 +161,7 @@ function ViewObject:Enable()
 					end
                 end
             end
-            task.wait(((5 / (math.max(12, studioQuality) / 21)) * (1 + (Util._DebugView.activeDebugViews:get() / 8)) + ((#Players:GetPlayers() == 1 and 10 or 0))))
+            task.wait(((5 / (math.max(12, studioQuality) / 21)) * (0.5 + (Util._DebugView.activeDebugViews:get() / 12)) + ((#Players:GetPlayers() >= 1 and 10 or 0))))
         end
     end)
 end

@@ -120,6 +120,7 @@ function ObjectType:ClearAppearance(part: Instance?)
         for _, index in pairs(self.Objects[part].MaidIndex) do
             self._Maid[index] = nil
         end
+        self.Objects[part] = nil
     else
         self.Visible = false
         self._Maid:Destroy()
