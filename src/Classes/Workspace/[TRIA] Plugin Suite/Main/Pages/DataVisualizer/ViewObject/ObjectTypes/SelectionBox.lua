@@ -53,18 +53,18 @@ function ObjectType:SetAppearance(part)
         local references = {}
         local function ProcessPart(partToProcess)
             local index
-                local selectionBox = GetSelectionBox(partToProcess)
+            local selectionBox = GetSelectionBox(partToProcess)
 
-                table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(selectionBox))
-                table.insert(self.Objects[part].SelectionBox, selectionBox)
-                index = self._Maid:GiveTask(partToProcess.AncestryChanged:Connect(function()
-                    if not partToProcess:IsDescendantOf(part) then
-                        self._Maid[index] = nil
-                        selectionBox:Destroy()
-                    end
-                end))
-                table.insert(references, partToProcess)
-                table.insert(self.Objects[part].MaidIndex, index)
+            table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(selectionBox))
+            table.insert(self.Objects[part].SelectionBox, selectionBox)
+            index = self._Maid:GiveTask(partToProcess.AncestryChanged:Connect(function()
+                if not partToProcess:IsDescendantOf(part) then
+                    self._Maid[index] = nil
+                    selectionBox:Destroy()
+                end
+            end))
+            table.insert(references, partToProcess)
+            table.insert(self.Objects[part].MaidIndex, index)
         end
         for _, instance in pairs(part:GetDescendants()) do
             if instance:IsA("BasePart") then
@@ -89,6 +89,12 @@ function ObjectType:SetAppearance(part)
         end)
     elseif part:IsA("BasePart") then
         local selectionBox = GetSelectionBox(part)
+
+        table.insert(self.Objects[part].MaidIndex, self._Maid:GiveTask(part.AncestryChanged:Connect(function()
+            if not part:IsDescendantOf(Util.mapModel:get()) then
+                self:ClearAppearance(part)
+            end
+        end)))
         table.insert(self.Objects[part].SelectionBox, selectionBox)
         self._Maid:GiveTask(selectionBox)
     end
