@@ -5,7 +5,7 @@ local possibleBranches = {
 			MaxParams = 1,
 			Parameters = {"true", "false"},
 			Documentation = {
-				value = "Toggles sliding"
+				value = "Toggles the sliding skill mid round."
 			},
 			CodeSample = [[
 	MapLib:GetFeature("Skills"):ToggleSliding(true)	
@@ -19,7 +19,7 @@ local possibleBranches = {
 			Parameters = {},
 			MaxParams = 0,
 			Documentation = {
-				value = "Retrieves a setting"
+				value = "Retrieves any of the players ingame settings. Can be useful to try to tone down scripted effects with the players ingame Detail setting."
 			},
 			CodeSample = [[
 	MapLib:GetFeature("Settings"):GetSetting("FOV")	
