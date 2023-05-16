@@ -1,5 +1,3 @@
-local Lighting = game:GetService("Lighting")
-
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
@@ -7,28 +5,19 @@ local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 
-local MapSelect = require(Package.MapSelect)
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
 
 local New = Fusion.New
 local Children = Fusion.Children
-local Computed = Fusion.Computed
-local Spring = Fusion.Spring
-local Hydrate = Fusion.Hydrate
 local ForValues = Fusion.ForValues
 local ForPairs = Fusion.ForPairs
-local OnChange = Fusion.OnChange
-local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
-local Out = Fusion.Out
 
 local frame = {}
 
 local SettingData = require(script:WaitForChild("SettingData"))
 local SettingsUtil = require(script:WaitForChild("SettingsUtil"))
-
-local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 
 local directories = SettingsUtil.Directories
 for directory, data in pairs(directories) do

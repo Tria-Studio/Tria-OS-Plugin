@@ -1,7 +1,7 @@
 local ContentProvider = game:GetService("ContentProvider")
-local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local RunService = game:GetService("RunService")
 
-if not plugin then
+if RunService:IsRunning() then
 	return
 end
 
