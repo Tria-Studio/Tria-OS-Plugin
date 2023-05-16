@@ -1,4 +1,5 @@
 -- Created by Taveple 11/12/2022
+-- Modified for use in TRIA.os plugin
 -- Updated 08/04/2023
 
 local HttpService = game:GetService("HttpService")
@@ -226,6 +227,5 @@ function Handler:CleanupAllCaches()
 		self:RemoveCache(CacheName, Key)
 	end
 end
-
 
 return Handler

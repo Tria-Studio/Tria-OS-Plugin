@@ -1,13 +1,5 @@
 local data = {}
 
---[[
-    TYPES: 
-        - Attribute
-        - ConfigAttribute
-        - ChildInstanceValue
-        - EndOfName
-]]
-
 data.metadataTypes = {
     Button = {
         _referenceName = "Button",
