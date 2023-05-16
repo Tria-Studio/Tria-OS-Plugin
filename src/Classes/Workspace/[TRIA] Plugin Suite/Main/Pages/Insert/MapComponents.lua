@@ -111,33 +111,7 @@ end)                ]], line + 1)
                 end
                 ChangeHistoryService:SetWaypoint("Inserted TUNE")
             end
-        }, {
-            Name = "Jump Measurement",
-            Creator = "TechnocraticAviation",
-            Icon = "rbxassetid://12581662208",
-            LayoutOrder = 3,
-            Tooltip = {
-                Header = "Jump & Fall Measurement Tools",
-                Tooltip = [[Allows for precise measurement of jumps for your maps. Each of the 5 different lines tracks a different part of the characters body within a jump.
-                
-<font color = "rgb(0,200,0)">Green line</font> - represents the bottom of the player's legs
-<font color = "rgb(200,200,0)">Yellow line</font> - represents the bottom of the player's legs, but indicates the highest jump that could be made
-<font color = "rgb(70,70,255)">Blue line</font> - represents the center of the torso
-<font color = "rgb(225,0,0)">Red line</font> - represents the top of the player's head
-<font color = "rgb(165,0,0)">Deep red line</font> - represents the top of the player's head, but indicates the highest jump that could be made ]]
-            },
-    
-            InsertFunction = function()
-                ChangeHistoryService:SetWaypoint("Inserting jump measurement")
-                local model = insertModel("JumpMeasurement", nil)
-                positionModel(model)
-                model.JumpMeasurement.Parent = workspace
-                model.FallMeasurement.Parent = workspace
-                model:Destroy()
-                Util.debugWarn("Successfully inserted Jump Measurement Tools addon!")
-                ChangeHistoryService:SetWaypoint("Inserted jump measurement")
-            end
-        }, {
+        },  {
             Name = "",
             Creator = "not_grif",
             Icon = "rbxassetid://12581932576",
