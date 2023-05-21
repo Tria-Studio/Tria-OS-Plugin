@@ -158,7 +158,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			} or {},
 			textEdit = AutocompleteUtil.buildReplacement(
 				request.position, 
-				responseData.text .. (isInParameters and ")" or ""),
+				responseData.text .. (isInParameters and "):" or ""),
 				#responseData.beforeCursor,
 				#responseData.afterCursor,
 				responseData.alreadyTyped
@@ -233,7 +233,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 		local isInParameters = #branches > 0 and fullLine:match(PARAM_MATCH) and not (lastToken == ":" or lastToken == ".")
 
-		local open = beforeCursor:reverse():find("(", 1, true) -- i hate this fix but it seems to work -grif
+		local open = beforeCursor:reverse():find("(", 2, true) -- i hate this fix but it seems to work -grif
 		local close = beforeCursor:reverse():find(")", 1, true)
 		if open and close and open > close then
 			isInParameters = false
@@ -246,7 +246,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 			updateParameters(branchName)
 
-			if current and current.Parameters and not (#branchParams[branchName] > current.MaxParams) then
+			if current and current.Parameters and branchParams[branchName] and not (#branchParams[branchName] > current.MaxParams) then
 				for _, param in ipairs(current.Parameters) do
 					addResponse({
 						label = param,
