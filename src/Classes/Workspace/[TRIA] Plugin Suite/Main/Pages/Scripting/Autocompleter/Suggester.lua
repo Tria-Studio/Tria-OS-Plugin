@@ -111,6 +111,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		for arg in funcArgs:gmatch(ARGS_MATCH) do
 			table.insert(newArgs, arg)
 		end
+
 		AutocompleteData[index].Branches[funcName] = {
 			AutocompleteArgs = newArgs,
 			Name = funcName,
@@ -143,7 +144,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		end
 	end
 
-	local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string)
+	local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string, isInParameters: boolean?)
 		local suggestionData = responseData.data
 		table.insert(response.items, {
 			label = responseData.label,
@@ -157,7 +158,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			} or {},
 			textEdit = AutocompleteUtil.buildReplacement(
 				request.position, 
-				responseData.text,
+				responseData.text .. (isInParameters and ")" or ""),
 				#responseData.beforeCursor,
 				#responseData.afterCursor,
 				responseData.alreadyTyped
@@ -207,6 +208,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			elseif typeof(current.Branches) == "function" then
 				updateParameters(branchName)
 				local suggestions = current.Branches(branchParams[branchName])
+				local isIndexer = lastToken == ":" or lastToken == "."
 
 				if suggestions then
 					for name, data in pairs(suggestions) do
@@ -231,9 +233,16 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 		local isInParameters = #branches > 0 and fullLine:match(PARAM_MATCH) and not (lastToken == ":" or lastToken == ".")
 
+		local open = beforeCursor:reverse():find("(", 1, true) -- i hate this fix but it seems to work -grif
+		local close = beforeCursor:reverse():find(")", 1, true)
+		if open and close and open > close then
+			isInParameters = false
+		end
+
 		if isInParameters then
 			local matches = {}
 			local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
+			local isIndexer = lastToken == ":" or lastToken == "."
 
 			updateParameters(branchName)
 
@@ -247,7 +256,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 						beforeCursor = beforeCursor,
 						afterCursor = afterCursor,
 						alreadyTyped = isIndexer and 0 or #lastToken
-					}, nil)
+					}, nil, true)
 				end
 			end
 		else
