@@ -146,6 +146,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 	local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string, isInParameters: boolean?)
 		local suggestionData = responseData.data
+
 		table.insert(response.items, {
 			label = responseData.label,
 			kind = responseData.kind,
@@ -156,6 +157,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				Enum.CompletionItemTag.AddParens, 
 				Enum.CompletionItemTag.PutCursorInParens
 			} or {},
+			detail = suggestionData.Arguments,
 			textEdit = AutocompleteUtil.buildReplacement(
 				request.position, 
 				responseData.text .. (isInParameters and ")" or ""),

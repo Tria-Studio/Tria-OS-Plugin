@@ -2,6 +2,7 @@ return {
 	AutocompleteArgs = {"object", "movement", "duration"},
 	Name = "Move",
 	Branches = nil,
+	Arguments = "Move(object: PVInstance, direction: Vector3, time: number): ()",
 	Documentation = {
 		value = "Moves an object in world space, not taking the parts orientation into account."
 	},

@@ -1,6 +1,7 @@
 return {
 	AutocompleteArgs = {"buttonNumber"},
 	Name = "GetButtonEvent",
+	Arguments = "GetButtonEvent(buttonNumber: number): RBXScriptSignal",
 	Documentation = {
 		value = "Get's a specific buttons events which allow you to detect when it is activated"
 	},
@@ -18,7 +19,7 @@ print("Button 2 was activated!")  ]],
 			AutocompleteArgs = {"function()\n\nend"},
 			Name = "Connect",
 			Branches = nil,
-			
+			Arguments = "Connect(self: RBXScriptSignal, func: (...any) -> ()): RBXScriptConnection",
 			Documentation = {
 				value = "Allows you to connect a custom function for when a button is activated"
 			},
@@ -37,7 +38,7 @@ end)  ]],
 			AutocompleteArgs = {""},
 			Name = "Wait",
 			Branches = nil,
-			
+			Arguments = "Wait(_: RBXScriptSignal): Instance",
 			Documentation = {
 				value = "Yields/halts the current thread until this button is activated"
 			},

@@ -4,6 +4,7 @@ local possibleBranches = {
 			Name = "ToggleSliding",
 			MaxParams = 1,
 			Parameters = {"true", "false"},
+			Arguments = "ToggleSliding(isActive: boolean): ()",
 			Documentation = {
 				value = "Toggles the sliding skill mid round."
 			},
@@ -18,6 +19,7 @@ local possibleBranches = {
 			Name = "GetSetting",
 			Parameters = {},
 			MaxParams = 0,
+			Arguments = "GetSetting(settingName: string): any",
 			Documentation = {
 				value = "Retrieves any of the players ingame settings. Can be useful to try to tone down scripted effects with the players ingame Detail setting."
 			},
@@ -55,6 +57,7 @@ return {
 		end
 		return nil
 	end,
+	Arguments = "GetFeature(featureName: string): Feature",
 	MaxParams = 1,
 	Parameters = {"\"Skills\"", "\"Settings\""},
 	Documentation = {

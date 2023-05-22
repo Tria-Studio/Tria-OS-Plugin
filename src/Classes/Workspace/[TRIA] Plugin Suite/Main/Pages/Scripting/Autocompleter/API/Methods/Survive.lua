@@ -2,6 +2,7 @@ return {
 	AutocompleteArgs = {"player"},
 	Name = "Survive",
 	Branches = nil,
+	Arguments = "Survive(player: Player): ()",
 	Documentation = {
 		value = "Calling this function will make the player survive without needing to touch the ExitRegion."
 	},

@@ -2,6 +2,7 @@ return {
 	AutocompleteArgs = {""},
 	Name = "GetPlayers",
 	Branches = nil,
+	Arguments = "GetPlayers(self: MapLib): {Player}",
 	Documentation = {
 		value = "Returns an array with all current players in the map."
 	},
