@@ -3,7 +3,6 @@ local possibleBranches = {
 		["ToggleSliding"] = {
 			Name = "ToggleSliding",
 			MaxParams = 1,
-			Parameters = {"true", "false"},
 			Arguments = "ToggleSliding(isActive: boolean): ()",
 			Documentation = {
 				value = "Toggles the sliding skill mid round."
@@ -17,7 +16,6 @@ local possibleBranches = {
 	["Settings"] = {
 		["GetSetting"] = {
 			Name = "GetSetting",
-			Parameters = {},
 			MaxParams = 0,
 			Arguments = "GetSetting(settingName: string): any",
 			Documentation = {
@@ -38,7 +36,6 @@ for _, v in pairs(possibleBranches) do
 end
 
 return {
-	AutocompleteArgs = {"featureName"},
 	Name = "GetFeature",
 	PossibleBranches = possibleBranchArray,
 	Branches = function(params)

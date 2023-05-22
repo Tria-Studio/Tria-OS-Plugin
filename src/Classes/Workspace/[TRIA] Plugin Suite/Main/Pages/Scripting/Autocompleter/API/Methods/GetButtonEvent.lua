@@ -1,5 +1,4 @@
 return {
-	AutocompleteArgs = {"buttonNumber"},
 	Name = "GetButtonEvent",
 	Arguments = "GetButtonEvent(buttonNumber: number): RBXScriptSignal",
 	Documentation = {
@@ -16,7 +15,6 @@ print("Button 2 was activated!")  ]],
 	
 	Branches = {
 		["Connect"] = {
-			AutocompleteArgs = {"function()\n\nend"},
 			Name = "Connect",
 			Branches = nil,
 			Arguments = "Connect(self: RBXScriptSignal, func: (...any) -> ()): RBXScriptConnection",
@@ -35,7 +33,6 @@ MapLib:GetButtonEvent(1):Connect(function(player)
 end)  ]],
 		},
 		["Wait"] = {
-			AutocompleteArgs = {""},
 			Name = "Wait",
 			Branches = nil,
 			Arguments = "Wait(_: RBXScriptSignal): Instance",

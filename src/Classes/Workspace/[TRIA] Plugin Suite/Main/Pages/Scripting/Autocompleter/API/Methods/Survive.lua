@@ -1,5 +1,4 @@
 return {
-	AutocompleteArgs = {"player"},
 	Name = "Survive",
 	Branches = nil,
 	Arguments = "Survive(player: Player): ()",

@@ -1,5 +1,4 @@
 return {
-	AutocompleteArgs = {"musicId", "volume", "startTick"},
 	Name = "ChangeMusic",
 	Arguments = "ChangeMusic(musicId: number, volume: number, startTick: number): ()",
 	Branches = nil,

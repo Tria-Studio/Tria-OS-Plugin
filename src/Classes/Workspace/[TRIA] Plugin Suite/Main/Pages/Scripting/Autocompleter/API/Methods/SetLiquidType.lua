@@ -1,5 +1,4 @@
 return {
-	AutocompleteArgs = {"liquid", "liquidType"},
 	Name = "SetLiquidType",
 	Branches = nil,
 	Arguments = "SetLiquidType(liquid: Part | MeshPart, liquidType: string): ()",

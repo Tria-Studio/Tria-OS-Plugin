@@ -1,5 +1,4 @@
 return {
-	AutocompleteArgs = {"text", "color", "duration"},
 	Name = "Alert",
 	Arguments = "Alert(text: string, color: Color3, duration: number): ()",
 	Branches = nil,

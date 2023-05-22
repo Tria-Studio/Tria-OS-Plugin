@@ -1,5 +1,4 @@
 return {
-	AutocompleteArgs = {"object", "movement", "duration"},
 	Name = "Move",
 	Branches = nil,
 	Arguments = "Move(object: PVInstance, direction: Vector3, time: number): ()",

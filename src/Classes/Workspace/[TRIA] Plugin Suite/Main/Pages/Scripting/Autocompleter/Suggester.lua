@@ -144,10 +144,11 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		end
 	end
 
-	local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string, isInParameters: boolean?)
+	local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string, isInParameters: boolean?, isInFunction: boolean?)
 		local suggestionData = responseData.data
 
-		table.insert(response.items, {
+		
+		local newResponse = {
 			label = responseData.label,
 			kind = responseData.kind,
 			documentation = suggestionData.Documentation,
@@ -160,12 +161,14 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			detail = suggestionData.Arguments,
 			textEdit = AutocompleteUtil.buildReplacement(
 				request.position, 
-				responseData.text .. (isInParameters and ")" or ""),
+				isInFunction and "" or responseData.text .. (isInParameters and ")" or ""),
 				#responseData.beforeCursor,
 				#responseData.afterCursor,
-				responseData.alreadyTyped
+				if isInFunction then 0 else responseData.alreadyTyped
 			)
-		})
+		}
+
+		table.insert(response.items, newResponse)
 	end
 
 	local function updateParameters(branchName: string)
@@ -188,7 +191,10 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 	
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
+		print"suggesiting"
+
 		local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
+
 		if current and current.Branches and not reachedEnd then
 			local lastToken = lineTokens[#lineTokens].value
 			local isIndexer = lastToken == ":" or lastToken == "."
@@ -224,6 +230,32 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 							alreadyTyped = isIndexer and 0 or #lastToken
 						}, index)
 					end
+				end
+			end
+		else
+			local start = beforeCursor:find(AUTOCOMPLETE_IDEN) -- there is probably a way that kris and his nerdy knowledge of string patterns can do this in like one or two lines but im not kris so this is the solution your getting whether you like it or not
+			if start then
+				local open, close = 0, 0
+				for i = 1, #beforeCursor - start - 1 do
+					if beforeCursor:sub(start + i, start + i) == ")" then
+						close += 1
+					elseif beforeCursor:sub(start + i, start + i) == "(" then
+						open += 1
+					end
+				end
+				if open > close then -- inside a function call
+					local lastToken = lineTokens[#lineTokens].value
+					local isIndexer = lastToken == ":" or lastToken == "."
+
+					addResponse({
+						label = beforeCursor,
+						kind = Enum.CompletionItemKind.Function,
+						data = current,
+						text = current.Name,
+						beforeCursor = beforeCursor,
+						afterCursor = afterCursor,
+						alreadyTyped = isIndexer and 0 or #lastToken
+					}, index, false, true)
 				end
 			end
 		end
@@ -394,6 +426,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			end
 		end
 	else 
+		print"case3"
 		-- Match Case 5: Normal line
 		if table.find(prefixes, tokens[1].value) then
 			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
@@ -406,7 +439,7 @@ end
 
 local responseTimes = {}
 function Suggester:registerCallback()
-	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 0, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
+	ScriptEditorService:RegisterAutocompleteCallback(CALLBACK_NAME, 1000, function(request: AutocompleteTypes.Request, response: AutocompleteTypes.Response): AutocompleteTypes.Response
 		local start = os.clock()
 		local newResponse = handleCallback(request, response)
 
@@ -421,3 +454,8 @@ function Suggester:disableCallback()
 end
 
 return Suggester
+
+
+--[[
+
+]]
