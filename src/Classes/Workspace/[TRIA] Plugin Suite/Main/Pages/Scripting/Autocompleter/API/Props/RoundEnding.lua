@@ -10,6 +10,7 @@ return {
 		["Connect"] = {
 			Name = "Connect",
 			Branches = nil,
+			Kind = Enum.CompletionItemKind.Method,
 			Arguments = "Connect(self: RBXScriptSignal, func: (...any) -> ()): RBXScriptConnection",
 			Documentation = {
 				value = "Allows you to connect a custom function for when a button is activated"
@@ -23,6 +24,7 @@ end)  ]],
 		["Wait"] = {
 			Name = "Wait",
 			Branches = nil,
+			Kind = Enum.CompletionItemKind.Method,
 			Arguments = "Wait(_: RBXScriptSignal): Instance",
 			Documentation = {
 				value = "Yields/halts the current thread until this button is activated"

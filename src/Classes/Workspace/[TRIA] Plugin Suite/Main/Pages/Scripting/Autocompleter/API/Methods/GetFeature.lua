@@ -54,7 +54,7 @@ return {
 		end
 		return nil
 	end,
-	Arguments = "GetFeature(featureName: string): Feature",
+	Arguments = "GetFeature(featureName: string): MapLibFeature",
 	MaxParams = 1,
 	Parameters = {"\"Skills\"", "\"Settings\""},
 	ParameterDescriptions = {
