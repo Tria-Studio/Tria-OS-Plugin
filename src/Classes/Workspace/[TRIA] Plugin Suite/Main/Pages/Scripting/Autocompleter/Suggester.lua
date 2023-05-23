@@ -202,7 +202,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 					if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 						addResponse({
 							label = name,
-							kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
+							kind = data.Kind or Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
 							data = data,
 							text = name,
 							beforeCursor = beforeCursor,
@@ -220,7 +220,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 					for name, data in pairs(suggestions) do
 						addResponse({
 							label = name,
-							kind = Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
+							kind = data.Kind or Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
 							data = data,
 							text = name,
 							beforeCursor = beforeCursor,
@@ -267,7 +267,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 
 	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
-		print"suggest"
 		local lastToken = tokenList[#tokenList].value
 		local fullLine = line .. afterCursor
 
@@ -295,7 +294,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				for _, param in ipairs(current.Parameters) do
 					addResponse({
 						label = param,
-						kind = Enum.CompletionItemKind.Property,
+						kind = Enum.CompletionItemKind.Keyword,
 						data = {
 							Documentation = {
 								value = current.ParameterDescriptions[param]
