@@ -57,12 +57,15 @@ return {
 	Arguments = "GetFeature(featureName: string): Feature",
 	MaxParams = 1,
 	Parameters = {"\"Skills\"", "\"Settings\""},
-	Documentation = {
-		value = "Allows you to get a specific Feature from the MapLib"
+	ParameterDescriptions = {
+		["\"Skills\""] = "Interact with the skills (sliding, etc.) that players use during a round",
+		["\"Settings\""] = "Get local player settings (ex. level of detail)"
 	},
-	CodeSample = [[
-AVALIABLE_FEATURES = {
-	"Skills", -- Interact with the skills (sliding, etc.) that the map uses  
-	"Settings", -- Get local player settings (ex. level of detail)  
-}  ]],
+	Documentation = {
+		value = [[Allows you to get a specific Feature from the MapLib  
+		
+Avaliable Features:
+	"Skills", -- Interact with the skills (sliding, etc.) that players use during a round    
+	"Settings", -- Get local player settings (ex. level of detail)  ]]
+	},
 }

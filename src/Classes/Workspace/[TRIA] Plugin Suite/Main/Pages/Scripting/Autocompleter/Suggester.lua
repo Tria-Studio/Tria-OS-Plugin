@@ -296,7 +296,11 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 					addResponse({
 						label = param,
 						kind = Enum.CompletionItemKind.Property,
-						data = {},
+						data = {
+							Documentation = {
+								value = current.ParameterDescriptions[param]
+							},
+						},
 						text = param,
 						beforeCursor = beforeCursor,
 						afterCursor = afterCursor,
