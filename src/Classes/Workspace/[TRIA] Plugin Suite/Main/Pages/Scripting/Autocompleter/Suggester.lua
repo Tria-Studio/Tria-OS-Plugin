@@ -191,8 +191,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	end
 	
 	local function suggestResponses(branchList: {string}, index: string, lineTokens: {AutocompleteTypes.Token})
-		print"suggesiting"
-
 		local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[index], branchList)
 
 		if current and current.Branches and not reachedEnd then
@@ -232,36 +230,44 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 					end
 				end
 			end
-		else
-			local start = beforeCursor:find(AUTOCOMPLETE_IDEN) -- there is probably a way that kris and his nerdy knowledge of string patterns can do this in like one or two lines but im not kris so this is the solution your getting whether you like it or not
-			if start then
-				local open, close = 0, 0
-				for i = 1, #beforeCursor - start - 1 do
-					if beforeCursor:sub(start + i, start + i) == ")" then
-						close += 1
-					elseif beforeCursor:sub(start + i, start + i) == "(" then
-						open += 1
-					end
-				end
-				if open > close then -- inside a function call
-					local lastToken = lineTokens[#lineTokens].value
-					local isIndexer = lastToken == ":" or lastToken == "."
+		end
+	end
 
-					addResponse({
-						label = beforeCursor,
-						kind = Enum.CompletionItemKind.Function,
-						data = current,
-						text = current.Name,
-						beforeCursor = beforeCursor,
-						afterCursor = afterCursor,
-						alreadyTyped = isIndexer and 0 or #lastToken
-					}, index, false, true)
+	local function suggestArguments(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
+		local lastToken = tokenList[#tokenList].value
+		local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
+
+		local start = beforeCursor:find(AUTOCOMPLETE_IDEN) -- there is probably a way that kris and his nerdy knowledge of string patterns can do this in like one or two lines but im not kris so this is the solution your getting whether you like it or not
+		if start and not current.Parameters then
+			local open, close = 0, 0
+			for i = 1, #beforeCursor - start - 1 do
+				if beforeCursor:sub(start + i, start + i) == ")" then
+					close += 1
+				elseif beforeCursor:sub(start + i, start + i) == "(" then
+					open += 1
 				end
+			end
+
+			if open > close then -- inside a function call
+				local lastToken = tokenList[#tokenList].value
+				local isIndexer = lastToken == ":" or lastToken == "."
+
+				addResponse({
+					label = beforeCursor,
+					kind = Enum.CompletionItemKind.Function,
+					data = current,
+					text = current.Name,
+					beforeCursor = beforeCursor,
+					afterCursor = afterCursor,
+					alreadyTyped = isIndexer and 0 or #lastToken
+				}, entryIndex, false, true)
+				return true
 			end
 		end
 	end
 
 	local function suggest(branches: {string}, entryIndex: string, tokenList: {AutocompleteTypes.Token})
+		print"suggest"
 		local lastToken = tokenList[#tokenList].value
 		local fullLine = line .. afterCursor
 
@@ -272,11 +278,16 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		if open and close and open > close then
 			isInParameters = false
 		end
+		
+		local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
+		local isIndexer = lastToken == ":" or lastToken == "."
+
+		if suggestArguments(branches, entryIndex, tokenList) then
+			return response
+		end
 
 		if isInParameters then
 			local matches = {}
-			local reachedEnd, current, branchName = AutocompleteUtil.traverseBranchList(AutocompleteData[entryIndex], branches)
-			local isIndexer = lastToken == ":" or lastToken == "."
 
 			updateParameters(branchName)
 
@@ -317,6 +328,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		and not AutocompleteUtil.tokenMatches(tokens[2], ")") 
 		and AutocompleteUtil.tokenMatches(tokens[3], {":", "."}) 
 	then
+		print"case1"
 		do	
 			local tempLineData = {
 				line = "",
@@ -412,6 +424,16 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		or line:match(FUNCTION_CALL)
 		or line:match(END_FUNCTION_MATCH)
 	then 
+		print"case2"
+
+		if table.find(prefixes, tokens[1].value) then
+			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
+			print(branches, treeEntryIndex, tokens)
+			if suggestArguments(branches, treeEntryIndex, tokens) then
+				return response
+			end
+		end
+
 		-- Match Case 2: Property index
 		-- Match Case 3: Function call
 		-- Match Case 4: End with inline
