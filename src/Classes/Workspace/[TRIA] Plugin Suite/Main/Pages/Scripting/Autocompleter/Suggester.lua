@@ -430,7 +430,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 		if table.find(prefixes, tokens[1].value) then
 			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
-			print(branches, treeEntryIndex, tokens)
 			if suggestArguments(branches, treeEntryIndex, tokens) then
 				return response
 			end
