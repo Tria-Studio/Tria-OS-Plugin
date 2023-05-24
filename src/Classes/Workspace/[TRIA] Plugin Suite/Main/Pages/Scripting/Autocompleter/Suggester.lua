@@ -215,18 +215,20 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				updateParameters(branchName)
 				local suggestions = current.Branches(branchParams[branchName])
 				local isIndexer = lastToken == ":" or lastToken == "."
-
+				print(isIndexer, lastToken)
 				if suggestions then
 					for name, data in pairs(suggestions) do
-						addResponse({
-							label = name,
-							kind = data.Kind or Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
-							data = data,
-							text = name,
-							beforeCursor = beforeCursor,
-							afterCursor = afterCursor,
-							alreadyTyped = isIndexer and 0 or #lastToken
-						}, index)
+						if data.Type == "Method" and lastToken == ":" or lastToken == "." and data.Type ~= "Method" then
+							addResponse({
+								label = name,
+								kind = data.Kind or Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
+								data = data,
+								text = name,
+								beforeCursor = beforeCursor,
+								afterCursor = afterCursor,
+								alreadyTyped = isIndexer and 0 or #lastToken
+							}, index)
+						end
 					end
 				end
 			end
