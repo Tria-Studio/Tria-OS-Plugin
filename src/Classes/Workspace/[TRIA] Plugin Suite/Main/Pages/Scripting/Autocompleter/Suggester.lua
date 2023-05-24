@@ -299,8 +299,9 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 						kind = Enum.CompletionItemKind.Keyword,
 						data = {
 							Documentation = {
-								value = current.ParameterDescriptions[param]
+								value = current.ParameterDescriptions[param].Description or ""
 							},
+							Arguments = current.ParameterDescriptions[param].Detail,
 						},
 						text = param,
 						beforeCursor = beforeCursor,
