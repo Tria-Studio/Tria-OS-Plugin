@@ -215,7 +215,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 				updateParameters(branchName)
 				local suggestions = current.Branches(branchParams[branchName])
 				local isIndexer = lastToken == ":" or lastToken == "."
-				print(isIndexer, lastToken)
+
 				if suggestions then
 					for name, data in pairs(suggestions) do
 						if data.Type == "Method" and lastToken == ":" or lastToken == "." and data.Type ~= "Method" then
@@ -288,8 +288,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		end
 
 		if isInParameters then
-			local matches = {}
-
 			updateParameters(branchName)
 
 			if current and current.Parameters and branchParams[branchName] and not (#branchParams[branchName] > current.MaxParams) then
@@ -334,7 +332,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		and not AutocompleteUtil.tokenMatches(tokens[2], ")") 
 		and AutocompleteUtil.tokenMatches(tokens[3], {":", "."}) 
 	then
-		print"case1"
 		do	
 			local tempLineData = {
 				line = "",
@@ -430,7 +427,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 		or line:match(FUNCTION_CALL)
 		or line:match(END_FUNCTION_MATCH)
 	then 
-		print"case2"
 
 		if table.find(prefixes, tokens[1].value) then
 			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
@@ -454,7 +450,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			end
 		end
 	else 
-		print"case3"
 		-- Match Case 5: Normal line
 		if table.find(prefixes, tokens[1].value) then
 			local branches, treeEntryIndex = AutocompleteUtil.getBranchesFromTokenList(tokens)
