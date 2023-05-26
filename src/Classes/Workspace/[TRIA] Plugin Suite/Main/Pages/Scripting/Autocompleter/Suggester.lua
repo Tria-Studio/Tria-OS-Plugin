@@ -212,8 +212,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 					break
 				end
 			end
-
-			print(suggestions)
 			if suggestions and lastIdenToken then
 				for name, data in pairs(suggestions) do
 					if 
