@@ -197,8 +197,30 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			local lastToken = lineTokens[#lineTokens].value
 			local isIndexer = lastToken == ":" or lastToken == "."
 
+			local suggestions
 			if typeof(current.Branches) == "table" then
-				for name, data in pairs(current.Branches) do
+				suggestions = current.Branches
+			elseif typeof(current.Branches) == "function" then
+				updateParameters(branchName)
+				suggestions = current.Branches(branchParams[branchName])
+			end
+
+			local lastIdenToken = nil
+			for i = #lineTokens, 1, -1 do
+				if AutocompleteUtil.tokenMatches(lineTokens[i], {":", "."}) then
+					lastIdenToken = lineTokens[i].value
+					break
+				end
+			end
+			if suggestions and lastIdenToken then
+				for name, data in pairs(suggestions) do
+					if 
+						data.Type and 
+						((data.Type == "Method" and lastIdenToken ~= ":") or 
+						(data.Type ~= "Method" and lastIdenToken ~= ".")) 
+					then
+						continue
+					end
 					if isIndexer or (name:lower():sub(1, #lastToken) == lastToken:lower()) then
 						addResponse({
 							label = name,
@@ -209,26 +231,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 							afterCursor = afterCursor,
 							alreadyTyped = isIndexer and 0 or #lastToken
 						}, index)
-					end
-				end
-			elseif typeof(current.Branches) == "function" then
-				updateParameters(branchName)
-				local suggestions = current.Branches(branchParams[branchName])
-				local isIndexer = lastToken == ":" or lastToken == "."
-
-				if suggestions then
-					for name, data in pairs(suggestions) do
-						if data.Type == "Method" and lastToken == ":" or lastToken == "." and data.Type ~= "Method" then
-							addResponse({
-								label = name,
-								kind = data.Kind or Enum.CompletionItemKind[index == "Methods" and "Function" or "Property"],
-								data = data,
-								text = name,
-								beforeCursor = beforeCursor,
-								afterCursor = afterCursor,
-								alreadyTyped = isIndexer and 0 or #lastToken
-							}, index)
-						end
 					end
 				end
 			end
