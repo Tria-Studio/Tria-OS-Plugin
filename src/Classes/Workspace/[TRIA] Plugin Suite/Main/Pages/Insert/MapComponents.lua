@@ -86,7 +86,7 @@ return {
                 end
 
                 local variable, moduleId = mapScript.Source:match(TUNE_MATCH)
-                if variable:lower() == "tune" or (tonumber(moduleId) and tonumber(moduleId) == 9193619374) then
+                if variable and variable:lower() == "tune" or (tonumber(moduleId) and tonumber(moduleId) == 9193619374) then
                     Util:ShowMessage("Module already installed", "TUNE is already installed in your map!")
                     return
                 end
