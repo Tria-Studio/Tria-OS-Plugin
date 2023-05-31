@@ -390,12 +390,31 @@ function MapSelect:ResetSelection()
 end
 
 Observer(Util.hasSpecialFolder):onChange(function()
-    while Util.hasSpecialFolder:get() and Util.mapModel:get() and Util.mapModel:get().Special:FindFirstChild("Variant") do
-        if #Util.variantFolderChildren:get() ~= #Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren() then
-            Util.variantFolderChildren:set(Util.mapModel:get().Special:FindFirstChild("Variant"):GetChildren())
+    local active = true
+    local folder = Util.mapModel:get().Special
+
+    local function check()
+        active = true
+        while Util.hasSpecialFolder:get() and Util.mapModel:get() and Util.mapModel:get().Special:FindFirstChild("Variant") do
+            if #Util.variantFolderChildren:get() ~= #folder:FindFirstChild("Variant"):GetChildren() then
+                Util.variantFolderChildren:set(folder:FindFirstChild("Variant"):GetChildren())
+            end
+            task.wait(0.25)
         end
-        task.wait(0.25)
+        if not Util.mapModel:get() or not Util.mapModel:get():FindFirstChild("Special") or Util.mapModel:get():FindFirstChild("Special") and not Util.mapModel:get().Special:FindFirstChild("Variant") then
+            Util.variantFolderChildren:set({})
+        end
+        active = false
     end
+    
+    task.spawn(function()
+        while task.wait(1) do
+            if not active and folder:FindFirstChild("Variant") then
+                check()
+            end
+        end
+    end)
+    check()
 end)
 
 return MapSelect
