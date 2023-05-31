@@ -92,6 +92,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top),
 
+                    Components.Spacer(false, 10, 5, 0),
+
                     ForPairs(directories, function(dirKey: string, dirData: PublicTypes.Dictionary): (string, Instance)
                         local dataModule = SettingData[dirKey]
                         dirData.HeaderChildren = if dataModule.Dynamic then dataModule:getHeaderChildren() else dirData.HeaderChildren
