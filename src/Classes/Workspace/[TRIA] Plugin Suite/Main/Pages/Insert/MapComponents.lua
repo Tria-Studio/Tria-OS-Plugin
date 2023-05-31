@@ -408,7 +408,7 @@ end)
             InsertFunction = function()
                 local newParent = getInsertFolder("Fluid")
     
-                local highestGas = Util.getObjectCountWithNameMatch("_Gas")
+                local highestGas = Util.getObjectCountWithNameMatch("_Gas", nil, true)
                 local model = insertModel("_Gas0", newParent)
                 model.Name = "_Gas" .. (highestGas + 1)
                 positionModel(model)
