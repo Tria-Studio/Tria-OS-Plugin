@@ -390,6 +390,10 @@ function MapSelect:ResetSelection()
 end
 
 Observer(Util.hasSpecialFolder):onChange(function()
+    if not Util.mapModel:get() then
+        return
+    end
+
     local active = true
     local folder = Util.mapModel:get().Special
 
