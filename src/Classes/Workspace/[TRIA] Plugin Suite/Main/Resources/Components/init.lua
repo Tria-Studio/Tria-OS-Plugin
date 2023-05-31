@@ -561,6 +561,7 @@ function Components.SearchBox(data: PublicTypes.Dictionary): Instance
         BorderColor3 = Theme.InputFieldBorder.Default,
         BorderMode = Enum.BorderMode.Inset,
         BorderSizePixel = 2,
+        TextTruncate = Enum.TextTruncate.AtEnd,
 
         [Out "Text"] = data.State,
 

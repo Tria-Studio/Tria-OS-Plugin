@@ -48,7 +48,9 @@ function ObjectType:SetAppearance(part)
             else "Default"
         
         Marker.Icon.ImageColor3 = button:GetAttribute(ColorType) or ButtonSettings:FindFirstChild(ButtonType) and ButtonSettings:FindFirstChild(ButtonType):GetAttribute(ColorType) or Color3.new(0, 0, 0)
-        Marker.Icon.Image = BUTTON_LOCATORS[button:GetAttribute("LocatorImage")] or BUTTON_LOCATORS[ButtonSettings:FindFirstChild(ButtonType) and ButtonSettings[ButtonType]:GetAttribute("LocatorImage")] or "rbxassetid://6274811030"
+        Marker.Icon.Image = tonumber(button:GetAttribute("LocatorImage")) and "rbxassetid://" .. button:GetAttribute("LocatorImage") or BUTTON_LOCATORS[button:GetAttribute("LocatorImage")] or ButtonSettings:FindFirstChild(ButtonType) and (BUTTON_LOCATORS[ButtonSettings[ButtonType]:GetAttribute("LocatorImage")] or tonumber(ButtonSettings[ButtonType]:GetAttribute("LocatorImage")) and "rbxassetid://" .. ButtonSettings[ButtonType]:GetAttribute("LocatorImage")) or "rbxassetid://6274811030"
+        -- button overide image or button default image or default image or fallback
+    
     end
     UpdateButton(part)
     

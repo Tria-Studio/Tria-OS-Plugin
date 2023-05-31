@@ -497,14 +497,14 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Position = UDim2.fromScale(0, 0),
                 Size = UDim2.new(0.5, 0, 0, 29),
                 Placeholder = "Search by Artist",
-                State = searchData.artist
+                State = searchData.artist,
             },
 
             Components.SearchBox {
                 Position = UDim2.fromScale(0.5, 0),
                 Size = UDim2.new(0.5, 0, 0, 29),
                 Placeholder = "Search by Name",
-                State = searchData.name
+                State = searchData.name,
             },
 
             
