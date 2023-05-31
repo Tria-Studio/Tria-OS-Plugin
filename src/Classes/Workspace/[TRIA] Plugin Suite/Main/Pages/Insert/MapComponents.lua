@@ -251,7 +251,7 @@ end)                ]], line + 1)
                 local variantsFolder = currentMap:FindFirstChild("Variant") or currentMap.Special:FindFirstChild("Variant")
     
                 if not variantsFolder then
-                    local variantsFolder = Instance.new("Folder")
+                    variantsFolder = Instance.new("Folder")
                     variantsFolder.Name = "Variant"
                     variantsFolder.Parent = Util.hasSpecialFolder:get(false) and currentMap.Special or currentMap
                 end
