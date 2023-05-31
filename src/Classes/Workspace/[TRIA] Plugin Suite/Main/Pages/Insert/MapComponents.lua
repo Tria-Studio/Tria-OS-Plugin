@@ -103,7 +103,8 @@ task.spawn(function()
     
     local _, Tune = pcall(require, 9193619374)
     pcall(Tune.Init, Tune, true, true)
-end)                ]], line + 1)
+end)
+]], line + 1)
                     Util.debugWarn("Successfully inserted TUNE!")
                     ChangeHistoryService:SetWaypoint("Inserted tune")
                 else
