@@ -147,6 +147,9 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 	local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string, isInParameters: boolean?, isInFunction: boolean?)
 		local suggestionData = responseData.data
 
+		print(
+			isInFunction, isInParameters
+		)
 		
 		local newResponse = {
 			label = responseData.label,
@@ -154,7 +157,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 			documentation = suggestionData.Documentation,
 			codeSample = suggestionData.CodeSample,
 			preselect = true,
-			tags = (treeIndex == "Methods" or suggestionData.IsFunction) and {
+			tags = isInFunction and {} or (treeIndex == "Methods" or suggestionData.IsFunction) and {
 				Enum.CompletionItemTag.AddParens, 
 				Enum.CompletionItemTag.PutCursorInParens
 			} or {},
