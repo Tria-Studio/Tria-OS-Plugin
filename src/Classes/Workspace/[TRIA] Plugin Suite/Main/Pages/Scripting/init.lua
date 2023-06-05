@@ -217,7 +217,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 Enabled = 
                                     if plugin:GetSetting(ENABLE_VAR) and plugin:GetSetting("TRIA_ScriptInjectionEnabled") 
                                     then plugin:GetSetting(ENABLE_VAR) 
-                                    else false,
+                                    else true,
                                 
                                 Validate = function(newState: Fusion.StateObject<boolean>): boolean
                                     if newState:get(false) == true then
@@ -245,7 +245,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 Enabled = 
                                     if plugin:GetSetting(GLOBAL_ENABLE_VAR) 
                                     then plugin:GetSetting(GLOBAL_ENABLE_VAR) 
-                                    else false,
+                                    else true,
                                     
                                 OnToggle = function(newState: boolean)
                                     GlobalSettings.runsInTriaScripts = not newState
