@@ -146,10 +146,6 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 	local function addResponse(responseData: PublicTypes.Dictionary, treeIndex: string, isInParameters: boolean?, isInFunction: boolean?)
 		local suggestionData = responseData.data
-
-		print(
-			isInFunction, isInParameters
-		)
 		
 		local newResponse = {
 			label = responseData.label,
