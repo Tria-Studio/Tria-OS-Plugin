@@ -41,11 +41,18 @@ local SettingsUtil = {
             LayoutOrder = 5,
             Items = Value({})
         },
+        Materials = {
+            Default = true,
+            IsHeader = true,
+            Display = "Materials",
+            LayoutOrder = 6,
+            Items = Value({})
+        },
         Liquids = {
             IsHeader = true,
             Default = true,
             Display = "Liquids and Gas",
-            LayoutOrder = 6,
+            LayoutOrder = 7,
             Items = Value({})
         }
     }

@@ -1,3 +1,4 @@
+--TODO: change this to a generic export button for both lighting and materials
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Lighting = game:GetService("Lighting")
 
