@@ -153,6 +153,15 @@ data.metadataTypes = {
         default = 100,
     },
 
+    UseFrontOnly = {
+        _referenceName = "UseFrontOnly",
+        type = "Attribute",
+        dataType = "boolean",
+        dataName = "UseFrontOnly",
+        displayName = "Front Face Only",
+        default = false,
+    },
+
     ZiplineColor = {
         _referenceName = "ZiplineColor",
         type = "ConfigAttribute",
@@ -580,7 +589,13 @@ Metadata:
             ActionText = "WallJump",
             DisplayIcon = "rbxassetid://9468872087",
             LayoutOrder = 1,
-            metadata = {},
+            metadata = {
+                {
+                    data = data.metadataTypes.UseFrontOnly,
+                    location = 1,
+                    isFullSize = true,
+                },
+            },
             ApplyMethod = {
                 "_Action",
                 "Child"
