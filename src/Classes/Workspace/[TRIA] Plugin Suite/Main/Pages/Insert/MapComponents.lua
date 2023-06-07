@@ -272,13 +272,7 @@ end)
             },
     
             InsertFunction = function()
-                local currentMap = Util.mapModel:get(false)
-    
-                local newParent = if Util.hasSpecialFolder:get(false) and currentMap.Special:FindFirstChild("Button")
-                    then currentMap.Special.Button
-                    elseif currentMap:FindFirstChild("Geometry") then currentMap.Geometry
-                    else currentMap
-    
+                local newParent = getInsertFolder("Button")
                 local highestButton = Util.getObjectCountWithNameMatch("_Button")
                 local model = insertModel("_Button0", newParent)
                 model.Name = "_Button" .. (highestButton + 1)
@@ -305,7 +299,7 @@ end)
             end
         }, {
             Name = "New Airtank",
-            Icon = "rbxassetid://12536983920",
+            Icon = "rbxassetid://13677007811",
             LayoutOrder = 3,
             Tooltip = {
                 Header = "Airtank",
@@ -318,6 +312,40 @@ end)
                 positionModel(model)
                 TagUtils.OnTagAdded("Airtank"):Fire(model)
                 Util.debugWarn("Successfully inserted new AirTank!")
+            end
+        }, {
+            Name = "New Launch Orb", 
+            Icon = "rbxassetid://13676946865",
+            LayoutOrder = 4,
+            Tooltip = {
+                Header = "Launch Orbs",
+                Tooltip = "One of two types of orbs. Launch Orbs always launch the player in the direction indicated in the model."
+            },
+    
+            InsertFunction = function()
+                local newParent = getInsertFolder("Interactable")
+                local model = insertModel("LaunchOrb", newParent)
+                positionModel(model)
+                TagUtils.OnTagAdded("LaunchOrb"):Fire(model)
+                Util.debugWarn("Successfully inserted new Launch Orb!")
+    
+            end
+        }, {
+            Name = "New Pivot Orb", 
+            Icon = "rbxassetid://13676946975",
+            LayoutOrder = 5,
+            Tooltip = {
+                Header = "Pivot Orbs",
+                Tooltip = "One of two types of orbs. Pivot Orbs launch the character in the direction they rotate their character."
+            },
+    
+            InsertFunction = function()
+                local newParent = getInsertFolder("Interactable")
+                local model = insertModel("PivotOrb", newParent)
+                positionModel(model)
+                TagUtils.OnTagAdded("PivotOrb"):Fire(model)
+                Util.debugWarn("Successfully inserted new Pivot Orb!")
+    
             end
         }, {
             Name = "Insert Optimized Structure",
@@ -365,9 +393,25 @@ end)
                 ChangeHistoryService:SetWaypoint("Inserted new map exit!")
             end
         }, {
+            Name = "Add Teleporter",
+            Icon = "rbxassetid://13677069251",
+            LayoutOrder = 9,
+            Tooltip = {
+                Header = "Teleporter",
+                Tooltip = "When touched will move the player to the Destination part, with the option to adjust the players camera."
+            },
+    
+            InsertFunction = function()
+                local newParent = getInsertFolder("Interactable")
+                local model = insertModel("Teleporter", newParent)
+                positionModel(model)
+                TagUtils.OnTagAdded("Teleporter"):Fire(model)
+                Util.debugWarn("Successfully inserted new Teleporter!")
+            end
+        }, {
             Name = "Add Walljump",
             Icon = "rbxassetid://12536982734",
-            LayoutOrder = 8,
+            LayoutOrder = 10,
             Tooltip = {
                 Header = "Walljumps",
                 Tooltip = "A normal walljump, but with the stock TRIA walljump texture."
@@ -383,7 +427,7 @@ end)
         }, {
             Name = "Insert Wallrun",
             Icon = "rbxassetid://12536982483",
-            LayoutOrder = 9,
+            LayoutOrder = 11,
             Tooltip = {
                 Header = "Wallruns",
                 Tooltip = "A normal wallrun, but with the stock TRIA wallrun texture."
@@ -398,8 +442,8 @@ end)
             end
         }, {
             Name = "Insert Gas",
-            Icon = "rbxassetid://12536983391",
-            LayoutOrder = 10,
+            Icon = "rbxassetid://13677024452",
+            LayoutOrder = 12,
             Tooltip = {
                 Header = "Gas",
                 Tooltip = "A normal gas liquid, but with the stock mapkit appearance."
