@@ -98,7 +98,7 @@ local function addLiquid()
     end
     local currentMap = Util.mapModel:get(false)
     local newLiquid = Instance.new("Configuration")
-    newLiquid.Name = string.format("CustomLiquid%d", Util.getObjectCountWithNameMatch("CustomLiquid", currentMap.Settings, true) + 1)
+    newLiquid.Name = string.format("Custom Liquid #%d", Util.getObjectCountWithNameMatch("Custom Liquid #", currentMap.Settings, true) + 1)
     newLiquid:SetAttribute("Color", Color3.new(1, 1, 1))
     newLiquid:SetAttribute("OxygenDepletion", 1)
     newLiquid:SetAttribute("SplashSound", "water")
