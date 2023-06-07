@@ -17,6 +17,20 @@ data.metadataTypes = {
         displayName = "Button & Path #",
         default = 1,
     },
+    PlayerPercentage = {
+        _referenceName = "PlayerPercentage",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "PlayerPercentage",
+        displayName = "Player %",
+        default = 50,
+        _onlyShow = {
+            {
+                Attribute = "Group",
+                Value = true
+            },
+        }
+    },
     GroupButton = {
         _referenceName = "GroupButton",
         type = "Attribute",
@@ -699,8 +713,12 @@ Metadata:
                     isFullSize = true,
                 }, {
                     data = data.metadataTypes.GroupButton,
-                    location = 3,
-                    isFullSize = true,
+                    location = 3, 
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.PlayerPercentage,
+                    location = 4, 
+                    isFullSize = false,
                 }, {
                     data = data.metadataTypes.InactiveColor,
                     location = 5,
