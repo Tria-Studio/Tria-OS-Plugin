@@ -233,16 +233,16 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             Util.hasSpecialFolder:set(newMap:FindFirstChild("Special") ~= nil)
         end
 
-        local function detectSpecialFolder()
+        local function detectSpecialFolder(force)
             local specialFolder = newMap:FindFirstChild("Special")
-
             updateSpecial()
             Util.MapMaid:GiveTask(newMap.ChildAdded:Connect(updateSpecial))
             Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(updateSpecial))
             task.spawn(function()
+                Util.hasSpecialFolder:set(newMap:FindFirstChild("Special") ~= nil, true)
                 while newMap == Util.mapModel:get() do
-                    Util.hasSpecialFolder:set(newMap:FindFirstChild("Special") ~= nil)
                     task.wait(1)
+                    Util.hasSpecialFolder:set(newMap:FindFirstChild("Special") ~= nil)
                 end
             end)
 
@@ -252,7 +252,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         end
 
         mapTypes[newMap.ClassName]()
-        detectSpecialFolder()
+        detectSpecialFolder(true)
     else
         self:ResetSelection()
     end
@@ -389,12 +389,12 @@ function MapSelect:ResetSelection()
     end
 end
 
+local active = true
 Observer(Util.hasSpecialFolder):onChange(function()
     if not Util.mapModel:get() then
         return
     end
 
-    local active = true
     local folder = Util.mapModel:get().Special
 
     local function check()
@@ -402,17 +402,19 @@ Observer(Util.hasSpecialFolder):onChange(function()
         while Util.hasSpecialFolder:get() and Util.mapModel:get() and Util.mapModel:get().Special:FindFirstChild("Variant") do
             if #Util.variantFolderChildren:get() ~= #folder:FindFirstChild("Variant"):GetChildren() then
                 Util.variantFolderChildren:set(folder:FindFirstChild("Variant"):GetChildren())
+                print(#folder:FindFirstChild("Variant"):GetChildren())
             end
-            task.wait(0.25)
+            task.wait(1)
         end
         if not Util.mapModel:get() or not Util.mapModel:get():FindFirstChild("Special") or Util.mapModel:get():FindFirstChild("Special") and not Util.mapModel:get().Special:FindFirstChild("Variant") then
+            print"none found"
             Util.variantFolderChildren:set({})
         end
         active = false
     end
     
     task.spawn(function()
-        while task.wait(1) do
+        while task.wait(1) and Util.mapModel:get() do
             if not active and folder:FindFirstChild("Variant") then
                 check()
             end
