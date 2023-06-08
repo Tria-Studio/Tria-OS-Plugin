@@ -238,7 +238,7 @@ end)
         {
             Name = "Create new variant",
             Icon = "rbxassetid://12537256759",
-            LayoutOrder = 4,
+            LayoutOrder = 6,
             Tooltip = {
                 Header = "Variants",
                 Tooltip = "Whenever a map starts, one random variant will be chosen and the rest will be deleted. This can be useful to add variation in a map."
@@ -349,7 +349,7 @@ end)
             end
         }, {
             Name = "Insert Optimized Structure",
-            Icon = "rbxassetid://12536983174",
+            Icon = "rbxassetid://13693728508",
             LayoutOrder = 0,
             Tooltip = {
                 Header = "Optimized Structure",
@@ -368,7 +368,7 @@ end)
             end
         }, {
             Name = "Add Exit Region",
-            Icon = "rbxassetid://12537665817",
+            Icon = "rbxassetid://13693329144",
             LayoutOrder = 7,
             Tooltip = {
                 Header = "Exit Region",

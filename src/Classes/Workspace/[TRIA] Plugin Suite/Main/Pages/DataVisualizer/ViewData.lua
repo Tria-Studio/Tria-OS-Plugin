@@ -53,7 +53,7 @@ return {
     ButtonTags = {
         DisplayText = "Button Tags",
         SubText = "All Button Tags",
-        DisplayIcon = "rbxassetid://6031079158",
+        DisplayIcon = "rbxassetid://6031625147",
         LayoutOrder = 2,
         ViewOptions = {
             {
@@ -92,7 +92,7 @@ return {
                 TagType = "Child",
                 Name = "_Destroy",
                 LayoutOrder = 5,
-                DisplayIcon = "rbxassetid://6022668962",
+                DisplayIcon = "rbxassetid://6022668885",
 
                 Color = Color3.fromRGB(135, 40, 40),
                 ObjectType = "SelectionBox",
@@ -155,7 +155,7 @@ return {
                 TagType = "NoChild",
                 Name = "_Kill",
                 LayoutOrder = 5,
-                DisplayIcon = "rbxassetid://6022668916",
+                DisplayIcon = "rbxassetid://6031071053",
                 UsesAllInstances = true,
 
                 Color = Color3.fromRGB(255, 0, 0),
@@ -182,7 +182,7 @@ return {
                 TagType = "Any",
                 Name = "AirTank",
                 LayoutOrder = 9,
-                DisplayIcon = "rbxassetid://6031339048",
+                DisplayIcon = "rbxassetid://6031488945  ",
                 UsesAllInstances = true,
 
                 Color = Color3.fromRGB(41, 184, 232),
@@ -222,7 +222,7 @@ return {
         Name = "Zipline",
         SingleOption = true,
         DisplayText = "Zipline Preview",
-        DisplayIcon = "rbxassetid://6035067839",
+        DisplayIcon = "rbxassetid://6031229350",
         LayoutOrder = 5,
         ViewOptions = {},
         ObjectType = "Zipline",

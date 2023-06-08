@@ -507,7 +507,7 @@ Metadata:
         _Destroy = {
             _nameStub = "_Destroy",
             DisplayText = "_Destroy#",
-            DisplayIcon = "rbxassetid://6022668962",
+            DisplayIcon = "rbxassetid://6022668885",
             LayoutOrder = 5,
             metadata = {
                 {
@@ -816,7 +816,7 @@ Metadata:
         Zipline = {
             DisplayText = "Zipline",
             ActionText = nil,
-            DisplayIcon = "rbxassetid://6035067839",
+            DisplayIcon = "rbxassetid://6031229350",
             LayoutOrder = 7,
             metadata = {
                 {
@@ -871,7 +871,7 @@ Metadata:
         _Kill = {
             DisplayText = "Killbrick",
             ActionText = "Kill",
-            DisplayIcon = "rbxassetid://6022668916",
+            DisplayIcon = "rbxassetid://6031071053",
             LayoutOrder = 6,
             metadata = {},
             ApplyMethod = "_Action",
@@ -886,7 +886,7 @@ Metadata:
         AirTank = {
             DisplayText = "AirTank",
             ActionText = nil,
-            DisplayIcon = "rbxassetid://6031339048", 
+            DisplayIcon = "rbxassetid://6031488945", 
             LayoutOrder = 13,
             metadata = {
                 {
@@ -990,7 +990,7 @@ Metadata:
         Teleport = {
             DisplayText = "Teleporter",
             ActionText = "Teleport",
-            DisplayIcon = "rbxassetid://6022668951",
+            DisplayIcon = "rbxassetid://6031082527",
             LayoutOrder = 11,
             metadata = {
                 {
