@@ -657,7 +657,7 @@ Metadata:
                 Text = [[Walljumps allow players to latch onto any side of a part, and jump off of it. After a certain time, you will fall off of the walljump.
 
 Metadata:
-    <font size="15"><b>Timeout: </b></font>The amount of time the user will cling to the orb before falling out.]]
+    <font size="15"><b>Timeout: </b></font>The amount of time the user will cling to the walljump before falling off.]]
             },
         },
         _Liquid = {
@@ -789,12 +789,13 @@ Metadata:
 
 Metadata:
     <font size="15"><b>Button# & Path#: </b></font>Allows you to determine the order in which buttons can be pressed. Letters after the button number allow you to have buttons that split into many different paths. Example: 5, 6, '5A', '6A'.
-    <font size="15"><b>Group: </b></font>Determines whether or not said button is a group button. Group buttons require 50% of all players in the map to press.
+    <font size="15"><b>Group: </b></font>Determines whether or not said button is a group button. Group buttons require the percent specified under PlayerPercentage (default 50%) of all players in the map to press.
     <font size="15"><b>Inactive Color: </b></font>Overrides the inactive color specified in map settings for this button. Leave empty for default.
     <font size="15"><b>Active Color: </b></font>Overrides the active color specified in map settings for this button. Leave empty for default.
     <font size="15"><b>Activated Color: </b></font>Overrides the activated color specified in map settings for this button. Leave empty for default.
     <font size="15"><b>Activated Sound: </b></font>Overrides the activated sound specified in map settings for this button. Leave empty for default.
-    <font size="15"><b>LocatorImage: </b></font>Overrides the locator image specified in map settings for this button. Leave empty for default.]]
+    <font size="15"><b>LocatorImage: </b></font>Overrides the locator image specified in map settings for this button. Leave empty for default.
+    <font size="15"><b>PlayerPercentage: </b></font>For group buttons, this will determine the percent of players which will need to have pressed the button in order to activate it..]]
             },
         },
         _Detail = {
