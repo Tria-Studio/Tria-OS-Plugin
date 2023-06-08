@@ -457,7 +457,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     Components.Dropdown({
                         LayoutOrder = 1,
                         Header = "How This Works",
-                        DefaultState = true
+                        DefaultState = false
                     }, function(visible: Fusion.StateObject<boolean>): Instance
                         return Components.DropdownTextlabel {
                             DropdownVisible = visible,
