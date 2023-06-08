@@ -24,7 +24,7 @@ end
 function ObjectType:SetAppearance(part)
     self.Visible = true
     local function GetSelectionBox(Part)
-        if self.Tag == "AirTank" then
+        if self.Tag == "AirTank" or self.Tag == "Orb" then
             return New "SelectionSphere" {
                 SurfaceColor3 = self.Color:get(),
                 Color3 = self.Color:get(),

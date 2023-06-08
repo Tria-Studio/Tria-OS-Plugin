@@ -181,11 +181,20 @@ return {
             }, {
                 TagType = "Any",
                 Name = "AirTank",
+                LayoutOrder = 9,
+                DisplayIcon = "rbxassetid://6031339048",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(41, 184, 232),
+                ObjectType = "SelectionBox",
+            }, {
+                TagType = "Any",
+                Name = "Orb",
                 LayoutOrder = 8,
                 DisplayIcon = "rbxassetid://6031068426",
                 UsesAllInstances = true,
 
-                Color = Color3.fromRGB(41, 184, 232),
+                Color = Color3.fromRGB(150, 64, 172),
                 ObjectType = "SelectionBox",
             },
         },

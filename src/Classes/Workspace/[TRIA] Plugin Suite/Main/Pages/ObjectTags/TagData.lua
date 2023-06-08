@@ -877,7 +877,7 @@ Metadata:
         AirTank = {
             DisplayText = "AirTank",
             ActionText = nil,
-            DisplayIcon = "rbxassetid://6031068426",
+            DisplayIcon = "rbxassetid://6031339048", 
             LayoutOrder = 12,
             metadata = {
                 {
@@ -949,7 +949,7 @@ Metadata:
         Orb = {
             DisplayText = "Orb",
             ActionText = nil,
-            DisplayIcon = "rbxassetid://6034467804",
+            DisplayIcon = "rbxassetid://6031068426",
             LayoutOrder = 11,
             metadata = {
                 {
