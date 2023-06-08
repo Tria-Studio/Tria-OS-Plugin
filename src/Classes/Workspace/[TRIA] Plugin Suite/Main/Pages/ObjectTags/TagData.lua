@@ -193,6 +193,14 @@ data.metadataTypes = {
         default = "Launch",
     },
 
+    SetCameraFront = {
+        _referenceName = "SetCameraFront",
+        type = "Attribute",
+        dataName = "SetCameraFront",
+        dataType = "boolean",
+        displayName = "Set Camera Front",
+        default = false,
+    },
 
     UseFrontOnly = {
         _referenceName = "UseFrontOnly",
@@ -878,7 +886,7 @@ Metadata:
             DisplayText = "AirTank",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6031339048", 
-            LayoutOrder = 12,
+            LayoutOrder = 13,
             metadata = {
                 {
                     data = data.metadataTypes.Oxygen,
@@ -950,7 +958,7 @@ Metadata:
             DisplayText = "Orb",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6031068426",
-            LayoutOrder = 11,
+            LayoutOrder = 12,
             metadata = {
                 {
                     data = data.metadataTypes.Power,
@@ -978,6 +986,31 @@ Metadata:
     <font size="15"><b>Timeout: </b></font>The amount of time the user will cling to the orb before falling out.]]
             },
         },
+        Teleport = {
+            DisplayText = "Teleporter",
+            ActionText = "Teleport",
+            DisplayIcon = "rbxassetid://6022668951",
+            LayoutOrder = 11,
+            metadata = {
+                {
+                    data = data.metadataTypes.SetCameraFront,
+                    location = 1,
+                    isFullSize = true,
+                },
+            },
+            ApplyMethod = "_Action",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "Teleporter",
+                Text = [[Teleports players when the main part is touched.
+                    
+Metadata:
+    <font size="15"><b>SetCameraFront: </b></font>Determines whether the players camera should get orientated to the direction of the destination or not.]]
+            },
+        },
+
     },
     addonTags = {
         _Teleporter = {

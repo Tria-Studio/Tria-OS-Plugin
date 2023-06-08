@@ -39,6 +39,7 @@ local newTagTypes = {
 	_Gas = { "ObjectTags" },
 	_SpeedBooster = { "ActionTags" },
 	_JumpBooster = { "ActionTags" },
+	Teleport = { "ActionTags" },
 	_Kill = { "ActionTags" },
 	_Detail = { "DetailTag" },
 	Zipline = { "ModelTags" },
@@ -74,6 +75,7 @@ local tagTypes = {
 		"_SpeedBooster",
 		"_JumpBooster",
 		"_Kill",
+		"Teleport",
 
 		_convert = {
 			_SpeedBooster = "WalkSpeed",
@@ -118,6 +120,7 @@ local tagsBypassParent = {
 	"_WallRun",
 	"_WallJump",
 	"_SpeedBooster",
+	"Teleport",
 	"_JumpBooster",
 }
 
@@ -488,7 +491,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 		local secondary = tagTypes.ActionTags._convert[tag]
 		local attribute = part:GetAttribute("_action")
 
-		if attribute == tag or attribute == secondary or attribute == TagData.dataTypes.objectTags[tag].ActionText then
+		if attribute == tag or secondary and attribute == secondary or attribute == TagData.dataTypes.objectTags[tag].ActionText then
 			return true
 		end
 
