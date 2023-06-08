@@ -44,6 +44,7 @@ local newTagTypes = {
 	Zipline = { "ModelTags" },
 	_Button = { "ModelTags" },
 	AirTank = { "ModelTags" },
+	Orb = { "ModelTags" },
 	_Teleporter = { "AddonTags" },
 	_Waterjet = { "AddonTags" },
 }
@@ -89,6 +90,7 @@ local tagTypes = {
 		"Zipline",
 		"_Button",
 		"AirTank",
+		"Orb",
 
 		_convert = {
 			_Button = "_Button%d",

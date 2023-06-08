@@ -87,5 +87,17 @@ return {
             {Value = "Square"},
             {Value = "Cylinder"}
         }
+    end,
+    OrbType = function(): {PublicTypes.Dictionary}
+        return {
+            {
+                Value = "Launch",
+                Image = "rbxassetid://13676946865"
+            },
+            {
+                Value = "Pivot",
+                Image = "rbxassetid://13676946975"
+            }
+        }
     end
 }

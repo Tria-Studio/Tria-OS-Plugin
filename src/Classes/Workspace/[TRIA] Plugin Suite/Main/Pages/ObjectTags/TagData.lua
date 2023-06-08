@@ -167,6 +167,33 @@ data.metadataTypes = {
         default = 100,
     },
 
+    Power = {
+        _referenceName = "Power",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "Power",
+        displayName = "Power",
+        default = 300,
+    },
+    Timeout = {
+        _referenceName = "Timeout",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "Timeout",
+        displayName = "Timeout",
+        default = 1,
+    },
+    OrbType = {
+        _referenceName = "OrbType",
+        type = "Attribute",
+        dataType = "dropdown",
+        dataName = "Type",
+        dropdownType = "OrbType",
+        displayName = "Type",
+        default = "Launch",
+    },
+
+
     UseFrontOnly = {
         _referenceName = "UseFrontOnly",
         type = "Attribute",
@@ -619,7 +646,10 @@ Metadata:
 
             Tooltip = {
                 Header = "Walljump",
-                Text = "Walljumps allow players to latch onto any side of a part, and jump off of it. After a certain time, you will fall off of the walljump."
+                Text = [[Walljumps allow players to latch onto any side of a part, and jump off of it. After a certain time, you will fall off of the walljump.
+
+Metadata:
+    <font size="15"><b>Timeout: </b></font>The amount of time the user will cling to the orb before falling out.]]
             },
         },
         _Liquid = {
@@ -848,7 +878,7 @@ Metadata:
             DisplayText = "AirTank",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6031068426",
-            LayoutOrder = 10,
+            LayoutOrder = 12,
             metadata = {
                 {
                     data = data.metadataTypes.Oxygen,
@@ -914,6 +944,38 @@ Metadata:
                     
 Metadata:
     <font size="15"><b>JumpPower: </b></font>The power the players JumpPower will be set to.]]
+            },
+        },
+        Orb = {
+            DisplayText = "Orb",
+            ActionText = nil,
+            DisplayIcon = "rbxassetid://6034467804",
+            LayoutOrder = 11,
+            metadata = {
+                {
+                    data = data.metadataTypes.Power,
+                    location = 1,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.Timeout,
+                    location = 2,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.OrbType,
+                    location = 3,
+                    isFullSize = true,
+                },
+            },
+            ApplyMethod = nil,
+            IsTagApplicable = false,
+            OnlyBaseParts = nil,
+
+            Tooltip = {
+                Header = "Orb",
+                Text = [[A part that launches the player when inside. Orbs can launch players in a fixed direction, or allow players to determine where they exit.
+                    
+Metadata:
+    <font size="15"><b>Timeout: </b></font>The amount of time the user will cling to the orb before falling out.]]
             },
         },
     },
