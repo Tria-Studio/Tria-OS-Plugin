@@ -22,11 +22,15 @@ local possibleBranches = {
 			Documentation = {
 				value = "Retrieves any of the players ingame settings. Can be useful to try to tone down scripted effects with the players ingame Detail setting."
 			},
-			MaxParams = 19,
+			MaxParams = 1,
 			Parameters = {"\"Cinematic Mode\"", "\"Refresh Maps\"", "\"Slide\"", "\"Swim Down\"", "\"Swim Up\"", "\"Toggle Perspective\"", "\"First Person Cursor\"", "\"Show Timer\"", "\"Spawn In Elevator\"", "\"Spinny Locators\"", "\"Lobby volume\"", "\"Music volume\"", "\"SFX volume\"", "\"Field Of View\"", "\"Ghost Players\"", "\"HUD Scale\"", "\"Level Of Detail\"", "\"Lobby Type\"", "\"Theme\""},
 			ParameterDescriptions = {
 				["\"Cinematic Mode\""] = {
 					Description = "The KeyCode for the key to toggle Cinematic Mode.",
+					Detail = "Enum.KeyCode",
+				},
+				["\"Freecam\""] = {
+					Description = "The KeyCode for toggling Freecam.",
 					Detail = "Enum.KeyCode",
 				},
 				["\"Refresh Maps\""] = {
@@ -49,8 +53,24 @@ local possibleBranches = {
 					Description = "The KeyCode for the key used to toggle from 1st to 3rd person, and vise-versa.",
 					Detail = "Enum.KeyCode",
 				},
+				["\"Air FX\""] = {
+					Description = "Adds extra effects to visualize air loss during rounds.",
+					Detail = "boolean",
+				},
+				["\"Auto Spectate\""] = {
+					Description = "Whether the user will automatically spectate someone upon death.",
+					Detail = "boolean",
+				},
+				["\"Debug Mode\""] = {
+					Description = "Whether the user is in debug mode.",
+					Detail = "boolean",
+				},
 				["\"First Person Cursor\""] = {
 					Description = "Whether or not the player uses a different first person cursor.",
+					Detail = "boolean",
+				},
+				["\"Show Spectators\""] = {
+					Description = "Whether the spectator count shows in the bottom right corner.",
 					Detail = "boolean",
 				},
 				["\"Show Timer\""] = {
@@ -106,7 +126,77 @@ local possibleBranches = {
 	MapLib:GetFeature("Settings"):GetSetting("FOV")	
 			]]
 		}
-	}
+	},
+
+	["PlayerUI"] = {
+		["LoadUI"] = {
+			Name = "LoadUI",
+			Type = "Method",
+			Arguments = "LoadUI(gui: ScreenGUi): ()",
+			Documentation = {
+				value = "Loads a GUI for that round, and gets cleaned up at the end of the round."
+			},
+			CodeSample = [[
+	local ScreenGui = Instance.new("ScreenGui")  
+	ScreenGui.Name = "MapGui"  
+	local Frame = Instance.new("Frame")  
+	Frame.Parent = ScreenGui  
+	
+	MapLib:GetFeature("PlayerUI"):LoadUI(ScreenGui)	 
+			]]
+		},
+	},
+
+	["Players"] = {
+		["GetPlayers"] = {
+			Name = "GetPlayers",
+			Type = "Method",
+			Arguments = "GetSetting(): { Player }",
+			Documentation = {
+				value = "Retrieves a list of all players ingame."
+			},
+			CodeSample = [[
+	local PlayersInRound = MapLib:GetFeature("Players"):GetPlayers()  
+
+	for i, Player in pairs(PlayersInRound) do  
+		print(Player.Name .. " is in the round!")  
+	end  ]]
+		},
+
+		["GetPlayersInRadius"] = {
+			Name = "GetPlayersInRadius",
+			Type = "Method",
+			Arguments = "GetPlayersInRadius(position: Vector3, radius: number): { Player }",
+			Documentation = {
+				value = "Retrieves a list of all players ingame that are within a certain radius from a specified point."
+			},
+			CodeSample = [[
+	local PlayersAtStart = MapLib:GetFeature("Players"):GetPlayersInRadius(MapLib.Map.Special.Spawn.Position, 20)  
+
+	for i, Player in pairs(PlayersAtStart) do  
+		print(Player.Name .. " is still at the start!")  
+	end  ]]
+		}
+	},
+
+	["Teleport"] = {
+		["Teleport"] = {
+			Name = "Teleport",
+			Type = "Method",
+			Arguments = "Teleport(player: Player, position: CFrame | Vector3, faceFront: boolean?): ()",
+			Documentation = {
+				value = "Teleports the given player to the specified position."
+			},
+			CodeSample = [[
+	local Players = MapLib:GetPlayers()
+
+	-- Teleport all players still in round to (100, 50, 50)
+	for i, Player in pairs(Players) do
+		MapLib:GetFeature("Teleport"):Teleport(Player, Vector3.new(100, 50, 50), true)
+	end
+			]]
+		},
+	},
 }
 
 local possibleBranchArray = {}
@@ -128,6 +218,19 @@ return {
 			["Settings"] = {
 				["GetSetting"] = possibleBranches.Settings.GetSetting
 			},
+
+			["Players"] = {
+				["GetPlayers"] = possibleBranches.Players.GetPlayers,
+				["GetPlayersInRadius"] = possibleBranches.Players.GetPlayersInRadius,
+			},
+
+			["PlayerUI"] = {
+				["LoadUI"] = possibleBranches.PlayerUI.LoadUI
+			},
+
+			["Teleport"] = {
+				["Teleport"] = possibleBranches.Teleport.Teleport
+			},
 		}
 		
 		if params then
@@ -137,7 +240,7 @@ return {
 	end,
 	Arguments = "GetFeature(featureName: string): MapLibFeature",
 	MaxParams = 1,
-	Parameters = {"\"Skills\"", "\"Settings\""},
+	Parameters = {"\"Skills\"", "\"Settings\"", "\"Players\"", "\"PlayerUI\"", "\"Teleport\""},
 	ParameterDescriptions = {
 		["\"Skills\""] = {
 			Description = "Interact with the skills (sliding, etc.) that players use during a round",
@@ -145,12 +248,17 @@ return {
 		["\"Settings\""] = {
 			Description = "Get local player settings (ex. level of detail)",
 		},
+		["\"Players\""] = {
+			Description = "Get information about the players currently in round.",
+		},
+		["\"PlayerUI\""] = {
+			Description = "Handles loading ScreenGui's during a round.",
+		},
+		["\"Teleport\""] = {
+			Description = "Teleport players through the MapLib.",
+		},
 	},
 	Documentation = {
-		value = [[Allows you to get a specific Feature from the MapLib  
-		
-Avaliable Features:
-	"Skills", -- Interact with the skills (sliding, etc.) that players use during a round    
-	"Settings", -- Get local player settings (ex. level of detail)  ]]
+		value = [[Allows you to retrieve additional features from the MapLib for more advanced functions.  ]]
 	},
 }
