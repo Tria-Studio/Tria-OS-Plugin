@@ -147,6 +147,28 @@ local possibleBranches = {
 		},
 	},
 
+	["Lighting"] = {
+		["ChangeLighting"] = {
+			Name = "ChangeLighting",
+			Type = "Method",
+			Arguments = "ChangeLighting(values: { [string]: any }): ()",
+			Documentation = {
+				value = "Change the lighting for any properties and post processing effects during a round, with these changes getting replicated to spectators."
+			},
+			CodeSample = [[
+	-- turn the map dark when the first button is pressed  
+	MapLib:GetButtonEvent(1):Connect(function()
+		local newLighting = {
+			Brightness = 0,
+			Ambient = Color3.fromRGB(25, 25, 25),
+		}
+
+		MapLib:GetFeature("Lighting"):ChangeLighting(newLighting)  
+	end)
+			]]
+		},
+	},
+
 	["Players"] = {
 		["GetPlayers"] = {
 			Name = "GetPlayers",
@@ -211,6 +233,10 @@ return {
 	PossibleBranches = possibleBranchArray,
 	Branches = function(params)
 		local features = {
+			["Lighting"] = {
+				["ChangeLighting"] = possibleBranches.Lighting.ChangeLighting
+			},
+
 			["Skills"] = {
 				["ToggleSliding"] = possibleBranches.Skills.ToggleSliding
 			},
@@ -240,19 +266,22 @@ return {
 	end,
 	Arguments = "GetFeature(featureName: string): MapLibFeature",
 	MaxParams = 1,
-	Parameters = {"\"Skills\"", "\"Settings\"", "\"Players\"", "\"PlayerUI\"", "\"Teleport\""},
+	Parameters = {"\"Lighting\"", "\"Players\"", "\"PlayerUI\"", "\"Settings\"", "\"Skills\"", "\"Teleport\""},
 	ParameterDescriptions = {
-		["\"Skills\""] = {
-			Description = "Interact with the skills (sliding, etc.) that players use during a round",
-		},
-		["\"Settings\""] = {
-			Description = "Get local player settings (ex. level of detail)",
+		["\"Lighting\""] = {
+			Description = "Change the lighting mid round and have it replicate to spectators.",
 		},
 		["\"Players\""] = {
 			Description = "Get information about the players currently in round.",
 		},
 		["\"PlayerUI\""] = {
 			Description = "Handles loading ScreenGui's during a round.",
+		},
+		["\"Settings\""] = {
+			Description = "Get local player settings (ex. level of detail)",
+		},
+		["\"Skills\""] = {
+			Description = "Interact with the skills (sliding, etc.) that players use during a round",
 		},
 		["\"Teleport\""] = {
 			Description = "Teleport players through the MapLib.",
