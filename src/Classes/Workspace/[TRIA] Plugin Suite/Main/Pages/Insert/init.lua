@@ -91,7 +91,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
         BackgroundColor3 = data.BackgroundColor or Color3.new(1, 1, 1),
         BackgroundTransparency = data.FullSize and 1 or 0,
         LayoutOrder = data.LayoutOrder or 2,
-        Size = UDim2.new(1, -24, 0, 95),
+        Size = UDim2.new(1, -16, 0, data.FullSize and 95 or 80),
 
         [OnEvent "MouseButton1Down"] = function()
             if data.FullSize and not Util.interfaceActive:get(false) then
@@ -217,16 +217,42 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         AutomaticSize = Enum.AutomaticSize.Y,
                         BackgroundColor3 = Theme.TableItem.Default,
 
-                        [Children] = GetAssetButton {
-                            ModelId = 6404661021,
-                            BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
-                            OverlayImage = "rbxassetid://12537133710",
-                            OverlayImageTransparency = 0.5,
-                            ZIndex = 5,
-                            Name = "Official TRIA.OS Map Kit",
-                            Creator = "TRIA",
-                            ImageCrop = Enum.ScaleType.Crop,
-                            Tooltip = {}
+                        [Children] = {
+
+                            Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
+
+                            GetAssetButton {
+                                ModelId = 6404661021, -- TODO: update with the new id once ethan publishes the map kits
+                                BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
+                                OverlayImage = "rbxassetid://13706366388",
+                                OverlayImageTransparency = 0.5,
+                                ZIndex = 5,
+                                LayoutOrder = 1,
+                                Name = "Basic TRIA.OS Map Kit",
+                                Creator = "TRIA",
+                                ImageCrop = Enum.ScaleType.Crop,
+                                Tooltip = {
+                                    Header = "Basic Map Kit",
+                                    Tooltip = "Contains only the essentials for mapmaking. Great for new mapmakers to understand the basics without getting overwhelmed with everything TRIA.os offers!",
+                                }
+                            },
+
+                            GetAssetButton {
+                                ModelId = 6404661021, -- TODO: update with the new id once ethan publishes the map kits
+                                LayoutOrder = 2,
+                                BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
+                                OverlayImage = "rbxassetid://13706366546",
+                                OverlayImageTransparency = 0.5,
+                                ZIndex = 5,
+                                Name = "Advanced TRIA.OS Map Kit",
+                                Creator = "TRIA",
+                                ImageCrop = Enum.ScaleType.Crop,
+                                Tooltip = {
+                                    Header = "Advanced Map Kit",
+                                    Tooltip = "Contains all features that TRIA.os offers, for those who want to utilize TRIA.os to its fullest!",
+                                }
+                            },
+
                         }
                     },
 

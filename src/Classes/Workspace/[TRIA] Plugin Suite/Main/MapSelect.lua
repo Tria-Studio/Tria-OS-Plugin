@@ -402,12 +402,10 @@ Observer(Util.hasSpecialFolder):onChange(function()
         while Util.hasSpecialFolder:get() and Util.mapModel:get() and Util.mapModel:get().Special:FindFirstChild("Variant") do
             if #Util.variantFolderChildren:get() ~= #folder:FindFirstChild("Variant"):GetChildren() then
                 Util.variantFolderChildren:set(folder:FindFirstChild("Variant"):GetChildren())
-                print(#folder:FindFirstChild("Variant"):GetChildren())
             end
             task.wait(1)
         end
         if not Util.mapModel:get() or not Util.mapModel:get():FindFirstChild("Special") or Util.mapModel:get():FindFirstChild("Special") and not Util.mapModel:get().Special:FindFirstChild("Variant") then
-            print"none found"
             Util.variantFolderChildren:set({})
         end
         active = false
