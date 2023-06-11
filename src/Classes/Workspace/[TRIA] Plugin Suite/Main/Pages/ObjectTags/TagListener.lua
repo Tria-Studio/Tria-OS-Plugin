@@ -59,7 +59,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
         LayoutOrder = data.LayoutOrder,
         Size = UDim2.new(1, 0, 0, 4),
         Name = name,
-        Visible = if name == "_Teleporter" then Util._Addons.hasEasyTP elseif name == "_Waterjet" then Util._Addons.hasWaterjet else true,
+        Visible = if name == "_Waterjet" then Util._Addons.hasWaterjet else true,
 
         [Children] = New "Frame" {
             BackgroundColor3 = Theme.Button.Default,    

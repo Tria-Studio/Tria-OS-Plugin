@@ -46,7 +46,6 @@ local newTagTypes = {
 	_Button = { "ModelTags" },
 	AirTank = { "ModelTags" },
 	Orb = { "ModelTags" },
-	_Teleporter = { "AddonTags" },
 	_Waterjet = { "AddonTags" },
 }
 local tagTypes = {
@@ -99,7 +98,6 @@ local tagTypes = {
 		},
 	},
 	AddonTags = {
-		"_Teleporter",
 		"_Waterjet",
 	},
 }
@@ -392,7 +390,6 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			elseif
 				newTag == "_Liquid" or newTag == "_Gas" and isOptimized:FindFirstChild("Fluid")
 			then isOptimized.Fluid
-			elseif newTag == "_Teleporter" and isOptimized:FindFirstChild("Teleporters") then isOptimized.Teleporters
 			elseif
 				string.find(newTag, "_Waterjet", 1, true) and isOptimized:FindFirstChild("Waterjets")
 			then isOptimized.Waterjets

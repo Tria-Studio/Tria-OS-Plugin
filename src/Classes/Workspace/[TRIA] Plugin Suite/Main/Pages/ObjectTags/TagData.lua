@@ -269,72 +269,6 @@ data.metadataTypes = {
         default = 0.25,
     },
 
-    DoFlash = {
-        _referenceName = "DoFlash",
-        type = "Attribute",
-        dataType = "boolean",
-        dataName = "DoFlash",
-        displayName = "Do Flash",
-        default = true,
-        _onlyShow = {
-            {
-                Attribute = "TeleportType",
-                Value = "start"
-            }
-        }
-    },
-    FlashColor = {
-        _referenceName = "FlashColor",
-        type = "Attribute",
-        dataType = "color",
-        dataName = "FlashColor",
-        displayName = "Flash Color",
-        default = Color3.new(),
-        _onlyShow = {
-            {
-                Attribute = "TeleportType",
-                Value = "start"
-            }, {
-                Attribute = "DoFlash",
-                Value = true
-            }
-        }
-    },
-    FlashDuration = {
-        _referenceName = "FlashDuration",
-        type = "Attribute",
-        dataType = "number",
-        dataName = "FlashDuration",
-        displayName = "Flash Duration",
-        default = 0.75,
-        _onlyShow = {
-            {
-                Attribute = "TeleportType",
-                Value = "start"
-            }, {
-                Attribute = "DoFlash",
-                Value = true
-            }
-        }
-    },
-    TeleportType = {
-        _referenceName = "TeleportType",
-        type = "Attribute",
-        dataType = "dropdown",
-        dropdownType = "TeleportType",
-        dataName = "TeleportType",
-        displayName = "Teleport Type",
-        default = "start",
-    },
-    TeleportNumber = {
-        _referenceName = "TeleportNumber",
-        type = "EndOfName",
-        dataType = "number",
-        dataName = "TeleportNumber",
-        displayName = "Teleport Number",
-        default = 0,
-    },
-
     FanNumber = {
         _referenceName = "FanNumber",
         type = "EndOfName",
@@ -1014,51 +948,6 @@ Metadata:
 
     },
     addonTags = {
-        _Teleporter = {
-            _nameStub = "_Teleporter",
-            DisplayText = "_Teleporter",
-            ActionText = "_Teleporter",
-            DisplayIcon = "rbxassetid://6031082527",
-            LayoutOrder = 2,
-            metadata = {
-                {
-                    data = data.metadataTypes.TeleportNumber,
-                    location = 1,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.TeleportType,
-                    location = 3,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.DoFlash,
-                    location = 5,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.FlashColor,
-                    location = 7,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.FlashDuration,
-                    location = 9,
-                    isFullSize = true,
-                },
-            },
-            ApplyMethod = "Name",
-            IsTagApplicable = true,
-            OnlyBaseParts = true,
-
-            Tooltip = {
-                Header = "Teleporter",
-                Text = [[A custom teleporter object from EasyTP that allows for the easy teleport of players inside a round.
-
-Metadata:
-    <font size="15"><b>TeleportNumber: </b></font>Determines which teleporters are linked together. There can only be one start and one end.
-    <font size="15"><b>TeleportType: </b></font>Determines if its the start or the end of a link.
-    <font size="15"><b>DoFlash: </b></font>Determines if the players screen will flash when telepored with the given color and duration.
-    <font size="15"><b>FlashColor: </b></font>Determines the color of the flash that will play if DoFlash is true.
-    <font size="15"><b>FlashDuration: </b></font>Determines the length of the flash if DoFlash is true.]]
-            },
-        },
         _Waterjet = {
             _nameStub = "_Waterjet",
             DisplayText = "_Waterjet",

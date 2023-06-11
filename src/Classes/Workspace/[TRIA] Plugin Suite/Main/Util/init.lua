@@ -53,7 +53,6 @@ local Util = {
         AddonRemoved = Signal.new(),
         hasAddonsWithObjectTags = Value(false),
         hasWaterjet = Value(false),
-        hasEasyTP = Value(false)
     },
     _Slider = {
         isUsingSlider = Value(false),

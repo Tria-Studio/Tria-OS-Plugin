@@ -259,7 +259,7 @@ return function(name: string, data: PublicTypes.Dictionary)
                             TextSize = 15,
                             TextXAlignment = Enum.TextXAlignment.Left,
                             Visible = name == "AddonView" and Computed(function(): boolean
-                                return Util._Addons[metadata.Name == "_Teleporter" and "hasEasyTP" or metadata.Name == "_Waterjet" and "hasWaterjet"]:get() ~= false
+                                return Util._Addons[metadata.Name == "_Waterjet" and "hasWaterjet"]:get() ~= false
                             end) or true,
 
                             [OnEvent "Activated"] = function()

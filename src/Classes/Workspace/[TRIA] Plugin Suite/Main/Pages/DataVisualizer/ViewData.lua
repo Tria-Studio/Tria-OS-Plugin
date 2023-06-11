@@ -252,15 +252,6 @@ return {
         ViewOptions = {
             {
                 TagType = "Addon",
-                Name = "_Teleporter",
-                LayoutOrder = 1,
-                DisplayIcon = "rbxassetid://6031082527",
-                UsesAllInstances = true,
-
-                Color = Color3.fromRGB(255, 255, 255),
-                ObjectType = "SelectionBox"
-            }, {
-                TagType = "Addon",
                 Name = "_Waterjet",
                 LayoutOrder = 2,
                 DisplayIcon = "rbxassetid://6022668890",
