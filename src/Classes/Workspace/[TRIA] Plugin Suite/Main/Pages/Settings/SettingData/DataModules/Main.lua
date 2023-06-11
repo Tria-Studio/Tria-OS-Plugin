@@ -70,7 +70,7 @@ Unknown difficulties cannot be published and are not officially supported.
 
 		Value = Value(""),
 		Tooltip = {
-			Text = "How long the map should last. Any players after this time will be killed. Maximum value of 420 seconds (7 minutes)",
+			Text = "How long the map should last. Any players after this time will be killed. Maximum value of 420 seconds (7 minutes).",
 		},
 	},
 
@@ -83,7 +83,7 @@ Unknown difficulties cannot be published and are not officially supported.
 
 		Value = Value(""),
 		Tooltip = {
-			Text = "The AssetID of the music that plays in the background of your map.",
+			Text = "The AssetID of the music that plays in the background of your map.\n\nIt is reccomended to use the Music folder instead of this setting.",
 		},
 	},
 
@@ -96,7 +96,7 @@ Unknown difficulties cannot be published and are not officially supported.
 
 		Value = Value(""),
 		Tooltip = {
-			Text = "Volume of the music that plays in the background.",
+			Text = "Volume of the music that plays in the background.\n\nIt is reccomended to use the Music folder instead of this setting.",
 		},
 	},
 

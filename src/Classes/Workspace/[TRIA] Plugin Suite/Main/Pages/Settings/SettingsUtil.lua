@@ -20,18 +20,25 @@ local SettingsUtil = {
             LayoutOrder = 1,
             Items = Value({}),
         },
+        Music = {
+            Default = true,
+            Display = "Music",
+            IsHeader = true,
+            LayoutOrder = 2,
+            Items = Value({}),
+        },
         Buttons = {
             Default = true,
             IsHeader = true,
             Display = "Buttons",
-            LayoutOrder = 2,
+            LayoutOrder = 3,
             Items = Value({})
         },
         Lighting = {
             Default = true,
             IsHeader = true,
             Display = "Lighting",
-            LayoutOrder = 3,
+            LayoutOrder = 4,
             Items = Value({})
         },
         Skills = {

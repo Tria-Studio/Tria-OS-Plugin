@@ -143,7 +143,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
 
                 index += 1
                 local liquidDropdown = SettingsUtil.DirectoryDropdown({
-                    Default = true, 
+                    Default = false, 
                     Display = itemName, 
                     IsSecondary = true,
                     LayoutOrder = index,
