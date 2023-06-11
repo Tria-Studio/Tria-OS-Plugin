@@ -275,7 +275,7 @@ local function handleCallback(request: AutocompleteTypes.Request, response: Auto
 
 		local isInParameters = #branches > 0 and fullLine:match(PARAM_MATCH) and not (lastToken == ":" or lastToken == ".")
 
-		local open = beforeCursor:reverse():find("(", 2, true) -- i hate this fix but it seems to work -grif
+		local open = beforeCursor:reverse():find("(", 2, true) -- i absolutely hate this fix but it seems to work -grif
 		local close = beforeCursor:reverse():find(")", 1, true)
 		if open and close and open > close then
 			isInParameters = false
@@ -477,8 +477,3 @@ function Suggester:disableCallback()
 end
 
 return Suggester
-
-
---[[
-
-]]
