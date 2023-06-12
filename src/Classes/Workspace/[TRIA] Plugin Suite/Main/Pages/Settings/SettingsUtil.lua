@@ -31,35 +31,35 @@ local SettingsUtil = {
             Default = true,
             IsHeader = true,
             Display = "Buttons",
-            LayoutOrder = 3,
+            LayoutOrder = 5,
             Items = Value({})
         },
         Lighting = {
             Default = true,
             IsHeader = true,
             Display = "Lighting",
-            LayoutOrder = 4,
+            LayoutOrder = 3,
             Items = Value({})
         },
         Skills = {
             Default = true,
             IsHeader = true,
             Display = "Skills and Features",
-            LayoutOrder = 5,
+            LayoutOrder = 6,
             Items = Value({})
         },
         Materials = {
             Default = true,
             IsHeader = true,
             Display = "Materials",
-            LayoutOrder = 6,
+            LayoutOrder = 7,
             Items = Value({})
         },
         Liquids = {
             IsHeader = true,
             Default = true,
             Display = "Liquids and Gas",
-            LayoutOrder = 7,
+            LayoutOrder = 8,
             Items = Value({})
         }
     }
