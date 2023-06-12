@@ -57,7 +57,7 @@ function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.Stat
         BorderColor3 = Theme.Border.Default,
         BorderMode = Enum.BorderMode.Outline,
         BorderSizePixel = 1,
-        Name = data.Text or data.Name,
+        Name = data.RichText or data.Text or data.Name,
         Size = UDim2.new(1, 0, 0, 20),
 
         [OnEvent "MouseEnter"] = function()
@@ -79,6 +79,7 @@ function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.Stat
                 Size = UDim2.fromScale(0.45, 1),
                 FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json"),
                 Text = data.Text,
+                RichText = data.RichText ~= nil,
                 TextTruncate = Enum.TextTruncate.AtEnd,
                 TextColor3 = Computed(function(): Color3
                     return getSettingTextColor(data)

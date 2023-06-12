@@ -75,8 +75,9 @@ Unknown difficulties cannot be published and are not officially supported.
 	},
 
 	{
-		Text = "BGM",
+		Text = "<s>BGM</s>",
 		Type = "Number",
+		RichText = "BGM",
 
 		Attribute = "Music",
 		Fallback = 6366407687,
@@ -88,8 +89,9 @@ Unknown difficulties cannot be published and are not officially supported.
 	},
 
 	{
-		Text = "BGM Volume",
+		Text = "<s>BGM Volume</s>",
 		Type = "Number",
+		RichText = "BGM Volume",
 
 		Attribute = "MusicVolume",
 		Fallback = 0.5,
