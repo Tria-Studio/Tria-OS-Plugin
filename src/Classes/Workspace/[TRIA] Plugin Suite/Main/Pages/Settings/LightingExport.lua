@@ -60,10 +60,15 @@ local function exportLighting()
 			LightObject.Parent = nil
 		end
 	end
+	for _, LightObject in pairs(workspace.Terrain:GetChildren()) do
+		if LightObject:IsA("Clouds") then
+			LightObject.Parent = nil
+		end
+	end
 
 	for _, NewLighting in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
 		local Clone = NewLighting:Clone()
-		Clone.Parent = Lighting
+		Clone.Parent = NewLighting:IsA("Clouds") and workspace.Terrain or Lighting
 	end
 	ChangeHistoryService:SetWaypoint("Exported lighting from map to Lighting")
 end
@@ -86,7 +91,7 @@ local function importLighting()
     end
 	
 	for _, LightObject in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
-		if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") then
+		if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") or LightObject:IsA("Clouds") then
 			LightObject.Parent = nil
 		end
 	end
@@ -94,6 +99,13 @@ local function importLighting()
 	for _, NewLighting in pairs(Lighting:GetChildren()) do
 		local Clone = NewLighting:Clone()
 		Clone.Parent = Util.mapModel:get().Settings.Lighting
+	end
+
+	for _, NewLighting in pairs(workspace.Terrain:GetChildren()) do
+		if NewLighting:IsA("Clouds") then
+			local Clone = NewLighting:Clone()
+			Clone.Parent = Util.mapModel:get().Settings.Lighting
+		end
 	end
 
 	ChangeHistoryService:SetWaypoint("Imported lighting from Lighting to map")
