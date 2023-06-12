@@ -921,9 +921,9 @@ Metadata:
     <font size="15"><b>Timeout: </b></font>The amount of time the user will cling to the orb before falling out.]]
             },
         },
-        Teleport = {
+        Teleporter = {
             DisplayText = "Teleporter",
-            ActionText = "Teleport",
+            ActionText = "Teleporter",
             DisplayIcon = "rbxassetid://6031082527",
             LayoutOrder = 11,
             metadata = {
@@ -934,7 +934,7 @@ Metadata:
                 },
             },
             ApplyMethod = "_Action",
-            IsTagApplicable = true,
+            IsTagApplicable = false,
             OnlyBaseParts = true,
 
             Tooltip = {

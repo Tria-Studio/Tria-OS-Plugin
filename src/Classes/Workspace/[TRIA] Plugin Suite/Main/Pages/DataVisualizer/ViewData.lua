@@ -196,6 +196,15 @@ return {
 
                 Color = Color3.fromRGB(150, 64, 172),
                 ObjectType = "SelectionBox",
+            }, {
+                TagType = "Any",
+                Name = "Teleporter",
+                LayoutOrder = 10,
+                DisplayIcon = "rbxassetid://6031082527",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(150, 64, 172),
+                ObjectType = "SelectionBox",
             },
         },
         Tooltip = {
