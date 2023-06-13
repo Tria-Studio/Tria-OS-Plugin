@@ -153,7 +153,7 @@ function frame:GetUI(type): Instance
 		BorderSizePixel = 1,
 		LayoutOrder = type == "Lighting" and 4 or 8,
 		Size = UDim2.new(1, 0, 0, 50),
-		Visible = directories.Lighting.Visible,
+		Visible = type == "Lighting" and directories.Lighting.Visible or directories.Materials.Visible,
 	
 		[Children] = {
 			Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),

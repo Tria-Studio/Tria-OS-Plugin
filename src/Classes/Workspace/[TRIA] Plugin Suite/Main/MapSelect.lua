@@ -253,6 +253,40 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         mapTypes[newMap.ClassName]()
         detectSpecialFolder(true)
+
+        -- make sure the map has every settings folder, if not add it
+        -- i got lazy so no it doesnt automatically add every setting
+
+        local Settings = Util.mapModel:get().Settings
+
+        if not Settings:FindFirstChild("Music") then
+            local musicFolder = Instance.new("Configuration")
+            musicFolder.Name = "Music"
+            musicFolder.Parent = Settings
+
+            musicFolder:SetAttribute("Music", Settings.Main:GetAttribute())
+            musicFolder:SetAttribute("Volume", 0.5)
+            musicFolder:SetAttribute("TimePosition", 0)
+        end
+
+        if not Settings:FindFirstChild("Materials") then
+            local musicFolder = Instance.new("Configuration")
+            musicFolder.Name = "Materials"
+            musicFolder.Parent = Settings
+
+            musicFolder:SetAttribute("Use2022Materials", false)
+        end
+
+        if not Settings:FindFirstChild("Skills") then
+            local musicFolder = Instance.new("Configuration")
+            musicFolder.Name = "Skills"
+            musicFolder.Parent = Settings
+
+            musicFolder:SetAttribute("AllowAirDive", false)
+            musicFolder:SetAttribute("AllowSliding", false)
+            musicFolder:SetAttribute("LinearSliding", false)
+        end
+
     else
         self:ResetSelection()
     end
