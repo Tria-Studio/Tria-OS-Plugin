@@ -124,7 +124,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
 
      if newMap:IsA("Model") or newMap:IsA("Workspace") then
         if score_1 > 0.875 or score_2 > 1 then
-            return false, "Unknown map detected. This plugin is designed to aid TRIA.os development."
+            return false, "Unknown map type detected. This plugin was designed to aid with TRIA.os mapmaking."
         end
 
         if not newMap:FindFirstChild("Spawn", true) then
@@ -140,7 +140,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
         end
 
         if not hasSettings then
-            return false, "No Settings found. Add a folder named 'Settings' into the map with the relevant subfolders (it's recommended to copy straight from the MapKit). "
+            return false, [[Unable to find the Map's settings. This could be because the main settings folder does not exist, or because that settings folder is missing the "Main" and "Lighting" folders (More settings folders exist, but these are the two most important folders that every map uses).]]
         end
 
         return true, nil
