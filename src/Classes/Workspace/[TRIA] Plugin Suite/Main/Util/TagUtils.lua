@@ -236,7 +236,9 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
 		end
 	end
 
-	types[metadata.data.type]()
+	if metadata.data.type then
+		types[metadata.data.type]()
+	end
 	tagUtils.OnlyShowUpdate:set(tagUtils.OnlyShowUpdate:get(false) + 1)
 end
 
