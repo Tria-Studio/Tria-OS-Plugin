@@ -86,7 +86,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
             score_1 += 0.25
         end
         if other_folder and newMap:FindFirstChild("TeleporterA1", true) and newMap:FindFirstChild("TeleporterA2", true) then
-            score_1 += 0.125
+            score_1 += 0.1
         end
 
         if newMap:FindFirstChild("Features") and newMap.Features:FindFirstChild("StunObjects") and newMap.Features:FindFirstChild("Interactives") and newMap.Features:FindFirstChild("Buttons") and newMap.Features:FindFirstChild("Triggers") then
