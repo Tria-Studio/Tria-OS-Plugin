@@ -264,9 +264,9 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             musicFolder.Name = "Music"
             musicFolder.Parent = Settings
 
-            musicFolder:SetAttribute("Music", Settings.Main:GetAttribute())
-            musicFolder:SetAttribute("Volume", 0.5)
-            musicFolder:SetAttribute("TimePosition", 0)
+            musicFolder:SetAttribute("Music", Settings.Main:GetAttribute("Music") or 0)
+            musicFolder:SetAttribute("Volume", Settings.Main:GetAttribute("MusicVolume") or 0.5)
+            musicFolder:SetAttribute("TimePosition", Settings.Main:GetAttribute("TimePosition") or 0)
         end
 
         if not Settings:FindFirstChild("Materials") then
