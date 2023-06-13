@@ -2,6 +2,7 @@
 --TODO: add workspace.terrain support (clouds) (WHY ARE THEY UNDER A SEPARATE LOCATION)
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Lighting = game:GetService("Lighting")
+local MaterialService = game:GetService("MaterialService")
 
 local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
@@ -111,13 +112,46 @@ local function importLighting()
 	ChangeHistoryService:SetWaypoint("Imported lighting from Lighting to map")
 end
 
+local function importMaterials()
+	ChangeHistoryService:SetWaypoint("Importing materials from MaterialService to map")
+
+	for _, MaterialObject in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
+		if MaterialObject:IsA("MaterialVariant") then
+			MaterialObject.Parent = nil
+		end
+	end
+
+	for _, NewMaterial in pairs(MaterialService:GetChildren()) do
+		local Clone = NewMaterial:Clone()
+		Clone.Parent = Util.mapModel:get().Settings.Materials
+	end
+
+	ChangeHistoryService:SetWaypoint("Imported materials from MaterialService to map")
+
+end
+
+local function exportMaterials()
+	ChangeHistoryService:SetWaypoint("Exporting materials from map to MaterialService")
+	for _, MaterialObject in pairs(MaterialService:GetChildren()) do
+		if MaterialObject:IsA("MaterialVariant") then
+			MaterialObject.Parent = nil
+		end
+	end
+
+	for _, NewMaterial in pairs(Util.mapModel:get().Settings.Materials:GetChildren()) do
+		local Clone = NewMaterial:Clone()
+		Clone.Parent = MaterialService
+	end
+	ChangeHistoryService:SetWaypoint("Exported materials from map to MaterialService")
+end
+
 local frame = {}
 
-function frame:GetUI(): Instance
+function frame:GetUI(type): Instance
 	return New "Frame" {
 		BackgroundTransparency = 1,
 		BorderSizePixel = 1,
-		LayoutOrder = 4,
+		LayoutOrder = type == "Lighting" and 4 or 8,
 		Size = UDim2.new(1, 0, 0, 50),
 		Visible = directories.Lighting.Visible,
 	
@@ -125,12 +159,12 @@ function frame:GetUI(): Instance
 			Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
 			ExportButton {
 				LayoutOrder = 1,
-				Text = "Export to Lighting",
+				Text = `Export to {type}`,
 	
 				[OnEvent "Activated"] = function()
 					local option1 = {
 						Text = "Export",
-						Callback = exportLighting,
+						Callback = type == "Lighting" and exportLighting or exportMaterials,
 						BackgroundColor3 = Theme.Button.Selected
 					}
 			
@@ -140,8 +174,8 @@ function frame:GetUI(): Instance
 					}
 	
 					Util:ShowMessage(
-						"Export to lighting?", 
-						"This will export the current lighting settings into your game's lighting system, and override all lighting instances in Lighting.", 
+						`Export to {type:lower()}?`, 
+						`This will export the current {type} settings into your game's {type} service, and override all {type} instances.`, 
 						option1, 
 						option2
 					)
@@ -149,11 +183,11 @@ function frame:GetUI(): Instance
 			},
 			ExportButton {
 				LayoutOrder = 2,
-				Text = "Import from Lighting",
+				Text = `Import from {type}`,
 				[OnEvent "Activated"] = function()
 					local option1 = {
 						Text = "Import",
-						Callback = importLighting,
+						Callback = type == "Lighting" and importLighting or importMaterials,
 						BackgroundColor3 = Theme.Button.Selected
 					}
 			
@@ -163,8 +197,8 @@ function frame:GetUI(): Instance
 					}
 	
 					Util:ShowMessage(
-						"Import from lighting?", 
-						"This will import the current lighting settings from your game into the map's settings and override all lighting instances.", 
+						`Import from {type}?`, 
+						`This will import the current {type} settings from your game into the map's settings and override all {type} instances.`, 
 						option1, 
 						option2
 					)

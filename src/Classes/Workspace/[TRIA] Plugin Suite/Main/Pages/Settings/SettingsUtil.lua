@@ -59,7 +59,7 @@ local SettingsUtil = {
             IsHeader = true,
             Default = true,
             Display = "Liquids and Gas",
-            LayoutOrder = 8,
+            LayoutOrder = 9,
             Items = Value({})
         }
     }

@@ -113,7 +113,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                         return dirKey, dirDropdown
                     end, Fusion.cleanup),
 
-                    LightingExport:GetUI()
+                    LightingExport:GetUI("Lighting"),
+                    LightingExport:GetUI("MaterialService")
                 }
             }
         }
