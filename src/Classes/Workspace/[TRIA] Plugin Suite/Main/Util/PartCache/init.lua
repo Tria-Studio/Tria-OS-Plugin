@@ -163,8 +163,10 @@ function Handler:CacheObject(CacheName: string, InstanceObject: Instance)
 	local CacheKey = Handler.Caches[CacheName]
 	assert(CacheKey or InstanceObject, ErrorMessage)
 	
-	CacheKey.Objects[InstanceObject] = true
-	InstanceObject.CFrame = FarCFrame
+	if CacheKey then
+		CacheKey.Objects[InstanceObject] = true
+		InstanceObject.CFrame = FarCFrame
+	end
 end
 
 -- Caches all objects being used.

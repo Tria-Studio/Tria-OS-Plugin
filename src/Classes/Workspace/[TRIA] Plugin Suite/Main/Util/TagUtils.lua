@@ -23,6 +23,7 @@ local ImmutableTags = {
 	"_Liquid",
 	"_Gas",
 	"_Kill",
+	"Rail",
 	"Zipline",
 	"AirTank",
 }
@@ -43,6 +44,7 @@ local newTagTypes = {
 	_Kill = { "ActionTags" },
 	_Detail = { "DetailTag" },
 	Zipline = { "ModelTags" },
+	Rail = { "ModelTags" },
 	_Button = { "ModelTags" },
 	AirTank = { "ModelTags" },
 	Orb = { "ModelTags" },
@@ -90,6 +92,7 @@ local tagTypes = {
 	ModelTags = { --// They are a model named this and stuff
 		"Zipline",
 		"_Button",
+		"Rail",
 		"AirTank",
 		"Orb",
 
@@ -566,6 +569,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 		_Explode = Special and Special:FindFirstChild("Button"),
 		_Button = Special and Special:FindFirstChild("Button"),
 		Zipline = Special and Special:FindFirstChild("Zipline"),
+		Rail = Special and Special:FindFirstChild("Rail"),
 		Variant = Special and Special:FindFirstChild("Variant"),
 		_Liquid = Special and Special:FindFirstChild("Fluid"),
 		_Gas = Special and Special:FindFirstChild("Fluid"),
@@ -601,7 +605,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 		return InstanceToCheck and InstanceToCheck:GetDescendants() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	elseif subTag == "Variant" then
 		return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
-	elseif tag == "Zipline" then
+	elseif tag == "Zipline" or tag == "Rail" then
 		return InstanceToCheck:GetChildren() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	end
 

@@ -227,6 +227,14 @@ data.metadataTypes = {
         displayName = "Jumpable Ziplines",
         default = false,
     },
+    RailJumpable = {
+        _referenceName = "RailJumpable",
+        type = "ConfigAttribute",
+        dataType = "boolean",
+        dataName = "Jumpable",
+        displayName = "Jumpable Rails",
+        default = false,
+    },
     ZiplineMaterial = {
         _referenceName = "ZiplineMaterial",
         type = "ConfigAttribute",
@@ -348,6 +356,49 @@ data.metadataTypes = {
                         local length = Beam.TextureLength
                         
                         Beam.TextureSpeed = -(length/speed)^-1
+                    end
+                end
+            end
+        end
+    },
+
+    ConvertToRail = {
+        _referenceName = "ConvertToRail",
+        dataType = "button",
+        dataName = "Convert Zipline to Rail",
+
+        callback = function()
+            local Util = require(script.Parent.Parent.Parent.Util)
+            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
+
+            if Util.mapModel:get():FindFirstChild("Special") and Util.mapModel:get().Special:FindFirstChild("Rail") then
+                for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
+                    local model = part:IsA("Model") and part or part.Parent:IsA("Model") and part.Parent
+                    
+                    if model and TagUtils:PartHasTag(model, "Zipline") then
+                        model.Name = "Rail"
+                        model.Parent = Util.mapModel:get().Special.Rail
+                    end
+                end
+            end
+        end
+    },
+    ConvertToZipline = {
+        _referenceName = "ConvertToZipline",
+        dataType = "button",
+        dataName = "Convert Rail to Zipline",
+
+        callback = function()
+            local Util = require(script.Parent.Parent.Parent.Util)
+            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
+
+            if Util.mapModel:get():FindFirstChild("Special") and Util.mapModel:get().Special:FindFirstChild("Zipline") then
+                for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
+                    local model = part:IsA("Model") and part or part.Parent:IsA("Model") and part.Parent
+
+                    if model and TagUtils:PartHasTag(model, "Rail") then
+                        model.Name = "Zipline"
+                        model.Parent = Util.mapModel:get().Special.Zipline
                     end
                 end
             end
@@ -781,6 +832,10 @@ Metadata:
                     data = data.metadataTypes.ZiplineSparkle,
                     location = 3,
                     isFullSize = false,
+                }, {
+                    data = data.metadataTypes.ConvertToRail,
+                    location = 11,
+                    isFullSize = true,
                 },
             },
             ApplyMethod = nil,
@@ -799,6 +854,65 @@ Metadata:
     <font size="15"><b>Color: </b></font>The color of the zipline.
     <font size="15"><b>Material: </b></font>The material of the zipline.
     <font size="15"><b>Zipline Width: </b></font>The width & height of the zipline cable.
+    <font size="15"><b>Sparkle: </b></font>Determines if a sparkle particle will play where the player 'grabs' onto the zipline.]]
+            },
+        },
+        Rail = {
+            DisplayText = "Rail",
+            ActionText = nil,
+            DisplayIcon = "rbxassetid://6031229350",
+            LayoutOrder = 7,
+            metadata = {
+                {
+                    data = data.metadataTypes.ZiplineSpeed,
+                    location = 1,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.ZiplineMomentum,
+                    location = 2,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.RailJumpable,
+                    location = 4,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.ZiplineColor,
+                    location = 5,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.ZiplineMaterial,
+                    location = 7,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.ZiplineWidth,
+                    location = 9,
+                    isFullSize = true,
+                },   {
+                    data = data.metadataTypes.ZiplineSparkle,
+                    location = 3,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.ConvertToZipline,
+                    location = 11,
+                    isFullSize = true,
+                },
+            },
+            ApplyMethod = nil,
+            IsTagApplicable = false,
+            OnlyBaseParts = nil,
+
+            Tooltip = {
+                Header = "Rails",
+                Text = [[Rails (Like Ziplines) are an interactive way to allow for people to travel from point A to point B in a map. Rails can be previewed with View Modes!
+
+Rails support custom 'Sparkle's! Insert a ParticleEmitter named <b>'_Sparkle'</b> into the 'Configuration' Instance to customize it!
+
+Metadata:
+    <font size="15"><b>Momentum: </b></font>Determines whether or not you continue moving in the direction that you exited the zipline.
+    <font size="15"><b>Jumpable: </b></font>Allows players to jump off ziplines mid zipline.
+    <font size="15"><b>Color: </b></font>The color of the zipline.
+    <font size="15"><b>Material: </b></font>The material of the zipline.
+    <font size="15"><b>Rail Width: </b></font>The width & height of the zipline cable.
     <font size="15"><b>Sparkle: </b></font>Determines if a sparkle particle will play where the player 'grabs' onto the zipline.]]
             },
         },

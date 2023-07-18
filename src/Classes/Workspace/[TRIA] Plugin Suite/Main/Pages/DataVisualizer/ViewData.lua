@@ -241,6 +241,21 @@ return {
             Text = ""
         }
     },
+    RailView = {
+        TagType = "Any",
+        Name = "Rail",
+        SingleOption = true,
+        DisplayText = "Rail Preview",
+        DisplayIcon = "rbxassetid://6031229350",
+        LayoutOrder = 5,
+        ViewOptions = {},
+        ObjectType = "Zipline",
+
+        Tooltip = {
+            Header = "",
+            Text = ""
+        }
+    },
     VariantView = {
         DisplayText = "Variant View",
         SubText = "All Variants",

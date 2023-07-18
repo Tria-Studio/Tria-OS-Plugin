@@ -11,6 +11,7 @@ ObjectType.__index = ObjectType
 function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)
 
+    self.Tag = controller.Tag
     self.Objects = {}
     self._Maid = Util.Maid.new()
 
@@ -121,7 +122,7 @@ end
 function ObjectType:ClearAppearance(part: Instance?)
     if part then
         for _, object in pairs(self.Objects[part].Zipline:GetChildren()) do
-            PartCache:CacheObject("ZiplineCache", object)
+            PartCache:CacheObject(self.Tag .. "Cache", object)
         end
         for _, index in pairs(self.Objects[part].MaidIndex) do
             self._Maid[index] = nil
@@ -130,14 +131,14 @@ function ObjectType:ClearAppearance(part: Instance?)
         for _, viewobject in pairs(self.Objects) do
             if viewobject.Zipline then
 	            for _, object in pairs(viewobject.Zipline:GetChildren()) do
-	                PartCache:CacheObject("ZiplineCache", object)
+	                PartCache:CacheObject(self.Tag .. "Cache", object)
 				end
 				viewobject.Zipline:Destroy()
 			end
         end
         self._Maid:Destroy()
         self.Objects = {}
-        PartCache:RemoveCache("ZiplineCache")
+        PartCache:RemoveCache(self.Tag .. "Cache")
     end
 end
 
