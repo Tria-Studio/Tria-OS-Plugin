@@ -202,6 +202,15 @@ data.metadataTypes = {
         default = false,
     },
 
+    AllowLeaning = {
+        _referenceName = "AllowLeaning",
+        type = "ConfigAttribute",
+        dataName = "AllowLeaning",
+        dataType = "boolean",
+        displayName = "Allow Leaning",
+        default = false,
+    },
+
     UseFrontOnly = {
         _referenceName = "UseFrontOnly",
         type = "Attribute",
@@ -247,10 +256,10 @@ data.metadataTypes = {
     ZiplineMomentum = {
         _referenceName = "ZiplineMomentum",
         type = "ConfigAttribute",
-        dataType = "boolean",
+        dataType = "number",
         dataName = "Momentum",
         displayName = "Momentum",
-        default = true,
+        default = 0,
     },
     ZiplineSparkle = {
         _referenceName = "ZiplineSparkle",
@@ -371,15 +380,24 @@ data.metadataTypes = {
             local Util = require(script.Parent.Parent.Parent.Util)
             local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
 
-            if Util.mapModel:get():FindFirstChild("Special") and Util.mapModel:get().Special:FindFirstChild("Rail") then
+            if Util.mapModel:get():FindFirstChild("Special") then
+                local newFolder = Util.mapModel:get().Special:FindFirstChild("Rail")
+
+                if not newFolder then
+                    newFolder = Instance.new("Folder")
+                    newFolder.Name = "Rail"
+                    newFolder.Parent = Util.mapModel:get().Special
+                end
+
                 for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
                     local model = part:IsA("Model") and part or part.Parent:IsA("Model") and part.Parent
                     
                     if model and TagUtils:PartHasTag(model, "Zipline") then
                         model.Name = "Rail"
-                        model.Parent = Util.mapModel:get().Special.Rail
+                        model.Parent = newFolder
                     end
                 end
+
             end
         end
     },
@@ -392,7 +410,16 @@ data.metadataTypes = {
             local Util = require(script.Parent.Parent.Parent.Util)
             local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
 
-            if Util.mapModel:get():FindFirstChild("Special") and Util.mapModel:get().Special:FindFirstChild("Zipline") then
+            if Util.mapModel:get():FindFirstChild("Special") then
+                
+                local newFolder = Util.mapModel:get().Special:FindFirstChild("Zipline")
+
+                if not newFolder then
+                    newFolder = Instance.new("Folder")
+                    newFolder.Name = "Zipline"
+                    newFolder.Parent = Util.mapModel:get().Special
+                end
+
                 for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
                     local model = part:IsA("Model") and part or part.Parent:IsA("Model") and part.Parent
 
@@ -401,7 +428,7 @@ data.metadataTypes = {
                         model.Parent = Util.mapModel:get().Special.Zipline
                     end
                 end
-            end
+            end 
         end
     }
 }
@@ -813,28 +840,32 @@ Metadata:
                     location = 2,
                     isFullSize = false,
                 }, {
-                    data = data.metadataTypes.ZiplineJumpable,
+                    data = data.metadataTypes.RailJumpable,
                     location = 4,
                     isFullSize = true,
                 }, {
                     data = data.metadataTypes.ZiplineColor,
-                    location = 5,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.ZiplineMaterial,
                     location = 7,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ZiplineWidth,
+                    data = data.metadataTypes.ZiplineMaterial,
                     location = 9,
                     isFullSize = true,
-                },   {
+                }, {
+                    data = data.metadataTypes.ZiplineWidth,
+                    location = 11,
+                    isFullSize = true,
+                }, {
                     data = data.metadataTypes.ZiplineSparkle,
                     location = 3,
                     isFullSize = false,
                 }, {
+                    data = data.metadataTypes.AllowLeaning,
+                    location = 5,
+                    isFullSize = true,
+                }, { 
                     data = data.metadataTypes.ConvertToRail,
-                    location = 11,
+                    location = 13,
                     isFullSize = true,
                 },
             },
@@ -877,23 +908,27 @@ Metadata:
                     isFullSize = true,
                 }, {
                     data = data.metadataTypes.ZiplineColor,
-                    location = 5,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.ZiplineMaterial,
                     location = 7,
                     isFullSize = true,
                 }, {
-                    data = data.metadataTypes.ZiplineWidth,
+                    data = data.metadataTypes.ZiplineMaterial,
                     location = 9,
                     isFullSize = true,
-                },   {
+                }, {
+                    data = data.metadataTypes.ZiplineWidth,
+                    location = 11,
+                    isFullSize = true,
+                }, {
                     data = data.metadataTypes.ZiplineSparkle,
                     location = 3,
                     isFullSize = false,
                 }, {
+                    data = data.metadataTypes.AllowLeaning,
+                    location = 5,
+                    isFullSize = true,
+                }, { 
                     data = data.metadataTypes.ConvertToZipline,
-                    location = 11,
+                    location = 13,
                     isFullSize = true,
                 },
             },
