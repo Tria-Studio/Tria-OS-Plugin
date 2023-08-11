@@ -75,34 +75,6 @@ Unknown difficulties cannot be published and are not officially supported.
 	},
 
 	{
-		Text = "<s>BGM</s>",
-		Type = "Number",
-		RichText = "BGM",
-
-		Attribute = "Music",
-		Fallback = 6366407687,
-
-		Value = Value(""),
-		Tooltip = {
-			Text = "The AssetID of the music that plays in the background of your map.\n\nIt is reccomended to use the Music folder instead of this setting.",
-		},
-	},
-
-	{
-		Text = "<s>BGM Volume</s>",
-		Type = "Number",
-		RichText = "BGM Volume",
-
-		Attribute = "MusicVolume",
-		Fallback = 0.5,
-
-		Value = Value(""),
-		Tooltip = {
-			Text = "Volume of the music that plays in the background.\n\nIt is reccomended to use the Music folder instead of this setting.",
-		},
-	},
-
-	{
 		Text = "Map Name",
 		Type = "String",
 

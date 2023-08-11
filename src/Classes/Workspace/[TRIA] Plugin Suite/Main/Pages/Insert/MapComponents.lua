@@ -18,6 +18,10 @@ local function positionModel(model: Model)
     Selection:Set({model})
 end
 
+local function ConvertToOptimized()
+
+end
+
 local function insertModel(modelName: string, parent: Instance?): Instance
     ChangeHistoryService:SetWaypoint(string.format("Inserting model '%s'", modelName))
     local newModel = (componentFiles:FindFirstChild(modelName) or addonFiles:FindFirstChild(modelName)):Clone()
@@ -305,13 +309,15 @@ end)
     
             InsertFunction = function()
                 if Util.hasSpecialFolder:get(false) then
-                    Util:ShowMessage("Cannot insert model", "Your map already has the optimized map structure format! (Folder named 'Special')")
+                    Util:ShowMessage("Cannot insert model", "Your map already has the optimized map structure format! (Folder named 'Special').\n\n Would you like to convert your map into this structure anyways? \n\n(NOTE: This will not convert your scripts. If your MapScript is referencing any key map component (liquid, buttons, etc.) You will need to manually update it.)", {Text = "Yes", Callback = ConvertToOptimized}, {Text = "No"})
                     return
                 end
     
                 local newParent = Util.mapModel:get(false)
                 insertModel("Special", newParent)
                 Util.debugWarn("Successfully added OptimizedStructure!")
+
+                Util:ShowMessage("Convert Map?", "Would you like to convert your map's components to use this structure automatically?\n\nNOTE: This will not convert your scripts. If your MapScript is referencing any key map component (liquid, buttons, etc.) You will need to manually update it.", {Text = "Yes", Callback = ConvertToOptimized}, {Text = "No"})
             end
         }, {
             Name = "Add Exit Region",

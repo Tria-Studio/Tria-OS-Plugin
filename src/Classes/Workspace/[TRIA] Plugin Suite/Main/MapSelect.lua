@@ -254,6 +254,10 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         mapTypes[newMap.ClassName]()
         detectSpecialFolder(true)
 
+        if not newMap:FindFirstChild("Special") then
+            Util:ShowMessage("Warning", "This map does not use OptimizedStructure, a way to improve performance & loading times. OptimizedStructure is a requirement in order to publish TRIA.os maps. \n\nWould you like to convert your map to this format?", {Text = "Take me there", Callback = function() Pages:ChangePage("Insert") end}, {Text = "No"})
+        end
+
         -- make sure the map has every settings folder, if not add it
         -- i got lazy so no it doesnt automatically add every setting
 
@@ -429,7 +433,7 @@ Observer(Util.hasSpecialFolder):onChange(function()
         return
     end
 
-    local folder = Util.mapModel:get().Special
+    local folder = Util.mapModel:get():FindFirstChild("Special")
 
     local function check()
         active = true
@@ -447,12 +451,16 @@ Observer(Util.hasSpecialFolder):onChange(function()
     
     task.spawn(function()
         while task.wait(1) and Util.mapModel:get() do
-            if not active and folder:FindFirstChild("Variant") then
+            folder = Util.mapModel:get():FindFirstChild("Special")
+
+            if not active and folder and folder:FindFirstChild("Variant") then
                 check()
             end
         end
     end)
-    check()
+    if folder then
+        check()
+    end
 end)
 
 return MapSelect
