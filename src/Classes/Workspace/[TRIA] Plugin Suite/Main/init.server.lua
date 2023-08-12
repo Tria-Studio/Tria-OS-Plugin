@@ -51,10 +51,13 @@ local debugMenu = plugin:CreatePluginMenu(math.random(), "Debug Menu")
 debugMenu.Name = "Debug Menu"
 debugMenu:AddNewAction("ShowDebug", "Show Debug Menu", "rbxassetid://6022668961")
 
-local function showDebug()
-	local selectedAction = debugMenu:ShowAsync()
-	if selectedAction then
-		if selectedAction.ActionId:find("ShowDebug") then
+local function showDebug(bypass)
+	local selectedAction
+	if bypass ~= true then
+		selectedAction = debugMenu:ShowAsync()
+	end
+	if selectedAction or bypass == true then
+		if bypass == true or selectedAction.ActionId:find("ShowDebug") then
 			Util:ShowMessage(Util._Headers.DEBUG_HEADER, Computed(function(): string
 				return ([[<font color='rgb(120, 120, 120)'><b>Debug Information</b></font>
 <b>Version</b>: %s
@@ -64,6 +67,7 @@ local function showDebug()
 <b>Average HTTP Response Time</b>: %s,
 <b>Average Autocomplete Response Time</b>: %s
 <b>Github Status</b>: %s
+<b>Output Messages</b>: %s
 				]]):format(
 					Util._DEBUG.PLUGIN_VERSION,
 					tostring(Util._DEBUG.IS_RELEASE),
@@ -71,9 +75,15 @@ local function showDebug()
 					Util._DEBUG._Fps:get(), 
 					Util._DEBUG._HttpPing:get(),
 					Util._DEBUG._SuggesterResponse:get(), 
-					Util._DEBUG._GitStatus:get()
+					Util._DEBUG._GitStatus:get(),
+					tostring(Util.doDebugPrints)
 				)
-			end))
+			end), {Text = Util.doDebugPrints and "Disable output prints" or "Enable output prints", Callback = function() 
+				Util.doDebugPrints = not Util.doDebugPrints 
+				task.delay(0, function() 
+					showDebug(true)
+				end)
+			end})
 		end
 	else
 		return;

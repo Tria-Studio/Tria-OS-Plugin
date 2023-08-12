@@ -25,6 +25,7 @@ local Util = {
     Signal = Signal,
     Maid = Maid,
 
+    doDebugPrints = true,
     PluginActive = Value(false),
     Widget = nil,
     mapModel = Value(nil),
@@ -131,7 +132,7 @@ local Util = {
         AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
     },
     _DEBUG = {
-        PLUGIN_VERSION = "1.1-dev",
+        PLUGIN_VERSION = "1.1",
         IS_RELEASE = true,
 
         _HttpPing = Value("Pinging..."),
@@ -212,7 +213,9 @@ function Util.updateMapSetting(directory: string, attribute: string, value: any)
 end
 
 function Util.debugWarn(...)
-    warn("[TRIA.os Map Plugin]:", ...)
+    if Util.doDebugPrints then
+        warn("[TRIA.os Map Plugin]:", ...)
+    end
 end
 
 function Util.getDirFolder(directory: string): Instance?

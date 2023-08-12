@@ -19,13 +19,9 @@ local function positionModel(model: Model)
 end
 
 local function insertModel(modelName: string, parent: Instance?): Instance
-    local recording = ChangeHistoryService:TryBeginRecording("insertPluginComponent", string.format('Inserted map component "%s"', modelName))
-    if recording then
-        local newModel = (componentFiles:FindFirstChild(modelName) or addonFiles:FindFirstChild(modelName)):Clone()
-        newModel.Parent = parent
-        ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
-        return newModel
-    end
+    local newModel = (componentFiles:FindFirstChild(modelName) or addonFiles:FindFirstChild(modelName)):Clone()
+    newModel.Parent = parent
+    return newModel
 end
 
 local function getInsertFolder(specialChildName: string): Instance
