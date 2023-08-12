@@ -3,8 +3,8 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
-local Pages = require(Package.Resources.Components.Pages)
 local TagUtils = require(Package.Util.TagUtils)
+local ConvertToOptimized = require(script.OptimizedConvert)
 
 local componentFiles = script.Parent.ComponentFiles
 local addonFiles = script.Parent.AddonFiles
@@ -16,10 +16,6 @@ local function positionModel(model: Model)
     local newPos = workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -36)
     model:PivotTo(CFrame.new(newPos.Position))
     Selection:Set({model})
-end
-
-local function ConvertToOptimized()
-
 end
 
 local function insertModel(modelName: string, parent: Instance?): Instance
@@ -135,6 +131,11 @@ end)
                 if currentMap.MapScript:FindFirstChild("Waterjets") and currentMap.MapScript.Waterjets:FindFirstChild("WaterjetClient") then
                     Util:ShowMessage("Cannot Insert Addon", "This addon already exists in your map! To update the addon, delete it from your map and retry.")
                     return Util.debugWarn("BBBBBB")
+                end
+
+                if not Util.mapModel:get():FindFirstChild("Special") then
+                    Util:ShowMessage("Cannot Insert Addon", "This addon requires your map to support OptimizedStructure. \n\nYou can add and convert your map to this below by inserting OptimizedStructure.")
+                    return Util.debugWarn("CCCCCC")
                 end
 
                 ChangeHistoryService:SetWaypoint("Inserting Waterjets")
