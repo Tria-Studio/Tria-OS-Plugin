@@ -85,6 +85,18 @@ return function(name: string, data: PublicTypes.Dictionary)
         Controller = ViewObject.new(name, data, data.Color)
         viewObjects[name] = Controller
         checkState = Controller.checkState
+
+        if name == "RailView" then
+            -- i got lazy so it just listens for when the zipline is enabled and not lol
+
+            viewObjects.ZiplineView.StateChanged:Connect(function(newValue)
+                if newValue then
+                    viewObjects.RailView:Enable()
+                else
+                    viewObjects.RailView:Disable()
+                end
+            end)
+        end
     else
         if viewObjects[name] and viewObjects[name].get then
             for metadataName, viewObject in pairs(viewObjects[name]:get()) do --// destroy them all because THIS WAS THE SOLUTION SOHDSFJKFHDJKSHFSKJLFHSDLKJHFL
@@ -126,9 +138,9 @@ return function(name: string, data: PublicTypes.Dictionary)
     end
 
     return New "Frame" {
-        Visible = name == "AddonView" and Computed(function(): boolean
+        Visible = if name == "AddonView" then Computed(function(): boolean
             return Util._Addons.hasAddonsWithObjectTags:get() ~= false
-        end) or true,
+        end) elseif name == "RailView" then false else true,
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundColor3 = Theme.ScrollBarBackground.Default,
         LayoutOrder = data.LayoutOrder,

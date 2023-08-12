@@ -122,7 +122,7 @@ end
 function ObjectType:ClearAppearance(part: Instance?)
     if part then
         for _, object in pairs(self.Objects[part].Zipline:GetChildren()) do
-            PartCache:CacheObject(self.Tag .. "Cache", object)
+            PartCache:CacheObject("ZiplineCache", object)
         end
         for _, index in pairs(self.Objects[part].MaidIndex) do
             self._Maid[index] = nil
@@ -131,14 +131,14 @@ function ObjectType:ClearAppearance(part: Instance?)
         for _, viewobject in pairs(self.Objects) do
             if viewobject.Zipline then
 	            for _, object in pairs(viewobject.Zipline:GetChildren()) do
-	                PartCache:CacheObject(self.Tag .. "Cache", object)
+	                PartCache:CacheObject("ZiplineCache", object)
 				end
 				viewobject.Zipline:Destroy()
 			end
         end
         self._Maid:Destroy()
         self.Objects = {}
-        PartCache:RemoveCache(self.Tag .. "Cache")
+        PartCache:RemoveCache("ZiplineCache")
     end
 end
 

@@ -29,6 +29,9 @@ function ViewObject.new(Name, data, color)
 
 	self.checkState = Value(false)
 	self.Enabled = false
+
+	self.StateChanged = Util.Signal.new()
+
 	return self
 end
 
@@ -44,6 +47,8 @@ function ViewObject:Enable()
 	if self.Enabled then
 		return
 	end
+
+	self.StateChanged:Fire(true)
 
 	local function HandleUpdates(part)
 		local MaidIndex = self.ObjectHandler.Objects[part].MaidIndex
@@ -168,6 +173,7 @@ end
 
 function ViewObject:Disable(override)
 	if self.Enabled then
+		self.StateChanged:Fire(false)
 		self.ObjectHandler:ClearAppearance()
         self.Enabled = false
         self.checkState:set(false)
