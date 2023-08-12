@@ -19,6 +19,7 @@ Data.Items = {
 		Directory = "Lighting",
 		Attribute = "Ambient",
 		Fallback = Util.colorToRGB(Color3.fromRGB(118, 118, 118)),
+		Default = Color3.fromRGB(118, 118, 118),
 
 		Value = Value(Color3.new()),
 		Tooltip = {
@@ -61,6 +62,7 @@ Data.Items = {
 		Directory = "Lighting",
 		Attribute = "ColorShift_Bottom",
 		Fallback = Util.colorToRGB(Color3.fromRGB()),
+		Default = Color3.new(),
 
 		Value = Value(Color3.new()),
 		Tooltip = {
@@ -75,6 +77,7 @@ Data.Items = {
 		Directory = "Lighting",
 		Attribute = "ColorShift_Top",
 		Fallback = Util.colorToRGB(Color3.fromRGB()),
+		Default = Color3.new(),
 
 		Value = Value(Color3.new()),
 		Tooltip = {
@@ -117,6 +120,7 @@ Data.Items = {
 		Directory = "Lighting",
 		Attribute = "FogColor",
 		Fallback = Util.colorToRGB(Color3.fromRGB()),
+		Default = Color3.new(),
 
 		Value = Value(Color3.new()),
 		Tooltip = {
@@ -184,6 +188,7 @@ Data.Items = {
 		Directory = "Lighting",
 		Attribute = "OutdoorAmbient",
 		Fallback = Util.colorToRGB(Color3.fromRGB(70, 70, 70)),
+		Default = Color3.fromRGB(70, 70, 70),
 
 		Value = Value(Color3.new()),
 		Tooltip = {

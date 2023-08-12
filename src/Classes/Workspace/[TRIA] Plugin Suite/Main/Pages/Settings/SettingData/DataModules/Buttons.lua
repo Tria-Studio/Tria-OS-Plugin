@@ -30,7 +30,8 @@ local function setupButtonFolder(folder: Instance)
 			Directory = "",
 			Attribute = "ActivatedColor",
 			Fallback = Util.colorToRGB(Color3.new(1, 0, 0)),
-	
+			Default = Color3.new(1, 0, 0),
+
 			Value = Value(Color3.new()),
 			Tooltip = {
 				Text = "The color of buttons that have already been pressed.\nSettings set per individual button overwrites these settings.",
@@ -58,6 +59,7 @@ local function setupButtonFolder(folder: Instance)
 			Directory = "",
 			Attribute = "ActiveColor",
 			Fallback = Util.colorToRGB(Color3.new(0, 1, 0)),
+			Default = Color3.new(0, 1, 0),
 	
 			Value = Value(Color3.new()),
 			Tooltip = {
@@ -72,6 +74,7 @@ local function setupButtonFolder(folder: Instance)
 			Directory = "",
 			Attribute = "InactiveColor",
 			Fallback = Util.colorToRGB(Color3.new(1, 1, 0)),
+			Default = Color3.new(1, 1, 0),
 	
 			Value = Value(Color3.new()),
 			Tooltip = {

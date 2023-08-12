@@ -84,10 +84,21 @@ function SettingsUtil.updateStateValue(currentValue: any, newValue: any, tbl: Pu
     if currentValue ~= nil then
         currentValue = newValue
     end
+    if not currentValue then
+        currentValue = Util.getDirFolder(tbl.Directory):GetAttribute(tbl.Attribute)
+    end
+
     if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
         tbl.Errored:set(true)
-        tbl.Value:set(if tbl.Fallback ~= nil then tbl.Fallback else "")
-        Util.debugWarn(("'%s' values aren't accepted for %s objects (%s)"):format(typeof(currentValue), tbl.Type, tbl.Text))
+        tbl.Value:set(if tbl.Fallback ~= nil then tbl.Default or tbl.Fallback else "")
+        Util.debugWarn(("'%s' values aren't accepted for %s objects (%s). Applying default value..."):format(typeof(currentValue), tbl.Type, tbl.Text))
+
+        if Util.getDirFolder(tbl.Directory):GetAttribute(tbl.Attribute) == nil then
+
+            Util.updateMapSetting(tbl.Directory, tbl.Attribute, tbl.Default or tbl.Fallback)
+            tbl.Errored:set(false, true)
+            tbl.Value:set(tbl.Default or tbl.Fallback)
+        end
     else
         tbl.Errored:set(false)
         tbl.Value:set(if currentValue ~= nil then currentValue elseif tbl.Fallback ~= nil then tbl.Fallback else "")

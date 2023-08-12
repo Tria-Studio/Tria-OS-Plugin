@@ -30,6 +30,7 @@ local function addLiquidToItems(liquid: Instance | Configuration)
             Type = "Color",  
             Attribute = "Color", 
             Fallback = Color3.new(1, 1, 1), 
+            Default = Color3.new(1, 1, 1),
             Value = Value(Color3.new(1, 1, 1)),
             Tooltip = {Text = "The color of this liquid/gas."}
         },
