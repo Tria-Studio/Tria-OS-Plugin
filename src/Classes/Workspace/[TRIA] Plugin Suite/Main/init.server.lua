@@ -83,7 +83,7 @@ local function showDebug(bypass)
 				task.delay(0, function() 
 					showDebug(true)
 				end)
-			end})
+			end}, {Text = "Close", Callback = function() end})
 		end
 	else
 		return;

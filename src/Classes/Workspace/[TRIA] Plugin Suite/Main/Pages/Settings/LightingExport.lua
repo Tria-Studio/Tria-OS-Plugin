@@ -1,5 +1,3 @@
---TODO: change this to a generic export button for both lighting and materials
---TODO: add workspace.terrain support (clouds) (WHY ARE THEY UNDER A SEPARATE LOCATION)
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Lighting = game:GetService("Lighting")
 local MaterialService = game:GetService("MaterialService")

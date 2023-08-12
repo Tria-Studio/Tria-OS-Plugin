@@ -227,7 +227,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
 
                             GetAssetButton {
-                                ModelId = 13762909019, -- TODO: update with the new id once ethan publishes the map kits
+                                ModelId = 13762909019,
                                 BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
                                 OverlayImage = "rbxassetid://13706366388",
                                 OverlayImageTransparency = 0.5,
@@ -243,7 +243,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             },
 
                             GetAssetButton {
-                                ModelId = 13762867366, -- TODO: update with the new id once ethan publishes the map kits
+                                ModelId = 13762867366,
                                 LayoutOrder = 2,
                                 BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
                                 OverlayImage = "rbxassetid://13706366546",
