@@ -16,10 +16,10 @@ local jetConnection
 
 local rayParams = RaycastParams.new()
 rayParams.FilterDescendantsInstances = {map}
-rayParams.FilterType = Enum.RaycastFilterType.Whitelist
+rayParams.FilterType = Enum.RaycastFilterType.Include
 
 local overlapParams = OverlapParams.new()
-overlapParams.FilterType = Enum.RaycastFilterType.Whitelist
+overlapParams.FilterType = Enum.RaycastFilterType.Include
 overlapParams.FilterDescendantsInstances = map.Special.Fluid:GetChildren()
 
 local function getNearbyFans(): {Instance}
@@ -30,23 +30,23 @@ local function getNearbyFans(): {Instance}
 
 		local isEnabled = fan:GetAttribute("Enabled")
 		local distance = fan:GetAttribute("Distance")
-		local fanShape = fan:GetAttribute("FanShape")
+		local fanShape = string.lower(fan:GetAttribute("FanShape"))
 
 		if localPos.Z < 0 and localPos.Z > -distance and isEnabled then
 			local fanTypes = {}
 
-			function fanTypes.Square()
+			function fanTypes.square()
 				local X = localPos.X > -fan.Size.X / 2 and localPos.X < fan.Size.X / 2
 				local Y = localPos.Y > -fan.Size.Y / 2 and localPos.Y < fan.Size.Y / 2
 				return X and Y
 			end
 
-			function fanTypes.Cylinder()
+			function fanTypes.cylinder()
 				local pos = localPos * Vector3.new(1, 1, 0)
 				return pos.Magnitude < math.min(fan.Size.X / 2, fan.Size.Y / 2)
 			end
 
-			if fanTypes[fanShape] ~= nil and fanTypes[fanShape]() then
+			if (fanTypes[fanShape] == "square" or fanTypes[fanShape] == "cylinder") and fanTypes[fanShape]() or fanTypes.square() then
 				table.insert(nearby, fan)
 			end
 		end
@@ -63,6 +63,7 @@ SwimmingService.OnSwimmingStateChanged:Connect(function(isSwimming: boolean)
 				local distance = fan:GetAttribute("Distance")
 
 				local raycastResult = workspace:Raycast(humanoidRootPart.Position, -fan.CFrame.LookVector * distance, rayParams)
+
 				if raycastResult then
 					local offset = (raycastResult.Position - humanoidRootPart.Position)
 					local resistance = if fan:GetAttribute("LinearMovement") then 1 else math.min(1, 1 - (math.abs(offset.Z) / distance) ^ 3)
