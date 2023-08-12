@@ -100,15 +100,20 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                             local currentlySelected = Util._Selection.selectedParts:get()
                             local newState = not dataVisible:get()
 
-                            ChangeHistoryService:SetWaypoint(string.format("Changing tag %s on %d part%s to %s", name, #currentlySelected, #currentlySelected == 1 and "" or "s", tostring(newState)))
-                            for _, instance in ipairs(Util._Selection.selectedParts:get()) do
-                                if data.OnlyBaseParts and not instance:IsA("BasePart") then
-                                    partError = true
-                                    continue
+                            local recording = ChangeHistoryService:TryBeginRecording("ChangeTag", string.format("Set tag %s on %d part%s to %s", name, #currentlySelected, #currentlySelected == 1 and "" or "s", tostring(newState)))
+                            if recording then
+                                
+                                for _, instance in ipairs(Util._Selection.selectedParts:get()) do
+                                    if data.OnlyBaseParts and not instance:IsA("BasePart") then
+                                        partError = true
+                                        continue
+                                    end
+                                    TagUtils:SetPartTag(instance, newState and name, not newState and name)
                                 end
-                                TagUtils:SetPartTag(instance, newState and name, not newState and name)
+
+                                ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
                             end
-                            ChangeHistoryService:SetWaypoint(string.format("Set tag %s on %d part%s to %s", name, #currentlySelected, #currentlySelected == 1 and "" or "s", tostring(newState)))
+                           
                             if partError and name ~= "_Detail" then
                                 Util.debugWarn(string.format("Only BaseParts, Models, Folders, & Attachments can have the tag '%s'. Selected parts which were not a BasePart were ignored.", name))
                                 Util:ShowMessage("Cannot Set Tag", string.format("Only <b>BaseParts</b>, <b>Models</b>, <b>Folders</b>, & <b>Attachments</b> can have the tag <b>'%s'</b>.<br /><br />Selected parts which were not a BasePart were ignored.", name))
@@ -237,12 +242,17 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         and Util.parseTextColor3(dataValue:get())
                                                         or dataValue:get()
 
-                                                    ChangeHistoryService:SetWaypoint(string.format("Changing metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(false), #Util._Selection.selectedParts:get(false) == 1 and "" or "s", tostring(stringTagValue)))
-                                                    dataValue:set(value)
-                                                    for _, selected: Instance in ipairs(Util._Selection.selectedParts:get()) do 
-                                                        TagUtils:SetPartMetaData(selected, name, metadataType, value)
+                                                    local recording = ChangeHistoryService:TryBeginRecording("ChangeMetadata", string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(false), #Util._Selection.selectedParts:get(false) == 1 and "" or "s", tostring(stringTagValue)))
+                                                    
+                                                    if recording then
+                                                        
+                                                        dataValue:set(value)
+                                                        for _, selected: Instance in ipairs(Util._Selection.selectedParts:get()) do 
+                                                            TagUtils:SetPartMetaData(selected, name, metadataType, value)
+                                                        end
+
+                                                        ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
                                                     end
-                                                    ChangeHistoryService:SetWaypoint(string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(false), #Util._Selection.selectedParts:get(false) == 1 and "" or "s", tostring(stringTagValue)))
                                                 end
 
                                                 function types.number(sizeSubtract: number?, extraChild: any?, textOverride: any?, isColor: boolean?): Instance

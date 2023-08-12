@@ -42,107 +42,119 @@ local function ExportButton(props: PublicTypes.Dictionary): Instance
 end
 
 local function exportLighting()
-	ChangeHistoryService:SetWaypoint("Exporting lighting from map to Lighting")
-    for _, item in ipairs(directories.Lighting.Items:get(false)) do
-        local settingToChange = if item.ExportAttribute then item.ExportAttribute else item.Attribute
-        local settingValue = item.Value:get(false)
-
-        local fired, _ = pcall(function()
-            Lighting[settingToChange] = settingValue
-        end)
-
-        if not fired then
-            Util.debugWarn(("Failed to set lighting setting '%s'"):format(tostring(settingToChange)))
-        end
-    end
-
-	for _, LightObject in pairs(Lighting:GetChildren()) do
-		if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") then
-			LightObject.Parent = nil
+	local recording = ChangeHistoryService:TryBeginRecording("ExportLighting", "Export lighting from map to game.Lighting")
+	if recording then
+		
+		for _, item in ipairs(directories.Lighting.Items:get(false)) do
+			local settingToChange = if item.ExportAttribute then item.ExportAttribute else item.Attribute
+			local settingValue = item.Value:get(false)
+	
+			local fired, _ = pcall(function()
+				Lighting[settingToChange] = settingValue
+			end)
+	
+			if not fired then
+				Util.debugWarn(("Failed to set lighting setting '%s'"):format(tostring(settingToChange)))
+			end
 		end
-	end
-	for _, LightObject in pairs(workspace.Terrain:GetChildren()) do
-		if LightObject:IsA("Clouds") then
-			LightObject.Parent = nil
+	
+		for _, LightObject in pairs(Lighting:GetChildren()) do
+			if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") then
+				LightObject.Parent = nil
+			end
 		end
-	end
+		for _, LightObject in pairs(workspace.Terrain:GetChildren()) do
+			if LightObject:IsA("Clouds") then
+				LightObject.Parent = nil
+			end
+		end
+	
+		for _, NewLighting in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
+			local Clone = NewLighting:Clone()
+			Clone.Parent = NewLighting:IsA("Clouds") and workspace.Terrain or Lighting
+		end
 
-	for _, NewLighting in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
-		local Clone = NewLighting:Clone()
-		Clone.Parent = NewLighting:IsA("Clouds") and workspace.Terrain or Lighting
+		ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
 	end
-	ChangeHistoryService:SetWaypoint("Exported lighting from map to Lighting")
 end
 
 local function importLighting()
-	ChangeHistoryService:SetWaypoint("Importing lighting from Lighting to map")
-    for _, item in ipairs(directories.Lighting.Items:get(false)) do
-        local settingToRetrieve = if item.ExportAttribute then item.ExportAttribute else item.Attribute
+	local recording = ChangeHistoryService:TryBeginRecording("ImportLighting", "Import lighting from game.Lighting to map")
+	if recording then
 
-        local fired, settingValue = pcall(function()
-            return Lighting[settingToRetrieve]
-        end)
-
-        if not fired then
-            Util.debugWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToRetrieve)))
-        else
-            item.Value:set(settingValue)
-			Util.updateMapSetting(item.Directory, item.Attribute, item.Value:get(false))
-        end
-    end
+		for _, item in ipairs(directories.Lighting.Items:get(false)) do
+			local settingToRetrieve = if item.ExportAttribute then item.ExportAttribute else item.Attribute
 	
-	for _, LightObject in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
-		if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") or LightObject:IsA("Clouds") then
-			LightObject.Parent = nil
+			local fired, settingValue = pcall(function()
+				return Lighting[settingToRetrieve]
+			end)
+	
+			if not fired then
+				Util.debugWarn(("Failed to get lighting setting '%s'"):format(tostring(settingToRetrieve)))
+			else
+				item.Value:set(settingValue)
+				Util.updateMapSetting(item.Directory, item.Attribute, item.Value:get(false))
+			end
 		end
-	end
-
-	for _, NewLighting in pairs(Lighting:GetChildren()) do
-		local Clone = NewLighting:Clone()
-		Clone.Parent = Util.mapModel:get().Settings.Lighting
-	end
-
-	for _, NewLighting in pairs(workspace.Terrain:GetChildren()) do
-		if NewLighting:IsA("Clouds") then
+		
+		for _, LightObject in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
+			if LightObject:IsA("PostEffect") or LightObject:IsA("Atmosphere") or LightObject:IsA("Sky") or LightObject:IsA("Clouds") then
+				LightObject.Parent = nil
+			end
+		end
+	
+		for _, NewLighting in pairs(Lighting:GetChildren()) do
 			local Clone = NewLighting:Clone()
 			Clone.Parent = Util.mapModel:get().Settings.Lighting
 		end
-	end
+	
+		for _, NewLighting in pairs(workspace.Terrain:GetChildren()) do
+			if NewLighting:IsA("Clouds") then
+				local Clone = NewLighting:Clone()
+				Clone.Parent = Util.mapModel:get().Settings.Lighting
+			end
+		end
 
-	ChangeHistoryService:SetWaypoint("Imported lighting from Lighting to map")
+		ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	end
 end
 
 local function importMaterials()
-	ChangeHistoryService:SetWaypoint("Importing materials from MaterialService to map")
+	local recording = ChangeHistoryService:TryBeginRecording("ImportMaterials", "Import materials from game.MaterialService to map")
+	if recording then
 
-	for _, MaterialObject in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
-		if MaterialObject:IsA("MaterialVariant") then
-			MaterialObject.Parent = nil
+		for _, MaterialObject in pairs(Util.mapModel:get().Settings.Lighting:GetChildren()) do
+			if MaterialObject:IsA("MaterialVariant") then
+				MaterialObject.Parent = nil
+			end
 		end
+	
+		for _, NewMaterial in pairs(MaterialService:GetChildren()) do
+			local Clone = NewMaterial:Clone()
+			Clone.Parent = Util.mapModel:get().Settings.Materials
+		end
+
+		ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
 	end
-
-	for _, NewMaterial in pairs(MaterialService:GetChildren()) do
-		local Clone = NewMaterial:Clone()
-		Clone.Parent = Util.mapModel:get().Settings.Materials
-	end
-
-	ChangeHistoryService:SetWaypoint("Imported materials from MaterialService to map")
-
 end
 
 local function exportMaterials()
-	ChangeHistoryService:SetWaypoint("Exporting materials from map to MaterialService")
-	for _, MaterialObject in pairs(MaterialService:GetChildren()) do
-		if MaterialObject:IsA("MaterialVariant") then
-			MaterialObject.Parent = nil
-		end
-	end
+	local recording = ChangeHistoryService:TryBeginRecording("ExportMaterials", "Export materials from map to game.MaterialService")
+	if recording then
 
-	for _, NewMaterial in pairs(Util.mapModel:get().Settings.Materials:GetChildren()) do
-		local Clone = NewMaterial:Clone()
-		Clone.Parent = MaterialService
+		for _, MaterialObject in pairs(MaterialService:GetChildren()) do
+			if MaterialObject:IsA("MaterialVariant") then
+				MaterialObject.Parent = nil
+			end
+		end
+	
+		for _, NewMaterial in pairs(Util.mapModel:get().Settings.Materials:GetChildren()) do
+			local Clone = NewMaterial:Clone()
+			Clone.Parent = MaterialService
+		end
+
+		ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
 	end
-	ChangeHistoryService:SetWaypoint("Exported materials from map to MaterialService")
 end
 
 local frame = {}

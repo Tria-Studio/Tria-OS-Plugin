@@ -361,9 +361,12 @@ local function AudioButton(data: audioTableFormat): Instance
                         {
                             Text = "Update",
                             Callback = function()
-                                Util.debugWarn("Updated map music!")
-                                Util.updateMapSetting("Main", "Music", data.ID)
-                                ChangeHistoryService:SetWaypoint("Updated map music")
+                                local recording = ChangeHistoryService:TryBeginRecording("updateMapMusic", "Updated map music")
+                                if recording then
+                                    Util.debugWarn("Updated map music!")
+                                    Util.updateMapSetting("Main", "Music", data.ID)
+                                    ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+                                end
                             end
                         }, {Text = "Nevermind", Callback = function() end}
                     )

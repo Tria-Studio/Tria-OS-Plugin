@@ -202,9 +202,13 @@ function Util.updateMapSetting(directory: string, attribute: string, value: any)
     if value == nil then
         return
     end
-    ChangeHistoryService:SetWaypoint("Changing setting '%s' to '%s'", attribute, value)
-    dirFolder:SetAttribute(attribute, value)
-    ChangeHistoryService:SetWaypoint("Set setting '%s' to '%s'", attribute, value)
+
+    local recording = ChangeHistoryService:TryBeginRecording("UpdateMapSetting", string.format("Changing setting '%s'", attribute))
+    if recording then
+        dirFolder:SetAttribute(attribute, value)
+
+        ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+    end
 end
 
 function Util.debugWarn(...)

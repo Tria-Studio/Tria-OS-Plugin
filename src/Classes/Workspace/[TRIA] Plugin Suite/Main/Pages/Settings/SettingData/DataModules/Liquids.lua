@@ -92,19 +92,23 @@ local function insertLiquids()
 end
 
 local function addLiquid()
-    ChangeHistoryService:SetWaypoint("Creating custom liqud")
-    local liquidFolder = Util.getDirFolder("Liquids")
-    if not liquidFolder then
-        return
+    local recording = ChangeHistoryService:TryBeginRecording("CreateCustomLiquid", "Creating custom liqud")
+    if recording then
+        
+        local liquidFolder = Util.getDirFolder("Liquids")
+        if not liquidFolder then
+            return
+        end
+        local currentMap = Util.mapModel:get(false)
+        local newLiquid = Instance.new("Configuration")
+        newLiquid.Name = string.format("Custom Liquid #%d", Util.getObjectCountWithNameMatch("Custom Liquid #", currentMap.Settings, true) + 1)
+        newLiquid:SetAttribute("Color", Color3.new(1, 1, 1))
+        newLiquid:SetAttribute("OxygenDepletion", 1)
+        newLiquid:SetAttribute("SplashSound", "water")
+        newLiquid.Parent = liquidFolder
+
+        ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
     end
-    local currentMap = Util.mapModel:get(false)
-    local newLiquid = Instance.new("Configuration")
-    newLiquid.Name = string.format("Custom Liquid #%d", Util.getObjectCountWithNameMatch("Custom Liquid #", currentMap.Settings, true) + 1)
-    newLiquid:SetAttribute("Color", Color3.new(1, 1, 1))
-    newLiquid:SetAttribute("OxygenDepletion", 1)
-    newLiquid:SetAttribute("SplashSound", "water")
-    newLiquid.Parent = liquidFolder
-    ChangeHistoryService:SetWaypoint("Created custom liquid")
 end
 
 local function removeLiquid(id: string)

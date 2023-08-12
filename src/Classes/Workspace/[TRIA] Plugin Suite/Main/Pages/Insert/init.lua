@@ -60,26 +60,31 @@ local function attemptToInsertModel(assetID: number)
         return
     end
 
-    result = result:GetChildren()[1]
-    Util.debugWarn(("Successfuly inserted %s!"):format(result.Name))
-    result.Name = "[INSERTED] - " .. result.Name
+    local recording = ChangeHistoryService:TryBeginRecording("insertPluginResource", string.format('Inserted model "%s"', result.Name))
 
-    local Pos, Size = result:GetBoundingBox()
-    local XYPosition = (workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -Size.Magnitude * 1.125 + 20) ).Position * Vector3.new(1, 0, 1)
-    local RaycastResult = workspace:Raycast(XYPosition + Vector3.new(0, 30, 0), Vector3.new(0, -60, 0), RaycastParams.new())
-    local NewPos = XYPosition + Vector3.new(0, RaycastResult and RaycastResult.Position.Y or workspace.CurrentCamera.CFrame.Position.Y, 0)
+    if recording then
+        
+        result = result:GetChildren()[1]
+        Util.debugWarn(("Successfuly inserted %s!"):format(result.Name))
+        result.Name = "[INSERTED] - " .. result.Name
 
-    result:PivotTo(CFrame.new(NewPos))
-    Selection:Set({result})
+        local Pos, Size = result:GetBoundingBox()
+        local XYPosition = (workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -Size.Magnitude * 1.125 + 20) ).Position * Vector3.new(1, 0, 1)
+        local RaycastResult = workspace:Raycast(XYPosition + Vector3.new(0, 30, 0), Vector3.new(0, -60, 0), RaycastParams.new())
+        local NewPos = XYPosition + Vector3.new(0, RaycastResult and RaycastResult.Position.Y or workspace.CurrentCamera.CFrame.Position.Y, 0)
 
-    if assetID == 6404661021 and not SelectMap:AutoSelect(true) then
-        result.Parent = workspace
-        SelectMap:SetMap(result)
-    else
-        result.Parent = workspace
+        result:PivotTo(CFrame.new(NewPos))
+        Selection:Set({result})
+
+        if assetID == 6404661021 and not SelectMap:AutoSelect(true) then
+            result.Parent = workspace
+            SelectMap:SetMap(result)
+        else
+            result.Parent = workspace
+        end
+
+        ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
     end
-    
-    ChangeHistoryService:SetWaypoint("Inserted model \"" .. result.Name .. "\"")
 end
 
 local function GetAssetButton(data: PublicTypes.Dictionary): Instance

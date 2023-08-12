@@ -132,22 +132,25 @@ local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: s
             AutomaticSize = Enum.AutomaticSize.X,
     
             [OnEvent "Activated"] = function()
-                ChangeHistoryService:SetWaypoint("Inserting TRIA Script")
-    
                 if Util.failedScriptInjection(Util._Errors.SCRIPT_INSERT_ERROR) then
                     return;
                 end
     
-                local currentMap = Util.mapModel:get(false)
+                local recording = ChangeHistoryService:TryBeginRecording("InsertScript", "Inserting TRIA Script")
+                if recording then
+                    
+                    local currentMap = Util.mapModel:get(false)
     
-                local newScript = Instance.new("LocalScript")
-                newScript.Name = scriptName
-                newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map" .. (scriptName == "EffectScript" and "\n\n-- For more information and examples on how EffectScript works, visit:\n-- https://github.com/Tria-Studio/Tria-OS-Docs/blob/main/EffectScript.md")
-                newScript.Enabled = false
-                newScript.Parent = currentMap
-    
-                plugin:OpenScript(newScript)
-                ChangeHistoryService:SetWaypoint("Inserted TRIA Script")
+                    local newScript = Instance.new("LocalScript")
+                    newScript.Name = scriptName
+                    newScript.Source = "local MapLib = game.GetMapLib:Invoke()()\nlocal map = MapLib.map" .. (scriptName == "EffectScript" and "\n\n-- For more information and examples on how EffectScript works, visit:\n-- https://github.com/Tria-Studio/Tria-OS-Docs/blob/main/EffectScript.md")
+                    newScript.Enabled = false
+                    newScript.Parent = currentMap
+        
+                    plugin:OpenScript(newScript)
+
+                    ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+                end
             end,
             [Children] = {
                 Components.Constraints.UICorner(0, 6),
