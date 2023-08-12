@@ -363,9 +363,9 @@ end)
                     Util.debugWarn("Successfully added OptimizedStructure!")
 
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
-                end
 
-                Util:ShowMessage("Convert Map?", "Would you like to convert your map's components to use this structure automatically?\n\nNOTE: This will not convert your scripts. If your MapScript is referencing any key map component (liquid, buttons, etc.) You will need to manually update it.", {Text = "Yes", Callback = ConvertToOptimized}, {Text = "No"})
+                    Util:ShowMessage("Convert Map?", "Would you like to convert your map's components to use this structure automatically?\n\nNOTE: This will not convert your scripts. If your MapScript is referencing any key map component (liquid, buttons, etc.) You will need to manually update it.", {Text = "Yes", Callback = ConvertToOptimized}, {Text = "No"})
+                end
             end
         }, {
             Name = "Add Exit Region",
