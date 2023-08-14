@@ -206,7 +206,7 @@ function Util.updateMapSetting(directory: string, attribute: string, value: any)
 
     local recording = ChangeHistoryService:TryBeginRecording("UpdateMapSetting", string.format("Changing setting '%s'", attribute))
     if recording then
-        dirFolder:SetAttribute(attribute, value)
+        dirFolder:SetAttribute(attribute, tonumber(value) or value)
 
         ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
     end
