@@ -364,7 +364,7 @@ local function AudioButton(data: audioTableFormat): Instance
                                 local recording = ChangeHistoryService:TryBeginRecording("updateMapMusic", "Updated map music")
                                 if recording then
                                     Util.debugWarn("Updated map music!")
-                                    Util.updateMapSetting("Main", "Music", data.ID)
+                                    Util.updateMapSetting("Music", "Music", data.ID, true)
                                     ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
                                 end
                             end
