@@ -1,6 +1,7 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Lighting = game:GetService("Lighting")
 local MaterialService = game:GetService("MaterialService")
+local StarterGui = game:GetService("StarterGui")
 
 local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
@@ -155,15 +156,58 @@ local function exportMaterials()
 	end
 end
 
+local function importUI()
+	local recording = ChangeHistoryService:TryBeginRecording("ImportUI", "Import UI from game.StarterGui to map")
+	if recording then
+
+		for _, ScreenGui in pairs(Util.mapModel:get().Settings.UI:GetChildren()) do
+			if ScreenGui:IsA("ScreenGui") then
+				ScreenGui.Parent = nil
+			end
+		end
+	
+		for _, NewScreenGui in pairs(StarterGui:GetChildren()) do
+			if NewScreenGui:IsA("ScreenGui") then
+                local Clone = NewScreenGui:Clone()
+                Clone.Parent = Util.mapModel:get().Settings.UI
+		    end
+        end
+
+		ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	end
+end
+
+local function exportUI()
+	local recording = ChangeHistoryService:TryBeginRecording("ExportUI", "Export UI from map to game.StarterGui")
+	if recording then
+
+        for _, ScreenGui in pairs(StarterGui:GetChildren()) do
+			if ScreenGui:IsA("ScreenGui") then
+                ScreenGui.Parent = nil
+		    end
+        end
+
+        for _, NewScreenGui in pairs(Util.mapModel:get().Settings.UI:GetChildren()) do
+			if NewScreenGui:IsA("ScreenGui") then
+				local Clone = NewScreenGui:Clone()
+                Clone.Parent = Util.mapModel:get().Settings.UI
+			end
+		end
+
+		ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	end
+end
+
 local frame = {}
 
 function frame:GetUI(type): Instance
+    print(type, directories[type])
 	return New "Frame" {
 		BackgroundTransparency = 1,
 		BorderSizePixel = 1,
-		LayoutOrder = type == "Lighting" and 4 or 8,
+		LayoutOrder = type == "UI" and 12 or type == "Lighting" and 4 or 8,
 		Size = UDim2.new(1, 0, 0, 50),
-		Visible = type == "Lighting" and directories.Lighting.Visible or directories.Materials.Visible,
+		Visible = directories[type].Visible,
 	
 		[Children] = {
 			Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
@@ -174,7 +218,7 @@ function frame:GetUI(type): Instance
 				[OnEvent "Activated"] = function()
 					local option1 = {
 						Text = "Export",
-						Callback = type == "Lighting" and exportLighting or exportMaterials,
+						Callback = type == "UI" and exportUI or type == "Lighting" and exportLighting or exportMaterials,
 						BackgroundColor3 = Theme.Button.Selected
 					}
 			
@@ -197,7 +241,7 @@ function frame:GetUI(type): Instance
 				[OnEvent "Activated"] = function()
 					local option1 = {
 						Text = "Import",
-						Callback = type == "Lighting" and importLighting or importMaterials,
+						Callback = type == "UI" and importUI or type == "Lighting" and importLighting or importMaterials,
 						BackgroundColor3 = Theme.Button.Selected
 					}
 			

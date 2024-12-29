@@ -14,28 +14,32 @@ local Data = {
 Data.Items = {
 
     {
-		Text = "BGM",
-		Type = "Number",
+		Text = "Sound ID",
+		Type = "String",
 
-		Attribute = "Music",
-		Fallback = 6366407687,
+		Directory = "Music",
+		Property = "SoundId",
+		Fallback = "",
+		Default = "",
 
 		Value = Value(""),
 		Tooltip = {
-			Text = "The AssetID of the music that plays in the background of your map.",
+			Text = "The Asset ID of your desired BGM.",
 		},
 	},
 
     {
-		Text = "Music Volume",
+		Text = "Playback Speed",
 		Type = "Number",
 
-		Attribute = "Volume",
-		Fallback = 0.5,
+		Directory = "Music",
+		Property = "PlaybackSpeed",
+		Fallback = 1,
+		Default = 1,
 
-		Value = Value(""),
+		Value = Value(1),
 		Tooltip = {
-			Text = "Volume of the music that plays in the background.",
+			Text = "How fast the sound should play.",
 		},
 	},
 
@@ -43,15 +47,35 @@ Data.Items = {
 		Text = "Time Position",
 		Type = "Number",
 
-		Attribute = "TimePosition",
+		Directory = "Music",
+		Property = "TimePosition",
 		Fallback = 0,
+		Default = 0,
 
-		Value = Value(""),
+		Value = Value(0),
 		Tooltip = {
-			Text = "The time at which the BGM starts at when the round begins.",
+			Text = "What timestamp the music should start at",
 		},
 	},
-	
+
+    {
+		Text = "Volume",
+		Type = "Number",
+
+		Directory = "Music",
+		Property = "Volume",
+		Fallback = 0.5,
+		Default = 0.5,
+
+		Value = Value(0.5),
+		Tooltip = {
+			Text = "How loud the audio should be.",
+		},
+	},
+
 }
+
+-- TODO: ITS NOT CODED TO WORK WITH PROPERTIES INSTEAD OF ATTRIBUTES YET
+Data.Items = {}
 
 return Data

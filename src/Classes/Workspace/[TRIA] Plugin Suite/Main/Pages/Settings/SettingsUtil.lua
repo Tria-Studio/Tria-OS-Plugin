@@ -55,10 +55,17 @@ local SettingsUtil = {
             LayoutOrder = 7,
             Items = Value({})
         },
-        Liquids = {
+        Fluid = {
             IsHeader = true,
             Default = true,
             Display = "Liquids and Gas",
+            LayoutOrder = 9,
+            Items = Value({})
+        },
+        UI = {
+            IsHeader = true,
+            Default = true,
+            Display = "UI that gets loaded into a map & cleaned up automatically",
             LayoutOrder = 9,
             Items = Value({})
         }

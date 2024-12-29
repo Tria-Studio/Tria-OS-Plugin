@@ -31,7 +31,7 @@ return {
     end,
     LiquidType = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         local data = table.clone(DEFAULT_LIQUIDS)
-        for i, child in ipairs(Util.mapModel:get(false).Settings.Liquids:GetChildren()) do
+        for i, child in ipairs(Util.mapModel:get(false).Settings.Fluid:GetChildren()) do
             data[3 + i] = {
                 Value = child.Name,
                 TextColor = child:GetAttribute("Color")

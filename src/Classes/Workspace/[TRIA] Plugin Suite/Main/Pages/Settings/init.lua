@@ -114,7 +114,8 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     end, Fusion.cleanup),
 
                     LightingExport:GetUI("Lighting"),
-                    LightingExport:GetUI("MaterialService")
+                    LightingExport:GetUI("Materials"),
+                    LightingExport:GetUI("UI")
                 }
             }
         }

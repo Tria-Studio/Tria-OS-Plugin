@@ -13,18 +13,6 @@ local Data = {
 
 Data.Items = {
 	{
-		Text = "Creator (s)",
-		Type = "String",
-
-		Attribute = "Creator",
-		Fallback = "TRIA",
-		Value = Value(""),
-		Tooltip = {
-			Text = "The name(s) of the creators of the map.",
-		},
-	},
-
-	{
 		Text = "Difficulty",
 		Type = "Dropdown",
 		DropdownArray = "Difficulty",
@@ -42,8 +30,7 @@ Data.Items = {
 <font color ="rgb(180,0,180)"> 4 - Insane </font>
 <font color ="rgb(255,155,0)"> 5 - Extreme </font>
 <font color ="rgb(255,0,255)"> 6 - Divine </font>
-
-Unknown difficulties cannot be published and are not officially supported.
+<font color ="rgb(255,255,255)"> 7 - Eternal </font>
 ]],
 		},
 	},
@@ -87,16 +74,16 @@ Unknown difficulties cannot be published and are not officially supported.
 		},
 	},
 
-	{
-		Text = "Default Oxygen",
-		Type = "Number",
+    {
+		Text = "Description",
+		Type = "String",
 
-		Attribute = "DefaultOxygen",
-		Fallback = "100",
+		Attribute = "Description",
+		Fallback = "",
 
 		Value = Value(""),
 		Tooltip = {
-			Text = "The total amount of oxygen you can have without an air tank.",
+			Text = "Map descriptions show on the info page, and get filtered by Roblox. Max 250 chars.",
 		},
 	},
 }
