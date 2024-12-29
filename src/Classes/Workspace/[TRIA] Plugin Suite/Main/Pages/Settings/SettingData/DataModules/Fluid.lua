@@ -99,7 +99,8 @@ local function addLiquidToItems(liquid: Instance | Configuration)
         SettingsUtil.modifyStateTable(directories.Fluid.Items, "set", liquid, {
             Name = liquid.Name, 
             Data = liquidData,
-            ID = liquidId
+            ID = liquidId,
+            _isCustomLiquid = true
         })
     end
 
@@ -201,13 +202,15 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                     end
 
                 }, function(isSectionVisible: Fusion.StateObject<boolean>): Instance
-                    --TODO this is erroring and i dont feel like debugging it rn
-                    -- if liquidVisibleMap[data.ID] then  
-                    --     isSectionVisible:set(liquidVisibleMap[data.ID])
-                    -- else
-                    --     liquidVisibleMap[data.ID] = isSectionVisible:get(false)
-                    -- end
-                    print(itemData)
+                    if not data._isCustomLiquid then
+                        return
+                    end
+                    if liquidVisibleMap[data.ID] then  
+                        isSectionVisible:set(liquidVisibleMap[data.ID])
+                    else
+                        liquidVisibleMap[data.ID] = isSectionVisible:get(false)
+                    end
+
                     return Components.DropdownHolderFrame {
                         DropdownVisible = isSectionVisible,
                         Children = {
