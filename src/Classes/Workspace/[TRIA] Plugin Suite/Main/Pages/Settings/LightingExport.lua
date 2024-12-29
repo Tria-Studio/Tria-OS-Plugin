@@ -213,7 +213,7 @@ function frame:GetUI(type): Instance
 			Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, UDim.new(0, 2), Enum.VerticalAlignment.Center),
 			ExportButton {
 				LayoutOrder = 1,
-				Text = `Export to {type}`,
+				Text = `Export to {type == "UI" and "StarterGui" or type}`,
 	
 				[OnEvent "Activated"] = function()
 					local option1 = {
@@ -237,7 +237,7 @@ function frame:GetUI(type): Instance
 			},
 			ExportButton {
 				LayoutOrder = 2,
-				Text = `Import from {type}`,
+				Text = `Import from {type == "UI" and "StarterGui" or type}`,
 				[OnEvent "Activated"] = function()
 					local option1 = {
 						Text = "Import",

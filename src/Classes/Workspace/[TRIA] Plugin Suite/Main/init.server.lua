@@ -231,7 +231,6 @@ local mainFrame = New "Frame" {
 					DataVisualizer = "Debug View",
 					Settings = "Map Settings",
 					Scripting = "Scripting",
-					Publish = "Publish & Whitelist",
 					Insert = "Resources",
 					AudioLibrary = "Audio Library"
 				}

@@ -65,8 +65,8 @@ local SettingsUtil = {
         UI = {
             IsHeader = true,
             Default = true,
-            Display = "UI that gets loaded into a map & cleaned up automatically",
-            LayoutOrder = 9,
+            Display = "UI",
+            LayoutOrder = 11,
             Items = Value({})
         }
     }

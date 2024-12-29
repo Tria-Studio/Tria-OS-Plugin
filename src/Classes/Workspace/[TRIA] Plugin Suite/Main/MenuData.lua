@@ -13,9 +13,6 @@ return {
 			Name = "Scripting",
 			Icon = "rbxassetid://6022668955",
 		}, {
-			Name = "Publish",
-			Icon = "rbxassetid://6034973085",
-		}, {
 			Name = "Insert",
 			Icon = "rbxassetid://6023565892",
 		}, {
@@ -29,7 +26,6 @@ return {
 		{Name = "DataVisualizer"},
 		{Name = "Settings"},
 		{Name = "Scripting"},
-		{Name = "Publish"},
 		{Name = "Insert"},
 		{Name = "AudioLibrary"}
 	}

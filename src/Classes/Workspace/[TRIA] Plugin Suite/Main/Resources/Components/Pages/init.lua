@@ -13,8 +13,8 @@ local PageHandler = {
     pageChanged = Signal.new(),
     pageData = {
         pages = {},
-        disabledPages = {"Publish"},
-        bypassedPages = {"Insert", "Publish"},
+        disabledPages = {},
+        bypassedPages = {"Insert"},
         currentPage = Value(nil),
         previousPage = Value(nil),
     },
@@ -24,7 +24,6 @@ local PageHandler = {
         "DataVisualizer",
         "Settings",
         "Scripting",
-        "Publish",
         "Insert",
         "AudioLibrary"
     }

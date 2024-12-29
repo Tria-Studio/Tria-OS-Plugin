@@ -72,7 +72,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
         settings2 
         and settings2:FindFirstChild("Main") 
         and settings2:FindFirstChild("Lighting")
-        and settings2:FindFirstChild("Liquids") 
+        and (settings2:FindFirstChild("Fluid") or settings2:FindFirstChild("Liquids"))
         and (settings2:FindFirstChild("Button") or settings2:FindFirstChild("Buttons")) 
     then
         score_3 += 0.5
