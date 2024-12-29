@@ -270,7 +270,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
-                            Components.FrameHeader("Featured Map Addons", 1, nil, nil, "Featured assets created by the community for use in mapmaking.", 2),
+                            -- Components.FrameHeader("Featured Map Addons", 1, nil, nil, "Featured assets created by the community for use in mapmaking.", 2),
                             New "Frame" {
                                 [Out "AbsoluteSize"] = AddonFrameSize,
                                 Size = UDim2.new(1, 0, 0, 0),
