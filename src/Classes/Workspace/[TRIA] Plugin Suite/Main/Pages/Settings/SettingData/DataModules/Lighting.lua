@@ -16,6 +16,7 @@ Data.Items = {
 		Text = "Ambient",
 		Type = "Color",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "Ambient",
 		Fallback = Util.colorToRGB(Color3.fromRGB(118, 118, 118)),
@@ -31,6 +32,7 @@ Data.Items = {
 		Text = "Brightness",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "Brightness",
 		Fallback = 2,
@@ -45,6 +47,7 @@ Data.Items = {
 		Text = "Time of Day",
 		Type = "Time",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "TimeOfDay",
 		Fallback = "12:00:00",
@@ -59,6 +62,7 @@ Data.Items = {
 		Text = "ColorShift_Bottom",
 		Type = "Color",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "ColorShift_Bottom",
 		Fallback = Util.colorToRGB(Color3.fromRGB()),
@@ -74,6 +78,7 @@ Data.Items = {
 		Text = "ColorShift_Top",
 		Type = "Color",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "ColorShift_Top",
 		Fallback = Util.colorToRGB(Color3.fromRGB()),
@@ -89,6 +94,7 @@ Data.Items = {
 		Text = "EnvironmentDiffuseScale",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "EnvironmentDiffuseScale",
 		Fallback = 0,
@@ -103,6 +109,7 @@ Data.Items = {
 		Text = "EnvironmentSpecularScale",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "EnvironmentSpecularScale",
 		Fallback = 0,
@@ -117,6 +124,7 @@ Data.Items = {
 		Text = "Fog Color",
 		Type = "Color",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "FogColor",
 		Fallback = Util.colorToRGB(Color3.fromRGB()),
@@ -132,6 +140,7 @@ Data.Items = {
 		Text = "Fog Start",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "FogStart",
 		Fallback = 0,
@@ -146,6 +155,7 @@ Data.Items = {
 		Text = "Fog End",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "FogEnd",
 		Fallback = 0,
@@ -160,6 +170,7 @@ Data.Items = {
 		Text = "GeographicLatitude",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "GeographicLatitude",
 		Fallback = 0,
@@ -171,6 +182,7 @@ Data.Items = {
 		Text = "Global Shadows",
 		Type = "Checkbox",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "GlobalShadows",
 		Fallback = false,
@@ -185,6 +197,7 @@ Data.Items = {
 		Text = "Outdoor Ambient",
 		Type = "Color",
 
+        ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "OutdoorAmbient",
 		Fallback = Util.colorToRGB(Color3.fromRGB(70, 70, 70)),

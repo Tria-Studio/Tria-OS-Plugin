@@ -25,6 +25,7 @@ Data.Items = {
 		Text = "Refill Rate",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Attribute = "RefillRate",
 		Fallback = 16,
 
@@ -38,6 +39,7 @@ Data.Items = {
 		Text = "Default Oxygen",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Attribute = "DefaultOxygen",
 		Fallback = 100,
 
@@ -57,6 +59,7 @@ local function addLiquidToItems(liquid: Instance | Configuration)
             Text = "Color", 
             Type = "Color",  
             Attribute = "Color", 
+            ApplyType = "Attribute",
             Fallback = Color3.new(1, 1, 1), 
             Default = Color3.new(1, 1, 1),
             Value = Value(Color3.new(1, 1, 1)),
@@ -66,6 +69,7 @@ local function addLiquidToItems(liquid: Instance | Configuration)
             Text = "Oxygen Depletion", 
             Type = "Number",  
             Attribute = "OxygenDepletion", 
+            ApplyType = "Attribute",
             Fallback = 1, 
             Value = Value(1),
             Tooltip = {Text = "How fast the oxygen will deplete when a player is inside this liquid/gas."}
@@ -74,7 +78,7 @@ local function addLiquidToItems(liquid: Instance | Configuration)
             Text = "Splash Sound", 
             Type = "Dropdown",
             DropdownArray = "Liquids",
-             
+            ApplyType = "Attribute",
             Attribute = "SplashSound", 
             Fallback = "water", 
             Value = Value(""),

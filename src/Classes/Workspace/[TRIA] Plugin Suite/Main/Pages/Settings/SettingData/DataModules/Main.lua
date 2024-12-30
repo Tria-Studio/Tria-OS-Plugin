@@ -17,6 +17,7 @@ Data.Items = {
 		Type = "Dropdown",
 		DropdownArray = "Difficulty",
 
+        ApplyType = "Attribute",
 		Attribute = "Difficulty",
 		Fallback = 6,
 
@@ -39,6 +40,7 @@ Data.Items = {
 		Text = "Thumbnail Image",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Attribute = "Image",
 		Fallback = 10672852399,
 
@@ -52,6 +54,7 @@ Data.Items = {
 		Text = "Max Time",
 		Type = "Number",
 
+        ApplyType = "Attribute",
 		Attribute = "MaxTime",
 		Fallback = 120,
 
@@ -65,6 +68,7 @@ Data.Items = {
 		Text = "Map Name",
 		Type = "String",
 
+        ApplyType = "Attribute",
 		Attribute = "Name",
 		Fallback = "Map Kit",
 
@@ -78,6 +82,7 @@ Data.Items = {
 		Text = "Description",
 		Type = "String",
 
+        ApplyType = "Attribute",
 		Attribute = "Description",
 		Fallback = "",
 

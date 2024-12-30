@@ -17,7 +17,8 @@ Data.Items = {
 		Type = "Checkbox",
 		Attribute = "Use2022Materials",
 		Directory = "Materials",
-
+        ApplyType = "Attribute",
+        
         Fallback = false,
 		Value = Value(false),
 		Tooltip = {

@@ -195,7 +195,7 @@ function Util.isPluginFrozen(): boolean
 	return Util.mapModel:get() == nil and not table.find(Pages.pageData.bypassedPages, Pages.pageData.currentPage:get())
 end
 
-function Util.updateMapSetting(directory: string, attribute: string, value: any, ignoreRecording)
+function Util.updateMapSetting(directory: string, attribute: string, value: any, ignoreRecording, ApplyType: string)
     local dirFolder = getSettingsDirFolder(directory)
     if not dirFolder then
         return
@@ -207,7 +207,11 @@ function Util.updateMapSetting(directory: string, attribute: string, value: any,
     local recording = ChangeHistoryService:TryBeginRecording("UpdateMapSetting", string.format("Changing setting '%s'", attribute))
 
     if recording or ignoreRecording then
-        dirFolder:SetAttribute(attribute, tonumber(value) or value)
+        if ApplyType == "Property" then
+            dirFolder[attribute] = tonumber(value) or value
+        else
+            dirFolder:SetAttribute(attribute, tonumber(value) or value)
+        end
 
         if not ignoreRecording then
             ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)

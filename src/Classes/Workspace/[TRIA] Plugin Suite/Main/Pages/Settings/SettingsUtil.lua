@@ -72,10 +72,16 @@ local SettingsUtil = {
     }
 }
 
-function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, callback: () -> ())
-    SettingsUtil.SettingMaid:GiveTask(parent:GetAttributeChangedSignal(attribute):Once(function()
-        task.defer(callback)
-    end))
+function SettingsUtil.hookAttributeChanged(parent: Instance, attribute: string, callback: () -> (), ApplyType: string)
+    if ApplyType == "Property" then
+        SettingsUtil.SettingMaid:GiveTask(parent:GetPropertyChangedSignal(attribute):Once(function()
+            task.defer(callback)
+        end))
+    else
+        SettingsUtil.SettingMaid:GiveTask(parent:GetAttributeChangedSignal(attribute):Once(function()
+            task.defer(callback)
+        end))
+    end
 end
 
 function SettingsUtil.updateStateValue(currentValue: any, newValue: any, tbl: PublicTypes.Dictionary)
@@ -92,7 +98,11 @@ function SettingsUtil.updateStateValue(currentValue: any, newValue: any, tbl: Pu
         currentValue = newValue
     end
     if not currentValue then
-        currentValue = Util.getDirFolder(tbl.Directory):GetAttribute(tbl.Attribute)
+        if tbl.ApplyType == "Property" then
+            currentValue = Util.getDirFolder(tbl.Directory)[tbl.Attribute]
+        else
+            currentValue = Util.getDirFolder(tbl.Directory):GetAttribute(tbl.Attribute)
+        end
     end
 
     if not table.find(acceptedValues[tbl.Type], typeof(currentValue)) then
@@ -100,9 +110,12 @@ function SettingsUtil.updateStateValue(currentValue: any, newValue: any, tbl: Pu
         tbl.Value:set(if tbl.Fallback ~= nil then tbl.Default or tbl.Fallback else "")
         Util.debugWarn(("'%s' values aren't accepted for %s objects (%s). Applying default value..."):format(typeof(currentValue), tbl.Type, tbl.Text))
 
-        if Util.getDirFolder(tbl.Directory):GetAttribute(tbl.Attribute) == nil then
+        local value = 
+            if tbl.ApplyType == "Property" then Util.getDirFolder(tbl.Directory)[tbl.Attribute]
+            else Util.getDirFolder(tbl.Directory):GetAttribute(tbl.Attribute)
+        if value == nil then
 
-            Util.updateMapSetting(tbl.Directory, tbl.Attribute, tbl.Default or tbl.Fallback)
+            Util.updateMapSetting(tbl.Directory, tbl.Attribute, tbl.Default or tbl.Fallback, nil, tbl.ApplyType) --TODO THIS
             tbl.Errored:set(false, true)
             tbl.Value:set(tbl.Default or tbl.Fallback)
         end
@@ -127,10 +140,10 @@ function SettingsUtil.modifyStateTable(state: Fusion.StateObject<any>, action: s
 end
 
 function SettingsUtil.connectValue(object: Instance, data: PublicTypes.Dictionary)
-    local currentValue = object:GetAttribute(data.Attribute)
+    local currentValue = data.ApplyType == "Property" and object[data.Attribute] or object:GetAttribute(data.Attribute)
     local function updateConnection()
         SettingsUtil.updateStateValue(currentValue, object:GetAttribute(data.Attribute), data)
-        SettingsUtil.hookAttributeChanged(object, data.Attribute, updateConnection)
+        SettingsUtil.hookAttributeChanged(object, data.Attribute, updateConnection, data.ApplyType)
     end
     updateConnection()
 end

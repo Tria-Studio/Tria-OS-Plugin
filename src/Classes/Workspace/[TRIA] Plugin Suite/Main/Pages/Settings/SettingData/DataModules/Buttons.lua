@@ -26,7 +26,8 @@ local function setupButtonFolder(folder: Instance)
 		{
 			Text = "Activated Color",
 			Type = "Color",
-	
+            
+            ApplyType = "Attribute",
 			Directory = "",
 			Attribute = "ActivatedColor",
 			Fallback = Util.colorToRGB(Color3.new(1, 0, 0)),
@@ -41,7 +42,8 @@ local function setupButtonFolder(folder: Instance)
 		{
 			Text = "Activated Sound",
 			Type = "String",
-	
+            
+            ApplyType = "Attribute",
 			Directory = "",
 			Attribute = "ActivatedSound",
 			Fallback = "default",
@@ -55,7 +57,8 @@ local function setupButtonFolder(folder: Instance)
 		{
 			Text = "Active Color",
 			Type = "Color",
-	
+            
+            ApplyType = "Attribute",
 			Directory = "",
 			Attribute = "ActiveColor",
 			Fallback = Util.colorToRGB(Color3.new(0, 1, 0)),
@@ -70,7 +73,8 @@ local function setupButtonFolder(folder: Instance)
 		{
 			Text = "Inactive Color",
 			Type = "Color",
-	
+            
+            ApplyType = "Attribute",
 			Directory = "",
 			Attribute = "InactiveColor",
 			Fallback = Util.colorToRGB(Color3.new(1, 1, 0)),
@@ -86,7 +90,8 @@ local function setupButtonFolder(folder: Instance)
 			Text = "Locator Image",
 			Type = "Dropdown",
 			DropdownArray = "Locators",
-	
+            
+            ApplyType = "Attribute",
 			Directory = "",
 			Attribute = "LocatorImage",
 			Fallback = "default",

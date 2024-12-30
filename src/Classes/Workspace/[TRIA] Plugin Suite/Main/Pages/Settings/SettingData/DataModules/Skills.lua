@@ -16,6 +16,7 @@ Data.Items = {
 		Text = "Allow Sliding",
 		Type = "Checkbox",
 
+        ApplyType = "Attribute",
 		Directory = "Skills",
 		Attribute = "AllowSliding",
 		Fallback = true,
@@ -30,6 +31,7 @@ Data.Items = {
 		Text = "Linear Sliding",
 		Type = "Checkbox",
 
+        ApplyType = "Attribute",
 		Directory = "Skills",
 		Attribute = "LinearSliding",
 		Fallback = false,
@@ -46,6 +48,7 @@ Data.Items = {
 		Text = "Allow Air Dive",
 		Type = "Checkbox",
 
+        ApplyType = "Attribute",
 		Directory = "Skills",
 		Attribute = "AllowAirDive",
 		Fallback = true,

@@ -161,8 +161,13 @@ function SettingTypes.String(data: PublicTypes.Dictionary): Instance
                     local inputBoxObject = inputBox:get(false)
                     local currentText = inputBoxObject.Text
 
+                    if data.RbxAssetIdCheck then
+                        currentText = string.gsub(currentText, "%D", "")
+                        currentText = "rbxassetid://" .. currentText
+                    end
+
                     data.Value:set(currentText)
-                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false), nil, data.ApplyType)
                 end
             end
         }
@@ -181,7 +186,7 @@ function SettingTypes.Checkbox(data: PublicTypes.Dictionary): Instance
             [OnEvent "Activated"] = function()
                 if canEditSetting(data) then
                     data.Value:set(not data.Value:get(false))
-                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false), nil, data.ApplyType)
                 end
             end,
 
@@ -227,7 +232,7 @@ function SettingTypes.Color(data: PublicTypes.Dictionary): Instance
                         return
                     end
                     data.Value:set(chosenColor)
-                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                    Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false), nil, data.ApplyType)
                 end
             },
 
@@ -270,7 +275,7 @@ function SettingTypes.Color(data: PublicTypes.Dictionary): Instance
                         else
                             data.Value:set(parsedColor)
                             inputBoxObject.Text = Util.colorToRGB(parsedColor)
-                            Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                            Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false), nil, data.ApplyType)
                         end
                     end
                 end
@@ -314,7 +319,7 @@ function SettingTypes.Time(data: PublicTypes.Dictionary): Instance
                     else
                         data.Value:set(parsedTime)
                         inputBoxObject.Text = parsedTime
-                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false), nil, data.ApplyType)
                     end
                 end
             end
@@ -340,7 +345,7 @@ function SettingTypes.Dropdown(data: PublicTypes.Dictionary): Instance
                     Options = data.DropdownArray,
                     OnToggle = function(newData: any)
                         data.Value:set(newData)
-                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false), nil, data.ApplyType)
                     end
                 }),
             },
@@ -382,7 +387,7 @@ function SettingTypes.Dropdown(data: PublicTypes.Dictionary): Instance
                         local currentText = inputBoxObject.Text
 
                         data.Value:set(currentText)
-                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false))
+                        Util.updateMapSetting(data.Directory, data.Attribute, data.Value:get(false), nil, data.ApplyType)
                     end
                 end,
 

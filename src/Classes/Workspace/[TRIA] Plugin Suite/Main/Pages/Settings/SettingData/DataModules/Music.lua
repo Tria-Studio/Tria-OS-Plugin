@@ -17,8 +17,10 @@ Data.Items = {
 		Text = "Sound ID",
 		Type = "String",
 
+        ApplyType = "Property",
 		Directory = "Music",
-		Property = "SoundId",
+		Attribute = "SoundId",
+        RbxAssetIdCheck = true,
 		Fallback = "",
 		Default = "",
 
@@ -32,8 +34,9 @@ Data.Items = {
 		Text = "Playback Speed",
 		Type = "Number",
 
+        ApplyType = "Property",
 		Directory = "Music",
-		Property = "PlaybackSpeed",
+		Attribute = "PlaybackSpeed",
 		Fallback = 1,
 		Default = 1,
 
@@ -47,8 +50,9 @@ Data.Items = {
 		Text = "Time Position",
 		Type = "Number",
 
+        ApplyType = "Property",
 		Directory = "Music",
-		Property = "TimePosition",
+		Attribute = "TimePosition",
 		Fallback = 0,
 		Default = 0,
 
@@ -62,8 +66,9 @@ Data.Items = {
 		Text = "Volume",
 		Type = "Number",
 
+        ApplyType = "Property",
 		Directory = "Music",
-		Property = "Volume",
+		Attribute = "Volume",
 		Fallback = 0.5,
 		Default = 0.5,
 
@@ -74,8 +79,5 @@ Data.Items = {
 	},
 
 }
-
--- TODO: ITS NOT CODED TO WORK WITH PROPERTIES INSTEAD OF ATTRIBUTES YET
-Data.Items = {}
 
 return Data
