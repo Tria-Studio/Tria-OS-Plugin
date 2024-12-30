@@ -16,7 +16,7 @@ local OnEvent = Fusion.OnEvent
 
 local Data = {
 	Directory = "Fluid",
-	Dynamic = false,
+	Dynamic = true,
 	Items = {},
 }
 
@@ -104,7 +104,8 @@ local function addLiquidToItems(liquid: Instance | Configuration)
             Name = liquid.Name, 
             Data = liquidData,
             ID = liquidId,
-            _isCustomLiquid = true
+            _isCustomLiquid = true,
+            _Dynamic = true,
         })
     end
 
@@ -118,7 +119,14 @@ local function insertLiquids()
         return
     end
 
-    directories.Fluid.Items:set({})
+    local newTbl = {}
+    for _, data in pairs(directories.Fluid.Items:get(false)) do
+        if not data._isCustomLiquid then
+            table.insert(newTbl, data)
+        end
+    end
+    directories.Fluid.Items:set(newTbl)
+
     for _, liquid in ipairs(liquidFolder:GetChildren()) do
         addLiquidToItems(liquid)
     end
@@ -174,8 +182,12 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
-            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.Name),
+            Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Left, nil, Enum.VerticalAlignment.Top, Enum.SortOrder.LayoutOrder),
             ForPairs(directories.Fluid.Items, function(liquid: Instance, data: PublicTypes.Dictionary): (Instance, Instance)
+                if not data._isCustomLiquid then
+                    return liquid, SettingsUtil.settingOption(data.Type, data)
+                end
+
                 local itemName = data.Name
                 local itemData = data.Data
 
@@ -184,7 +196,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                     Default = false, 
                     Display = itemName, 
                     IsSecondary = true,
-                    LayoutOrder = index,
+                    LayoutOrder = 100 + index,
                     HeaderChildren = Components.ImageButton {
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         BackgroundTransparency = 1,
@@ -206,9 +218,6 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                     end
 
                 }, function(isSectionVisible: Fusion.StateObject<boolean>): Instance
-                    if not data._isCustomLiquid then
-                        return
-                    end
                     if liquidVisibleMap[data.ID] then  
                         isSectionVisible:set(liquidVisibleMap[data.ID])
                     else

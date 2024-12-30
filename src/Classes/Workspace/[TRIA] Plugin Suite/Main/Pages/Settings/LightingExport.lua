@@ -201,7 +201,6 @@ end
 local frame = {}
 
 function frame:GetUI(type): Instance
-    print(type, directories[type])
 	return New "Frame" {
 		BackgroundTransparency = 1,
 		BorderSizePixel = 1,

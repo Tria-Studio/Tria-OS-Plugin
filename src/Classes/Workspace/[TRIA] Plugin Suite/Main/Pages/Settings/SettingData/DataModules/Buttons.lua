@@ -118,7 +118,8 @@ local function setupButtonFolder(folder: Instance)
         SettingsUtil.modifyStateTable(directories.Buttons.Items, "set", folder, {
             Name = folder.Name, 
             Data = buttonProperties,
-			ID = folderId
+			ID = folderId,
+            _Dynamic = true,
         })
     end
     update()

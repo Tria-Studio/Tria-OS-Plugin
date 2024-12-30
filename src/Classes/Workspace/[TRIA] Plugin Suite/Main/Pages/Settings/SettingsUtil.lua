@@ -136,6 +136,7 @@ function SettingsUtil.modifyStateTable(state: Fusion.StateObject<any>, action: s
     elseif action == "remove" then
         table.remove(newTbl, args[1])
     end
+
     state:set(newTbl, true)
 end
 

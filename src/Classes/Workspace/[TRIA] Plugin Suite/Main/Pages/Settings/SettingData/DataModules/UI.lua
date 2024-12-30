@@ -6,7 +6,6 @@ local Value = Fusion.Value
 
 local Data = {
 	Directory = "UI",
-
 	Dynamic = false,
 	Items = {},
 }

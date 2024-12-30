@@ -32,6 +32,10 @@ local function onMapChanged()
     
     local function updateNormalDataModule(module: PublicTypes.Dictionary)
         for _, tbl in ipairs(module.Items) do
+            if tbl._Dynamic then
+                continue
+            end
+
             local dirFolder = Util.getDirFolder(module.Directory)
             if not dirFolder then
                 continue
@@ -50,6 +54,7 @@ local function onMapChanged()
                 updateNormalDataModule(dataModule)
             else
                 dataModule:init()
+                updateNormalDataModule(dataModule)
             end
         end
     end
@@ -102,10 +107,10 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             dirData.Visible = visible
 
                             if dataModule then
-                                if not dataModule.Dynamic then
-                                    return getStandardDropdown(dirKey, dataModule, visible)
-                                else
+                                if dataModule.Dynamic then
                                     return dataModule:getDropdown(visible)
+                                else
+                                    return getStandardDropdown(dirKey, dataModule, visible)
                                 end
                             end
                         end)
