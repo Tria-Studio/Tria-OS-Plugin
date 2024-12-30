@@ -262,33 +262,58 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         -- i got lazy so no it doesnt automatically add every setting
 
         local Settings = Util.mapModel:get().Settings
+        local wrong = {}
 
+        warn("MUSIC", Settings:FindFirstChild("Music"), Settings:FindFirstChild("Music") and Settings:FindFirstChild("Music").ClassName)
         if not Settings:FindFirstChild("Music") then
-            local musicFolder = Instance.new("Configuration")
+            local musicFolder = Instance.new("Sound")
             musicFolder.Name = "Music"
             musicFolder.Parent = Settings
+        elseif not Settings.Music:IsA("Sound") then
+            local musicFolder = Instance.new("Sound")
+            musicFolder.Name = "Music"
 
-            musicFolder:SetAttribute("Music", Settings.Main:GetAttribute("Music") or 0)
-            musicFolder:SetAttribute("Volume", Settings.Main:GetAttribute("MusicVolume") or 0.5)
-            musicFolder:SetAttribute("TimePosition", Settings.Main:GetAttribute("TimePosition") or 0)
+            musicFolder.SoundId = "rbxassetid://" .. Settings.Music:GetAttribute("Music"):gsub("%D", "")
+            musicFolder.PlaybackSpeed = tonumber(Settings.Music:GetAttribute("PlaybackSpeed")) or 1
+            musicFolder.TimePosition = tonumber(Settings.Music:GetAttribute("TimePosition")) or 0
+            musicFolder.Volume = tonumber(Settings.Music:GetAttribute("Volume")) or 0.5
+            
+            table.insert(wrong, "Liquids")
+            Settings.Music:Destroy()
+            musicFolder.Parent = Settings
         end
 
-        if not Settings:FindFirstChild("Materials") then
-            local musicFolder = Instance.new("Configuration")
-            musicFolder.Name = "Materials"
+        if Settings:FindFirstChild("Liquids") then
+            Settings.Liquids.Name = "Fluid"
+            table.insert(wrong, "Liquids")
+        end 
+
+        if not Settings:FindFirstChild("Material") then
+            local musicFolder = Settings:FindFirstChild("Materials") or Instance.new("Folder")
+            musicFolder.Name = "Material"
             musicFolder.Parent = Settings
 
             musicFolder:SetAttribute("Use2022Materials", false)
         end
 
-        if not Settings:FindFirstChild("Skills") then
-            local musicFolder = Instance.new("Configuration")
-            musicFolder.Name = "Skills"
+        if not Settings:FindFirstChild("UI") then
+            local musicFolder = Instance.new("Folder")
+            musicFolder.Name = "UI"
+            musicFolder.Parent = Settings
+        end
+
+        if not Settings:FindFirstChild("Skill") then
+            local musicFolder = Settings:FindFirstChild("Skills") or Instance.new("Configuration")
+            musicFolder.Name = "Skill"
             musicFolder.Parent = Settings
 
             musicFolder:SetAttribute("AllowAirDive", false)
             musicFolder:SetAttribute("AllowSliding", false)
             musicFolder:SetAttribute("LinearSliding", false)
+        end
+
+        if #wrong ~= 0 then
+            Util:ShowMessage("Outdated Map Format", `Your map has automatically been updated to use the new mapkit format for the following Setting folders: {#wrong == 2 and string.format("%s, & %s", wrong[1], wrong[2]) or wrong[1]}.\n\nThis should not change functionallity of your map, unless you are changing the properties of Settings.Liquids (and or) Settings.Music.`, {Text = "Ok"})
         end
 
     else
