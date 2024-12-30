@@ -166,6 +166,31 @@ data.metadataTypes = {
         displayName = "JumpPower",
         default = 100,
     },
+    Gravity = {
+        _referenceName = "Gravity",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "Gravity",
+        displayName = "Gravity",
+        default = 196.2,
+    },
+
+    EasingStyle = {
+        _referenceName = "EasingStyle",
+        type = "Attribute",
+        dataType = "string",
+        dataName = "EasingStyle",
+        displayName = "EasingStyle",
+        default = "Linear",
+    },
+    TweenDuration = {
+        _referenceName = "TweenDuration",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "TweenDuration",
+        displayName = "TweenDuration",
+        default = 3,
+    },
 
     Power = {
         _referenceName = "Power",
@@ -286,64 +311,15 @@ data.metadataTypes = {
         default = 0.25,
     },
 
-    FanNumber = {
-        _referenceName = "FanNumber",
-        type = "EndOfName",
-        dataType = "number",
-        dataName = "FanNumber",
-        displayName = "Fan #",
-        default = 0,
-    },
-    FanSpeed = {
-        _referenceName = "FanSpeed",
-        type = "Attribute",
-        dataType = "number",
-        dataName = "FanSpeed",
-        displayName = "Fan Speed",
-        default = 32,
-    },
-    Distance = {
-        _referenceName = "Distance",
-        type = "Attribute",
-        dataType = "number",
-        dataName = "Distance",
-        displayName = "Jet Distance",
-        default = 24,
-    },
-    LinearMovement = {
-        _referenceName = "LinearMovement",
+    Falloff = {
+        _referenceName = "Falloff",
         type = "Attribute",
         dataType = "boolean",
-        dataName = "LinearMovement",
-        displayName = "Linear Movement",
+        dataName = "Falloff",
+        displayName = "Falloff",
         default = false,
     },
-    Enabled = {
-        _referenceName = "Enabled",
-        type = "Attribute",
-        dataType = "boolean",
-        dataName = "Enabled",
-        displayName = "Enabled",
-        default = true,
-    },
-    FanShape = {
-        _referenceName = "FanShape",
-        type = "Attribute",
-        dataType = "dropdown",
-        dropdownType = "FanShape",
-        dataName = "FanShape",
-        displayName = "Fan Shape",
-        default = "Square",
-    },
-    BubbleParticle = {
-        _referenceName = "BubbleParticle",
-        type = "Attribute",
-        dataType = "dropdown",
-        dropdownType = "BubbleParticle",
-        dataName = "BubbleParticle",
-        displayName = "Bubble Particle",
-        default = "default",
-    },
+
 
     WallrunSync = {
         _referenceName = "WallrunSync",
@@ -817,6 +793,7 @@ Metadata:
             LayoutOrder = 0,
             metadata = {},
             ApplyMethod = "DetailParent",
+
             IsTagApplicable = true,
             OnlyBaseParts = false,
 
@@ -876,6 +853,8 @@ Metadata:
             Tooltip = {
                 Header = "Ziplines",
                 Text = [[Ziplines are an interactive way to allow for people to travel from point A to point B in a map. Zipline ropes can be previewed with View Modes!
+
+Ziplines support custom color gradients. To add a color gradient to a zipline, add a "UIGradient" Instance into the 'Configuration' Instance to customize it!
 
 Ziplines support custom 'Sparkle's! Insert a ParticleEmitter named <b>'_Sparkle'</b> into the 'Configuration' Instance to customize it!
 
@@ -966,28 +945,20 @@ Metadata:
                 Text = "Kills the player upon touch."
             },
         },
-        AirTank = {
-            DisplayText = "AirTank",
-            ActionText = nil,
-            DisplayIcon = "rbxassetid://6031488945", 
-            LayoutOrder = 13,
-            metadata = {
-                {
-                    data = data.metadataTypes.Oxygen,
-                    location = 1,
-                    isFullSize = true,
-                },
-            },
-            ApplyMethod = nil,
-            IsTagApplicable = false,
-            OnlyBaseParts = nil,
+        Cancel = {
+            DisplayText = "SkillCancel",
+            ActionText = "Cancel",
+            DisplayIcon = "rbxassetid://75012014640689",
+            LayoutOrder = 6,
+            metadata = {},
+
+            ApplyMethod = "_Action",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
 
             Tooltip = {
-                Header = "Airtank",
-                Text = [[Airtanks allow for extended underwater gameplay by allowing players to get extra oxygen. Airtanks cannot prevent you from dying to lava.
-                    
-Metadata:
-    <font size="15"><b>Oxygen: </b></font>The amount of oxygen the player will obtain on collection of the tank.]]
+                Header = "SkillCancel",
+                Text = "If a player is on a wallrun, or zipline/rail and they touch this, they will fall off of said skill."
             },
         },
         _SpeedBooster = {
@@ -1000,7 +971,17 @@ Metadata:
                     data = data.metadataTypes.WalkSpeed,
                     location = 1,
                     isFullSize = true,
-                },
+                }, 
+                {
+                    data = data.metadataTypes.EasingStyle,
+                    location = 3,
+                    isFullSize = false,
+                }, 
+                {
+                    data = data.metadataTypes.TweenDuration,
+                    location = 4,
+                    isFullSize = false,
+                }, 
             },
             ApplyMethod = "_Action",
             IsTagApplicable = true,
@@ -1011,7 +992,9 @@ Metadata:
                 Text = [[Speed boosters allow for easy changing of the players walkspeed. Default player walkspeed is 20.
                     
 Metadata:
-    <font size="15"><b>WalkSpeed: </b></font>The speed the players WalkSpeed will be set to.]]
+    <font size="15"><b>WalkSpeed: </b></font>The speed the players WalkSpeed will be set to.
+    <font size="15"><b>EasingStyle: </b></font>The name of the Enum.EasingStyle the gravity will change by.
+    <font size="15"><b>TweenDuration: </b></font>How long it will take for their gravity to fully change.]]
             },
         },
         _JumpBooster = {
@@ -1024,7 +1007,17 @@ Metadata:
                     data = data.metadataTypes.JumpPower,
                     location = 1,
                     isFullSize = true,
-                },
+                }, 
+                {
+                    data = data.metadataTypes.EasingStyle,
+                    location = 3,
+                    isFullSize = false,
+                }, 
+                {
+                    data = data.metadataTypes.TweenDuration,
+                    location = 4,
+                    isFullSize = false,
+                }, 
             },
             ApplyMethod = "_Action",
             IsTagApplicable = true,
@@ -1035,14 +1028,76 @@ Metadata:
                 Text = [[Jump boosters allow for easy changing of the players <u>JumpPower</u>. Default JumpPower is 50.
                     
 Metadata:
-    <font size="15"><b>JumpPower: </b></font>The power the players JumpPower will be set to.]]
+    <font size="15"><b>JumpPower: </b></font>The power the players JumpPower will be set to.
+    <font size="15"><b>EasingStyle: </b></font>The name of the Enum.EasingStyle the gravity will change by.
+    <font size="15"><b>TweenDuration: </b></font>How long it will take for their gravity to fully change.]]
+            },
+        },
+        Gravity = {
+            DisplayText = "Gravity",
+            ActionText = "Gravity",
+            DisplayIcon = "rbxassetid://6034754445",
+            LayoutOrder = 10,
+            metadata = {
+                {
+                    data = data.metadataTypes.Gravity,
+                    location = 1,
+                    isFullSize = true,
+                }, 
+                {
+                    data = data.metadataTypes.EasingStyle,
+                    location = 3,
+                    isFullSize = false,
+                }, 
+                {
+                    data = data.metadataTypes.TweenDuration,
+                    location = 4,
+                    isFullSize = false,
+                }, 
+            },
+            ApplyMethod = "_Action",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "Gravity",
+                Text = [[Gravity pads allow for easy changing of the maps gravity. Default is 196.2.
+                    
+Metadata:
+    <font size="15"><b>Gravity: </b></font>The new gravity the map will be set to.
+    <font size="15"><b>EasingStyle: </b></font>The name of the Enum.EasingStyle the gravity will change by.
+    <font size="15"><b>TweenDuration: </b></font>How long it will take for their gravity to fully change.]]
+            },
+        },
+        BouncePad = {
+            DisplayText = "BouncePad",
+            ActionText = "BouncePad",
+            DisplayIcon = "rbxassetid://104259770138609",
+            LayoutOrder = 11,
+            metadata = {
+                {
+                    data = data.metadataTypes.Power,
+                    location = 1,
+                    isFullSize = true,
+                }
+            },
+            ApplyMethod = "_Action",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "BouncePad",
+                Text = [[A part that launches the player when touched in the direction of its Top face.
+                    
+Metadata:
+    <font size="15"><b>Power: </b></font>The velocity, in studs, of how strong it should launch the player.]]
             },
         },
         Orb = {
             DisplayText = "Orb",
             ActionText = nil,
             DisplayIcon = "rbxassetid://6031068426",
-            LayoutOrder = 12,
+            LayoutOrder = 14,
             metadata = {
                 {
                     data = data.metadataTypes.Power,
@@ -1074,7 +1129,7 @@ Metadata:
             DisplayText = "Teleporter",
             ActionText = "Teleporter",
             DisplayIcon = "rbxassetid://6031082527",
-            LayoutOrder = 11,
+            LayoutOrder = 13,
             metadata = {
                 {
                     data = data.metadataTypes.SetCameraFront,
@@ -1094,66 +1149,62 @@ Metadata:
     <font size="15"><b>SetCameraFront: </b></font>Determines whether the players camera should get orientated to the direction of the destination or not.]]
             },
         },
-
-    },
-    addonTags = {
-        _Waterjet = {
-            _nameStub = "_Waterjet",
-            DisplayText = "_Waterjet",
-            ActionText = "_Waterjet",
-            DisplayIcon = "rbxassetid://6022668890",
-            LayoutOrder = 1,
+        AirTank = {
+            DisplayText = "AirTank",
+            ActionText = nil,
+            DisplayIcon = "rbxassetid://6031488945", 
+            LayoutOrder = 15,
             metadata = {
                 {
-                    data = data.metadataTypes.FanNumber,
+                    data = data.metadataTypes.Oxygen,
                     location = 1,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.FanSpeed,
-                    location = 3,
-                    isFullSize = false,
-                }, {
-                    data = data.metadataTypes.Distance,
-                    location = 4,
-                    isFullSize = false,
-                }, {
-                    data = data.metadataTypes.LinearMovement,
-                    location = 5,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.FanShape,
-                    location = 7,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.Enabled,
-                    location = 9,
-                    isFullSize = true,
-                }, {
-                    data = data.metadataTypes.BubbleParticle,
-                    location = 11,
                     isFullSize = true,
                 },
             },
-            ApplyMethod = "Name",
+            ApplyMethod = nil,
+            IsTagApplicable = false,
+            OnlyBaseParts = nil,
+
+            Tooltip = {
+                Header = "Airtank",
+                Text = [[Airtanks allow for extended underwater gameplay by allowing players to get extra oxygen. Airtanks cannot prevent you from dying to lava.
+                    
+Metadata:
+    <font size="15"><b>Oxygen: </b></font>The amount of oxygen the player will obtain on collection of the tank.]]
+            },
+        },
+        Jetstream = {
+            DisplayText = "Jetstream",
+            ActionText = "Jetstream",
+            DisplayIcon = "rbxassetid://6022668890",
+            LayoutOrder = 16,
+            metadata = {
+               {
+                    data = data.metadataTypes.Power,
+                    location = 1,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.Falloff,
+                    location = 2,
+                    isFullSize = false,
+                },
+            },
+            ApplyMethod = "_Action",
             IsTagApplicable = true,
             OnlyBaseParts = true,
 
             Tooltip = {
                 Header = "Waterjets",
-                Text = [[A custom jetstream object from the Waterjets Addon that allows for custom underwater jetstream currents.
+                Text = [[A custom jetstream object that allows for underwater currents.
 
 Metadata:
     <font size="15"><b>FanNumber: </b></font>A unique identifier for the fan in use of scripting.
     <font size="15"><b>FanSpeed: </b></font>Speed in studs/sec that the fan will push players inside its bounds.
-    <font size="15"><b>Distance: </b></font>The total distance that the fan can push you.
-    <font size="15"><b>LinearMovement: </b></font>When true, the fans push players at a constant rate throughout the entire distance. When false, the rate that the fan pushes players decreases as you get farther away.
-    <font size="15"><b>FanShape: </b></font>Determines if the bounds that the fan will push players in is a cylinder, or a box.
-    <font size="15"><b>Enabled: </b></font>Determines whether the fan is currently active.
-    <font size="15"><b>BubbleParticle: </b></font>The number of the ImageID that the fan's particles will show. 
-]]
+    <font size="15"><b>LinearMovement: </b></font>When true, the fans push players at a constant rate throughout the entire distance. When false, the rate that the fan pushes players decreases as you get farther away.]]
             },
         },
-    }
+    },
+    addonTags = {}
 }
 
 return data

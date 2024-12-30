@@ -49,6 +49,10 @@ local newTagTypes = {
 	AirTank = { "ModelTags" },
 	Orb = { "ModelTags" },
 	_Waterjet = { "AddonTags" },
+    Gravity = { "ActionTags" },
+    Cancel = { "ActionTags" },
+    BouncePad = { "ActionTags" },
+    Jetstream = { "ActionTags" },
 }
 local tagTypes = {
 	ButtonTags = { --// Child named tag but button
@@ -75,8 +79,12 @@ local tagTypes = {
 		"_WallJump",
 		"_SpeedBooster",
 		"_JumpBooster",
+		"Gravity",
+        "Cancel",
+        "BouncePad",
 		"_Kill",
 		"Teleporter",
+        "Jetstream",
 
 		_convert = {
 			_SpeedBooster = "WalkSpeed",
@@ -100,9 +108,7 @@ local tagTypes = {
 			_Button = "_Button%d",
 		},
 	},
-	AddonTags = {
-		"_Waterjet",
-	},
+	AddonTags = {},
 }
 local tagsWithNumbers = {
 	"_Button",
@@ -114,15 +120,18 @@ local tagsWithNumbers = {
 	"_Explode",
 	"_Destroy",
 	"_Sound",
-	"_Waterjet",
 }
 local tagsBypassParent = {
 	"_Kill",
 	"_WallRun",
 	"_WallJump",
 	"_SpeedBooster",
+	"Gravity",
+    "Cancel",
+    "BouncePad",
 	"Teleporter",
 	"_JumpBooster",
+    "Jetstream"
 }
 
 local defaultMetadataTypes = {
