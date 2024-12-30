@@ -135,7 +135,7 @@ end
 -- Gets an object from the cache.
 function Handler:GetObject(CacheName: string): Instance
     if not Handler.Caches[CacheName] then
-        Handler:CreateCache("ZiplineCache", script.PartTemplate, 100, 50, false)
+        Handler:CreateCache(CacheName, script.PartTemplate, 100, 50, false)
     end
 	
 	local CacheKey = Handler.Caches[CacheName]

@@ -264,7 +264,6 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         local Settings = Util.mapModel:get().Settings
         local wrong = {}
 
-        warn("MUSIC", Settings:FindFirstChild("Music"), Settings:FindFirstChild("Music") and Settings:FindFirstChild("Music").ClassName)
         if not Settings:FindFirstChild("Music") then
             local musicFolder = Instance.new("Sound")
             musicFolder.Name = "Music"

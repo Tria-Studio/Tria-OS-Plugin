@@ -179,9 +179,18 @@ return {
                 Color = Color3.fromRGB(190, 222, 48),
                 ObjectType = "SelectionBox",
             }, {
+                TagType = "NoChild",
+                Name = "Gravity",
+                LayoutOrder = 8,
+                DisplayIcon = "rbxassetid://6034754445",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(110, 203, 53),
+                ObjectType = "SelectionBox",
+            }, {
                 TagType = "Any",
                 Name = "AirTank",
-                LayoutOrder = 9,
+                LayoutOrder = 10,
                 DisplayIcon = "rbxassetid://6031488945  ",
                 UsesAllInstances = true,
 
@@ -190,20 +199,47 @@ return {
             }, {
                 TagType = "Any",
                 Name = "Orb",
-                LayoutOrder = 8,
+                LayoutOrder = 9,
                 DisplayIcon = "rbxassetid://6031068426",
                 UsesAllInstances = true,
 
                 Color = Color3.fromRGB(150, 64, 172),
-                ObjectType = "SelectionBox",
+                ObjectType = "Projection",
             }, {
                 TagType = "Any",
                 Name = "Teleporter",
-                LayoutOrder = 10,
+                LayoutOrder = 11,
                 DisplayIcon = "rbxassetid://6031082527",
                 UsesAllInstances = true,
 
-                Color = Color3.fromRGB(150, 64, 172),
+                Color = Color3.fromRGB(182, 59, 141),
+                ObjectType = "SelectionBox",
+            }, {
+                TagType = "NoChild",
+                Name = "BouncePad",
+                LayoutOrder = 12,
+                DisplayIcon = "rbxassetid://104259770138609",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(46, 163, 157),
+                ObjectType = "SelectionBox",
+            }, {
+                TagType = "NoChild",
+                Name = "Cancel",
+                LayoutOrder = 13,
+                DisplayIcon = "rbxassetid://75012014640689",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(230, 50, 5),
+                ObjectType = "SelectionBox",
+            }, {
+                TagType = "NoChild",
+                Name = "Jetstream",
+                LayoutOrder = 14,
+                DisplayIcon = "rbxassetid://6022668890",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(118, 247, 208),
                 ObjectType = "SelectionBox",
             },
         },
@@ -273,17 +309,7 @@ return {
         SubText = "All Addon Tags",
         DisplayIcon = "rbxassetid://6023565892",
         LayoutOrder = 7,
-        ViewOptions = {
-            {
-                TagType = "Addon",
-                Name = "_Waterjet",
-                LayoutOrder = 2,
-                DisplayIcon = "rbxassetid://6022668890",
-                UsesAllInstances = true,
-
-                ObjectType = "Waterjet"
-            }
-        },
+        ViewOptions = {},
         Tooltip = {
             Header = "Map Addons View",
             Text = "Because the selected map has map addons that support Event & Item Tags, those tags can be visualized below."
