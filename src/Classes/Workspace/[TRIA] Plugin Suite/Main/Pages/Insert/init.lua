@@ -227,22 +227,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
 
                             GetAssetButton {
-                                ModelId = 13762909019,
-                                BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
-                                OverlayImage = "rbxassetid://13706366388",
-                                OverlayImageTransparency = 0.5,
-                                ZIndex = 5,
-                                LayoutOrder = 1,
-                                Name = "Basic TRIA.OS Map Kit",
-                                Creator = "TRIA",
-                                ImageCrop = Enum.ScaleType.Crop,
-                                Tooltip = {
-                                    Header = "Basic Map Kit",
-                                    Tooltip = "Contains only the essentials for mapmaking. Great for new mapmakers to understand the basics without getting overwhelmed with everything TRIA.os offers!",
-                                }
-                            },
-
-                            GetAssetButton {
                                 ModelId = 13762867366,
                                 LayoutOrder = 2,
                                 BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),

@@ -1,3 +1,4 @@
+--!nocheck
 local ContentProvider = game:GetService("ContentProvider")
 local RunService = game:GetService("RunService")
 
@@ -348,6 +349,7 @@ openButton.Click:Connect(function()
 end)
 Util.PluginActive:set(widget.Enabled)
 
+task.wait()
 if not MapSelect:AutoSelect() then
 	PageHandler:ChangePage("Insert")
 end

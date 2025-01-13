@@ -1,4 +1,5 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local ScriptEditorService = game:GetService("ScriptEditorService")
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local Package = script.Parent.Parent
@@ -23,6 +24,7 @@ local Computed = Fusion.Computed
 
 local ENABLE_VAR = "TRIA_AutocompleteEnabled"
 local GLOBAL_ENABLE_VAR = "TRIA_GlobalAutocompleteEnabled"
+local HEADER = 'require(game:GetService("ServerScriptService").Runtime):Init()\n'
 
 local ScriptMaid = Util.Maid.new()
 
@@ -268,6 +270,28 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
     }
 end
 
+local function DoRuntimeCheck(script: LuaSourceContainer)
+    task.delay(0.5, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
+        if string.sub(old, 1, #HEADER) ~= HEADER then
+            return HEADER .. '\n' .. old
+        end
+        return old
+    end)
+
+    task.delay(1, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
+        if string.sub(old, 1, #HEADER) ~= HEADER then
+            return HEADER .. '\n' .. old
+        end
+        return old
+    end)
+
+    task.delay(2, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
+        if string.sub(old, 1, #HEADER) ~= HEADER then
+            return HEADER .. '\n' .. old
+        end
+        return old
+    end)
+end
 
 Observer(mapScripts):onChange(function()
     local children = mapScripts:get(false)
@@ -320,11 +344,14 @@ Util.MapChanged:Connect(function()
 
     task.wait()
 
-    local function updateChildren()
+    local function updateChildren(doRuntime)
         local newTable = {}
         for _, child in pairs(newMap:GetChildren()) do
             if child:IsA("Script") then
                 table.insert(newTable, child)
+            end
+            if doRuntime and child:IsA("LuaSourceContainer") then
+                DoRuntimeCheck(child)
             end
         end
 
@@ -332,9 +359,15 @@ Util.MapChanged:Connect(function()
         mapScripts:set(newTable)
     end
 
-    updateChildren()
+    updateChildren(true)
     Util.MapMaid:GiveTask(newMap.ChildAdded:Connect(updateChildren))
     Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(updateChildren))
+    Util.MapMaid:GiveTask(newMap.DescendantAdded:Connect(function(newThing: Instance)
+        if newThing:IsA("LuaSourceContainer") then
+            task.wait()
+            DoRuntimeCheck(newThing)
+        end
+    end))
 end)
 
 return frame
