@@ -276,7 +276,8 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             musicFolder.PlaybackSpeed = tonumber(Settings.Music:GetAttribute("PlaybackSpeed")) or 1
             musicFolder.TimePosition = tonumber(Settings.Music:GetAttribute("TimePosition")) or 0
             musicFolder.Volume = tonumber(Settings.Music:GetAttribute("Volume")) or 0.5
-            
+            musicFolder.Looped = true
+
             table.insert(wrong, "Liquids")
             Settings.Music:Destroy()
             musicFolder.Parent = Settings
