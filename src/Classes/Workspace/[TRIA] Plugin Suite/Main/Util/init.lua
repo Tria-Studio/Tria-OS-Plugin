@@ -132,7 +132,7 @@ local Util = {
         AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
     },
     _DEBUG = {
-        PLUGIN_VERSION = "1.1.2",
+        PLUGIN_VERSION = "1.2",
         IS_RELEASE = true,
 
         _HttpPing = Value("Pinging..."),
