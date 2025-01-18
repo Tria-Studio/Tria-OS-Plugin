@@ -304,12 +304,14 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         if not Settings:FindFirstChild("Skill") then
             local musicFolder = Settings:FindFirstChild("Skills") or Instance.new("Configuration")
+            if musicFolder.Name ~= "Skills" then
+                musicFolder:SetAttribute("AllowAirDive", false)
+                musicFolder:SetAttribute("AllowSliding", false)
+                musicFolder:SetAttribute("LinearSliding", false)
+            end
             musicFolder.Name = "Skill"
             musicFolder.Parent = Settings
 
-            musicFolder:SetAttribute("AllowAirDive", false)
-            musicFolder:SetAttribute("AllowSliding", false)
-            musicFolder:SetAttribute("LinearSliding", false)
         end
 
         if #wrong ~= 0 then
