@@ -278,7 +278,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             musicFolder.Volume = tonumber(Settings.Music:GetAttribute("Volume")) or 0.5
             musicFolder.Looped = true
 
-            table.insert(wrong, "Liquids")
+            table.insert(wrong, "Music")
             Settings.Music:Destroy()
             musicFolder.Parent = Settings
         end
@@ -311,11 +311,11 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             end
             musicFolder.Name = "Skill"
             musicFolder.Parent = Settings
-
+            table.insert(wrong, "Skills")
         end
 
         if #wrong ~= 0 then
-            Util:ShowMessage("Outdated Map Format", `Your map has automatically been updated to use the new mapkit format for the following Setting folders: {#wrong == 2 and string.format("%s, & %s", wrong[1], wrong[2]) or wrong[1]}.\n\nThis should not change functionallity of your map, unless you are changing the properties of Settings.Liquids (and or) Settings.Music.`, {Text = "Ok"})
+            Util:ShowMessage("Outdated Map Format", `Your map has automatically been updated to use the new mapkit format for the following Setting folders: {#wrong == 3 and string.format("%s, %s, & %s", wrong[1], wrong[2], wrong[3]) or #wrong == 2 and string.format("%s, & %s", wrong[1], wrong[2]) or wrong[1]}.\n\nThis should not change functionallity of your map, unless you are changing the properties of Settings.Liquids (and or) Settings.Music.`, {Text = "Ok"})
         end
 
     else
