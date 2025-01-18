@@ -213,7 +213,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                 [Children] = {
                     Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, nil, Enum.VerticalAlignment.Top),
-                    Components.FrameHeader("Map Kits", 1, nil, nil, "Here you can insert Map kits which can help you get started on making a map!"),
+                    Components.FrameHeader("Map Kits", 1, nil, nil, "Get the TRIA.os Map Kit here to start making maps!"),
                     Components.Spacer(false, 1, 6, nil),
 
                     New "Frame" {
@@ -227,18 +227,18 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
 
                             GetAssetButton {
-                                ModelId = 13762867366,
+                                ModelId = 103809693584842,
                                 LayoutOrder = 2,
                                 BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
-                                OverlayImage = "rbxassetid://13706366546",
+                                OverlayImage = "rbxassetid://80938683090696",
                                 OverlayImageTransparency = 0.5,
                                 ZIndex = 5,
-                                Name = "Advanced TRIA.OS Map Kit",
+                                Name = "TRIA.OS Map Kit",
                                 Creator = "TRIA",
                                 ImageCrop = Enum.ScaleType.Crop,
                                 Tooltip = {
-                                    Header = "Advanced Map Kit",
-                                    Tooltip = "Contains all features that TRIA.os offers, for those who want to utilize TRIA.os to its fullest!",
+                                    Header = "Map Kit",
+                                    Tooltip = "The latest version of the TRIA.os MapKit",
                                 }
                             },
 

@@ -277,20 +277,6 @@ local function DoRuntimeCheck(script: LuaSourceContainer)
         end
         return old
     end)
-
-    task.delay(1, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
-        if string.sub(old, 1, #HEADER) ~= HEADER then
-            return HEADER .. '\n' .. old
-        end
-        return old
-    end)
-
-    task.delay(2, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
-        if string.sub(old, 1, #HEADER) ~= HEADER then
-            return HEADER .. '\n' .. old
-        end
-        return old
-    end)
 end
 
 Observer(mapScripts):onChange(function()
@@ -330,7 +316,15 @@ Observer(mapScripts):onChange(function()
     end
 end)
 
+local connections = {}
 Util.MapChanged:Connect(function()
+    for _, connection in pairs(connections) do
+        if connection then
+            connection:Disconnect()
+        end
+    end
+    table.clear(connections)
+
     for k in pairs(hasScripts) do
         hasScripts[k]:set(false)
     end
@@ -360,14 +354,18 @@ Util.MapChanged:Connect(function()
     end
 
     updateChildren(true)
-    Util.MapMaid:GiveTask(newMap.ChildAdded:Connect(updateChildren))
-    Util.MapMaid:GiveTask(newMap.ChildRemoved:Connect(updateChildren))
-    Util.MapMaid:GiveTask(newMap.DescendantAdded:Connect(function(newThing: Instance)
+    local connection1 = newMap.ChildAdded:Connect(updateChildren)
+    local connection2 = newMap.ChildRemoved:Connect(updateChildren)
+    local connection3 = newMap.DescendantAdded:Connect(function(newThing: Instance)
         if newThing:IsA("LuaSourceContainer") then
             task.wait()
             DoRuntimeCheck(newThing)
         end
-    end))
+    end)
+
+    table.insert(connections, connection1)
+    table.insert(connections, connection2)
+    table.insert(connections, connection3)
 end)
 
 return frame
