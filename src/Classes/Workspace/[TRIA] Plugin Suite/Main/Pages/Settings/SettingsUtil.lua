@@ -41,7 +41,7 @@ local SettingsUtil = {
             LayoutOrder = 3,
             Items = Value({})
         },
-        Skills = {
+        Skill = {
             Default = true,
             IsHeader = true,
             Display = "Skills and Features",

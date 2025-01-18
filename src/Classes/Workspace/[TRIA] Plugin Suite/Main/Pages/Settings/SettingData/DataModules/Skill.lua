@@ -5,7 +5,7 @@ local Util = require(Package.Util)
 local Value = Fusion.Value
 
 local Data = {
-	Directory = "Skills",
+	Directory = "Skill",
 
 	Dynamic = false,
 	Items = {},
@@ -17,7 +17,7 @@ Data.Items = {
 		Type = "Checkbox",
 
         ApplyType = "Attribute",
-		Directory = "Skills",
+		Directory = "Skill",
 		Attribute = "AllowSliding",
 		Fallback = true,
 
@@ -32,7 +32,7 @@ Data.Items = {
 		Type = "Checkbox",
 
         ApplyType = "Attribute",
-		Directory = "Skills",
+		Directory = "Skill",
 		Attribute = "LinearSliding",
 		Fallback = false,
 
@@ -49,7 +49,7 @@ Data.Items = {
 		Type = "Checkbox",
 
         ApplyType = "Attribute",
-		Directory = "Skills",
+		Directory = "Skill",
 		Attribute = "AllowAirDive",
 		Fallback = true,
 
