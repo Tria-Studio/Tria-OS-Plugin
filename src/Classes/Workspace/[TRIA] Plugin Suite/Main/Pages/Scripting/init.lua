@@ -165,7 +165,6 @@ local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: s
 end
 
 local function DoRuntimeCheck(script: LuaSourceContainer)
-    print("runtime enabled:", GlobalSettings.autoInjectRuntime)
     if #Players:GetPlayers() > 1 or not GlobalSettings.autoInjectRuntime then
         return
     end
@@ -291,7 +290,6 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     else true,
                                     
                                 OnToggle = function(newState: boolean)
-                                    print("newstate", newState)
                                     GlobalSettings.autoInjectRuntime = newState
                                     plugin:SetSetting(GLOBAL_INJECT_VAR, newState)
                                     if newState and Util.mapModel:get(false) then
