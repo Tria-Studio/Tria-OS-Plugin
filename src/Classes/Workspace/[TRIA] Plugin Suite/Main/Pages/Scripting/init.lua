@@ -25,6 +25,7 @@ local Computed = Fusion.Computed
 
 local ENABLE_VAR = "TRIA_AutocompleteEnabled"
 local GLOBAL_ENABLE_VAR = "TRIA_GlobalAutocompleteEnabled"
+local GLOBAL_INJECT_VAR = "TRIA_GlobalAutocompleteEnabled"
 local HEADER = 'require(game:GetService("ServerScriptService").Runtime):Init()\n'
 
 local ScriptMaid = Util.Maid.new()
@@ -262,6 +263,24 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     Header = "Global Autocomplelte",
                                     Tooltip = "Determines whether or not Autocomplete will happen in TRIA scripts (MapScript, LocalMapScript, EffectScript) or any script in your map."
                                 }
+                            },
+                            OptionFrame {
+                                Text = "Automatic Runtime Injection",
+                                LayoutOrder = 3,
+                                Enabled = 
+                                    if plugin:GetSetting(GLOBAL_INJECT_VAR) 
+                                    then plugin:GetSetting(GLOBAL_INJECT_VAR) 
+                                    else true,
+                                    
+                                OnToggle = function(newState: boolean)
+                                    GlobalSettings.autoInjectRuntime = not newState
+                                    plugin:SetSetting(GLOBAL_INJECT_VAR, newState)
+                                end,
+
+                                Tooltip = {
+                                    Header = "Runtime Injection",
+                                    Tooltip = "When enabled, every script inside your map will automatically have the runtime header put at the top of it if it does not have it."
+                                }
                             }
                         }
                     }
@@ -272,7 +291,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
 end
 
 local function DoRuntimeCheck(script: LuaSourceContainer)
-    if #Players:GetPlayers() > 1 then
+    if #Players:GetPlayers() > 1 or not GlobalSettings.autoInjectRuntime then
         return
     end
     task.delay(0.5, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
