@@ -164,6 +164,24 @@ local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: s
     }
 end
 
+local function DoRuntimeCheck(script: LuaSourceContainer)
+    print("runtime enabled:", GlobalSettings.autoInjectRuntime)
+    if #Players:GetPlayers() > 1 or not GlobalSettings.autoInjectRuntime then
+        return
+    end
+
+    task.delay(0.5, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
+        if #Players:GetPlayers() > 1 or not GlobalSettings.autoInjectRuntime then
+            return old
+        end 
+        if string.sub(old, 1, #HEADER) ~= HEADER then
+            return HEADER .. '\n' .. old
+        end
+        return old
+    end)
+end
+
+
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
@@ -217,7 +235,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                         LayoutOrder = 19,
 
                         [Children] = {
-                            Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6), Enum.VerticalAlignment.Center),
+                            Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6), Enum.VerticalAlignment.Top),
                             OptionFrame {
                                 Text = "Enable Autocomplete",
                                 LayoutOrder = 1,
@@ -273,8 +291,16 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     else true,
                                     
                                 OnToggle = function(newState: boolean)
-                                    GlobalSettings.autoInjectRuntime = not newState
+                                    print("newstate", newState)
+                                    GlobalSettings.autoInjectRuntime = newState
                                     plugin:SetSetting(GLOBAL_INJECT_VAR, newState)
+                                    if newState and Util.mapModel:get(false) then
+                                        for _, child in pairs(Util.mapModel:get(false):GetChildren()) do
+                                            if child:IsA("LuaSourceContainer") then
+                                                DoRuntimeCheck(child)
+                                            end
+                                        end
+                                    end
                                 end,
 
                                 Tooltip = {
@@ -288,18 +314,6 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
             }
         }
     }
-end
-
-local function DoRuntimeCheck(script: LuaSourceContainer)
-    if #Players:GetPlayers() > 1 or not GlobalSettings.autoInjectRuntime then
-        return
-    end
-    task.delay(0.5, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
-        if string.sub(old, 1, #HEADER) ~= HEADER then
-            return HEADER .. '\n' .. old
-        end
-        return old
-    end)
 end
 
 Observer(mapScripts):onChange(function()
