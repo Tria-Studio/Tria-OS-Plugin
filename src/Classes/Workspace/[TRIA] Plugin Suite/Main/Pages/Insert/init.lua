@@ -60,6 +60,7 @@ local function attemptToInsertModel(assetID: number)
         local clone = script.Mapkits:FindFirstChild(result):Clone()
         result = Instance.new("Model")
         clone.Parent = result
+        clone.Name = "1.0 MapKit"
         for _, thing in pairs(clone:GetChildren()) do
             if thing:IsA("LuaSourceContainer") then
                 thing.Enabled = true
@@ -277,19 +278,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 BackgroundTransparency = 1,
                                 
                                 [Children] = {
-                                    Components.GradientTextLabel(Computed(function(): boolean
-                                        return Util.mapModel:get() == nil
-                                    end), {
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        Size = Computed(function(): UDim2
-                                            local size = AddonFrameSize:get() or Vector2.new()
-                                            return UDim2.fromOffset(size.X, size.Y)
-                                        end),
-                                        Text = "Select a map to continue.",
-                                        ZIndex = 5,
-                                    }),
-
                                     New "Frame" {
                                         Size = UDim2.fromScale(1, 1),
                                         BackgroundTransparency = 1,
