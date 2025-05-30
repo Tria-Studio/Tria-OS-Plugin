@@ -7,7 +7,6 @@ local TagUtils = require(Package.Util.TagUtils)
 local ConvertToOptimized = require(script.OptimizedConvert)
 
 local componentFiles = script.Parent.ComponentFiles
-local addonFiles = script.Parent.AddonFiles
 
 local COMMA_BREAK = ",*%s*"
 local TUNE_MATCH = `local%s[%w%p+]{COMMA_BREAK}(%w+)%s=%spcall%(require,%s*(%d+)%)%w*`
@@ -19,7 +18,7 @@ local function positionModel(model: Model)
 end
 
 local function insertModel(modelName: string, parent: Instance?): Instance
-    local newModel = (componentFiles:FindFirstChild(modelName) or addonFiles:FindFirstChild(modelName)):Clone()
+    local newModel = componentFiles:FindFirstChild(modelName)
     newModel.Parent = parent
     return newModel
 end
@@ -31,31 +30,6 @@ local function getInsertFolder(specialChildName: string): Instance
         and currentMap.Special:FindFirstChild(specialChildName) 
         or currentMap:FindFirstChild("Geometry") 
         or currentMap
-end
-
-local function mergeSources(sourceA: string, sourceB: string, line: number): string
-	local lines = sourceA:split("\n");
-	local newLines = sourceB:split("\n");
-
-	for i = 1, #newLines do
-		table.insert(lines, i + line - 1, newLines[i])
-	end
-	
-	return table.concat(lines, "\n")
-end
-
-local function getScriptLineMatch(source: string, match: string): number?
-    local line = -1
-    local lines = source:split("\n")
-
-    for i = 1, #lines do
-        if lines[i]:match(match) then
-            line = i
-            break
-        end
-    end
-
-    return if line == -1 then nil else line
 end
 
 return {

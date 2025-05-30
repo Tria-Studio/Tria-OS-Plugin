@@ -54,9 +54,23 @@ local function attemptToInsertModel(assetID: number)
     success, result = attemptTask(InsertService, "GetLatestAssetVersionAsync", assetID)
     if not success then return end
 
-    success, result = attemptTask(InsertService, "LoadAssetVersion", result)
+
+    if script.Mapkits:FindFirstChild(result) then
+        success = true
+        local clone = script.Mapkits:FindFirstChild(result):Clone()
+        result = Instance.new("Model")
+        clone.Parent = result
+        for _, thing in pairs(clone:GetChildren()) do
+            if thing:IsA("LuaSourceContainer") then
+                thing.Enabled = true
+            end
+        end
+    else
+        success, result = attemptTask(InsertService, "LoadAssetVersion", result)
+    end
+   
     if not success then 
-        Util:ShowMessage("Unable to Insert Model", "Unable to insert the selected model into the workspace. This could be because of you are in offline mode.")
+        Util:ShowMessage("Unable to Insert Model", "Roblox failed to insert the model, please try again.")
         return
     end
 
@@ -233,7 +247,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                 OverlayImage = "rbxassetid://80938683090696",
                                 OverlayImageTransparency = 0.5,
                                 ZIndex = 5,
-                                Name = "TRIA.OS Map Kit",
+                                Name = "TRIA.os Map Kit",
                                 Creator = "TRIA",
                                 ImageCrop = Enum.ScaleType.Crop,
                                 Tooltip = {
