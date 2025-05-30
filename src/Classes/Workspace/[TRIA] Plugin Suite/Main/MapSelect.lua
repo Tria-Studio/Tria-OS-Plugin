@@ -122,7 +122,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
         end
     end 
 
-     if newMap:IsA("Model") or newMap:IsA("Workspace") then
+     if newMap:IsA("Model") or newMap:IsA("Folder") or newMap:IsA("Workspace") then
         if score_1 > 0.875 or score_2 > 1 then
             return false, "Unknown map type detected. This plugin was designed to aid with TRIA.os mapmaking."
         end
@@ -228,6 +228,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
                 end
             end))
         end
+        mapTypes.Folder = mapTypes.Model
 
         local function updateSpecial()
             Util.hasSpecialFolder:set(newMap:FindFirstChild("Special") ~= nil)
@@ -417,7 +418,7 @@ function MapSelect:AutoSelect(DontSet: boolean?): boolean
     end
 
     for _, v: Instance in ipairs(workspace:GetChildren()) do
-        if v:IsA("Model") then
+        if v:IsA("Model") or v:IsA("Folder") then
             isMap, value = self:IsTriaMap(v)
             if isMap then
                 if not DontSet then

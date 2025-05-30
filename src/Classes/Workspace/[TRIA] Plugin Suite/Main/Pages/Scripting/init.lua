@@ -1,4 +1,5 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local Players = game:GetService("Players")
 local ScriptEditorService = game:GetService("ScriptEditorService")
 
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")
@@ -271,6 +272,9 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
 end
 
 local function DoRuntimeCheck(script: LuaSourceContainer)
+    if #Players:GetPlayers() > 1 then
+        return
+    end
     task.delay(0.5, ScriptEditorService.UpdateSourceAsync, ScriptEditorService, script, function(old)
         if string.sub(old, 1, #HEADER) ~= HEADER then
             return HEADER .. '\n' .. old
