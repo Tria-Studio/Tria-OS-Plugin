@@ -40,7 +40,7 @@ function ObjectType:SetAppearance(part)
         local Marker = self.Objects[button].Marker
 
         Marker.ButtonNum.Text = button.Name:sub(8)
-        Marker.GroupPercent.Text = button:GetAttribute("Group") and '50%' or ""
+        Marker.GroupPercent.Text = button:GetAttribute("Group") and `{button:GetAttribute("PlayerPercentage") or 50}%` or ""
 
         local ColorType = string.gsub(string.sub(button.Name, 8), "%a", "") == "1" and "ActiveColor" or "InactiveColor"
         local ButtonType = if button:GetAttribute("Group") then "Group"
