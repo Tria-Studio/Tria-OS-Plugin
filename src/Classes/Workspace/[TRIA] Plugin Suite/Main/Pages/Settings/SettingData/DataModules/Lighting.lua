@@ -65,7 +65,7 @@ Data.Items = {
         ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "ColorShift_Bottom",
-		Fallback = Util.colorToRGB(Color3.fromRGB()),
+		Fallback = Util.colorToRGB(Color3.fromRGB(0, 0, 0)),
 		Default = Color3.new(),
 
 		Value = Value(Color3.new()),
@@ -81,7 +81,7 @@ Data.Items = {
         ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "ColorShift_Top",
-		Fallback = Util.colorToRGB(Color3.fromRGB()),
+		Fallback = Util.colorToRGB(Color3.fromRGB(0, 0, 0)),
 		Default = Color3.new(),
 
 		Value = Value(Color3.new()),
@@ -127,7 +127,7 @@ Data.Items = {
         ApplyType = "Attribute",
 		Directory = "Lighting",
 		Attribute = "FogColor",
-		Fallback = Util.colorToRGB(Color3.fromRGB()),
+		Fallback = Util.colorToRGB(Color3.fromRGB(0, 0, 0)),
 		Default = Color3.new(),
 
 		Value = Value(Color3.new()),
@@ -190,6 +190,21 @@ Data.Items = {
 		Value = Value(false),
 		Tooltip = {
 			Text = "Whether or not the sun will cast shadows.",
+		},
+	},
+
+    {
+		Text = "Shadow Softness",
+		Type = "Number",
+
+        ApplyType = "Attribute",
+		Directory = "Lighting",
+		Attribute = "ShadowSoftness",
+		Fallback = 0.5,
+
+		Value = Value(0.5),
+		Tooltip = {
+			Text = "How sharp the edges of all sun shadows will appear.",
 		},
 	},
 
