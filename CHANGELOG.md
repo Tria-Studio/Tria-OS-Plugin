@@ -1,3 +1,86 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.2.2] - 2025/XX/XX
+### Fixed
+- Fixed `Shadow Softness` Lighting property is not being recognised by the plugin.
+
+
+
+## [1.2.1] - 2025/05/29
+### Added
+- Added an option to toggle runtime injection in the scripting menu
+
+### Changed
+- Maps can now be inside of Folders instead of only Models & Unparented in workspace
+- Disabled runtime script injections when more than one person is inside of a studio place.
+~ This hopefully will be undone in the future but is in place now to help prevent duplicating scripts.
+
+### Fixed 
+- Fixed an issue where you could not insert the 1.0 mapkit if you do not own the model due to a change in Roblox model permissions.
+
+
+
+## [1.2.0] - 2023/18/01
+### Added
+- Added support for the TRIA.os `v1.0` MapKit:
+~ All new properties, settings, and new features have been added to the `Object Tags`, `Debug View`, and `Resources` tabs.
+
+- Added an option to automatically convert older mapkit formats to the Optimized Structure format.
+- Added Automatic Runtime Injection for all scripts.
+- Added `Orb Projections` to Orb Debug View modes.
+
+### Fixed
+- Fixed a bug where some actions may not properly initiate when the plugin is loaded for the first time and a map gets auto selected.
+
+### Removed
+- Removed `Featured Addons` in support for the #Assets-and-Mods channel in the Discord.
+- Removed the `Map Manager` menu, this idea was scrapped.
+
+
+
+## [1.1.2] - 2023/19/08
+### Changed
+- Audio Library will now set the 'Music' value in the 'Music' folder rather than the 'Main' folder
+
+### Fixed 
+- Fixed Lighting Import not working due to ChangeHistoryService API migration
+- Fixed setting music via Audio Library not working due to ChangeHistoryService API migration
+
+
+
+## [1.1.1] - 2023/14/08
+### Fixed
+- Settings menu setting number types as strings, possibly breaking maps when loading them in TRIA.os
+
+
+
+## [1.1.0] - 2023/12/08
+### Added
+- Added Support for rails. Visualizing, metadata, & converting ziplines to rails + vise-versa
+- Added Support for converting map objects to optimized structure (does not touch scripts)
+- Added a warning to warn you if your map does not use OptimizedStructure
+- Added Ability to disable prints in the output in the debug menu
+
+### Changed
+- Any missing settings now get auto-filled to their default values instead of doing nothing
+- All ChangeHistoryService calls now use the new API
+- Updated all component inserts to be up-to-date
+
+### Fixed
+- Fixed Waterjets not working in game
+- Fixed teleporters inserted not working in game
+- Fixed Zipline momentum being a checkbox rather than a number box
+- Fixed other errors + bugs 
+
+### Removed
+- Removed legacy BGM + BGM Volume setting from the 'Main' folder. Use the dedicated 'Music' folder from now on.
+
+
+
 ## [1.0.0] - 2023/06/17
 ###  Added
 - Added the `Resources` Menu:
@@ -30,80 +113,3 @@
 - Added the `Studio Map Manager` page to the plugin, currently disabled.
 
 - Added Tooltips all throughout the plugin for buttons explaining what each setting or what each MapKit feature does.
-
-
-
-## [1.1.0] - 2023/12/08
-### Added
-- Added Support for rails. Visualizing, metadata, & converting ziplines to rails + vise-versa
-- Added Support for converting map objects to optimized structure (does not touch scripts)
-- Added a warning to warn you if your map does not use OptimizedStructure
-- Added Ability to disable prints in the output in the debug menu
-
-### Changed
-- Any missing settings now get auto-filled to their default values instead of doing nothing
-- All ChangeHistoryService calls now use the new API
-- Updated all component inserts to be up-to-date
-
-### Fixed
-- Fixed Waterjets not working in game
-- Fixed teleporters inserted not working in game
-- Fixed Zipline momentum being a checkbox rather than a number box
-- Fixed other errors + bugs 
-
-### Removed
-- Removed legacy BGM + BGM Volume setting from the 'Main' folder. Use the dedicated 'Music' folder from now on.
-
-
-
-## [1.1.1] - 2023/14/08
-### Fixed
-- Settings menu setting number types as strings, possibly breaking maps when loading them in TRIA.os
-
-
-
-## [1.1.2] - 2023/19/08
-### Changed
-- Audio Library will now set the 'Music' value in the 'Music' folder rather than the 'Main' folder
-
-### Fixed 
-- Fixed Lighting Import not working due to ChangeHistoryService API migration
-- Fixed setting music via Audio Library not working due to ChangeHistoryService API migration
-
-
-
-## [1.2.0] - 2023/18/01
-### Added
-- Added support for the TRIA.os `v1.0` MapKit:
-~ All new properties, settings, and new features have been added to the `Object Tags`, `Debug View`, and `Resources` tabs.
-
-- Added an option to automatically convert older mapkit formats to the Optimized Structure format.
-- Added Automatic Runtime Injection for all scripts.
-- Added `Orb Projections` to Orb Debug View modes.
-
-### Fixed
-- Fixed a bug where some actions may not properly initiate when the plugin is loaded for the first time and a map gets auto selected.
-
-### Removed
-- Removed `Featured Addons` in support for the #Assets-and-Mods channel in the Discord.
-- Removed the `Map Manager` menu, this idea was scrapped.
-
-
-
-## [1.2.1] - 2025/05/29
-### Added
-- Added an option to toggle runtime injection in the scripting menu
-
-### Changed
-- Maps can now be inside of Folders instead of only Models & Unparented in workspace
-- Disabled runtime script injections when more than one person is inside of a studio place.
-~ This hopefully will be undone in the future but is in place now to help prevent duplicating scripts.
-
-### Fixed 
-- Fixed an issue where you could not insert the 1.0 mapkit if you do not own the model due to a change in Roblox model permissions.
-
-
-
-## [1.2.2] - 2025/XX/XX
-### Fixed
-- Fixed `Shadow Softness` Lighting property is not being recognised by the plugin.
