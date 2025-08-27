@@ -6,10 +6,16 @@
     "$className": "DataModel",
     "Workspace": {
       "$className": "Workspace",
-      "$path": "src/Classes/Workspace",
       "$ignoreUnknownInstances": true,
       "$properties": {
         "AllowThirdPartySales": true
+      },
+      "[TRIA] Plugin Suite": {
+        "$className": "Folder",
+        
+        "Main": {
+            "$path": "src"
+        }
       }
     }
   }
