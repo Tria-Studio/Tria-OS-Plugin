@@ -242,7 +242,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                             Components.Constraints.UIListLayout(nil, Enum.HorizontalAlignment.Center, UDim.new(0, 8)),
 
                             GetAssetButton {
-                                ModelId = 103809693584842,
+                                ModelId = 93671903447129,
                                 LayoutOrder = 2,
                                 BackgroundGradient = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(195, 0, 133)),
                                 OverlayImage = "rbxassetid://80938683090696",
