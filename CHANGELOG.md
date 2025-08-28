@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed `Shadow Softness` Lighting property is not being recognised by the plugin.
 - Fixed inserting the MapKit sometimes not working.
+- Fixed Group Button debug view always showing 50% instead of its PlayerPercensge attribute.
 
 
 ## [1.2.1] - 2025/05/29
