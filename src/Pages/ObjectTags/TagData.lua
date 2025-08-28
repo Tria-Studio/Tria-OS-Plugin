@@ -109,6 +109,14 @@ data.metadataTypes = {
         displayName = "Liquid #",
         default = 0,
     },
+    LiquidPriroity = {
+        _referenceName = "LiquidPriroity",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "Priority",
+        displayName = "Priority",
+        default = 0,
+    },
     Meshless = {
         _referenceName = "Meshless",
         type = "Attribute",
@@ -242,6 +250,15 @@ data.metadataTypes = {
         dataType = "boolean",
         dataName = "UseFrontOnly",
         displayName = "Front Face Only",
+        default = false,
+    },
+
+    UseTopOnly = {
+        _referenceName = "UseTopOnly",
+        type = "Attribute",
+        dataType = "boolean",
+        dataName = "UseTopOnly",
+        displayName = "Top Face Only",
         default = false,
     },
 
@@ -600,8 +617,12 @@ Metadata:
                     location = 2,
                     isFullSize = false,
                 }, {
-                    data = data.metadataTypes.WallrunSync,
+                    data = data.metadataTypes.UseTopOnly,
                     location = 3,
+                    isFullSize = true,
+                }, {
+                    data = data.metadataTypes.WallrunSync,
+                    location = 5,
                     isFullSize = true,
                 },
             },
@@ -618,7 +639,8 @@ Metadata:
 
 Metadata:
     <font size="15"><b>Speed: </b></font>Speed in studs per second that the player will move on the wallrun. Speeds &lt;20 is slower than your walkspeed.
-    <font size="15"><b>Momentum: </b></font>a scalar value that determines how much speed the player will carry off of the wallrun into the air.]]
+    <font size="15"><b>Momentum: </b></font>a scalar value that determines how much speed the player will carry off of the wallrun into the air.
+    <font size="15"><b>Use Top Only: </b></font>When true, you will only be able to latch onto the wallrun on the part's Top face.]]
             },
         },
         _WallJump = {
@@ -658,7 +680,11 @@ Metadata:
                 {
                     data = data.metadataTypes.LiquidNum,
                     location = 1,
-                    isFullSize = true,
+                    isFullSize = false,
+                }, {
+                    data = data.metadataTypes.LiquidPriroity,
+                    location = 2,
+                    isFullSize = false,
                 }, {
                     data = data.metadataTypes.LiquidType,
                     location = 3,
@@ -686,6 +712,7 @@ You can specify the oxygen depletion, default color, and splash sound with custo
 
 Metadata:
     <font size="15"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
+    <font size="15"><b>Fluid Priority: </b></font> Used to identify which liquid you should be inside of if at a point in a map, you are swimming inside multiple different Fluids.
     <font size="15"><b>Type: </b></font> Determines if the liquid is water, lava, etc.
     <font size="15"><b>Meshless: </b></font>Determines whether or not the liquid is visible on all 6 faces, instead of just the <b>top face</b>.]]
             },
@@ -701,6 +728,10 @@ Metadata:
                     data = data.metadataTypes.LiquidNum,
                     location = 1,
                     isFullSize = true,
+                }, {
+                    data = data.metadataTypes.LiquidPriroity,
+                    location = 2,
+                    isFullSize = false,
                 }, {
                     data = data.metadataTypes.LiquidType,
                     location = 3,
@@ -722,7 +753,8 @@ Metadata:
 Custom oxygen depletion rates can be specified with custom liquids.
 
 Metadata:
-    <font size="15"><b>Liquid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
+    <font size="15"><b>Fluid#: </b></font> Used to identify this liquid for others. Useful for coding your map.
+    <font size="15"><b>Fluid Priority: </b></font> Used to identify which liquid you should be inside of if at a point in a map, you are swimming inside multiple different Fluids.
     <font size="15"><b>Type: </b></font> Determines if the liquid is water, lava, etc.]]
             },
         },
