@@ -17,9 +17,9 @@ Data.Items = {
 		Text = "Sound ID",
 		Type = "String",
 
-        ApplyType = "Property",
+        ApplyType = "Attribute",
 		Directory = "Music",
-		Attribute = "SoundId",
+		Attribute = "Music",
         RbxAssetIdCheck = true,
 		Fallback = "",
 		Default = "",
@@ -34,7 +34,7 @@ Data.Items = {
 		Text = "Playback Speed",
 		Type = "Number",
 
-        ApplyType = "Property",
+        ApplyType = "Attribute",
 		Directory = "Music",
 		Attribute = "PlaybackSpeed",
 		Fallback = 1,
@@ -50,7 +50,7 @@ Data.Items = {
 		Text = "Time Position",
 		Type = "Number",
 
-        ApplyType = "Property",
+        ApplyType = "Attribute",
 		Directory = "Music",
 		Attribute = "TimePosition",
 		Fallback = 0,
@@ -66,7 +66,7 @@ Data.Items = {
 		Text = "Volume",
 		Type = "Number",
 
-        ApplyType = "Property",
+        ApplyType = "Attribute",
 		Directory = "Music",
 		Attribute = "Volume",
 		Fallback = 0.5,

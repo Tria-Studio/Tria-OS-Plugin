@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.2] - 2025/XX/XX
 ### Changed
 - Moved `Script Autocomplete Settings` to the top of the Scripting page.
+- The plugin will no longer automatically convert the `Music` folder to the `Sound` instance, and will leave it as a Folder/Configuration instance.
 
 ### Fixed
 - Fixed `Shadow Softness` Lighting property is not being recognised by the plugin.
