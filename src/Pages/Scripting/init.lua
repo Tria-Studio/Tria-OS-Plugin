@@ -21,6 +21,7 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Value = Fusion.Value
 local OnEvent = Fusion.OnEvent
+local Hydrate = Fusion.Hydrate
 local Computed = Fusion.Computed
 
 local ENABLE_VAR = "TRIA_AutocompleteEnabled"
@@ -37,6 +38,24 @@ local hasScripts = {
 }
 
 local frame = {}
+
+local function ExportButton(props: PublicTypes.Dictionary): Instance
+    return Hydrate(Components.TextButton {
+        Active = Util.interfaceActive,
+        AutoButtonColor = Util.interfaceActive,
+
+        AutomaticSize = Enum.AutomaticSize.None,
+        BackgroundColor3 = Theme.Button.Default,
+        BackgroundTransparency = 0,
+        BorderColor3 = Theme.ButtonBorder.Default,
+        BorderMode = Enum.BorderMode.Inset,
+        BorderSizePixel = 3,
+        Size = UDim2.new(1, 0, 0, 22),
+        TextColor3 = Theme.MainText.Default,
+        TextXAlignment = Enum.TextXAlignment.Center,
+        TextYAlignment = Enum.TextYAlignment.Center
+    })(props)
+end
 
 local function OptionFrame(props: PublicTypes.Dictionary): Instance
     local enabled = Value(props.Enabled)
@@ -230,7 +249,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                     Components.Spacer(false, 18, 6, nil),
                     New "Frame" {
                         BackgroundColor3 = Theme.TableItem.Default,
-                        Size = UDim2.new(1, 0, 0, 84),
+                        Size = UDim2.new(1, 0, 0, 112),
                         LayoutOrder = -2,
 
                         [Children] = {
@@ -305,8 +324,38 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
 
                                 Tooltip = {
                                     Header = "Runtime Injection",
-                                    Tooltip = "When enabled, every script inside your map will automatically have the runtime header put at the top of it if it does not have it."
+                                    Tooltip = "When enabled, every script inside your map will automatically have the runtime header put at the top of it if it does not have it. \n\nToggling this will manually run a runtime check."
                                 }
+                            },
+
+                            ExportButton {
+                                LayoutOrder = 4,
+                                Text = `Run Manual Runtime Check`,
+                                [OnEvent "Activated"] = function()
+                                    local option1 = {
+                                        Text = "Run",
+                                        BackgroundColor3 = Theme.Button.Selected,
+                                        Callback = function()
+                                            for _, child in pairs(Util.mapModel:get(false):GetChildren()) do
+                                                if child:IsA("LuaSourceContainer") then
+                                                    DoRuntimeCheck(child)
+                                                end
+                                            end
+                                        end,
+                                    }
+                            
+                                    local option2 = {
+                                        Text = "Cancel",
+                                        BackgroundColor3 = Theme.Button.Default
+                                    }
+                    
+                                    Util:ShowMessage(
+                                        `Do Runtime Check?`, 
+                                        `This will check through every Script (Script, LocalScript, ModuleScript) and insert the required runtime code at the top of it if not present.`, 
+                                        option1, 
+                                        option2
+                                    )
+                                end
                             }
                         }
                     }
