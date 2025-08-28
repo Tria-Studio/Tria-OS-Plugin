@@ -241,6 +241,15 @@ return {
 
                 Color = Color3.fromRGB(118, 247, 208),
                 ObjectType = "SelectionBox",
+            }, {
+                TagType = "NoChild",
+                Name = "Conveyor",
+                LayoutOrder = 14,
+                DisplayIcon = "rbxassetid://82155041795428",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(118, 247, 208),
+                ObjectType = "SelectionBox",
             },
         },
         Tooltip = {

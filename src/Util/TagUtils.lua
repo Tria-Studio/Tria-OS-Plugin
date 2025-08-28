@@ -53,6 +53,7 @@ local newTagTypes = {
     Cancel = { "ActionTags" },
     BouncePad = { "ActionTags" },
     Jetstream = { "ActionTags" },
+    Conveyor = { "ActionTags" },
 }
 local tagTypes = {
 	ButtonTags = { --// Child named tag but button
@@ -85,6 +86,7 @@ local tagTypes = {
 		"_Kill",
 		"Teleporter",
         "Jetstream",
+        "Conveyor",
 
 		_convert = {
 			_SpeedBooster = "WalkSpeed",
@@ -131,7 +133,8 @@ local tagsBypassParent = {
     "BouncePad",
 	"Teleporter",
 	"_JumpBooster",
-    "Jetstream"
+    "Jetstream",
+    "Conveyor"
 }
 
 local defaultMetadataTypes = {

@@ -1125,6 +1125,30 @@ Metadata:
     <font size="15"><b>Power: </b></font>The velocity, in studs, of how strong it should launch the player.]]
             },
         },
+        Conveyor = {
+            DisplayText = "Conveyor",
+            ActionText = "Conveyor",
+            DisplayIcon = "rbxassetid://82155041795428",
+            LayoutOrder = 17,
+            metadata = {
+                {
+                    data = data.metadataTypes.Speed,
+                    location = 1,
+                    isFullSize = true,
+                }
+            },
+            ApplyMethod = "_Action",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "Conveyor",
+                Text = [[A part that when stood on will move players in the direction of its speed.
+                    
+Metadata:
+    <font size="15"><b>Speed: </b></font>The speed, in studs per second, of how strong fast it will move the player.]]
+            },
+        },
         Orb = {
             DisplayText = "Orb",
             ActionText = nil,

@@ -304,6 +304,28 @@ return {
                 end
             end
         }, {
+            Name = "Insert Conveyor",
+            Icon = "rbxassetid://135482160119855",
+            LayoutOrder = 11,
+            Tooltip = {
+                Header = "Conveyors",
+                Tooltip = "A normal conveyor, but with the stock TRIA conveyor texture."
+            },
+    
+            InsertFunction = function()
+                local recording = ChangeHistoryService:TryBeginRecording("insertPluginComponent", string.format('Inserted map component "%s"', "Conveyor"))
+                if recording then
+
+                    local newParent = getInsertFolder("Interactable")
+                    local model = insertModel("Conveyor", newParent)
+                    positionModel(model)
+                    TagUtils.OnTagAdded("Conveyor"):Fire(model)
+                    Util.debugWarn("Successfully inserted new Conveyor!")
+
+                    ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
+                end
+            end
+        }, {
             Name = "Insert Gas",
             Icon = "rbxassetid://13677024452",
             LayoutOrder = 12,
