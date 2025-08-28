@@ -5,9 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.2.2] - 2025/XX/XX
+### Added
+- Added the option to manually run a Runtime Check on all Scripts inside a map in the Scripting menu.
+
 ### Changed
 - Moved `Script Autocomplete Settings` to the top of the Scripting page.
 - The plugin will no longer automatically convert the `Music` folder to the `Sound` instance, and will leave it as a Folder/Configuration instance.
+- `Automatic Runtime Injection` is now set to false by default for new plugin installs. 
 
 ### Fixed
 - Fixed `Shadow Softness` Lighting property is not being recognised by the plugin.
