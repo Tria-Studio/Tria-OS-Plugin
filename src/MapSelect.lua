@@ -269,19 +269,6 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             local musicFolder = Instance.new("Sound")
             musicFolder.Name = "Music"
             musicFolder.Parent = Settings
-        elseif not Settings.Music:IsA("Sound") then
-            local musicFolder = Instance.new("Sound")
-            musicFolder.Name = "Music"
-
-            musicFolder.SoundId = "rbxassetid://" .. Settings.Music:GetAttribute("Music"):gsub("%D", "")
-            musicFolder.PlaybackSpeed = tonumber(Settings.Music:GetAttribute("PlaybackSpeed")) or 1
-            musicFolder.TimePosition = tonumber(Settings.Music:GetAttribute("TimePosition")) or 0
-            musicFolder.Volume = tonumber(Settings.Music:GetAttribute("Volume")) or 0.5
-            musicFolder.Looped = true
-
-            table.insert(wrong, "Music")
-            Settings.Music:Destroy()
-            musicFolder.Parent = Settings
         end
 
         if Settings:FindFirstChild("Liquids") then
