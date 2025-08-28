@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Group Button debug view always showing 50% instead of its PlayerPercensge attribute.
 
 
+
 ## [1.2.1] - 2025/05/29
 ### Added
 - Added an option to toggle runtime injection in the scripting menu

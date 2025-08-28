@@ -223,18 +223,20 @@ EffectScript communicates with the server / MapScript using RemoteEvents and get
                     GetScriptButton(hasScripts.EffectScript, "EffectScript", 15),
                     Components.Spacer(false, 16, 3, nil),
 
-                    Components.FrameHeader("Script Autocomplete Settings", 17, nil, nil, [[Here you can customise how the script autocompleter works.
+                    Components.FrameHeader("Script Autocomplete Settings", -3, nil, nil, [[Here you can customise how the script autocompleter works.
 
 TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scripting autocomplete menu. Complete with descriptions, code samples, and function arguments.]]),
                     
                     Components.Spacer(false, 18, 6, nil),
                     New "Frame" {
                         BackgroundColor3 = Theme.TableItem.Default,
-                        Size = UDim2.new(1, 0, 0, 52),
-                        LayoutOrder = 19,
+                        Size = UDim2.new(1, 0, 0, 84),
+                        LayoutOrder = -2,
 
                         [Children] = {
+                            Components.Constraints.UIPadding(UDim.new(0, 4), UDim.new(0, 4), nil, nil),
                             Components.Constraints.UIListLayout(nil, nil, UDim.new(0, 6), Enum.VerticalAlignment.Top),
+
                             OptionFrame {
                                 Text = "Enable Autocomplete",
                                 LayoutOrder = 1,
@@ -287,7 +289,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 Enabled = 
                                     if plugin:GetSetting(GLOBAL_INJECT_VAR) 
                                     then plugin:GetSetting(GLOBAL_INJECT_VAR) 
-                                    else true,
+                                    else false,
                                     
                                 OnToggle = function(newState: boolean)
                                     GlobalSettings.autoInjectRuntime = newState
