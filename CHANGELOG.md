@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.2] - 2025/XX/XX
 ### Added
 - Added the option to manually run a Runtime Check on all Scripts inside a map in the Scripting menu.
+- Added support for the following `v1.4` MapKit features:
+~ Added `Fluid Priority` to Liquid & Gas settings.
+~ Added `UseTopOnly` to Wallrun settings.
+~ Added `Conveyor` Object support to Object Tags, Debug View, & Resources menus.
 
 ### Changed
 - Moved `Script Autocomplete Settings` to the top of the Scripting page.
