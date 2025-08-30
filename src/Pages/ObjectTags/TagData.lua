@@ -134,6 +134,24 @@ data.metadataTypes = {
         displayName = "Type",
         default = "water",
     },
+    
+    AdjustAmount = {
+        _referenceName = "AdjustAmount",
+        type = "Attribute",
+        dataType = "number",
+        dataName = "Amount",
+        displayName = "Amount",
+        default = 50,
+    },
+    AdjustOverride = {
+        _referenceName = "AdjustOverride",
+        type = "Attribute",
+        dataType = "boolean",
+        dataName = "Override",
+        displayName = "Override",
+        default = false,
+    },
+
     Oxygen = {
         _referenceName = "Oxygen",
         type = "Attribute",
@@ -1257,6 +1275,37 @@ Metadata:
     <font size="15"><b>FanNumber: </b></font>A unique identifier for the fan in use of scripting.
     <font size="15"><b>FanSpeed: </b></font>Speed in studs/sec that the fan will push players inside its bounds.
     <font size="15"><b>LinearMovement: </b></font>When true, the fans push players at a constant rate throughout the entire distance. When false, the rate that the fan pushes players decreases as you get farther away.]]
+            },
+        },
+        AdjustOxygen = {
+            DisplayText = "Adjust Oxygen",
+            ActionText = "AdjustOxygen",
+            DisplayIcon = "rbxassetid://131297396803402",
+            LayoutOrder = 20,
+            metadata = {
+                {
+                    data = data.metadataTypes.AdjustAmount,
+                    location = 1,
+                    isFullSize = false,
+                },
+                {
+                    data = data.metadataTypes.AdjustOverride,
+                    location = 2,
+                    isFullSize = false,
+                },
+            },
+
+            ApplyMethod = "_Action",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "SkillCancel",
+                Text = [[Touching this part in a round will automatically change the players oxygen to the amount specified here..
+
+Metadata:
+    <font size="15"><b>Amount: </b></font>The amount of oxygen getting set to, or added / subtracted.
+    <font size="15"><b>Override: </b></font>When true, the players oxygen will get set to the value in Amount.]]
             },
         },
     },

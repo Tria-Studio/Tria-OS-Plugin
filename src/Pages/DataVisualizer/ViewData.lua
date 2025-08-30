@@ -248,9 +248,18 @@ return {
                 DisplayIcon = "rbxassetid://82155041795428",
                 UsesAllInstances = true,
 
-                Color = Color3.fromRGB(118, 247, 208),
+                Color = Color3.fromRGB(255, 162, 40),
                 ObjectType = "SelectionBox",
-            },
+            }, {
+                TagType = "NoChild",
+                Name = "AdjustOxygen",
+                LayoutOrder = 15,
+                DisplayIcon = "rbxassetid://131297396803402",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(19, 241, 130),
+                ObjectType = "SelectionBox",
+            }
         },
         Tooltip = {
             Header = "",
