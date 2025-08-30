@@ -4,13 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] - 2025/XX/XX
+## [1.3.0] - 2025/08/30
 ### Added
 - Added the option to manually run a Runtime Check on all Scripts inside a map in the Scripting menu.
 - Added support for the following `v1.4` MapKit features:
 ~ Added `Fluid Priority` to Liquid & Gas settings.
 ~ Added `UseTopOnly` to Wallrun settings.
 ~ Added `Conveyor` Object support to Object Tags, Debug View, & Resources menus.
+~ Added `AdjustOxygen` Object support to Object Tags & Debyg View.
 
 ### Changed
 - Moved `Script Autocomplete Settings` to the top of the Scripting page.
@@ -38,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-## [1.2.0] - 2023/18/01
+## [1.2.0] - 2023/01/18
 ### Added
 - Added support for the TRIA.os `v1.0` MapKit:
 ~ All new properties, settings, and new features have been added to the `Object Tags`, `Debug View`, and `Resources` tabs.
@@ -56,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-## [1.1.2] - 2023/19/08
+## [1.1.2] - 2023/08/19
 ### Changed
 - Audio Library will now set the 'Music' value in the 'Music' folder rather than the 'Main' folder
 
@@ -66,13 +67,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-## [1.1.1] - 2023/14/08
+## [1.1.1] - 2023/08/14
 ### Fixed
 - Settings menu setting number types as strings, possibly breaking maps when loading them in TRIA.os
 
 
 
-## [1.1.0] - 2023/12/08
+## [1.1.0] - 2023/08/12
 ### Added
 - Added Support for rails. Visualizing, metadata, & converting ziplines to rails + vise-versa
 - Added Support for converting map objects to optimized structure (does not touch scripts)
