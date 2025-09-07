@@ -1,0 +1,19 @@
+{
+    "explorer.sortOrderLexicographicOptions": "lower",
+    "robloxLsp.workspace.rojoProjectFile": "default",
+    "terminal.integrated.env.windows": {
+        "PATH": "${env:USERPROFILE}/.aftman/bin;${env:PATH}"
+    },
+    "terminal.integrated.env.linux": {
+        "PATH": "${env:HOME}/.aftman/bin:${env:PATH}"
+    },
+    "robloxLsp.workspace.loadMode": "Rojo Project",
+    "robloxLsp.diagnostics.disable": [
+        "duplicate-doc-class",
+    ],
+    "stylua.targetReleaseVersion": "latest",
+    "luau-lsp.completion.imports.enabled": true,
+    "luau-lsp.completion.imports.separateGroupsWithLine": true,
+    "luau-lsp.completion.imports.suggestServices": true,
+    "luau-lsp.diagnostics.workspace": true
+}
