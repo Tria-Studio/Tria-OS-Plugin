@@ -1,0 +1,19 @@
+# Project place file
+sourcemap.json
+
+# Selene
+/roblox.toml
+
+# Roblox Studio files
+*.rbxl
+*.rbxlx.lock
+*.rbxl.lock
+
+# count
+.VSCodeCounter
+
+# Wally
+wally.lock
+
+# Moonwave
+build
