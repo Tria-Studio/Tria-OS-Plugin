@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.1] - 2025/09/07
 ### Fixed
 - Fixed inserting audios into a map from the Audio Library does not work.
+- Fixed orb models were incorrect when being inserted
 
 
 
