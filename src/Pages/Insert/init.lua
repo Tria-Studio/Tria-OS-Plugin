@@ -33,6 +33,7 @@ local function attemptTask(service: Instance, functionName: string, ...): (boole
     repeat
         attemptCount += 1
         success, result = pcall(service[functionName], service, ...)
+
         if success then
             break
         end
@@ -49,37 +50,17 @@ local function attemptToInsertModel(assetID: number)
     if assetID == 0 then
         return
     end
-    local success, result
 
-    success, result = attemptTask(InsertService, "GetLatestAssetVersionAsync", assetID)
-    if not success then return end
-
-
-    if script.Mapkits:FindFirstChild(result) then
-        success = true
-        local clone = script.Mapkits:FindFirstChild(result):Clone()
-        result = Instance.new("Model")
-        clone.Parent = result
-        clone.Name = "1.0 MapKit"
-        for _, thing in pairs(clone:GetChildren()) do
-            if thing:IsA("LuaSourceContainer") then
-                thing.Enabled = true
-            end
-        end
-    else
-        success, result = attemptTask(InsertService, "LoadAssetVersion", result)
-    end
-   
+    local success, result = attemptTask(game, "GetObjects", `rbxassetid://{assetID}`)   
     if not success then 
         Util:ShowMessage("Unable to Insert Model", "Roblox failed to insert the model, please try again.")
         return
     end
 
+    result = result[1]
     local recording = ChangeHistoryService:TryBeginRecording("insertPluginResource", string.format('Inserted model "%s"', result.Name))
 
     if recording then
-        
-        result = result:GetChildren()[1]
         Util.debugWarn(("Successfuly inserted %s!"):format(result.Name))
         result.Name = "[INSERTED] - " .. result.Name
 
