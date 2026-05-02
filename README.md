@@ -3,6 +3,7 @@
    ## [NOTICE]
     > This plugin is being remade. Parts of the existing plugin may be broken or out of date. The current 
       plugin may have missing or broken features until an official build as been released.
+    > Some files inside may be on a different license than the rest of the project. Effected files are marked at the top. 
    
 ![TRIA.os Map Making Companion Thumbnail](https://cdn.discordapp.com/attachments/891672667193761792/1063994662853034045/plugin_icon_big.png)
 

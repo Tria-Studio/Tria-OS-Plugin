@@ -1,3 +1,7 @@
+-- Copyright (C) 2026 TRIA
+-- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
+-- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 local InsertService = game:GetService("InsertService")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
@@ -51,7 +55,31 @@ local function attemptToInsertModel(assetID: number)
         return
     end
 
-    local success, result = attemptTask(game, "GetObjects", `rbxassetid://{assetID}`)   
+    
+
+
+
+
+    local success, result
+
+    success, result = attemptTask(InsertService, "GetLatestAssetVersionAsync", assetID)
+    if not success then return end
+
+    if script.Mapkits:FindFirstChild(result) then
+        success = true
+        local clone = script.Mapkits:FindFirstChild(result):Clone()
+        result = Instance.new("Model")
+        clone.Parent = result
+        clone.Name = "1.0 MapKit"
+        for _, thing in pairs(clone:GetChildren()) do
+            if thing:IsA("LuaSourceContainer") then
+                thing.Enabled = true
+            end
+        end
+    else
+        success, result = attemptTask(game, "GetObjects", `rbxassetid://{assetID}`)   
+    end
+
     if not success then 
         Util:ShowMessage("Unable to Insert Model", "Roblox failed to insert the model, please try again.")
         return

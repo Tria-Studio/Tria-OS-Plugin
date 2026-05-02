@@ -1,3 +1,7 @@
+-- Copyright (C) 2026 TRIA
+-- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
+-- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 local Package = script.Parent.Parent.Parent
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
