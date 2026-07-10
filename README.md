@@ -1,6 +1,6 @@
 # [TRIA] Plugin Suite
 
-![Plugin Icon](/.github/plugin_icon.jpg)
+![Plugin Icon](/.github/plugin-icon.jpg)
 
 The TRIA Plugin Suite offers tools to help map developers in the map development process in every way. Completely reimagined from the ground up with tons of new features, QoL improvements, and a brand new interface, the TRIA Plugin Suite offers tools to allow creators to worry less about the logistics and focus more on creating the best maps possible.
 
