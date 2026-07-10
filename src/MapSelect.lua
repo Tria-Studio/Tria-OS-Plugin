@@ -176,6 +176,10 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             Util.MapChanged:Fire()
         end
 
+        for _, thing in pairs(newMap:GetDescendants()) do
+            thing.Sanndboxed = false
+        end
+
         self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
 
         local nameChangedSignal; nameChangedSignal = newMap.Settings.Main:GetAttributeChangedSignal("Name"):Connect(function()

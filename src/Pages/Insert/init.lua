@@ -28,60 +28,20 @@ local Out = Fusion.Out
 
 local frame = {}
 
-local function attemptTask(service: Instance, functionName: string, ...): (boolean, any)
-    local MAX_ATTEMPTS = 5
 
-    local attemptCount = 0
-    local success, result
-
-    repeat
-        attemptCount += 1
-        success, result = pcall(service[functionName], service, ...)
-
-        if success then
-            break
-        end
-        task.wait(0.75)
-    until attemptCount >= MAX_ATTEMPTS
-
-    if not success then
-        Util.debugWarn(("Process '%s' failed after %d attempt(s)"):format(functionName, MAX_ATTEMPTS))
-    end
-    return success, result
-end
 
 local function attemptToInsertModel(assetID: number)
     if assetID == 0 then
         return
     end
 
-    
+    local result = nil
+    local success = pcall(function()
+        result = game:GetObjects(`rbxassetid://{assetID}`)
+    end)
 
-
-
-
-    local success, result
-
-    success, result = attemptTask(InsertService, "GetLatestAssetVersionAsync", assetID)
-    if not success then return end
-
-    if script.Mapkits:FindFirstChild(result) then
-        success = true
-        local clone = script.Mapkits:FindFirstChild(result):Clone()
-        result = Instance.new("Model")
-        clone.Parent = result
-        clone.Name = "1.0 MapKit"
-        for _, thing in pairs(clone:GetChildren()) do
-            if thing:IsA("LuaSourceContainer") then
-                thing.Enabled = true
-            end
-        end
-    else
-        success, result = attemptTask(game, "GetObjects", `rbxassetid://{assetID}`)   
-    end
-
-    if not success then 
-        Util:ShowMessage("Unable to Insert Model", "Roblox failed to insert the model, please try again.")
+    if not success or not result or #result == 0 then 
+        Util:ShowMessage("Unable to Insert Model", "Roblox failed to insert the model, please try again. If this continues, try purchasing the MapKit from the TRIA group in the Toolbox.")
         return
     end
 
@@ -105,6 +65,10 @@ local function attemptToInsertModel(assetID: number)
             SelectMap:SetMap(result)
         else
             result.Parent = workspace
+        end
+
+        for _, thing in pairs(result:GetDescendants()) do
+            thing.Sanndboxed = false
         end
 
         ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
