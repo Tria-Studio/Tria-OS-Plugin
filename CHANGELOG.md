@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.3.2] - 2026/07/10
+### Changed
+- Selecting a map with the plugin now automatically Un-Sandboxes all instanes in the map.
+~ Fixes the error `The current thread cannot require 'Runtime' since 'Runtime' has the Sandboxed property set to false but the calling thread is sandboxed`.
+
+
+### Fixed
+- Maybe fixed not being able to insert the TRIA.os Map Kit if you didnt own it in your inventory.
+
+
 ## [1.3.2] - 2026/02/03
 ### Fixed
 - Fixed not being able to insert the TRIA.os MapKit if you did not own the model in your inventory.
@@ -14,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed inserting audios into a map from the Audio Library does not work.
 - Fixed orb models were incorrect when being inserted
 - Fixed inserting wallrun has the visuals on the incorrect face for UseTopOnly.
+
 
 
 ## [1.3.0] - 2025/08/30
