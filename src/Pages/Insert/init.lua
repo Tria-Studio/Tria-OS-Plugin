@@ -68,7 +68,7 @@ local function attemptToInsertModel(assetID: number)
         end
 
         for _, thing in pairs(result:GetDescendants()) do
-            thing.Sanndboxed = false
+            thing.Sandboxed = false
         end
 
         ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)

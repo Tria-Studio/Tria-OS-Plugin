@@ -177,7 +177,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
         end
 
         for _, thing in pairs(newMap:GetDescendants()) do
-            thing.Sanndboxed = false
+            thing.Sandboxed = false
         end
 
         self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
