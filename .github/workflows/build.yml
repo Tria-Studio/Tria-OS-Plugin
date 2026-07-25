@@ -2,6 +2,8 @@ name: CI
 
 on:
   workflow_dispatch:
+  pull_request:
+  push:
 
 jobs:
   build:
@@ -15,5 +17,11 @@ jobs:
         uses: ok-nick/setup-aftman@v0
 
       - name: Build Plugin
-        run: rojo build --output build.rbxlx build.project.json
+        run: rojo build --output build.rbxm build.project.json
         
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: build
+          path: build.rbxm
+          archive: false
