@@ -132,8 +132,8 @@ local Util = {
     },
     _Errors = {
         HTTP_ERROR = "<font color='rgb(180, 180, 180)'>HTTP Error</font>",
-        SCRIPT_INSERT_ERROR = "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.",
-        AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in the \"Plugin Settings\" tab.", 
+        SCRIPT_INSERT_ERROR = "There was an error while trying to insert the requested script. This may be due to the plugin not having script injection permissions, you can change this in <b>Plugins > Manage Plugins > TRIA Plugin Suite > Script Injection</b>.",
+        AUTOCOMPLETE_ERROR = "There was an error while trying to initiate autocomplete. This may be due to the plugin not having script injection permissions, you can change this in <b>Plugins > Manage Plugins > TRIA Plugin Suite > HTTP Requests</b>.", 
     },
     _DEBUG = {
         PLUGIN_VERSION = "1.3.3",
