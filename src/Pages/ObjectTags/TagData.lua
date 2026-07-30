@@ -369,7 +369,7 @@ data.metadataTypes = {
 
         callback = function()
             local Util = require(script.Parent.Parent.Parent.Util)
-            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
+            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils) :: any
 
             for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
                 if TagUtils:PartHasTag(part, "_WallRun") then
@@ -393,7 +393,7 @@ data.metadataTypes = {
 
         callback = function()
             local Util = require(script.Parent.Parent.Parent.Util)
-            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
+            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils) :: any
 
             if Util.mapModel:get():FindFirstChild("Special") then
                 local newFolder = Util.mapModel:get().Special:FindFirstChild("Rail")
@@ -405,7 +405,7 @@ data.metadataTypes = {
                 end
 
                 for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
-                    local model = part:IsA("Model") and part or part.Parent:IsA("Model") and part.Parent
+                    local model = part:IsA("Model") and part or part.Parent and part.Parent:IsA("Model")
                     
                     if model and TagUtils:PartHasTag(model, "Zipline") then
                         model.Name = "Rail"
@@ -423,7 +423,7 @@ data.metadataTypes = {
 
         callback = function()
             local Util = require(script.Parent.Parent.Parent.Util)
-            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils)
+            local TagUtils = require(script.Parent.Parent.Parent.Util.TagUtils) :: any
 
             if Util.mapModel:get():FindFirstChild("Special") then
                 
@@ -436,7 +436,7 @@ data.metadataTypes = {
                 end
 
                 for _, part: Instance in pairs(Util._Selection.selectedParts:get()) do
-                    local model = part:IsA("Model") and part or part.Parent:IsA("Model") and part.Parent
+                    local model = part:IsA("Model") and part or part.Parent and part.Parent:IsA("Model")
 
                     if model and TagUtils:PartHasTag(model, "Rail") then
                         model.Name = "Zipline"

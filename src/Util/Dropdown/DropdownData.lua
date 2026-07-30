@@ -2,10 +2,14 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent.Parent.Parent
+
+--< Imports >--
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
 
+--< Constants >--
 local DEFAULT_LIQUIDS = {
     {
         Value = "water",
@@ -18,6 +22,9 @@ local DEFAULT_LIQUIDS = {
         TextColor = Color3.fromRGB(255, 0, 0)
     },
 }
+
+
+--< Main >--
 
 return {
     Difficulty = function(): (PublicTypes.Dictionary, Enum.SortOrder)
@@ -33,6 +40,7 @@ return {
         end
         return data, Enum.SortOrder.LayoutOrder
     end,
+
     LiquidType = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         local data = table.clone(DEFAULT_LIQUIDS)
         for i, child in ipairs(Util.mapModel:get(false).Settings.Fluid:GetChildren()) do
@@ -43,9 +51,11 @@ return {
         end
         return data, Enum.SortOrder.LayoutOrder
     end,
+
     Liquids = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         return table.clone(DEFAULT_LIQUIDS), Enum.SortOrder.LayoutOrder
     end,
+
     Materials = function(): (PublicTypes.Dictionary, Enum.SortOrder)
         local data = {}
         for i, material in ipairs(Enum.Material:GetEnumItems()) do
@@ -58,6 +68,7 @@ return {
         end
         return data, Enum.SortOrder.Name
     end,
+
     Locators = function(): {PublicTypes.Dictionary}
         return {
             {
@@ -75,23 +86,27 @@ return {
             },
         }
     end,
+
     TeleportType = function(): {PublicTypes.Dictionary}
         return {
             {Value = "start"},
             {Value = "end"},
         }
     end,
+
     BubbleParticle = function(): {PublicTypes.Dictionary}
         return {
             {Value = "default"}
         }
     end,
+
     FanShape = function(): {PublicTypes.Dictionary}
         return {
             {Value = "Square"},
             {Value = "Cylinder"}
         }
     end,
+    
     OrbType = function(): {PublicTypes.Dictionary}
         return {
             {

@@ -2,14 +2,17 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent.Parent.Parent
 
+--< Imports >--
 local PublicTypes = require(Package.PublicTypes)
 local Components = require(Package.Resources.Components)
 local Fusion = require(Package.Resources.Fusion)
 local Util = require(Package.Util)
 local Dropdown = require(script.Parent)
 
+--< Variables >--
 local Value = Fusion.Value
 local Ref = Fusion.Ref
 local Spring = Fusion.Spring
@@ -19,6 +22,9 @@ local OnEvent = Fusion.OnEvent
 local Computed = Fusion.Computed
 
 local DropdownComponents = {}
+
+
+--< Main >--
 
 function DropdownComponents.DropdownButton(props: PublicTypes.Dictionary): Instance
     local arrowButton = Value()

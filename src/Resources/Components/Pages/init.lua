@@ -45,7 +45,9 @@ local function showPageWelcome(pageName: string)
         local settingName = "TRIA_HasViewed-" .. pageWelcomeData.Setting
         if not plugin:GetSetting(settingName) then
             plugin:SetSetting(settingName, true)
-            require(Package.Util):ShowMessage(pageWelcomeData.Title, pageWelcomeData.Description)
+
+            local Util = require(Package.Util) :: any
+            Util:ShowMessage(pageWelcomeData.Title, pageWelcomeData.Description)
         end
     end
 end

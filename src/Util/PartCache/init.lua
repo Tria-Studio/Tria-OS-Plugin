@@ -2,13 +2,15 @@
 -- Modified for use in TRIA.os plugin
 -- Updated 08/04/2023
 
+--< Services >--
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 
+--< Imports >--
 local Util = require(script.Parent)
 
+--< Variables >--
 local ErrorMessage = "Unable to perform task with cache."
-
 local FarCFrame = CFrame.new(0,10e8,0)
 
 local GeneralCacheCap = 2500
@@ -25,8 +27,12 @@ Handler.Caches = {}
 
 local MainCacheFolder
 
+
+--< Main >--
+
 function Cache.new(...) -- Create the cache, I used a table for the info to avoid repeating variables.
 	local Data = {...}
+
 	return setmetatable({
 		CacheName = Data[1],
 		TemplateObject = Data[2],
@@ -45,7 +51,7 @@ local function GenerateID(Length: number): string -- Generates random ID
 end
 
 -- Creates a cache folder.
-local function CreateCacheFolder(NewFolderName: string, RecursiveCall: boolean): Instance
+local function CreateCacheFolder(NewFolderName: string, RecursiveCall: boolean?): Instance
 	local CacheFolder
 
 	if not MainCacheFolder and not RecursiveCall then -- Creates the main folder
@@ -61,7 +67,7 @@ local function CreateCacheFolder(NewFolderName: string, RecursiveCall: boolean):
 end
 
 -- Gets the objects in the table for the specific CacheType.
-function Handler:GetObjects(CacheName: string, CacheType: string): table
+function Handler:GetObjects(CacheName: string, CacheType: string): {}
 	local CacheKey = Handler.Caches[CacheName]
 	local FoundObjects = {}
 	
@@ -122,7 +128,7 @@ function Handler:RemoveFromCache(CacheName: string, Amount: number, Cleanup: boo
 	local CachedObjects = Handler:GetObjects(CacheName, "Cached")
 	
 	for i = 1, ((Cleanup and #CachedObjects) or Amount) do
-		local LastNumber = #CachedObjects
+		local _LastNumber = #CachedObjects
 		local InstanceObject = CachedObjects[#CachedObjects]
 		
 		InstanceObject:Destroy()
@@ -133,7 +139,7 @@ function Handler:RemoveFromCache(CacheName: string, Amount: number, Cleanup: boo
 end
 
 -- Gets an object from the cache.
-function Handler:GetObject(CacheName: string): Instance
+function Handler:GetObject(CacheName: string): Instance?
     if not Handler.Caches[CacheName] then
         Handler:CreateCache(CacheName, script.PartTemplate, 100, 50, false)
     end
@@ -150,7 +156,7 @@ function Handler:GetObject(CacheName: string): Instance
 	
 	if not InstanceObject then 
 		warn("Unable to find instance object!")
-		return 
+		return nil
 	end
 	
 	CacheKey.Objects[InstanceObject] = false
@@ -159,7 +165,7 @@ function Handler:GetObject(CacheName: string): Instance
 end
 
 -- Caches a specific object in use.
-function Handler:CacheObject(CacheName: string, InstanceObject: Instance)
+function Handler:CacheObject(CacheName: string, InstanceObject: BasePart)
 	local CacheKey = Handler.Caches[CacheName]
 	assert(CacheKey or InstanceObject, ErrorMessage)
 	
@@ -183,26 +189,29 @@ function Handler:CacheAllObjects(CacheName: string)
 end
 
 -- Creates a new cache.
-function Handler:CreateCache(CacheName: string, TemplateObject: Instance, StartAmount, RegistryAmount: number, NameObjectsInNumericalOrder: boolean): table
-	if not CacheName or not TemplateObject then error("Unable to create cache for: " .. CacheName) end
-	if Handler.Caches[CacheName] then warn("Cache already in use for name: " .. CacheName) return end
+function Handler:CreateCache(CacheName: string, TemplateObject: Instance, StartAmount, RegistryAmount: number, NameObjectsInNumericalOrder: boolean): {}
+	if not CacheName or not TemplateObject then 
+        error(`Unable to create cache for: {CacheName}`) 
+    end
+	if Handler.Caches[CacheName] then warn("Cache already in use for name: " .. CacheName) 
+        return {} 
+    end
 
 	if not table.find(TemplateTypeAllowList, TemplateObject.ClassName) then
 		error("Invalid template object for cache.")
 	end
 
 	local CacheFolder = CreateCacheFolder(CacheName)
-
 	local CacheKey = Cache.new(CacheName, TemplateObject, CacheFolder, RegistryAmount, NameObjectsInNumericalOrder)
+
 	Handler.Caches[CacheName] = CacheKey
-	
 	CacheKey:FillCache(StartAmount)
 	
 	return CacheKey
 end
 
 -- Removes a cache when you are done with it.
-function Handler:RemoveCache(CacheName: string, CacheKey: table)
+function Handler:RemoveCache(CacheName: string, CacheKey: any)
 	CacheKey = CacheKey or Handler.Caches[CacheName]
 	CacheName = CacheName or CacheKey.CacheName
 	

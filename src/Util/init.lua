@@ -2,20 +2,27 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
+local Package = script.Parent
+local Resources = Package.Resources
+
+--< Services >--
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local Selection = game:GetService("Selection")
 
-local Package = script.Parent
-local Resources = Package.Resources
-
+--< Imports >--
 local Fusion = require(Resources.Fusion)
 local Pages = require(Resources.Components.Pages)
 
 local Maid = require(script.Maid)
 local Signal = require(script.Signal)
 
+--< Constants >--
+local GITHUB_URL = "https://www.githubstatus.com/api/v2/status.json"
+
+--< Variables >--
 local Value = Fusion.Value
 local Observer = Fusion.Observer
 
@@ -147,6 +154,9 @@ local Util = {
     },
     _showArrows = Value(true),
 }
+
+
+--< Main >--
 
 local function getSettingsDirFolder(directory: string): Instance?
     local currentMap = Util.mapModel:get(false)
@@ -360,16 +370,19 @@ end
 function Util.getObjectCountWithNameMatch(pattern: string, path: Instance?, anyInstance: boolean?): number
     local map = Util.mapModel:get(false)
     local check = path or Util.hasSpecialFolder:get(false) and map.Special or map
-
     local highest = 0
+
     for _, model: Instance in ipairs(check:GetDescendants()) do 
         if (model:IsA("Model") or anyInstance) and model.Name:match(pattern .. "%d+") then 
-            local objectNum = tonumber(model.Name:match(pattern .. "(%d+)")); 
+            local objectString = model.Name:match(`{pattern}(%d+)`)
+            local objectNum = tonumber(objectString) 
+
             if objectNum then
                 highest = math.max(highest, objectNum)
             end
         end 
     end
+
     return highest
 end
 
@@ -379,7 +392,6 @@ end
 
 function Util.secondsToTime(t: number): string
     local timeStr = ""
-
     local formatters = {
         t / 60 ^ 2,     -- H
         t / 60 % 60,    -- M
@@ -446,13 +458,11 @@ do
     end, 0.05)
 end
 
-local githubUrl = "https://www.githubstatus.com/api/v2/status.json"
-
 do
     local httpTimes = {}
     task.defer(schedule, function()
         local start = os.clock()
-        local fired, result = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
+        local fired = pcall(HttpService.GetAsync, HttpService, GITHUB_URL, true)
         if fired then
             table.insert(httpTimes, (os.clock() - start) * 1000)
             Util._DEBUG._HttpPing:set(("%dms"):format(Util.getRollingAverage(httpTimes, 10)))
@@ -464,7 +474,7 @@ end
 
 do
     task.defer(schedule, function()
-        local fired, response = pcall(HttpService.GetAsync, HttpService, githubUrl, true)
+        local fired, response = pcall(HttpService.GetAsync, HttpService, GITHUB_URL, true)
         local colorMap = {
             ["none"] = "<font color='rgb(66, 245, 126)'>%s</font>",
             ["minor"] = "<font color='rgb(235, 235, 68)'>%s</font>",

@@ -246,8 +246,9 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
 		end
 
 		function types.ChildInstanceValue()
-			if part:FindFirstChild(metadata.data.dataName) then
-				part:FindFirstChild(metadata.data.dataName).Parent = nil
+			local child = part:FindFirstChild(metadata.data.dataName)
+            if child then
+				child.Parent = nil
 			end
 		end
 
@@ -296,7 +297,7 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
 	end
 
 	function types.Property(): any?
-		local sound = part:FindFirstChildOfClass("Sound") or part.Parent:FindFirstChildOfClass("Sound")
+		local sound = part:FindFirstChildOfClass("Sound") or part.Parent and part.Parent:FindFirstChildOfClass("Sound")
 		return sound and sound[data._propertyName]
 	end
 
@@ -575,7 +576,7 @@ function tagUtils:PartsHaveTag(parts: { [number]: Instance }, tag: string): Enum
 		or Enum.TriStateBoolean.Unknown
 end
 
-function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Instance }
+function tagUtils:GetPartsWithTag(tag: string | Fusion.Value<string>, subTag: string?): { [number]: Instance }
 	local Map = Util.mapModel:get()
 	local Special = Map:FindFirstChild("Special")
 	local CheckIfSpecial = {
@@ -596,7 +597,7 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 
 	local InstanceToCheck = CheckIfSpecial[subTag] or CheckIfSpecial[tag] or Map
 	local partsFound = {}
-	local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
+	local studioQuality = 20
 
 	if
 		Util._DebugView.viewsActiveUsingAll > 1
@@ -623,7 +624,8 @@ function tagUtils:GetPartsWithTag(tag: string, subTag: string?): { [number]: Ins
 	if tag == "_Detail" then
 		return InstanceToCheck and InstanceToCheck:GetDescendants() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	elseif subTag == "Variant" then
-		return InstanceToCheck and InstanceToCheck[tag:get()]:GetDescendants() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
+        local tagValue = tag :: Fusion.Value<string>
+		return InstanceToCheck and InstanceToCheck[tagValue:get()]:GetDescendants() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	elseif tag == "Zipline" or tag == "Rail" then
 		return InstanceToCheck:GetChildren() or {}, CheckIfSpecial[subTag] or CheckIfSpecial[tag]
 	end
@@ -669,6 +671,8 @@ function tagUtils:IsPartTagged(part: Instance): boolean
 	then
 		return true
 	end
+
+    return false
 end
 
 function tagUtils.OnTagRemoved(tagName: string)

@@ -2,18 +2,23 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
+local Package = script.Parent.Parent.Parent
+
+--< Services >--
 local Selection = game:GetService("Selection")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 
-local Package = script.Parent.Parent.Parent
+--< Imports >--
 local Util = require(Package.Util)
 local TagUtils = require(Package.Util.TagUtils)
 local ConvertToOptimized = require(script.OptimizedConvert)
 
+--< Variables >--
 local componentFiles = script.Parent.ComponentFiles
 
-local COMMA_BREAK = ",*%s*"
-local TUNE_MATCH = `local%s[%w%p+]{COMMA_BREAK}(%w+)%s=%spcall%(require,%s*(%d+)%)%w*`
+
+--< Main >--
 
 local function positionModel(model: Model)
     local newPos = workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -36)
@@ -39,6 +44,7 @@ end
 return {
     Addons = {},
     Components = {
+
         {
             Name = "Create new variant",
             Icon = "rbxassetid://12537256759",
@@ -70,7 +76,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "New Button", 
             Icon = "rbxassetid://12536983604",
             LayoutOrder = 1,
@@ -96,7 +104,9 @@ return {
                 end
 
             end
-        }, {
+        }, 
+        
+        {
             Name = "New Zipline",
             Icon = "rbxassetid://12536982253",
             LayoutOrder = 2,
@@ -118,7 +128,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "New Airtank",
             Icon = "rbxassetid://13677007811",
             LayoutOrder = 3,
@@ -140,7 +152,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "New Launch Orb", 
             Icon = "rbxassetid://13676946865",
             LayoutOrder = 4,
@@ -162,7 +176,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "New Pivot Orb", 
             Icon = "rbxassetid://13676946975",
             LayoutOrder = 5,
@@ -184,7 +200,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "Insert Optimized Structure",
             Icon = "rbxassetid://13693728508",
             LayoutOrder = 0,
@@ -211,7 +229,9 @@ return {
                     Util:ShowMessage("Convert Map?", "Would you like to convert your map's components to use this structure automatically?\n\nNOTE: This will not convert your scripts. If your MapScript is referencing any key map component (liquid, buttons, etc.) You will need to manually update it.", {Text = "Yes", Callback = ConvertToOptimized}, {Text = "No"})
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "Add Exit Region",
             Icon = "rbxassetid://13693329144",
             LayoutOrder = 7,
@@ -240,7 +260,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "Add Teleporter",
             Icon = "rbxassetid://13677069251",
             LayoutOrder = 9,
@@ -262,7 +284,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "Add Walljump",
             Icon = "rbxassetid://12536982734",
             LayoutOrder = 10,
@@ -285,7 +309,9 @@ return {
                 end
 
             end
-        }, {
+        }, 
+        
+        {
             Name = "Insert Wallrun",
             Icon = "rbxassetid://12536982483",
             LayoutOrder = 11,
@@ -307,7 +333,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "Insert Conveyor",
             Icon = "rbxassetid://135482160119855",
             LayoutOrder = 11,
@@ -329,7 +357,9 @@ return {
                     ChangeHistoryService:FinishRecording(recording,  Enum.FinishRecordingOperation.Commit)
                 end
             end
-        }, {
+        }, 
+        
+        {
             Name = "Insert Gas",
             Icon = "rbxassetid://13677024452",
             LayoutOrder = 12,
@@ -355,5 +385,6 @@ return {
                 end
             end
         }, 
+
     }
 }

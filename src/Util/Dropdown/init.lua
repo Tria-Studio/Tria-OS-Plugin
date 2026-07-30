@@ -2,9 +2,11 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
+--< Imports >--
 local Fusion = require(Resources.Fusion)
 local Components = require(Resources.Components)
 local Theme = require(Resources.Themes)
@@ -12,9 +14,9 @@ local Pages = require(Resources.Components.Pages)
 
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
-
 local DropdownData = require(script.DropdownData)
 
+--< Variables >--
 local New = Fusion.New
 local Children = Fusion.Children
 local ForValues = Fusion.ForValues
@@ -24,8 +26,10 @@ local Value = Fusion.Value
 local Maid = Util.Maid.new()
 local DataChosen = Util.Signal.new()
 
-local current
 local Dropdown = {}
+
+
+--< Main >--
 
 function Dropdown:Cancel()
     currentValue = nil
@@ -127,4 +131,5 @@ function Dropdown:GetValue(dataArray, uiParent)
 end
 
 Util.MainMaid:GiveTask(Maid)
+
 return Dropdown

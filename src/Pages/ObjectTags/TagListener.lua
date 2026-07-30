@@ -45,7 +45,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
         local active = Util.objectTagsActive:get()
 
         if not active or not Util._Addons.hasAddonsWithObjectTags:get() and (name == "_Teleporter" or name == "_Waterjet") then
-            return
+            return false
         end
 
         local value = #selectedParts == 0 and Enum.TriStateBoolean.False or TagUtils:PartsHaveTag(selectedParts, name)
@@ -112,7 +112,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                         partError = true
                                         continue
                                     end
-                                    TagUtils:SetPartTag(instance, newState and name, not newState and name)
+                                    TagUtils:SetPartTag(instance, newState and name, not newState and name or "")
                                 end
 
                                 ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
@@ -355,8 +355,8 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                     }
                                                 end
 
-                                                local value = types[metadataType.data.dataType]()
-                                                return value
+                                                local tagType = types[metadataType.data.dataType]()
+                                                return tagType
                                             end)()
                                         }
                                     }

@@ -21,7 +21,6 @@ local Hydrate = Fusion.Hydrate
 local Spring = Fusion.Spring
 local Ref = Fusion.Ref
 local Out = Fusion.Out
-local OnChange = Fusion.OnChange
 
 local Components = {
     Constraints = require(script.Constraints),
@@ -62,7 +61,6 @@ function Components.TopbarButton(index: number, data: PublicTypes.Dictionary): I
 
     local pageActive = Computed(function(): boolean
         local map = Util.mapModel:get()
-        local hasSpecial = Util.hasSpecialFolder:get()
         return 
             if table.find(Pages.pageData.disabledPages, data.Name) then false 
             else map ~= nil or table.find(Pages.pageData.bypassedPages, data.Name) ~= nil
@@ -510,7 +508,7 @@ function Components.BasicTextLabel(text: string, layoutOrder: number, background
     }
 end
 
-function Components.Spacer(hidden: boolean?, layoutOrder: number?, size: number?, zIndex: number?, BackgroundColor3: Color3?): Instance
+function Components.Spacer(hidden: boolean?, layoutOrder: number?, size: number?, zIndex: number?, BackgroundColor3: Color3?): Instance?
     if not hidden then
         return New "Frame" {
             LayoutOrder = layoutOrder,
@@ -519,6 +517,8 @@ function Components.Spacer(hidden: boolean?, layoutOrder: number?, size: number?
             ZIndex = zIndex,
         }
     end
+
+    return nil
 end
 
 function Components.GradientTextLabel(enabled, data: PublicTypes.Dictionary): Instance

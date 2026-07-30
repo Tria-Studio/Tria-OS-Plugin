@@ -51,7 +51,7 @@ local function attemptToInsertModel(assetID: number)
         Util.debugWarn(("Successfuly inserted %s!"):format(result.Name))
         result.Name = "[INSERTED] - " .. result.Name
 
-        local Pos, Size = result:GetBoundingBox()
+        local _Pos, Size = result:GetBoundingBox()
         local XYPosition = (workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -Size.Magnitude * 1.125 + 20) ).Position * Vector3.new(1, 0, 1)
         local RaycastResult = workspace:Raycast(XYPosition + Vector3.new(0, 30, 0), Vector3.new(0, -60, 0), RaycastParams.new())
         local NewPos = XYPosition + Vector3.new(0, RaycastResult and RaycastResult.Position.Y or workspace.CurrentCamera.CFrame.Position.Y, 0)

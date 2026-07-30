@@ -24,8 +24,6 @@ return function (data: PublicTypes.Dictionary): {Instance}
     local absoluteSize = Value(Vector2.zero)
     local sliderButton = Value()
 
-    local text = Value("")
-
     local min = data.Min
     local max = data.Max
 
