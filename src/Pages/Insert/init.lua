@@ -2,7 +2,6 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-local InsertService = game:GetService("InsertService")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
@@ -60,7 +59,7 @@ local function attemptToInsertModel(assetID: number)
         result:PivotTo(CFrame.new(NewPos))
         Selection:Set({result})
 
-        if assetID == 6404661021 and not SelectMap:AutoSelect(true) then
+        if not SelectMap:AutoSelect(true) then
             result.Parent = workspace
             SelectMap:SetMap(result)
         else
