@@ -2,15 +2,22 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent.Parent.Parent
+
+--< Imports >--
 local Fusion = require(Package.Resources.Fusion)
 local Util = require(Package.Util)
 
+--< Variables >--
 local Observer = Fusion.Observer
 local Value = Fusion.Value
 
 local varaints = Value({})
 local nameEvents = Util.Maid.new()
+
+
+--< Main >--
 
 Observer(Util.variantFolderChildren):onChange(function()
     local newTable = {}
@@ -54,6 +61,7 @@ return {
         Color = Color3.fromRGB(187, 67, 227),
         ObjectType = "SelectionBox",
     },
+
     ButtonTags = {
         DisplayText = "Button Tags",
         SubText = "All Button Tags",
@@ -68,7 +76,8 @@ return {
 
                 Color = Color3.fromRGB(51, 162, 48),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Child",
                 Name = "_Hide",
                 LayoutOrder = 2,
@@ -76,7 +85,8 @@ return {
 
                 Color = Color3.fromRGB(75, 52, 156),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Child",
                 Name = "_Fall",
                 LayoutOrder = 3,
@@ -84,7 +94,8 @@ return {
 
                 Color = Color3.fromRGB(214, 240, 99),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Child",
                 Name = "_Sound",
                 LayoutOrder = 4,
@@ -92,7 +103,8 @@ return {
 
                 Color = Color3.fromRGB(102, 102, 102),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Child",
                 Name = "_Destroy",
                 LayoutOrder = 5,
@@ -100,7 +112,8 @@ return {
 
                 Color = Color3.fromRGB(135, 40, 40),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Child",
                 Name = "_Explode",
                 LayoutOrder = 6,
@@ -115,6 +128,7 @@ return {
             Text = ""
         },
     },
+
     ObjectView = {
         DisplayText = "Object Tags",
         SubText = "All Object Tags",
@@ -130,7 +144,8 @@ return {
 
                 Color = Color3.fromRGB(180, 180, 180),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Any",
                 Name = "_WallRun",
                 LayoutOrder = 2,
@@ -139,7 +154,8 @@ return {
                 
                 Color = Color3.fromRGB(225, 225, 225),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Child",
                 Name = "_Liquid",
                 LayoutOrder = 3,
@@ -147,7 +163,8 @@ return {
 
                 Color = Color3.fromRGB(60, 60, 220),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Child",
                 Name = "_Gas",
                 LayoutOrder = 4,
@@ -155,7 +172,8 @@ return {
 
                 Color = Color3.fromRGB(206, 143, 211),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "_Kill",
                 LayoutOrder = 5,
@@ -164,7 +182,8 @@ return {
 
                 Color = Color3.fromRGB(255, 0, 0),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "_SpeedBooster",
                 LayoutOrder = 6,
@@ -173,7 +192,8 @@ return {
 
                 Color = Color3.fromRGB(110, 203, 53),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "_JumpBooster",
                 LayoutOrder = 7,
@@ -182,7 +202,8 @@ return {
 
                 Color = Color3.fromRGB(190, 222, 48),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "Gravity",
                 LayoutOrder = 8,
@@ -191,7 +212,8 @@ return {
 
                 Color = Color3.fromRGB(110, 203, 53),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Any",
                 Name = "AirTank",
                 LayoutOrder = 10,
@@ -200,7 +222,8 @@ return {
 
                 Color = Color3.fromRGB(41, 184, 232),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "Any",
                 Name = "Orb",
                 LayoutOrder = 9,
@@ -209,7 +232,8 @@ return {
 
                 Color = Color3.fromRGB(150, 64, 172),
                 ObjectType = "Projection",
-            }, {
+            },
+            {
                 TagType = "Any",
                 Name = "Teleporter",
                 LayoutOrder = 11,
@@ -218,7 +242,8 @@ return {
 
                 Color = Color3.fromRGB(182, 59, 141),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "BouncePad",
                 LayoutOrder = 12,
@@ -227,7 +252,8 @@ return {
 
                 Color = Color3.fromRGB(46, 163, 157),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "Cancel",
                 LayoutOrder = 13,
@@ -236,7 +262,8 @@ return {
 
                 Color = Color3.fromRGB(230, 50, 5),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "Jetstream",
                 LayoutOrder = 14,
@@ -245,7 +272,8 @@ return {
 
                 Color = Color3.fromRGB(118, 247, 208),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "Conveyor",
                 LayoutOrder = 14,
@@ -254,7 +282,8 @@ return {
 
                 Color = Color3.fromRGB(255, 162, 40),
                 ObjectType = "SelectionBox",
-            }, {
+            },
+            {
                 TagType = "NoChild",
                 Name = "AdjustOxygen",
                 LayoutOrder = 15,
@@ -270,6 +299,7 @@ return {
             Text = ""
         },
     },
+
     ButtonView = {
         TagType = "Any",
         SingleOption = true,
@@ -284,6 +314,7 @@ return {
             Text = ""
         }
     },
+
     ZiplineView = {
         TagType = "Any",
         Name = "Zipline",
@@ -299,6 +330,7 @@ return {
             Text = ""
         }
     },
+
     RailView = {
         TagType = "Any",
         Name = "Rail",
@@ -314,6 +346,7 @@ return {
             Text = ""
         }
     },
+
     VariantView = {
         DisplayText = "Variant View",
         SubText = "All Variants",
@@ -326,6 +359,7 @@ return {
             Text = ""
         }
     },
+
     AddonView = {
         DisplayText = "Map Addons View",
         SubText = "All Addon Tags",

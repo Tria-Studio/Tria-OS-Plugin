@@ -184,7 +184,7 @@ function ColorWheel:GetUI(): Instance
                 [Children] = {
                     Components.Constraints.UIAspectRatio(0.75, Enum.AspectType.ScaleWithParentSize),
                     Components.Constraints.UISizeConstraint(Vector2.new(169, 169), Vector2.new(256, 256)),
-                    New "ImageLabel" { --// Wheel
+                    New "ImageLabel" { -- Wheel
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         Position = UDim2.fromScale(0.4, 0.395),
                         Size = UDim2.fromScale(0.7, 0.6),
@@ -246,7 +246,7 @@ function ColorWheel:GetUI(): Instance
                             }
                         }
                     },
-                    Components.MiniTopbar { --// Top bar
+                    Components.MiniTopbar { -- Top bar
                         Text = "Select Color",
                         ZIndex = 10,
                         Callback = function()
@@ -254,7 +254,7 @@ function ColorWheel:GetUI(): Instance
                             colorChosen:Fire()
                         end,
                     },
-                    New "Frame" { --// Slider
+                    New "Frame" { -- Slider
                         AnchorPoint = Vector2.new(0, 0.5),
                         BorderColor3 = Theme.Border.Default,
                         BorderSizePixel = 2,
@@ -310,14 +310,14 @@ function ColorWheel:GetUI(): Instance
                             }
                         }
                     },
-                    New "Frame" { --// Color Display
+                    New "Frame" { -- Color Display
                         BackgroundColor3 = chosenColor,
                         BorderSizePixel = 1,
                         BorderColor3 = Theme.Border.Default,
                         Size = UDim2.fromScale(0.256, 0.192),
                         Position = UDim2.fromScale(0.05, 0.698),
                     },
-                    New "Frame" { --// Values
+                    New "Frame" { -- Values
                         BackgroundTransparency = 1,
                         Position = UDim2.fromScale(0.339, 0.698),
                         Size = UDim2.fromScale(0.641, 0.192),
@@ -352,7 +352,7 @@ function ColorWheel:GetUI(): Instance
                         }
                     },
 
-                   Hydrate(Components.TwoOptions({ --// Two buttons
+                   Hydrate(Components.TwoOptions({ -- Two buttons
                         Text = "Confirm",
                         Callback = function()
                             colorChosen:Fire()
@@ -369,7 +369,7 @@ function ColorWheel:GetUI(): Instance
                         AnchorPoint = Vector2.new(0, 1)
                     },
 
-                    Components.TextBox { --// Hex input
+                    Components.TextBox { -- Hex input
                         Position = UDim2.fromScale(0.05, 0.92),
                         Size = UDim2.fromScale(0.26, 0.06),
                         TextColor3 = Theme.MainText.Default,

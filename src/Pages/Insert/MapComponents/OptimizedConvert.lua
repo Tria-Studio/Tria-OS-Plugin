@@ -2,11 +2,18 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
+local Package = script.Parent.Parent.Parent.Parent
+
+--< Services >--
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 
-local Package = script.Parent.Parent.Parent.Parent
+--< Imports >--
 local Util = require(Package.Util)
 local TagUtils = require(Package.Util.TagUtils)
+
+
+--< Main >--
 
 local function OptimizedConvert()
     local recording = ChangeHistoryService:TryBeginRecording("OptimizedStructureConversion", "Convert map to optimized structure")

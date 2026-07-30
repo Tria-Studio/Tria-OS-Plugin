@@ -2,18 +2,21 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-local Selection = game:GetService("Selection")
-
+--< Package >--
 local Package = script.Parent.Parent.Parent.Parent.Parent
+
+--< Imports >--
 local Util = require(Package.Util)
 local PartCache = require(Package.Util.PartCache)
 
+--< Variables >--
 local ObjectType = {}
 ObjectType.__index = ObjectType
 
 
+--< Main >--
 
-local function calc(Orb, x, cf, type)
+local function calculate(Orb, x, cf, type)
 	local g = workspace.Gravity * 1
 	local v = Orb:GetAttribute("Power") * (workspace:GetAttribute("Power") or 1)
 	local localYDirection = cf.UpVector
@@ -65,7 +68,7 @@ local function MakeProjection(OrbHitbox, Type, Parent, Color)
 		node.Size = Vector3.new(.375, .375, .375)
 		node.Parent = Parent
 
-		local X, Y = calc(Orb, i, cf, Type)
+		local X, Y = calculate(Orb, i, cf, Type)
 		node.CFrame = CF * CFrame.new(0, 0, X) + Vector3.new(0, Y, 0)
 	end
     return true

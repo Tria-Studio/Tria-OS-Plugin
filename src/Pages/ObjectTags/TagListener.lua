@@ -72,7 +72,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
             [Children] = {
                 Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil),
-                New "TextButton" { --// Button
+                New "TextButton" { -- Button
                     AutoButtonColor = Computed(function(): boolean
                         local interfaceActive = Util.interfaceActive:get()
                         return if Util.dropdownActive:get() then false else interfaceActive
@@ -91,7 +91,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
                         if #Util._Selection.selectedParts:get(false) > 0 then
                             local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name] or TagData.dataTypes.addonTags[name]
-                            if not tagData.IsTagApplicable then --// Buttons, ziplines, and airtanks cannot be assigned or removed
+                            if not tagData.IsTagApplicable then -- Buttons, ziplines, and airtanks cannot be assigned or removed
                                 Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br />See the Insert page to add these map components to your map.", name), {
                                     Text = "Take me there",
                                     Callback = function()
@@ -127,8 +127,8 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
 
                     [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil)
                 },
-                Components.Checkbox(20, UDim2.fromOffset(-30, 2), Vector2.new(1, 0), checkState), --// Checkbox
-                New "ImageLabel" { --// Icon
+                Components.Checkbox(20, UDim2.fromOffset(-30, 2), Vector2.new(1, 0), checkState), -- Checkbox
+                New "ImageLabel" { -- Icon
                     Size = UDim2.fromOffset(20, 20),
                     Position = UDim2.fromOffset(-6, 2),
                     BackgroundTransparency = 1,
@@ -145,7 +145,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                         return
                     end
 
-                    return New "Frame" { --// Metadata
+                    return New "Frame" { -- Metadata
                         AutomaticSize = Enum.AutomaticSize.Y,
                         BackgroundColor3 = Theme.MainBackground.Default,
                         BorderColor3 = Theme.Border.Default,

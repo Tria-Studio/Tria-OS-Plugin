@@ -2,7 +2,11 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Variables >--
 local Bezier = {}
+
+
+--< Main >--
 
 function getBezierPointAtPercent(p: number, ...): Vector3
 	local points = { ... }
@@ -49,9 +53,11 @@ end
 function Bezier.calculate(t: number, lookupTable: { number }, points: { Vector3 })
 	local arcLength = lookupTable[#lookupTable]
 	local targetDist = arcLength * t
+
 	if (t == 0) or (t >= 1) then
 		return getBezierPointAtPercent(if t == 0 then 0 else 1, unpack(points))
 	end
+
 	for count = 1, #lookupTable - 1 do
 		local currentDist = lookupTable[count]
 		local nextDist = lookupTable[count + 1]
@@ -69,6 +75,8 @@ function Bezier.calculate(t: number, lookupTable: { number }, points: { Vector3 
 			return getBezierPointAtPercent(lerpedT, unpack(points))
 		end
 	end
+
+    return getBezierPointAtPercent(1, unpack(points))
 end
 
 return Bezier

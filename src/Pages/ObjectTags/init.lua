@@ -2,24 +2,28 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent.Parent
-local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
-local Theme = require(Resources.Themes)
-local Components = require(Resources.Components)
+--< Imports >--
+local Fusion = require(Package.Resources.Fusion)
+local Theme = require(Package.Resources.Themes)
+local Components = require(Package.Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
-
 local TagListener = require(script.TagListener)
 local TagData = require(script.TagData)
 
+--< Variables >--
 local New = Fusion.New
 local ForPairs = Fusion.ForPairs
 local Children = Fusion.Children
 
 local frame = {}
  
+
+--< Main >--
+
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),

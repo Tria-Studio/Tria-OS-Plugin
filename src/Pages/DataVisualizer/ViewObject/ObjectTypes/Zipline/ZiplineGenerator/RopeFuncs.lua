@@ -2,15 +2,30 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-local RopeFuncs = {}
-local Bezier = require(script.Parent:WaitForChild("Bezier"))
-local PartCache = require(script.Parent.Parent.Parent.Parent.Parent.Parent.Parent.Util.PartCache)
+--< Package >--
+local Package = script.Parent.Parent.Parent.Parent.Parent.Parent.Parent
 
-local customizationDefault = {
+--< Imports >--
+local Bezier = require(script.Parent:WaitForChild("Bezier"))
+local PartCache = require(Package.Util.PartCache)
+
+--< Types >--
+type RopeConfig = {
+    Width: number?,
+    Material: Enum.Material?,
+    Color: Color3?
+}
+
+--< Constants >--
+local DEFAULT_CUSTOMIZATION = {
 	Material = "Neon",
 	Color = Color3.new(1, 1, 1),
 	Width = 0.25,
 }
+
+--< Variables >--
+local RopeFuncs = {}
+
 
 function RopeFuncs.sortPointsArray(points)
 	table.sort(points, function(a, b)
@@ -19,19 +34,19 @@ function RopeFuncs.sortPointsArray(points)
 	return points
 end
 
-function RopeFuncs.createPoint(point: Vector3, nextPoint: Vector3, parent: Instance, custom: {})
+function RopeFuncs.createPoint(point: Vector3, nextPoint: Vector3, parent: Instance, custom: RopeConfig)
 	local distance = (nextPoint - point).Magnitude
-	local width = custom.Width or customizationDefault.Width
+	local width = custom.Width or DEFAULT_CUSTOMIZATION.Width
 
 	local part = PartCache:GetObject("ZiplineCache")
 
 	local success = pcall(function()
-		part.Material = custom.Material or customizationDefault.Material
+		part.Material = custom.Material or DEFAULT_CUSTOMIZATION.Material
 	end)
 	if not success then
-		part.Material = customizationDefault.Material
+		part.Material = DEFAULT_CUSTOMIZATION.Material
 	end
-	part.Color = custom.Color or customizationDefault.Color
+	part.Color = custom.Color or DEFAULT_CUSTOMIZATION.Color
 	part.Size = Vector3.new(width, width, distance)
 
 	part.CFrame = CFrame.lookAt(point, nextPoint, Vector3.new(0, 1, 0)) * CFrame.new(0, 0, -distance / 2)
@@ -83,7 +98,7 @@ function RopeFuncs.generateRope(rope: Model, customization: Configuration?, ...)
 		table.insert(finalPositionTable, points[#points].Position)
 	end
 
-	local custom = { Material = customizationDefault.Material }
+	local custom = { Material = DEFAULT_CUSTOMIZATION.Material }
 	if customization then
 		custom = customization:GetAttributes()
 		for _, v in pairs(Enum.Material:GetEnumItems()) do

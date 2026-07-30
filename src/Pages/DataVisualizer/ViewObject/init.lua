@@ -2,17 +2,25 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
+local Package = script.Parent.Parent.Parent
+
+--< Services >--
 local Players = game:GetService("Players")
 
-local Package = script.Parent.Parent.Parent
+--< Imports >--
 local Util = require(Package.Util)
 local TagUtil = require(Package.Util.TagUtils)
 local Fusion = require(Package.Resources.Fusion)
 
+--< Variables >--
 local Value = Fusion.Value
 
 local ViewObject = {}
 ViewObject.__index = ViewObject
+
+
+--< Main >--
 
 function ViewObject.new(Name, data, color)
 	local self = setmetatable({}, ViewObject)
@@ -162,14 +170,16 @@ function ViewObject:Enable()
 				self:Disable(true)
 				break
 			end
-            local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
+            
             for _, part in pairs(TagUtil:GetPartsWithTag(self.Tag)) do
                 if not self.ObjectHandler.Objects[part] then
                     if self.ObjectHandler:SetAppearance(part) then
 						HandleUpdates(part)
 					end
                 end
-            end
+            end 
+
+            local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
             task.wait(((5 / (math.max(12, studioQuality) / 21)) * (0.5 + (Util._DebugView.activeDebugViews:get() / 12)) + ((#Players:GetPlayers() >= 1 and 10 or 0))))
         end
     end)

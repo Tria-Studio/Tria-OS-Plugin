@@ -34,7 +34,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
 
     local hasMapScript, hasSettings, oldMapLib
 
-    --// script check
+    -- script check
 
     if not ignoreChecks then
         local script1 : Script? = newMap:FindFirstChild("EventScript")
@@ -83,7 +83,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
         hasSettings = true
      end
 
-    --// other checks
+    -- other checks
 
     if not ignoreChecks then
         if newMap:FindFirstChild("ExitWall") and newMap:FindFirstChild("MapPreviewCamera") and other_folder then
@@ -210,7 +210,7 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
 
         local parentChanged = false
         function mapTypes.Model()
-            Util.MapMaid:GiveTask(newMap.AncestryChanged:Connect(function() --// Model was either ungrouped or deleted
+            Util.MapMaid:GiveTask(newMap.AncestryChanged:Connect(function() -- Model was either ungrouped or deleted
 				if not newMap.Parent then
                     parentChanged = true
 

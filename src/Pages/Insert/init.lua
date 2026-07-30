@@ -2,21 +2,23 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
+local Package = script.Parent.Parent
+
+--< Services >--
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
-local Package = script.Parent.Parent
-local Resources = Package.Resources
-
-local Fusion = require(Resources.Fusion)
-local Theme = require(Resources.Themes)
-local Components = require(Resources.Components)
+--< Imports >--
+local Fusion = require(Package.Resources.Fusion)
+local Theme = require(Package.Resources.Themes)
+local Components = require(Package.Resources.Components)
 local MapComponents = require(script.MapComponents)
 local SelectMap = require(Package.MapSelect)
-
 local Util = require(Package.Util)
 local PublicTypes = require(Package.PublicTypes)
 
+--< Variables >--
 local New = Fusion.New
 local Children = Fusion.Children
 local OnEvent = Fusion.OnEvent
@@ -28,6 +30,7 @@ local Out = Fusion.Out
 local frame = {}
 
 
+--< Main >--
 
 local function attemptToInsertModel(assetID: number)
     if assetID == 0 then
@@ -179,6 +182,36 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
             }
         }
     }
+end
+
+local function updateMapScriptChildren()
+    local newValues = {
+        Waterjets = false,
+    }
+
+    local currentMap = Util.mapModel:get(false)
+    for i, thing in pairs(currentMap and currentMap.MapScript:GetChildren() or {}) do
+        if thing:IsA("ModuleScript") then
+            local addons = {}
+
+            function addons.Waterjets(): boolean
+                local success, module = pcall(function()
+                    return thing.Name == "Waterjets" and require(thing)
+                end)
+                return success and module and module.SetFanEnabled == 0 and thing:FindFirstChild("WaterjetClient")
+            end
+
+            if addons[thing.Name] then
+                newValues[thing.Name] = addons[thing.Name]()
+            end
+        end
+    end
+
+    if Util._Addons.hasWaterjet:get() and not newValues.Waterjets then
+        Util._Addons.AddonRemoved:Fire("_Waterjet")
+    end
+    Util._Addons.hasWaterjet:set(newValues.Waterjets)
+    Util._Addons.hasAddonsWithObjectTags:set(newValues.Waterjets)
 end
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
@@ -354,36 +387,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
             }, true)
         }
     }
-end
-
-local function updateMapScriptChildren()
-    local newValues = {
-        Waterjets = false,
-    }
-
-    local currentMap = Util.mapModel:get(false)
-    for i, thing in pairs(currentMap and currentMap.MapScript:GetChildren() or {}) do
-        if thing:IsA("ModuleScript") then
-            local addons = {}
-
-            function addons.Waterjets(): boolean
-                local success, module = pcall(function()
-                    return thing.Name == "Waterjets" and require(thing)
-                end)
-                return success and module and module.SetFanEnabled == 0 and thing:FindFirstChild("WaterjetClient")
-            end
-
-            if addons[thing.Name] then
-                newValues[thing.Name] = addons[thing.Name]()
-            end
-        end
-    end
-
-    if Util._Addons.hasWaterjet:get() and not newValues.Waterjets then
-        Util._Addons.AddonRemoved:Fire("_Waterjet")
-    end
-    Util._Addons.hasWaterjet:set(newValues.Waterjets)
-    Util._Addons.hasAddonsWithObjectTags:set(newValues.Waterjets)
 end
 
 function frame.OnClose()

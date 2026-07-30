@@ -2,9 +2,13 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent.Parent.Parent.Parent.Parent
+
+--< Imports >--
 local Util = require(Package.Util)
 
+--< Constants >--
 local BUTTON_LOCATORS = {
     default = "rbxassetid://6274811030",
     classic = "rbxassetid://6275599542",
@@ -12,8 +16,12 @@ local BUTTON_LOCATORS = {
     square = "rbxassetid://6275600378",
 }
 
+--< Variables >--
 local ObjectType = {}
 ObjectType.__index = ObjectType
+
+
+--< Main >--
 
 function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)

@@ -2,10 +2,11 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-local plugin = plugin or script:FindFirstAncestorWhichIsA("Plugin")
+--< Package >--
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
+--< Imports >--
 local Fusion = require(Resources.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
@@ -15,6 +16,7 @@ local Pages = require(Resources.Components.Pages)
 local ViewFrame = require(script.ViewFrame)
 local ViewData = require(script.ViewData)
 
+--< Variables >--
 local New = Fusion.New
 local Children = Fusion.Children
 local Observer = Fusion.Observer
@@ -23,6 +25,8 @@ local Computed = Fusion.Computed
 
 local frame = {}
 
+
+--< Main >--
 
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     return New "Frame" {
@@ -76,7 +80,6 @@ Observer(Util._DebugView.activeDebugViews):onChange(function()
 		Util._DebugView.debugObjectsFolder.Parent = Util._DebugView.activeDebugViews:get() ~= 0 and workspace.CurrentCamera or Util.Widget
 	end
 end)
-
 
 
 return frame

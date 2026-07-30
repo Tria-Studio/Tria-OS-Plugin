@@ -2,15 +2,22 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent.Parent.Parent.Parent.Parent
+
+--< Imports >--
 local Util = require(Package.Util)
 local Fusion = require(Package.Resources.Fusion)
 
+--< Variables >--
 local Value = Fusion.Value
 local New = Fusion.New
 
 local ObjectType = {}
 ObjectType.__index = ObjectType
+
+
+--< Main >--
 
 function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)

@@ -2,15 +2,25 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
+local Package = script.Parent.Parent.Parent.Parent.Parent
+
+--< Services >--
 local Selection = game:GetService("Selection")
 
-local Package = script.Parent.Parent.Parent.Parent.Parent
+--< Imports >--
 local Util = require(Package.Util)
 local ZiplineGenerator = require(script.ZiplineGenerator)
 local PartCache = require(Package.Util.PartCache)
 
+--< Variables >--
+local debounce = false
+
 local ObjectType = {}
 ObjectType.__index = ObjectType
+
+
+--< Main >--
 
 function ObjectType.new(controller)
     local self = setmetatable({}, ObjectType)
@@ -83,6 +93,7 @@ function ObjectType:SetAppearance(part)
                     self:ClearAppearance(part)
                     task.wait()
                     self:SetAppearance(part)
+
                     debounce = false
                 end
             end)))
@@ -104,6 +115,8 @@ function ObjectType:SetAppearance(part)
 
         return true
     end
+
+    return nil
 end
 
 function ObjectType:UpdateAppearance(part)

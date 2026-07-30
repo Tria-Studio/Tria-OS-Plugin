@@ -19,7 +19,7 @@ local Out = Fusion.Out
 
 local messageFrameSize = Value()
 
-return New "Frame" { --// Message
+return New "Frame" { -- Message
 	BackgroundTransparency = 0.625,
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	Size = UDim2.fromScale(1, 1),
@@ -65,7 +65,7 @@ return New "Frame" { --// Message
 					Callback = Util.CloseMessage,
 				},
 
-				New "TextLabel" { --// Body
+				New "TextLabel" { -- Body
 					AutomaticSize = Enum.AutomaticSize.Y,
 					BackgroundTransparency = 1,
 					Position = UDim2.fromOffset(0, 24),

@@ -61,7 +61,7 @@ local newTagTypes = {
     AdjustOxygen = { "ActionTags" },
 }
 local tagTypes = {
-	ButtonTags = { --// Child named tag but button
+	ButtonTags = { -- Child named tag but button
 		"_Show",
 		"_Hide",
 		"_Fall",
@@ -69,7 +69,7 @@ local tagTypes = {
 		"_Destroy",
 		"_Sound",
 	},
-	ObjectTags = { --// Child named tag
+	ObjectTags = { -- Child named tag
 		"_WallRun",
 		"_WallJump",
 		"_Liquid",
@@ -80,7 +80,7 @@ local tagTypes = {
 			_Gas = "_Gas%d",
 		},
 	},
-	ActionTags = { --// _action attribute
+	ActionTags = { -- _action attribute
 		"_WallRun",
 		"_WallJump",
 		"_SpeedBooster",
@@ -102,10 +102,10 @@ local tagTypes = {
 			_WallRun = "WallRun",
 		},
 	},
-	DetailTag = { --// Parented to the detail folder
+	DetailTag = { -- Parented to the detail folder
 		"_Detail",
 	},
-	ModelTags = { --// They are a model named this and stuff
+	ModelTags = { -- They are a model named this and stuff
 		"Zipline",
 		"_Button",
 		"Rail",
@@ -192,7 +192,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
 
 	local types = {}
 
-	if newValue then --// Assign or Change
+	if newValue then -- Assign or Change
 		function types.Attribute()
 			part:SetAttribute(metadata.data.dataName, newValue)
 		end
@@ -235,7 +235,7 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
 				)._nameStub .. newValue or 0
 			end
 		end
-	else --// Clear
+	else -- Clear
 		function types.Attribute()
 			part:SetAttribute(metadata.data.dataName, nil)
 		end
@@ -355,7 +355,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 		or TagData.dataTypes.addonTags[newTag or oldTag]
 	local methods = {}
 
-	if not newTag then --// Clear tag
+	if not newTag then -- Clear tag
 		local otherTags = tagUtils:GetPartTags(part, oldTag)
 		local currentMap = Util.mapModel:get(false)
 		tagUtils.OnTagRemoved(oldTag):Fire(part)
@@ -411,7 +411,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 		for _, method in pairs(applyMethods) do
 			methods[method]()
 		end
-	else --// Assign new tag
+	else -- Assign new tag
 		local newParent = if table.find(tagsBypassParent, newTag) then part.Parent 
 			elseif isOptimized
 				and table.find(tagTypes.ButtonTags, newTag)
@@ -597,7 +597,7 @@ function tagUtils:GetPartsWithTag(tag: string | Fusion.Value<string>, subTag: st
 
 	local InstanceToCheck = CheckIfSpecial[subTag] or CheckIfSpecial[tag] or Map
 	local partsFound = {}
-	local studioQuality = 20
+	local studioQuality = settings().Rendering.QualityLevel.Value == 0 and 21 or settings().Rendering.QualityLevel.Value
 
 	if
 		Util._DebugView.viewsActiveUsingAll > 1
