@@ -1,4 +1,5 @@
 return {
     enabled = true,
-    runsInTriaScripts = false
+    runsInTriaScripts = false,
+    autoInjectRuntime = false,
 }

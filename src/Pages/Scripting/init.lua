@@ -30,7 +30,7 @@ local Computed = Fusion.Computed
 
 local ENABLE_VAR = "TRIA_AutocompleteEnabled"
 local GLOBAL_ENABLE_VAR = "TRIA_GlobalAutocompleteEnabled"
-local GLOBAL_INJECT_VAR = "TRIA_GlobalAutocompleteEnabled"
+local GLOBAL_INJECT_VAR = "TRIA_GlobalRuntimeInjectionEnabled"
 local HEADER = 'require(game:GetService("ServerScriptService").Runtime):Init()\n'
 
 local ScriptMaid = Util.Maid.new()
@@ -264,8 +264,8 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 Text = "Enable Autocomplete",
                                 LayoutOrder = 1,
                                 Enabled = 
-                                    if plugin:GetSetting(ENABLE_VAR) and plugin:GetSetting("TRIA_ScriptInjectionEnabled") 
-                                    then plugin:GetSetting(ENABLE_VAR) 
+                                    if plugin:GetSetting(ENABLE_VAR) ~= nil and plugin:GetSetting("TRIA_ScriptInjectionEnabled") 
+                                    then plugin:GetSetting(ENABLE_VAR)  
                                     else true,
                                 
                                 Validate = function(newState: Fusion.StateObject<boolean>): boolean
@@ -292,7 +292,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 Text = "Run autocomplete globally",
                                 LayoutOrder = 3,
                                 Enabled = 
-                                    if plugin:GetSetting(GLOBAL_ENABLE_VAR) 
+                                    if plugin:GetSetting(GLOBAL_ENABLE_VAR) ~= nil
                                     then plugin:GetSetting(GLOBAL_ENABLE_VAR) 
                                     else true,
                                     
@@ -310,13 +310,14 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                 Text = "Automatic Runtime Injection",
                                 LayoutOrder = 3,
                                 Enabled = 
-                                    if plugin:GetSetting(GLOBAL_INJECT_VAR) 
+                                    if plugin:GetSetting(GLOBAL_INJECT_VAR) ~= nil
                                     then plugin:GetSetting(GLOBAL_INJECT_VAR) 
                                     else false,
                                     
                                 OnToggle = function(newState: boolean)
                                     GlobalSettings.autoInjectRuntime = newState
                                     plugin:SetSetting(GLOBAL_INJECT_VAR, newState)
+
                                     if newState and Util.mapModel:get(false) then
                                         for _, child in pairs(Util.mapModel:get(false):GetChildren()) do
                                             if child:IsA("LuaSourceContainer") then
