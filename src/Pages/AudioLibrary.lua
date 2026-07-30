@@ -2,38 +2,32 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-local plugin = plugin or script:FindFirstAncestorWhichIsA("Plugin")
+--< Package >--
+local Package = script.Parent.Parent
+
+--< Services >--
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local ContentProvider = game:GetService("ContentProvider")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
-local Package = script.Parent.Parent
-local Resources = Package.Resources
-
-local Fusion = require(Resources.Fusion)
-local Theme = require(Resources.Themes)
-local Components = require(Resources.Components)
-
+--< Imports >--
+local Fusion = require(Package.Resources.Fusion)
+local Theme = require(Package.Resources.Themes)
+local Components = require(Package.Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
 local Util = require(Package.Util)
 local PluginSoundManager = require(Package.Util.PluginSoundManager)
 local GitUtil = require(Package.Util.GitUtil)
 
-local New = Fusion.New
-local Children = Fusion.Children
-local Computed = Fusion.Computed
-local OnEvent = Fusion.OnEvent
-local Value = Fusion.Value
-local Hydrate = Fusion.Hydrate
-local Ref = Fusion.Ref
-local Observer = Fusion.Observer
-local Spring = Fusion.Spring
-local Out = Fusion.Out
-local Cleanup = Fusion.Cleanup
+--< Types >--
+type audioTableFormat = {
+    Name: string, 
+    Artist: string, 
+    ID: number
+}
 
-type audioTableFormat = {Name: string, Artist: string, ID: number}
-
+--< Constants >--
 local URL = "https://raw.githubusercontent.com/Tria-Studio/TriaAudioList/master/AUDIO_LIST/list.json"
 local BUTTON_ICONS = {
     Pause = {
@@ -54,18 +48,32 @@ local BUTTON_ICONS = {
     }
 }
 
-task.spawn(function()
-    for _, t in pairs(BUTTON_ICONS) do
-        for _, imageId in pairs(t) do
-            ContentProvider:PreloadAsync({imageId})
-        end
-    end
-end)
+local CURRENT_FETCH_STATUS = Fusion.Value("Fetching")
+local FETCHED_AUDIO_DATA = Fusion.Value({})
+
+local STATUS_ERRORS = {
+    ["Fetching"] = "Fetching the latest audio...",
+    ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plugin Settings\" tab.",
+    ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
+    ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
+}
+
+local FADE_TWEEN = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+
+--< Variables >--
+local New = Fusion.New
+local Children = Fusion.Children
+local Computed = Fusion.Computed
+local OnEvent = Fusion.OnEvent
+local Value = Fusion.Value
+local Hydrate = Fusion.Hydrate
+local Observer = Fusion.Observer
+local Spring = Fusion.Spring
+local Out = Fusion.Out
+local Cleanup = Fusion.Cleanup
 
 local SoundMaid = Util.Maid.new()
-
 local frameAbsoluteSize = Value()
-
 
 local lastFetchTime = 0
 local songLoadSession = 0
@@ -90,24 +98,23 @@ local songPlayData = {
     currentTween = nil
 }
 
-local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
-local CURRENT_FETCH_STATUS = Value("Fetching")
-local FETCHED_AUDIO_DATA = Value({})
+--< Main >--
 
-local STATUS_ERRORS = {
-    ["Fetching"] = "Fetching the latest audio...",
-    ["HTTPDisabled"] = "Failed to fetch audio library due to HTTP requests being disabled. You can change this in the \"Plugin Settings\" tab.",
-    ["HTTPError"] = "A network error occured while trying to get the latest audio. Please try again later.",
-    ["JSONDecodeError"] = "A JSON Decoding error occured, please report this to the plugin developers as this needs to be manually fixed."
-}
+task.spawn(function()
+    for _, t in pairs(BUTTON_ICONS) do
+        for _, imageId in pairs(t) do
+            ContentProvider:PreloadAsync({imageId})
+        end
+    end
+end)
 
 local function fadeSound(sound: Sound, direction: string)
     if not sound then
         return
     end
 
-    local tween = TweenService:Create(sound, fadeInfo, {Volume = (direction == "In" and 1 or 0)})
+    local tween = TweenService:Create(sound, FADE_TWEEN, {Volume = (direction == "In" and 1 or 0)})
     tween:Play()
     songPlayData.currentTween = tween
 
@@ -306,17 +313,18 @@ local function AudioButton(data: audioTableFormat): Instance
     end), 15)
 
     return New "Frame" {
-        BackgroundColor3 = BackgroundColorSpring,
         Size = UDim2.new(1, 0, 0, 36),
+        
+        BackgroundColor3 = BackgroundColorSpring,
         Visible = Computed(function()
             local searchedArtist = searchData.artist:get()
             local searchedName = searchData.name:get()
 
             local matches = true
-            if searchedArtist and #searchedArtist > 0 and not data.Artist:lower():match(searchedArtist:lower()) then
-                matches = false
-            end
-            if searchedName and #searchedName > 0 and not data.Name:lower():match(searchedName:lower()) then
+            if 
+                (searchedArtist and #searchedArtist > 0 and not data.Artist:lower():match(searchedArtist:lower()))
+                or (searchedName and #searchedName > 0 and not data.Name:lower():match(searchedName:lower()))
+            then
                 matches = false
             end
 
@@ -332,26 +340,28 @@ local function AudioButton(data: audioTableFormat): Instance
                 ClipsDescendants = true,
                 Position = UDim2.fromScale(0.005, 0),
                 Text = ("<b>%s</b>\n%s"):format(data.Artist, data.Name),
-                TextColor3 = Theme.MainText.Default,
                 LineHeight = 1.1,
                 RichText = true,
                 TextTruncate = Enum.TextTruncate.AtEnd,
                 TextSize = 15,
                 TextXAlignment = Enum.TextXAlignment.Left,
+                
+                TextColor3 = Theme.MainText.Default,
 
                 [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
             },
 
             Components.TextButton {
-                Active = Util.interfaceActive,
                 Size = UDim2.new(0, 32, 0.6, 0),
                 Position = UDim2.new(1, -8, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
                 Text = "Use",
                 ZIndex = 3,
                 Font = Enum.Font.SourceSansBold,
-                BackgroundColor3 = Theme.MainButton.Default,
                 TextSize = 15,
+                
+                Active = Util.interfaceActive,
+                BackgroundColor3 = Theme.MainButton.Default,
                 TextColor3 = Theme.BrightText.Default,
 
                 [Children] = {
@@ -388,6 +398,7 @@ local function AudioButton(data: audioTableFormat): Instance
                         AnchorPoint = Vector2.new(1, 0.5),
                         Position = UDim2.new(1, -15, 0.35, 0),
                         Size = UDim2.fromScale(0.7, 0.7),
+
                         Image = Computed(function(): string
                             return 
                                 if isLoadingCurrentSong:get() then BUTTON_ICONS.Loading.normal
@@ -441,7 +452,7 @@ local function fetchApi()
     CURRENT_FETCH_STATUS:set("Fetching")
     task.wait(0.5)
 
-    local fired, result, errorCode, errorDetails = GitUtil:Fetch(URL)
+    local fired, result, errorCode = GitUtil:Fetch(URL)
     
     CURRENT_FETCH_STATUS:set(if not fired then errorCode else "Success")
     
@@ -486,7 +497,6 @@ end
 
 
 local frame = {}
-
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
     local isSongPlaying = Computed(function(): boolean
         return songPlayData.currentlyPlaying:get() and (not songPlayData.isPaused:get())
@@ -494,12 +504,14 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
-        BackgroundColor3 = Theme.TableItem.Default,
         Visible = data.Visible,
         Name = "AudioLib",
 
+        BackgroundColor3 = Theme.TableItem.Default,
+
         [Children] = {
             Components.PageHeader("Audio Library", 4),
+
             Components.SearchBox {
                 Position = UDim2.fromScale(0, 0),
                 Size = UDim2.new(0.5, 0, 0, 29),
@@ -513,48 +525,54 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                 Placeholder = "Search by Name",
                 State = searchData.name,
             },
-
             
             New "Frame" { -- Holder
-                BackgroundColor3 = Theme.TableItem.Default,
                 Position = UDim2.new(0, 0, 0, 30),
                 Size = UDim2.new(1, 0, 1, -30),
                 LayoutOrder = 2,
+
+                BackgroundColor3 = Theme.TableItem.Default,
 
                 [Children] = {
                     New "Frame" { -- Status Message
                         BackgroundTransparency = 1,
                         Size = UDim2.fromScale(1, 0.95),
+
                         Visible = Computed(function(): boolean
                             return CURRENT_FETCH_STATUS:get() ~= "Success"
                         end),
 
                         [Children] = {
                             Components.Constraints.UIListLayout(Enum.FillDirection.Vertical, Enum.HorizontalAlignment.Center, UDim.new(0, 2), Enum.VerticalAlignment.Center),
+
                             New "ImageLabel" {
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromOffset(24, 24),
                                 Image = "rbxasset://textures/ui/ErrorIcon.png",
                             },
+
                             New "TextLabel" {
                                 AutomaticSize = Enum.AutomaticSize.Y,
                                 BackgroundTransparency = 1,
                                 Size = UDim2.fromScale(0.75, 0),
+                                TextSize = 18,
+                                TextWrapped = true,
+                                TextXAlignment = Enum.TextXAlignment.Center,
+                                TextYAlignment = Enum.TextYAlignment.Top,
+                                
+                                TextColor3 = Theme.SubText.Default,
                                 Text = Computed(function(): string
                                     local fetchStatus = CURRENT_FETCH_STATUS:get()
                                     return STATUS_ERRORS[fetchStatus] or "N/A"
                                 end),
-                                TextSize = 18,
-                                TextWrapped = true,
-                                TextColor3 = Theme.SubText.Default,
-                                TextXAlignment = Enum.TextXAlignment.Center,
-                                TextYAlignment = Enum.TextYAlignment.Top
                             },
+
                             Components.TextButton {
                                 Active = Util.interfaceActive,
                                 Size = UDim2.fromScale(0.5, 0.05),
-                                BackgroundColor3 = Theme.Button.Default,
                                 Text = "Retry",
+
+                                BackgroundColor3 = Theme.Button.Default,
 
                                 [Children] = {
                                     Components.Constraints.UICorner(0, 8),
@@ -573,17 +591,18 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                     New "Frame" { -- Audio Library
                         BackgroundTransparency = 1,
                         Size = UDim2.new(1, 0, 1, -42),
+
                         Visible = Computed(function(): boolean
                             return CURRENT_FETCH_STATUS:get() == "Success"
                         end),
 
                         [Children] = {
                             New "Frame" { -- Main
-                                [Out "AbsoluteSize"] = frameAbsoluteSize, 
-
                                 BackgroundTransparency = 1,
                                 Size = UDim2.new(1, 0, 1, 41),
                                 ClipsDescendants = true,
+
+                                [Out "AbsoluteSize"] = frameAbsoluteSize, 
 
                                 [Children] = {
                                     Components.ScrollingFrame({
@@ -597,25 +616,22 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                             Computed(getScrollChildren, Fusion.cleanup)
                                         }
                                     }, false),
+
                                     New "Frame" { -- Now playing
-                                        BackgroundColor3 = Theme.RibbonTab.Default,
                                         AnchorPoint = Vector2.new(0, 1),
                                         Size = UDim2.new(1, 0, 0, 36),
+                                        ZIndex = 4,
+
+                                        BackgroundColor3 = Theme.RibbonTab.Default,
                                         Position = Spring(Computed(function(): UDim2
                                             return UDim2.new(0, 0, 1, if songPlayData.currentlyPlaying:get() then 0 else 38)
                                         end), 20),
-                                        ZIndex = 4,
 
                                         [Children] = {
                                             New "TextLabel" {
                                                 BackgroundTransparency = 1,
                                                 Size = UDim2.fromScale(0.6, 1),
                                                 Position = UDim2.fromScale(0.0, 0),
-                                                Text = Computed(function(): string
-                                                    local currentData = songPlayData.currentSongData:get()
-                                                    return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
-                                                end),
-                                                TextColor3 = Theme.MainText.Default,
                                                 LineHeight = 1.1,
                                                 ZIndex = 4,
                                                 RichText = true,
@@ -623,18 +639,25 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                                 TextTruncate = Enum.TextTruncate.AtEnd,
                                                 TextSize = 15,
                                                 TextXAlignment = Enum.TextXAlignment.Left, 
+                                                
+                                                TextColor3 = Theme.MainText.Default,
+                                                Text = Computed(function(): string
+                                                    local currentData = songPlayData.currentSongData:get()
+                                                    return ("<b>%s</b>\n%s"):format(currentData.Artist, currentData.Name)
+                                                end),
 
                                                 [Children] = Components.Constraints.UIPadding(nil, nil, UDim.new(0, 6), nil)
                                             },
 
                                             Components.Slider {
-                                                Value = songPlayData.currentTimePosition,
                                                 Min = Value(0),
-                                                Max = songPlayData.currentTimeLength,
                                                 Position = UDim2.fromScale(0.675, 0.275),
                                                 Size = UDim2.fromScale(0.5, 0.2),
                                                 Increment = 1,
                                                 ZIndex = 4,
+
+                                                Value = songPlayData.currentTimePosition,
+                                                Max = songPlayData.currentTimeLength,
                                             },
 
                                             New "TextLabel" {
@@ -642,19 +665,22 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                                 Position = UDim2.new(0.45, 0, 0.5, 2),
                                                 Size = UDim2.fromScale(0.5, 0.25),
                                                 TextSize = 14,
+                                                ZIndex = 4,
+
+                                                TextColor3 = Theme.MainText.Default,
                                                 Text = Computed(function(): string
                                                     return ("%s/%s"):format(
                                                         Util.secondsToTime(songPlayData.currentTimePosition:get()), 
                                                         Util.secondsToTime(songPlayData.currentTimeLength:get())
                                                     )
                                                 end),
-                                                ZIndex = 4,
-                                                TextColor3 = Theme.MainText.Default,
                                             },
 
                                             SongPlayButton {
                                                 Position = UDim2.fromScale(0.375, 0.3),
                                                 Size = UDim2.fromScale(0.5, 0.5),
+                                                ZIndex = 4,
+
                                                 Image = Computed(function(): string
                                                     return isSongPlaying:get() and BUTTON_ICONS.Pause.normal or BUTTON_ICONS.Play.normal
                                                 end),
@@ -664,7 +690,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
                                                 HoverImage = Computed(function(): string
                                                     return isSongPlaying:get() and BUTTON_ICONS.Pause.hover or BUTTON_ICONS.Play.hover
                                                 end),
-                                                ZIndex = 4,
 
                                                 [OnEvent "Activated"] = function()
                                                     updatePlayingSound(songPlayData.currentlyPlaying:get(false), songPlayData.currentSongData:get(false))

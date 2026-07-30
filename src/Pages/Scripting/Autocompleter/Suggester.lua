@@ -1,3 +1,4 @@
+--!nocheck
 local Suggester = {}
 
 local ScriptEditorService = game:GetService("ScriptEditorService")

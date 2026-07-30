@@ -1,3 +1,4 @@
+--!nocheck
 --[[
 
 Original code from: https://devforum.roblox.com/t/lexer-for-rbx-lua/183115
@@ -19,10 +20,10 @@ local STRING3	= [[^(['"]).-[^\](\*)%2%1]]
 local STRING4	= "^(['\"]).-.*"						--Incompleted String
 local STRING5	= "^%[(=*)%[.-%]%1%]"					--Multiline-String
 local STRING6	= "^%[%[.-.*"							--Incompleted Multiline-String
-local CHAR1		= "^''"
-local CHAR2		= [[^'(\*)%1']]
-local CHAR3		= [[^'.-[^\](\*)%1']]
-local PREPRO	= "^#.-[^\\]\n"
+local _CHAR1		= "^''"
+local _CHAR2		= [[^'(\*)%1']]
+local _CHAR3		= [[^'.-[^\](\*)%1']]
+local _PREPRO	= "^#.-[^\\]\n"
 local MCOMMENT1	= "^%-%-%[(=*)%[.-%]%1%]"				--Completed Multiline-Comment
 local MCOMMENT2	= "^%-%-%[%[.-.*"						--Incompleted Multiline-Comment
 local SCOMMENT1	= "^%-%-.-\n"							--Completed Singleline-Comment

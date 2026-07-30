@@ -32,12 +32,12 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
     local score_2 = 0
     local score_3 = 0
 
-    local hasMapScript, hasSettings, oldMapLib
+    local hasMapScript, hasSettings
 
     -- script check
 
     if not ignoreChecks then
-        local script1 : Script? = newMap:FindFirstChild("EventScript")
+        local script1 : Script? = newMap:FindFirstChild("EventScript") :: Script
         if script1 and string.find(script1.Source, "workspace.MapTest.GetMapFunctions:Invoke()", 1, true) then
             score_1 += 0.5
         end
@@ -46,7 +46,7 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
         end
     end
 
-    local script2: Script? = newMap:FindFirstChild("MapScript")
+    local script2: Script? = newMap:FindFirstChild("MapScript") :: Script
     if script2 then
         score_3 += 0.5
         hasMapScript = true
@@ -93,7 +93,8 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
             score_1 += 0.1
         end
 
-        if newMap:FindFirstChild("Features") and newMap.Features:FindFirstChild("StunObjects") and newMap.Features:FindFirstChild("Interactives") and newMap.Features:FindFirstChild("Buttons") and newMap.Features:FindFirstChild("Triggers") then
+        local features = newMap:FindFirstChild("Features")
+        if features and newMap:FindFirstChild("Features") and features:FindFirstChild("StunObjects") and features:FindFirstChild("Interactives") and features:FindFirstChild("Buttons") and features:FindFirstChild("Triggers") then
             score_2 += 0.25
         end
 
@@ -108,10 +109,13 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
             score_2 += 0.125
         end
 
-        if newMap:FindFirstChild("Intro") and newMap:FindFirstChild("Intro"):IsA("Model") then
+        local intro = newMap:FindFirstChild("Intro")
+        if intro and intro:IsA("Model") then
             score_2 += 0.125
         end
-        if newMap:FindFirstChild("BGMLists") and (newMap.BGMLists:FindFirstChild("FE2Classic") or newMap.BGMLists:FindFirstChild("LiquidBreakout")) then
+
+        local bgmLists = newMap:FindFirstChild("BGMLists")
+        if bgmLists and (bgmLists:FindFirstChild("FE2Classic") or bgmLists:FindFirstChild("LiquidBreakout")) then
             score_2 += 0.125
         end
         
@@ -120,8 +124,12 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
             score_2 += 0.125
         end
 
-        if newMap:FindFirstChild("EndPole", true) and newMap:FindFirstChild("EndPole", true):FindFirstChild("RopePiece")
-        and newMap:FindFirstChild("StartPole", true) and newMap:FindFirstChild("StartPole", true):FindFirstChild("RopePiece") then
+        local startPole = newMap:FindFirstChild("StartPole", true)
+        local endPole = newMap:FindFirstChild("EndPole", true)
+        if 
+            endPole and endPole:FindFirstChild("RopePiece")
+            and startPole and startPole:FindFirstChild("RopePiece") 
+        then
             score_2 += 0.125
         end
     end 
@@ -131,11 +139,11 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
             return false, "Unknown map type detected. This plugin was designed to aid with TRIA.os mapmaking."
         end
 
-        if not newMap:FindFirstChild("Spawn", true) then
+        if not (newMap :: Instance):FindFirstChild("Spawn", true) then
             return false, "No spawn point found. Add a part named 'Spawn', and add it into the Special folder or map model. "
         end
 
-        if not newMap:FindFirstChild("ExitRegion", true) then
+        if not (newMap :: Instance):FindFirstChild("ExitRegion", true) then
             return false, "No ExitRegion found. Add a part named 'ExitRegion', and add it into the Special folder or map model. "
         end
 
@@ -153,8 +161,8 @@ function MapSelect:IsTriaMap(newMap: Instance, ignoreChecks: boolean?): (boolean
     return false, "Invalid map model format. Must be a 'Model', 'Folder', or unparented in the workspace."
 end
 
-function MapSelect:SetMap(newMap: Model | Workspace?): boolean
-    if newMap then -- add or change selection
+function MapSelect:SetMap(newMap: Instance?): boolean
+    if newMap ~= nil then -- add or change selection
         local success, message = self:IsTriaMap(newMap)
 
         if not success then
@@ -164,6 +172,8 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             self:ResetSelection()
             return false
         end
+
+        local mapSettings = newMap:FindFirstChild("Settings")
 
         self.selectCancelColor:set(Theme.ErrorText.Default:get(false))
         self.selectTextColor:set(Theme.MainText.Default:get(false))
@@ -180,10 +190,10 @@ function MapSelect:SetMap(newMap: Model | Workspace?): boolean
             thing.Sandboxed = false
         end
 
-        self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
+        self.selectTextState:set(mapSettings.Main:GetAttribute("Name"))
 
-        local nameChangedSignal; nameChangedSignal = newMap.Settings.Main:GetAttributeChangedSignal("Name"):Connect(function()
-            self.selectTextState:set(newMap.Settings.Main:GetAttribute("Name"))
+        local nameChangedSignal; nameChangedSignal = mapSettings.Main:GetAttributeChangedSignal("Name"):Connect(function()
+            self.selectTextState:set(mapSettings.Main:GetAttribute("Name"))
         end)
         Util.MapMaid:GiveTask(nameChangedSignal)
 
@@ -367,8 +377,8 @@ function MapSelect:StartMapSelection()
                     humanoid.Parent = target
                 end
 
-                local isMap, text = self:IsTriaMap(target)
-                mapHighlight.FillColor = isMap and Color3.fromRGB(168, 229, 153) or Color3.fromRGB(245, 130, 130)
+                local isTriaMap = self:IsTriaMap(target)
+                mapHighlight.FillColor = isTriaMap and Color3.fromRGB(168, 229, 153) or Color3.fromRGB(245, 130, 130)
                 mapHighlight.Adornee = target
                 currentTarget = target
             else
@@ -403,9 +413,9 @@ function MapSelect:StopManualSelection()
 end
 
 function MapSelect:AutoSelect(DontSet: boolean?): boolean
-    local isMap, value = self:IsTriaMap(workspace)
+    local isTriaMap = self:IsTriaMap(workspace)
 
-    if isMap then
+    if isTriaMap then
         if not DontSet then
             self:SetMap(workspace)
         end
@@ -414,8 +424,8 @@ function MapSelect:AutoSelect(DontSet: boolean?): boolean
 
     for _, v: Instance in ipairs(workspace:GetChildren()) do
         if v:IsA("Model") or v:IsA("Folder") then
-            isMap, value = self:IsTriaMap(v)
-            if isMap then
+            isTriaMap = self:IsTriaMap(v)
+            if isTriaMap then
                 if not DontSet then
                     self:SetMap(v)
                 end
@@ -428,7 +438,7 @@ function MapSelect:AutoSelect(DontSet: boolean?): boolean
         return false
     end
 
-    if not isMap then
+    if not isTriaMap then
         self:ResetSelection()
         return false
     end

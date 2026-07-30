@@ -2,15 +2,16 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
 local Package = script.Parent
-local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
-local Components = require(Resources.Components)
-local Theme = require(Resources.Themes)
-
+--< Imports >--
+local Fusion = require(Package.Resources.Fusion)
+local Components = require(Package.Resources.Components)
+local Theme = require(Package.Resources.Themes)
 local Util = require(Package.Util)
 
+--< Variables >--
 local New = Fusion.New
 local Children = Fusion.Children
 local Value = Fusion.Value
@@ -45,6 +46,9 @@ local chosenColor = Value(Color3.fromRGB(255, 255, 255))
 local colorChosen = Util.Signal.new()
 
 local ColorWheel = {}
+
+
+--< Main >--
 
 local function updateColor()
     local currentColor = chosenColor:get(false)
@@ -152,9 +156,10 @@ function ColorWheel:GetUI(): Instance
         BackgroundColor3 = Color3.fromRGB(0, 0, 0),
         Size = UDim2.new(1, 0, 1, -76),
         Position = UDim2.fromOffset(0, 52),
-        Visible = visible,
         Name = "ColorWheel",
-    
+        
+        Visible = visible,
+
         [Children] = {
             New "ImageLabel" {
                 BackgroundTransparency = 1,
@@ -174,21 +179,24 @@ function ColorWheel:GetUI(): Instance
                 }
             },
             New "Frame" {
-                BackgroundColor3 = Theme.ColorPickerFrame.Default,
-                BorderColor3 = Theme.Border.Default,
                 BorderSizePixel = 1,
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 Position = UDim2.fromScale(0.5, 0.5),
                 Size = UDim2.new(1, -36, 0, 128),
 
+                BackgroundColor3 = Theme.ColorPickerFrame.Default,
+                BorderColor3 = Theme.Border.Default,
+
                 [Children] = {
                     Components.Constraints.UIAspectRatio(0.75, Enum.AspectType.ScaleWithParentSize),
                     Components.Constraints.UISizeConstraint(Vector2.new(169, 169), Vector2.new(256, 256)),
+
                     New "ImageLabel" { -- Wheel
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         Position = UDim2.fromScale(0.4, 0.395),
                         Size = UDim2.fromScale(0.7, 0.6),
                         Image = "rbxassetid://6916730280",
+
                         BackgroundColor3 = Theme.Border.Default,
                         ImageColor3 = Computed(function(): Color3
                             if not chosenColor:get() then
@@ -205,6 +213,7 @@ function ColorWheel:GetUI(): Instance
                             Components.Constraints.UIAspectRatio(1),
                             Components.Constraints.UICorner(0.5, 0),
                             Components.Constraints.UIStroke(2.5, Theme.Border.Default),
+
                             New "Frame" {
                                 BackgroundColor3 = Color3.fromRGB(255, 230, 40),
                                 BorderColor3 = Color3.fromRGB(179, 162, 28),
@@ -224,11 +233,9 @@ function ColorWheel:GetUI(): Instance
                                         updatePos("Wheel")
                                     end
                                 end,
-
                                 [OnEvent "MouseButton1Up"] = function()
                                     mouseDownWheel:set(false)
                                 end,
-
                                 [OnEvent "MouseButton1Down"] = function()
                                     local relativeMousePos = Util.Widget:GetRelativeMousePosition()
                                     local mousePos = relativeMousePos - wheelData.Position:get(false)
@@ -239,13 +246,13 @@ function ColorWheel:GetUI(): Instance
                                         updatePos("Wheel")
                                     end
                                 end,
-
                                 [OnEvent "MouseLeave"] = function()
                                     mouseDownWheel:set(false)
                                 end,
                             }
                         }
                     },
+
                     Components.MiniTopbar { -- Top bar
                         Text = "Select Color",
                         ZIndex = 10,
@@ -254,21 +261,24 @@ function ColorWheel:GetUI(): Instance
                             colorChosen:Fire()
                         end,
                     },
+                
                     New "Frame" { -- Slider
                         AnchorPoint = Vector2.new(0, 0.5),
-                        BorderColor3 = Theme.Border.Default,
                         BorderSizePixel = 2,
                         Position = UDim2.fromScale(0.84, 0.398),
                         Size = UDim2.fromScale(0.063, 0.531),
+                        
+                        BorderColor3 = Theme.Border.Default,
 
                         [Out "AbsolutePosition"] = sliderData.Position,
                         [Out "AbsoluteSize"] = sliderData.Size,
 
                         [Children] = {
                             Components.Constraints.UIGradient(Computed(function(): ColorSequence
-                                local H, S, V = (chosenColor:get() or Color3.new()):ToHSV()
+                                local H, S, _V = (chosenColor:get() or Color3.new()):ToHSV()
                                 return ColorSequence.new(Color3.new(0, 0, 0), Color3.fromHSV(H, S, 1))
                             end), nil, 270),
+
                             New "Frame" {
                                 BackgroundColor3 = Color3.fromRGB(255, 230, 40),
                                 BorderColor3 = Color3.fromRGB(179, 162, 28),
@@ -290,11 +300,9 @@ function ColorWheel:GetUI(): Instance
                                         updatePos("Slider")
                                     end
                                 end,
-
                                 [OnEvent "MouseButton1Up"] = function()
                                     mouseDownSlider:set(false)
                                 end,
-
                                 [OnEvent "MouseButton1Down"] = function()
                                     local relativeMousePos = Util.Widget:GetRelativeMousePosition()
                                     local mousePos = sliderData.Position:get(false) - relativeMousePos
@@ -303,13 +311,13 @@ function ColorWheel:GetUI(): Instance
                                         updatePos("Slider")
                                     end
                                 end,
-
                                 [OnEvent "MouseLeave"] = function()
                                     mouseDownSlider:set(false)
                                 end,
                             }
                         }
                     },
+
                     New "Frame" { -- Color Display
                         BackgroundColor3 = chosenColor,
                         BorderSizePixel = 1,
@@ -317,6 +325,7 @@ function ColorWheel:GetUI(): Instance
                         Size = UDim2.fromScale(0.256, 0.192),
                         Position = UDim2.fromScale(0.05, 0.698),
                     },
+
                     New "Frame" { -- Values
                         BackgroundTransparency = 1,
                         Position = UDim2.fromScale(0.339, 0.698),
@@ -325,6 +334,7 @@ function ColorWheel:GetUI(): Instance
 
                         [Children] = {
                             Components.Constraints.UIGridLayout(UDim2.fromScale(0.475, 0.25), UDim2.fromOffset(6, 6), Enum.FillDirection.Vertical),
+
                             ForPairs({"R", "G", "B"}, function(index: number, value: string): (number, Instance)
                                 return index, getColorDisplay {
                                     LayoutOrder = value == "R" and 1 or value == "G" and 2 or 3,
@@ -337,6 +347,7 @@ function ColorWheel:GetUI(): Instance
                                     end
                                 }
                             end, Fusion.cleanup),
+
                             ForPairs({"H", "S", "V"}, function(index: number, value: string): (number, Instance)
                                 return index, getColorDisplay {
                                     LayoutOrder = value == "H" and 4 or value == "S" and 5 or 6,
@@ -358,23 +369,25 @@ function ColorWheel:GetUI(): Instance
                             colorChosen:Fire()
                         end,
                         BackgroundColor3 = Theme.Button.Selected
-                    }, {
+                    },
+                    {
                         Text = "Cancel",
                         Callback = function()
                             chosenColor:set(nil)
                             colorChosen:Fire()
                         end,
                         BackgroundColor3 = Theme.Button.Default
-                    })) {
+                    }))({
                         AnchorPoint = Vector2.new(0, 1)
-                    },
+                    }),
 
                     Components.TextBox { -- Hex input
                         Position = UDim2.fromScale(0.05, 0.92),
                         Size = UDim2.fromScale(0.26, 0.06),
-                        TextColor3 = Theme.MainText.Default,
                         PlaceholderText = "Hex",
                         ZIndex = 9,
+
+                        TextColor3 = Theme.MainText.Default,
                         Text = Computed(function(): string
                             if not chosenColor:get() then
                                 return ""

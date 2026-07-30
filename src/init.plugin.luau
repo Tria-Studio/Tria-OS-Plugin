@@ -1,8 +1,22 @@
---!nocheck
 -- Copyright (C) 2026 TRIA
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+--< Package >--
+local Resources = script.Resources
+local Pages = script.Pages
+
+local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 400)
+local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
+local Toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
+local OpenButton = Toolbar:CreateButton(
+	"TRIA.os Companion Plugin", 
+	"Make mapmaking easy!", 
+	"rbxassetid://12032105372", 
+	"TRIA.os Mapmaker"
+)
+
+--< Services >--
 local ContentProvider = game:GetService("ContentProvider")
 local RunService = game:GetService("RunService")
 
@@ -10,25 +24,11 @@ if RunService:IsRunning() then
 	return
 end
 
-local toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
-local openButton = toolbar:CreateButton(
-	"TRIA.os Companion Plugin", 
-	"Make mapmaking easy!", 
-	"rbxassetid://12032105372", 
-	"TRIA.os Mapmaker"
-)
-
-local widgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 400)
-local widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", widgetInfo)
-
-local Resources = script.Resources
-local Pages = script.Pages
-
+--< Imports >--
 local Fusion = require(Resources.Fusion)
 local Components = require(Resources.Components)
 local Theme = require(Resources.Themes)
 local PageHandler = require(Resources.Components.Pages)
-
 local SettingsUtil = require(Pages.Settings.SettingsUtil)
 
 local MapSelect = require(script.MapSelect)
@@ -38,6 +38,7 @@ local Message = require(script.Message)
 local MenuData = require(script.MenuData)
 local PublicTypes = require(script.PublicTypes)
 
+--< Variables >--
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
@@ -47,14 +48,17 @@ local ForPairs = Fusion.ForPairs
 local Value = Fusion.Value
 local Out = Fusion.Out
 
-widget.Name = "TRIA_PluginSuite"
-widget.Title = "[TRIA] Plugin Suite"
-Util.Widget = widget
+Widget.Name = "TRIA_PluginSuite"
+Widget.Title = "[TRIA] Plugin Suite"
+Util.Widget = Widget
 Util.attemptScriptInjection()
 
-local debugMenu = plugin:CreatePluginMenu(math.random(), "Debug Menu")
+local debugMenu = plugin:CreatePluginMenu(tostring(math.random()), "Debug Menu")
 debugMenu.Name = "Debug Menu"
 debugMenu:AddNewAction("ShowDebug", "Show Debug Menu", "rbxassetid://6022668961")
+
+
+--< Main >--
 
 local function showDebug(bypass)
 	local selectedAction
@@ -108,7 +112,7 @@ local topbarData = {
 
 local mainFrame = New "Frame" {
 	Name = "TRIA.os Plugin",
-	Parent = widget,
+	Parent = Widget,
 	Size = UDim2.fromScale(1, 1),
 	BackgroundColor3 = Theme.MainBackground.Default,
 
@@ -219,7 +223,7 @@ local mainFrame = New "Frame" {
 			end,
 
 			[OnEvent "MouseMoved"] = function()
-				local relativePos = widget:GetRelativeMousePosition()
+				local relativePos = Widget:GetRelativeMousePosition()
 				local mousePos = -(topbarData.absolutePosition:get(false) - relativePos)
 
 				local pages = PageHandler._PageOrder
@@ -342,16 +346,16 @@ local function createDebugViewFolder()
 	Util.MainMaid:GiveTask(folder)
 end
 
-openButton.Click:Connect(function()
-	widget.Enabled = not widget.Enabled
-	Util.PluginActive:set(widget.Enabled)
+OpenButton.Click:Connect(function()
+	Widget.Enabled = not Widget.Enabled
+	Util.PluginActive:set(Widget.Enabled)
 
-	if widget.Enabled then
+	if Widget.Enabled then
 		MapSelect:AutoSelect()
 		createDebugViewFolder()
 	end
 end)
-Util.PluginActive:set(widget.Enabled)
+Util.PluginActive:set(Widget.Enabled)
 
 task.wait()
 if not MapSelect:AutoSelect() then
@@ -360,13 +364,13 @@ end
 createDebugViewFolder()
 
 function unloadPlugin()
-	widget.Enabled = false
-	Util.toggleAudioPerms(nil)
+	Widget.Enabled = false
+	Util.toggleAudioPerms(false)
 	Util.PluginActive:set(false)
     MapSelect._Maid:DoCleaning()
     Util.MainMaid:DoCleaning()
     SettingsUtil.SettingMaid:DoCleaning()
 end
 
-widget:BindToClose(unloadPlugin)
+Widget:BindToClose(unloadPlugin)
 plugin.Unloading:Connect(unloadPlugin)

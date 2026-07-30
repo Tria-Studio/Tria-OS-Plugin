@@ -173,12 +173,12 @@ function Util.deepCopy(t: {}): {}
 	return new
 end
 
-function Util.traverseBranchList(current: {}, branchList: { string }): (boolean, {}, string)
+function Util.traverseBranchList(current, branchList: { string }): (boolean, {}, string)
 	local reachedEnd = false
 	local branchName = ""
 
 	if not current then
-		return false, nil, nil
+		return false, {}, ""
 	end
 
 	for _, branch in ipairs(branchList) do
