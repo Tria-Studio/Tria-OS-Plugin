@@ -1,0 +1,10 @@
+[package]
+name = "do-not-publish/tria-os-plugin"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Signal = "sleitnick/signal@1.5.0"
+Fusion = "krypt102/fusion@0.2.0"
+Maid = "nightcycle/maid@2.2.2"

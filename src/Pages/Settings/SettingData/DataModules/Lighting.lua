@@ -3,7 +3,7 @@
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 local Package = script.Parent.Parent.Parent.Parent.Parent
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Util = require(Package.Util)
 
 local Value = Fusion.Value

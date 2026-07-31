@@ -7,7 +7,7 @@ local Resources = Package.Resources
 
 local PublicTypes = require(Package.PublicTypes)
 local Constraints = require(script.Parent.Constraints)
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Resources.Themes)
 local Util = require(Package.Util)
 

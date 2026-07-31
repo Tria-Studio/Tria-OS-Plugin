@@ -5,7 +5,7 @@
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 
@@ -64,7 +64,7 @@ local function onMapChanged()
     end
 end
 
-local function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictionary, visible: Fusion.StateObject<boolean>): Instance
+local function getStandardDropdown(dirKey: string, dirData: PublicTypes.Dictionary, visible): Instance
     return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {

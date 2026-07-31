@@ -7,7 +7,7 @@ local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
 
 --< Imports >--
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 local Util = require(Package.Util)

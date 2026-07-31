@@ -5,7 +5,7 @@
 local Package = script.Parent
 local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Components = require(Resources.Components)
 local Theme = require(Resources.Themes)
 

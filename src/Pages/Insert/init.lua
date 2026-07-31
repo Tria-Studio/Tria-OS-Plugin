@@ -10,7 +10,7 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local Selection = game:GetService("Selection")
 
 --< Imports >--
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Package.Resources.Themes)
 local Components = require(Package.Resources.Components)
 local MapComponents = require(script.MapComponents)

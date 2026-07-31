@@ -5,7 +5,7 @@
 local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Components = require(Resources.Components)
 
 local Util = require(Package.Util)
@@ -129,7 +129,7 @@ function SettingsUtil.updateStateValue(currentValue: any, newValue: any, tbl: Pu
     end
 end
 
-function SettingsUtil.modifyStateTable(state: Fusion.StateObject<any>, action: string, ...)
+function SettingsUtil.modifyStateTable(state, action: string, ...)
     local newTbl = state:get(false)
     local args = {...}
 

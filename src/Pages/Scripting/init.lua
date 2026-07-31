@@ -10,7 +10,7 @@ local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local Package = script.Parent.Parent
 local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 
@@ -124,7 +124,7 @@ local function OptionFrame(props: PublicTypes.Dictionary): Instance
     }
 end
 
-local function GetScriptButton(state: Fusion.StateObject<boolean>, scriptName: string, layoutOrder: number): Instance
+local function GetScriptButton(state, scriptName: string, layoutOrder: number): Instance
     local activeState = Computed(function(): boolean
         return not state:get() and Util.interfaceActive:get()
     end)
@@ -268,7 +268,7 @@ TRIA Autocomplete adds full support for the entire TRIA.os MapLib into the scrip
                                     then plugin:GetSetting(ENABLE_VAR)  
                                     else true,
                                 
-                                Validate = function(newState: Fusion.StateObject<boolean>): boolean
+                                Validate = function(newState): boolean
                                     if newState:get(false) == true then
                                         return not Util.failedScriptInjection(Util._Errors.AUTOCOMPLETE_ERROR)
                                     end

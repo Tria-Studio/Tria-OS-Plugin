@@ -6,9 +6,9 @@ local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
 local Pages = Resources.Parent.Pages
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local PublicTypes = require(Package.PublicTypes)
-local Signal = require(Package.Util.Signal)
+local Signal = require(Package.Packages.Signal)
 
 local Value = Fusion.Value
 local plugin = script:FindFirstAncestorWhichIsA("Plugin")

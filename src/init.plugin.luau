@@ -25,7 +25,7 @@ if RunService:IsRunning() then
 end
 
 --< Imports >--
-local Fusion = require(Resources.Fusion)
+local Fusion = require(script.Packages.Fusion)
 local Components = require(Resources.Components)
 local Theme = require(Resources.Themes)
 local PageHandler = require(Resources.Components.Pages)

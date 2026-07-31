@@ -8,7 +8,7 @@ local Package = script.Parent.Parent.Parent
 --< Imports >--
 local PublicTypes = require(Package.PublicTypes)
 local Components = require(Package.Resources.Components)
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Util = require(Package.Util)
 local Dropdown = require(script.Parent)
 

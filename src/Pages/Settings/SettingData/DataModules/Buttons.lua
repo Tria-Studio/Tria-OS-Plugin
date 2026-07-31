@@ -5,7 +5,7 @@
 local HttpService = game:GetService("HttpService")
 local Package = script.Parent.Parent.Parent.Parent.Parent
 
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Util = require(Package.Util)
 local Components = require(Package.Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
@@ -145,7 +145,7 @@ local function insertButtonFolders()
 end
 
 local buttonVisibleMap = {}
-function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
+function Data:getDropdown(visible): Instance
 	return Components.DropdownHolderFrame {
         DropdownVisible = visible,
         Children = {
@@ -160,7 +160,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                     Display = itemName, 
                     LayoutOrder = data.Name == "Default" and 1 or data.Name == "Group" and 2 or 3,
 
-                }, function(isSectionVisible: Fusion.StateObject<boolean>): Instance
+                }, function(isSectionVisible): Instance
                     if buttonVisibleMap[data.ID] then
                         isSectionVisible:set(buttonVisibleMap[data.ID])
                     else

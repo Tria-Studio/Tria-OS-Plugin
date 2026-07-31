@@ -11,7 +11,7 @@ local Players = game:GetService("Players")
 --< Imports >--
 local Util = require(Package.Util)
 local TagUtil = require(Package.Util.TagUtils)
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 
 --< Variables >--
 local Value = Fusion.Value

@@ -2,11 +2,13 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+local Package = script.Parent.Parent
 local Resources = script.Parent
-local Fusion = require(Resources.Fusion)
+
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Resources.Themes)
 local Util = require(Resources.Parent.Util)
-local lerpType = require(Resources.Fusion.Animation.lerpType)
+local lerpType = require(Package.Packages._Index["krypt102_fusion@0.2.0"].fusion.Animation.lerpType)
 local PublicTypes = require(Resources.Parent.PublicTypes)
 
 local Pages = require(script.Pages)

@@ -14,7 +14,11 @@
         "$className": "Folder",
         
         "Main": {
-            "$path": "src"
+            "$path": "src",
+
+            "Packages": {
+                "$path": "Packages"
+            }
         }
       }
     }

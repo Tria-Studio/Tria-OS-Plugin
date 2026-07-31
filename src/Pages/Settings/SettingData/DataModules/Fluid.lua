@@ -6,7 +6,7 @@ local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local HttpService = game:GetService("HttpService")
 local Package = script.Parent.Parent.Parent.Parent.Parent
 
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Util = require(Package.Util)
 local Components = require(Package.Resources.Components)
 local PublicTypes = require(Package.PublicTypes)
@@ -180,7 +180,7 @@ end
 
 local liquidVisibleMap = {}
 
-function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
+function Data:getDropdown(visible): Instance
     local index = 0
 
 	return Components.DropdownHolderFrame {
@@ -221,7 +221,7 @@ function Data:getDropdown(visible: Fusion.StateObject<boolean>): Instance
                         liquid.Name = newHeader
                     end
 
-                }, function(isSectionVisible: Fusion.StateObject<boolean>): Instance
+                }, function(isSectionVisible): Instance
                     if liquidVisibleMap[data.ID] then  
                         isSectionVisible:set(liquidVisibleMap[data.ID])
                     else

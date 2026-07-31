@@ -2,7 +2,7 @@
 -- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
 -- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-local Fusion = require(script.Parent.Fusion)
+local Fusion = require(script.Parent.Parent.Packages.Fusion)
 local Util = require(script.Parent.Parent.Util)
 
 local Value = Fusion.Value

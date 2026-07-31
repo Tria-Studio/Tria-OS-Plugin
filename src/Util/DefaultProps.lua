@@ -1,11 +1,15 @@
---!strict
+-- Copyright (C) 2026 TRIA
+-- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
+-- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
---[[
-	Stores 'sensible default' properties to be applied to instances created by
-	the New function.
-]]
+--< Package
+local Package = script.Parent.Parent
 
-return {
+--< Imports >--
+local DefaultProps = require(Package.Packages._Index["krypt102_fusion@0.2.0"].fusion.Instances.defaultProps)
+
+--< Constants >--
+local DEFAULT_PROPS = {
 	ScreenGui = {
 		ResetOnSpawn = false,
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -107,3 +111,13 @@ return {
 		BorderSizePixel = 0
 	}
 }
+
+
+--< Main >--
+
+table.clear(DefaultProps)
+for i, v in pairs(DEFAULT_PROPS) do
+    DefaultProps[i] = v
+end
+
+return nil

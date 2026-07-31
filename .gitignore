@@ -9,6 +9,10 @@ sourcemap.json
 *.rbxlx.lock
 *.rbxl.lock
 
+# Wally
+wally.lock
+Packages
+
 # count
 .VSCodeCounter
 

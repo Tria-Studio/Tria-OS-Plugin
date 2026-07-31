@@ -6,7 +6,7 @@
 local Package = script.Parent.Parent.Parent
 
 --< Imports >--
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Util = require(Package.Util)
 
 --< Variables >--

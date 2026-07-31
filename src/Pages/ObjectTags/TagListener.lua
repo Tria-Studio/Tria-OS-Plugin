@@ -9,7 +9,7 @@ local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
 local UtilModule = Package.Util
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Resources.Themes)
 local Components = require(Resources.Components)
 local Pages = require(Resources.Components.Pages)

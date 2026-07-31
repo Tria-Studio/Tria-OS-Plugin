@@ -7,7 +7,7 @@ local SettingTypes = {}
 local Package = script.Parent.Parent.Parent
 local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Components = require(Resources.Components)
 local Theme = require(Resources.Themes)
 
@@ -41,7 +41,7 @@ local function canEditSetting(data: PublicTypes.Dictionary): boolean
     return (not isErrored)
 end
 
-function BaseSettingButton(data: PublicTypes.Dictionary): (Instance, Fusion.StateObject<Color3>, Fusion.StateObject<boolean>)
+function BaseSettingButton(data: PublicTypes.Dictionary)
     local backgroundColor = Value(Theme.MainBackground.Default:get(false))
     local mouseInside = Value(false)
     local settingFrame = Value()

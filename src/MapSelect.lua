@@ -8,7 +8,7 @@ local Selection = game:GetService("Selection")
 local Package = script.Parent
 local Resources = Package.Resources
 
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Theme = require(Resources.Themes)
 local Pages = require(Resources.Components.Pages)
 

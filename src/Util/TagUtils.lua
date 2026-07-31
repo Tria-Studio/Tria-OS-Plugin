@@ -5,7 +5,7 @@
 local Package = script.Parent.Parent
 local Players = game:GetService("Players")
 
-local Fusion = require(Package.Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local TagData = require(Package.Pages.ObjectTags.TagData)
 local Util = require(script.Parent)
 local PublicTypes = require(Package.PublicTypes)

@@ -13,11 +13,12 @@ local RunService = game:GetService("RunService")
 local Selection = game:GetService("Selection")
 
 --< Imports >--
-local Fusion = require(Resources.Fusion)
+local Fusion = require(Package.Packages.Fusion)
 local Pages = require(Resources.Components.Pages)
 
-local Maid = require(script.Maid)
-local Signal = require(script.Signal)
+local Maid = require(Package.Packages.Maid)
+local Signal = require(Package.Packages.Signal)
+require(script.DefaultProps)
 
 --< Constants >--
 local GITHUB_URL = "https://www.githubstatus.com/api/v2/status.json"
