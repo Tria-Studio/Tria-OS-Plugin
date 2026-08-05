@@ -292,6 +292,16 @@ return {
 
                 Color = Color3.fromRGB(19, 241, 130),
                 ObjectType = "SelectionBox",
+            },
+            {
+                TagType = "NoChild",
+                Name = "Checkpoint",
+                LayoutOrder = 16,
+                DisplayIcon = "rbxassetid://78235736615112",
+                UsesAllInstances = true,
+
+                Color = Color3.fromRGB(183, 244, 255),
+                ObjectType = "SelectionBox",
             }
         },
         Tooltip = {

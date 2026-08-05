@@ -47,6 +47,7 @@ local newTagTypes = {
 	Teleport = { "ActionTags" },
 	_Kill = { "ActionTags" },
 	_Detail = { "DetailTag" },
+    Checkpoint = { "CheckpointTag" },
 	Zipline = { "ModelTags" },
 	Rail = { "ModelTags" },
 	_Button = { "ModelTags" },
@@ -105,6 +106,9 @@ local tagTypes = {
 	DetailTag = { -- Parented to the detail folder
 		"_Detail",
 	},
+    CheckpointTag = {
+        "Checkpoint"
+    },
 	ModelTags = { -- They are a model named this and stuff
 		"Zipline",
 		"_Button",
@@ -381,6 +385,11 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			end
 		end
 
+        function methods.CheckpointParent()
+            verifyFolder()
+			part.Parent = currentMap.Geometry
+        end
+
 		function methods.DetailParent()
 			verifyFolder()
 			part.Parent = currentMap.Geometry
@@ -412,14 +421,23 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			methods[method]()
 		end
 	else -- Assign new tag
+        if newTag == "Checkpoint" and isOptimized and not isOptimized:FindFirstChild("Checkpoint") then
+            local folder = Instance.new("Folder")
+            folder.Name = "Checkpoint"
+            folder.Parent = isOptimized
+        end
+
 		local newParent = if table.find(tagsBypassParent, newTag) then part.Parent 
 			elseif isOptimized
 				and table.find(tagTypes.ButtonTags, newTag)
 				and isOptimized:FindFirstChild("Button")
 			then isOptimized.Button
 			elseif
-				newTag == "_Liquid" or newTag == "_Gas" and isOptimized:FindFirstChild("Fluid")
+                newTag == "_Liquid" or newTag == "_Gas" and isOptimized:FindFirstChild("Fluid")
 			then isOptimized.Fluid
+            elseif 
+                newTag == "Checkpoint" and isOptimized:FindFirstChild("Checkpoint")
+            then isOptimized.Checkpoint
 			elseif
 				string.find(newTag, "_Waterjet", 1, true) and isOptimized:FindFirstChild("Waterjets")
 			then isOptimized.Waterjets
@@ -452,6 +470,13 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			verifyFolder("Detail")
 			part.Parent = currentMap.Detail
 		end
+
+        function methods.CheckpointParent()
+            part.Parent = newParent
+            if part.Name == "Part" then
+                part.Name = `Checkpoint{#newParent:GetChildren()}`
+            end
+        end
 
 		function methods.Child()
 			verifyFolder()
@@ -545,6 +570,12 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 		end
 		return false
 	end
+
+    function types.CheckpointTag(): boolean?
+        local special = Util.mapModel:get():FindFirstChild("Special")
+        local checkpointFolder = special and special:FindFirstChild("Checkpoint")
+        return checkpointFolder and part:IsDescendantOf(checkpointFolder)
+    end
 
 	function types.DetailTag(): boolean?
 		local detailFolder = Util.mapModel:get():FindFirstChild("Detail")

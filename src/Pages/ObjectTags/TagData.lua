@@ -1313,6 +1313,21 @@ Metadata:
     <font size="15"><b>Override: </b></font>When true, the players oxygen will get set to the value in Amount.]]
             },
         },
+        Checkpoint = {
+            DisplayText = "Checkpoint",
+            ActionText = nil,
+            DisplayIcon = "rbxassetid://78235736615112", 
+            LayoutOrder = 21,
+            metadata = {},
+            ApplyMethod = "CheckpointParent",
+            IsTagApplicable = true,
+            OnlyBaseParts = true,
+
+            Tooltip = {
+                Header = "Checkpoints",
+                Text = "Checkpoints are invisible nodes that allow you to teleport to different parts of your map in Unverified Servers using Practice Tools."
+            },
+        },
     },
     addonTags = {}
 }
