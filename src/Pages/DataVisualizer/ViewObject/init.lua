@@ -64,7 +64,7 @@ function ViewObject:Enable()
 
 	local function HandleUpdates(part)
 		local MaidIndex = self.ObjectHandler.Objects[part].MaidIndex
-        local index1, index2, index3
+        local index1, index2
 
 		local function UpdatePart()
 			if not TagUtil:PartHasTag(part, self.Tag) or not part:IsDescendantOf(Util.mapModel:get()) then
@@ -103,19 +103,9 @@ function ViewObject:Enable()
 			index1 = self._Maid:GiveTask(part:GetAttributeChangedSignal("_action"):Connect(UpdatePart))
 		end
 
-		function TagTypes.Addon()
-			index3 = self._Maid:GiveTask(Util._Addons.AddonRemoved:Connect(function(removedTag)
-				if removedTag == self.Tag then
-					UpdatePart()
-				end
-			end))
-			TagTypes.Any()
-		end
-
 		TagTypes[self.TagType]()
         table.insert(self.ObjectHandler.Objects[part].MaidIndex, index1)
         table.insert(self.ObjectHandler.Objects[part].MaidIndex, index2)
-        table.insert(self.ObjectHandler.Objects[part].MaidIndex, index3)
 	end
 
 	self._Maid:GiveTask(TagUtil.OnTagAdded(self.Tag):Connect(function(...)

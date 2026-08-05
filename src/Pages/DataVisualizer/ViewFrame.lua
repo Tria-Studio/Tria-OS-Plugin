@@ -156,9 +156,7 @@ return function(name: string, data: PublicTypes.Dictionary)
         Name = name,
         
         BackgroundColor3 = Theme.ScrollBarBackground.Default,
-        Visible = if name == "AddonView" then Computed(function(): boolean
-            return Util._Addons.hasAddonsWithObjectTags:get() ~= false
-        end) elseif name == "RailView" then false else true,
+        Visible = name ~= "RailView",
 
         [Children] = {
             Components.Constraints.UIPadding(nil, nil, UDim.new(0, 56), nil),
@@ -292,10 +290,6 @@ return function(name: string, data: PublicTypes.Dictionary)
                             
                             BorderColor3 = Theme.Border.Default,
                             TextColor3 = Theme.MainText.Default,
-                            
-                            Visible = name == "AddonView" and Computed(function(): boolean
-                                return Util._Addons[metadata.Name == "_Waterjet" and "hasWaterjet"]:get() ~= false
-                            end) or true,
 
                             [OnEvent "Activated"] = function()
                                 if not Util.isPluginFrozen() then

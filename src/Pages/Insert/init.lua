@@ -25,7 +25,6 @@ local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Computed = Fusion.Computed
 local ForValues = Fusion.ForValues
-local Out = Fusion.Out
 
 local frame = {}
 
@@ -184,39 +183,7 @@ local function GetAssetButton(data: PublicTypes.Dictionary): Instance
     }
 end
 
-local function updateMapScriptChildren()
-    local newValues = {
-        Waterjets = false,
-    }
-
-    local currentMap = Util.mapModel:get(false)
-    for i, thing in pairs(currentMap and currentMap.MapScript:GetChildren() or {}) do
-        if thing:IsA("ModuleScript") then
-            local addons = {}
-
-            function addons.Waterjets(): boolean
-                local success, module = pcall(function()
-                    return thing.Name == "Waterjets" and require(thing)
-                end)
-                return success and module and module.SetFanEnabled == 0 and thing:FindFirstChild("WaterjetClient")
-            end
-
-            if addons[thing.Name] then
-                newValues[thing.Name] = addons[thing.Name]()
-            end
-        end
-    end
-
-    if Util._Addons.hasWaterjet:get() and not newValues.Waterjets then
-        Util._Addons.AddonRemoved:Fire("_Waterjet")
-    end
-    Util._Addons.hasWaterjet:set(newValues.Waterjets)
-    Util._Addons.hasAddonsWithObjectTags:set(newValues.Waterjets)
-end
-
 function frame:GetFrame(data: PublicTypes.Dictionary): Instance
-    local AddonFrameSize = Value()
-
     return New "Frame" {
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Theme.TableItem.Default,
@@ -224,7 +191,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
         Name = "Insert",
 
         [Children] = {
-            Components.PageHeader("Resources & Addons"),
+            Components.PageHeader("Map Resources"),
             Components.ScrollingFrame ({
                 BackgroundColor3 = Theme.TableItem.Default,
                 BackgroundTransparency = 0,
@@ -274,45 +241,6 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 
                         [Children] = {
                             Components.Constraints.UIListLayout(),
-                            -- Components.FrameHeader("Featured Map Addons", 1, nil, nil, "Featured assets created by the community for use in mapmaking.", 2),
-                            New "Frame" {
-                                [Out "AbsoluteSize"] = AddonFrameSize,
-                                Size = UDim2.new(1, 0, 0, 0),
-                                AutomaticSize = Enum.AutomaticSize.Y,
-                                LayoutOrder = 2,
-                                BackgroundTransparency = 1,
-                                
-                                [Children] = {
-                                    New "Frame" {
-                                        Size = UDim2.fromScale(1, 1),
-                                        BackgroundTransparency = 1,
-                                        AutomaticSize = Enum.AutomaticSize.Y,
-
-                                        [Children] = {
-                                            Components.Constraints.UIGridLayout(UDim2.new(0, 140, 0, 79), UDim2.new(0, 6, 0, 6), Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center),
-                                            Components.Constraints.UIPadding(UDim.new(0, 6), UDim.new(0, 6)),
-                                            ForValues(MapComponents.Addons, function(data: PublicTypes.Dictionary): Instance
-                                                return GetAssetButton {
-                                                    OverlayImage = data.Icon,
-                                                    OverlayImageTransparency = 0,
-                                                    Name = data.Name,
-                                                    Creator = data.Creator,
-                                                    FullSize = true,
-                                                    Tooltip = data.Tooltip,
-                                                    ActivatedFunction = function()
-                                                        if Util.mapModel:get(false) then
-                                                            data.InsertFunction()
-                                                        else
-                                                            Util:ShowMessage("Cannot insert map addons", "Please select a map to continue inserting map addons. \n\nHowever, you can insert a map kit whenever!")
-                                                        end
-                                                    end,
-                                                    LayoutOrder = data.LayoutOrder,
-                                                }
-                                            end, Fusion.cleanup)
-                                        }
-                                    }
-                                },
-                            },
                             Components.FrameHeader("Map Components", 3, nil, nil, "These are common map components which can be found in most maps.", 2),
                             New "Frame" {
                                 Size = UDim2.new(1, 0, 0, 0),
@@ -390,17 +318,7 @@ function frame:GetFrame(data: PublicTypes.Dictionary): Instance
 end
 
 function frame.OnClose()
-    updateMapScriptChildren()
 end
 
-Util.MapChanged:Connect(function()
-    local currentMap = Util.mapModel:get(false)
-    if currentMap then
-        task.wait()
-        Util.MapMaid:GiveTask(currentMap.MapScript.ChildAdded:Connect(updateMapScriptChildren))
-        Util.MapMaid:GiveTask(currentMap.MapScript.ChildRemoved:Connect(updateMapScriptChildren))
-        updateMapScriptChildren()
-    end
-end)
 
 return frame

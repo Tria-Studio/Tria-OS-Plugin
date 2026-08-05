@@ -42,7 +42,6 @@ local function getInsertFolder(specialChildName: string): Instance
 end
 
 return {
-    Addons = {},
     Components = {
 
         {

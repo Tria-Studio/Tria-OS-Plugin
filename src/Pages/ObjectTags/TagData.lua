@@ -1329,7 +1329,6 @@ Metadata:
             },
         },
     },
-    addonTags = {}
 }
 
 return data

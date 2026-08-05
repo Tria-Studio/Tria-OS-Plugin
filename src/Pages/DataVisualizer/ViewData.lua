@@ -369,16 +369,4 @@ return {
             Text = ""
         }
     },
-
-    AddonView = {
-        DisplayText = "Map Addons View",
-        SubText = "All Addon Tags",
-        DisplayIcon = "rbxassetid://6023565892",
-        LayoutOrder = 7,
-        ViewOptions = {},
-        Tooltip = {
-            Header = "Map Addons View",
-            Text = "Because the selected map has map addons that support Event & Item Tags, those tags can be visualized below."
-        }
-    },
 }

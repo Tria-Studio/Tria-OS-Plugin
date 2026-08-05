@@ -53,7 +53,6 @@ local newTagTypes = {
 	_Button = { "ModelTags" },
 	AirTank = { "ModelTags" },
 	Orb = { "ModelTags" },
-	_Waterjet = { "AddonTags" },
     Gravity = { "ActionTags" },
     Cancel = { "ActionTags" },
     BouncePad = { "ActionTags" },
@@ -120,7 +119,6 @@ local tagTypes = {
 			_Button = "_Button%d",
 		},
 	},
-	AddonTags = {},
 }
 local tagsWithNumbers = {
 	"_Button",
@@ -235,7 +233,6 @@ function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicT
 				tagInstance.Name = (
 					TagData.dataTypes.buttonTags[tag]
 					or TagData.dataTypes.objectTags[tag]
-					or TagData.dataTypes.addonTags[tag]
 				)._nameStub .. newValue or 0
 			end
 		end
@@ -279,7 +276,6 @@ function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
 	local data = TagData.metadataTypes[tag]
 	local mainData = TagData.dataTypes.buttonTags[name]
 		or TagData.dataTypes.objectTags[name]
-		or TagData.dataTypes.addonTags[name]
 	local types = {}
 
 	function types.Attribute(): any
@@ -356,7 +352,6 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 	local isOptimized = currentMap:FindFirstChild("Special")
 	local tagData = TagData.dataTypes.objectTags[newTag or oldTag]
 		or TagData.dataTypes.buttonTags[newTag or oldTag]
-		or TagData.dataTypes.addonTags[newTag or oldTag]
 	local methods = {}
 
 	if not newTag then -- Clear tag
@@ -411,7 +406,6 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 
 		local tagData = TagData.dataTypes.buttonTags[oldTag]
 			or TagData.dataTypes.objectTags[oldTag]
-			or TagData.dataTypes.addonTags[oldTag]
 		for _, metaData in ipairs(tagData.metadata) do
 			tagUtils:SetPartMetaData(part, oldTag, metaData, nil)
 		end
@@ -496,7 +490,6 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 		tagUtils.OnTagAdded(newTag):Fire(part)
 		local tagData = TagData.dataTypes.buttonTags[newTag]
 			or TagData.dataTypes.objectTags[newTag]
-			or TagData.dataTypes.addonTags[newTag]
 		if not tagData._instanceType then
 			for _, metaData in ipairs(tagData.metadata) do
 				tagUtils:SetPartMetaData(part, newTag, metaData, metaData.data.default)
@@ -535,10 +528,6 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 			return true
 		end
 		return false
-	end
-
-	function types.AddonTags(): boolean?
-		return string.find(part.Name, tag, 1, true)
 	end
 
 	function types.ActionTags(): boolean?

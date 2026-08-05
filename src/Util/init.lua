@@ -62,11 +62,6 @@ local Util = {
     AudioPerms = false,
     AudioPermsToggled = Signal.new(),
 
-    _Addons = {
-        AddonRemoved = Signal.new(),
-        hasAddonsWithObjectTags = Value(false),
-        hasWaterjet = Value(false),
-    },
     _Slider = {
         isUsingSlider = Value(false),
         currentSlider = Value(nil)

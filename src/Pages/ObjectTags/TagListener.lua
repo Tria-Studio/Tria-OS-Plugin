@@ -44,7 +44,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
         local selectedParts = Util._Selection.selectedParts:get()
         local active = Util.objectTagsActive:get()
 
-        if not active or not Util._Addons.hasAddonsWithObjectTags:get() and (name == "_Teleporter" or name == "_Waterjet") then
+        if not active then
             return false
         end
 
@@ -63,7 +63,6 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
         LayoutOrder = data.LayoutOrder,
         Size = UDim2.new(1, 0, 0, 4),
         Name = name,
-        Visible = if name == "_Waterjet" then Util._Addons.hasWaterjet else true,
 
         [Children] = New "Frame" {
             BackgroundColor3 = Theme.Button.Default,    
@@ -90,7 +89,7 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                         local partError = false
 
                         if #Util._Selection.selectedParts:get(false) > 0 then
-                            local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name] or TagData.dataTypes.addonTags[name]
+                            local tagData = TagData.dataTypes.objectTags[name] or TagData.dataTypes.buttonTags[name]
                             if not tagData.IsTagApplicable then -- Buttons, ziplines, and airtanks cannot be assigned or removed
                                 Util:ShowMessage("Cannot Set Tag", string.format("The following tag '%s' cannot be assigned or removed from other parts because these are more complex models.<br /><br />See the Insert page to add these map components to your map.", name), {
                                     Text = "Take me there",
