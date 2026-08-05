@@ -247,12 +247,17 @@ return function(name: string, data: PublicTypes.Dictionary): Instance
                                                         or dataValue:get()
 
                                                     local recording = ChangeHistoryService:TryBeginRecording("ChangeMetadata", string.format("Set metadata %s on %d part%s to %s", metadataType.data.displayName, #Util._Selection.selectedParts:get(false), #Util._Selection.selectedParts:get(false) == 1 and "" or "s", tostring(stringTagValue)))
-                                                    
+
                                                     if recording then
+                                                        local success, err = pcall(function(...)
+                                                            dataValue:set(value)
+                                                            for _, selected: Instance in ipairs(Util._Selection.selectedParts:get()) do 
+                                                                TagUtils:SetPartMetaData(selected, name, metadataType, value)
+                                                            end
+                                                        end)
                                                         
-                                                        dataValue:set(value)
-                                                        for _, selected: Instance in ipairs(Util._Selection.selectedParts:get()) do 
-                                                            TagUtils:SetPartMetaData(selected, name, metadataType, value)
+                                                        if not success then
+                                                            warn("[TRIA] Error applying metadata:", err)
                                                         end
 
                                                         ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
