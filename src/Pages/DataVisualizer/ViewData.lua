@@ -235,7 +235,7 @@ return {
             },
             {
                 TagType = "Any",
-                Name = "Teleporter",
+                Name = "Teleport",
                 LayoutOrder = 11,
                 DisplayIcon = "rbxassetid://6031082527",
                 UsesAllInstances = true,

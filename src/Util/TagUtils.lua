@@ -44,7 +44,7 @@ local newTagTypes = {
 	_Gas = { "ObjectTags" },
 	_SpeedBooster = { "ActionTags" },
 	_JumpBooster = { "ActionTags" },
-	Teleporter = { "ActionTags" },
+	Teleport = { "ActionTags" },
 	_Kill = { "ActionTags" },
 	_Detail = { "DetailTag" },
 	Zipline = { "ModelTags" },
@@ -89,7 +89,7 @@ local tagTypes = {
         "Cancel",
         "BouncePad",
 		"_Kill",
-		"Teleporter",
+		"Teleport",
         "Jetstream",
         "Conveyor",
         "AdjustOxygen",
@@ -137,7 +137,7 @@ local tagsBypassParent = {
 	"Gravity",
     "Cancel",
     "BouncePad",
-	"Teleporter",
+	"Teleport",
 	"_JumpBooster",
     "Jetstream",
     "Conveyor",
@@ -184,9 +184,9 @@ function tagUtils:GetPartTags(part: Instance, excludeTag: string?): { string }
 end
 
 function tagUtils:SetPartMetaData(part: Instance, tag: string, metadata: PublicTypes.Dictionary, newValue: any)
-	if table.find(tagTypes.ModelTags, tag) then
+    if table.find(tagTypes.ModelTags, tag) then
 		part = part:IsA("Model") and part or part.Parent
-	elseif tag == "Teleporter" then
+	elseif tag == "Teleport" then
 		part = part.Name == "Destination" and part.Parent or part
 	end
 
@@ -268,7 +268,7 @@ end
 function tagUtils:GetPartMetaData(part: Instance, name: string, tag: any): any
 	if table.find(tagTypes.ModelTags, name) then
 		part = part:IsA("Model") and part or part.Parent
-	elseif name == "Teleporter" then
+	elseif name == "Teleport" then
 		part = part.Name == "Destination" and part.Parent or part
 	end
 
@@ -361,7 +361,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 		tagUtils.OnTagRemoved(oldTag):Fire(part)
 
 		function methods._Action()
-			local part = oldTag == "Teleporter" and part.Name == "Destination" and part.Parent or part
+			local part = oldTag == "Teleport" and part.Name == "Destination" and part.Parent or part
 			if isOptimized then
 				verifyFolder()
 			end
@@ -427,7 +427,7 @@ function tagUtils:SetPartTag(part: Instance, newTag: string?, oldTag: string?)
 			else part.Parent
 
 		function methods._Action()
-			local part = newTagTypes == "Teleporter"  and part.Name == "Destination" and part.Parent or part
+			local part = newTagTypes == "Teleport"  and part.Name == "Destination" and part.Parent or part
 
 			verifyFolder()
 			part:SetAttribute("_action", tagData.ActionText or newTag)
@@ -518,7 +518,7 @@ function tagUtils:PartHasTag(part: Instance, tag: string): boolean
 
 	function types.ActionTags(): boolean?
 		local secondary = tagTypes.ActionTags._convert[tag]
-		local part = tag == "Teleporter" and part.Name == "Destination" and part.Parent or part
+		local part = tag == "Teleport" and part.Name == "Destination" and part.Parent or part
 		local attribute = part:GetAttribute("_action")
 
 		if attribute == tag or secondary and attribute == secondary or attribute == TagData.dataTypes.objectTags[tag].ActionText then
