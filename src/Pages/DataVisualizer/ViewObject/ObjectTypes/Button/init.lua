@@ -91,7 +91,7 @@ function ObjectType:ClearAppearance(part: Instance?)
             self._Maid[index] = nil
         end
     else
-        self._Maid:Destroy()
+        self._Maid:DoCleaning()
         self.Objects = {}
     end
 end

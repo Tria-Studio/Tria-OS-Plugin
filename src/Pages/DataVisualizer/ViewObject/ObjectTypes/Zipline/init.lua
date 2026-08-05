@@ -153,7 +153,7 @@ function ObjectType:ClearAppearance(part: Instance?)
 				viewobject.Zipline:Destroy()
 			end
         end
-        self._Maid:Destroy()
+        self._Maid:DoCleaning()
         self.Objects = {}
         PartCache:RemoveCache("ZiplineCache")
     end

@@ -144,7 +144,7 @@ function ObjectType:ClearAppearance(part: Instance?)
 				viewobject.Orb:Destroy()
 			end
         end
-        self._Maid:Destroy()
+        self._Maid:DoCleaning()
         self.Objects = {}
         PartCache:RemoveCache("OrbCache")
     end

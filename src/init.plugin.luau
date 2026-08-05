@@ -7,7 +7,7 @@ local Resources = script.Resources
 local Pages = script.Pages
 
 local WidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 250, 450, 300, 400)
-local Widget = plugin:CreateDockWidgetPluginGui("TRIA.os Tools", WidgetInfo)
+local Widget = plugin:CreateDockWidgetPluginGuiAsync("TRIA.os Tools", WidgetInfo)
 local Toolbar = plugin:CreateToolbar("[TRIA] Plugin Suite")
 local OpenButton = Toolbar:CreateButton(
 	"TRIA.os Companion Plugin", 

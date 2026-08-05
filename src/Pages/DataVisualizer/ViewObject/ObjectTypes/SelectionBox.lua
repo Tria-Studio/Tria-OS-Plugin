@@ -134,7 +134,7 @@ function ObjectType:ClearAppearance(part: Instance?)
         self.Objects[part] = nil
     else
         self.Visible = false
-        self._Maid:Destroy()
+        self._Maid:DoCleaning()
         self.Objects = {}
     end
 end
