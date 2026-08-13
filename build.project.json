@@ -1,7 +1,6 @@
 {
   "name": "Tria.OS Plugin Build",
   "tree": {
-    "$className": "Folder",
-    "$path": "src/Classes/Workspace/[TRIA] Plugin Suite"
+    "$path": "src"
   }
 }
